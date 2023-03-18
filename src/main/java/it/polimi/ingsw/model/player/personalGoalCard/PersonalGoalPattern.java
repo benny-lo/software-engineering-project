@@ -11,13 +11,13 @@ import java.util.Map;
  */
 public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     /**
-     * Map associating {@code Item}s with position in the Bookshelf
+     * Map associating {@code Item}s with position in the Bookshelf.
      */
     private final Map<Position, Item> maskPositions;
 
     /**
-     * Constructor of the class
-     * @param maskPositions map to assign to private attribute {@code maskPositions}
+     * Constructor of the class.
+     * @param maskPositions map to assign to private attribute {@code maskPositions}.
      */
     public PersonalGoalPattern(Map<Position, Item> maskPositions) {
         this.maskPositions = maskPositions;
