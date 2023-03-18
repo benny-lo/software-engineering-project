@@ -9,5 +9,7 @@ public enum Item {
     GAME,
     FRAME,
     CUP,
-    PLANT
+    PLANT,
+    LOCKED,
+    FREE
 }

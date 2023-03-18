@@ -18,7 +18,9 @@ public class Bag {
      */
     public Bag(int numberPerType) {
         this.elements = new Stack<>();
-        for (Item type : Item.values()) {
+        Item[] items = Item.values();
+        for (int j = 0; j < 6; j++) {
+            Item type = items[j];
             for (int i = 0; i < numberPerType; i++) {
                 elements.add(type);
             }
@@ -41,5 +43,11 @@ public class Bag {
     public Item extract() {
         if (!this.isEmpty()) return elements.pop();
         else return null;
+    }
+
+    public void printBag() {
+        for (Item item : elements) {
+            System.out.println(item);
+        }
     }
 }
