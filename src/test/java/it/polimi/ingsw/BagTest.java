@@ -7,21 +7,30 @@ import it.polimi.ingsw.model.Item;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for Bag
+ * Unit tests for {@code Bag}.
  */
 public class BagTest {
+    /**
+     * Test a new non-empty {@code  Bag} is non-empty.
+     */
     @Test
     public void testNonEmptyBag() {
         Bag bag = new Bag(1);
         assertFalse(bag.isEmpty());
     }
 
+    /**
+     * Test a new empty {@code Bag} is empty.
+     */
     @Test
     public void testEmptyBag() {
         Bag bag = new Bag(0);
         assertTrue(bag.isEmpty());
     }
 
+    /**
+     * Test extract method on a non-empty {@code Bag} returns a non-null {@code Item}.
+     */
     @Test
     public void testExtractNonEmptyBag() {
         Bag bag = new Bag(1);
@@ -30,6 +39,9 @@ public class BagTest {
         assertNotEquals(item, null);
     }
 
+    /**
+     * Test extract method on an empty {@code Bag} returns null.
+     */
     @Test
     public void testExtractEmptyBag() {
         Bag bag = new Bag(0);
@@ -38,8 +50,11 @@ public class BagTest {
         assertNull(item);
     }
 
+    /**
+     * Test a {@code Bag} is becomes after all {@code Item}s have been extracted.
+     */
     @Test
-    public void testBagIsEmptied() {
+    public void testBagIsEmptiedByExtract() {
         Bag bag = new Bag(1);
         Item item;
         for(int i = 0; i < 4; i++) {

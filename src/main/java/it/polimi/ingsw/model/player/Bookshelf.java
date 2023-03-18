@@ -1,13 +1,22 @@
-package it.polimi.ingsw.model.Player;
+package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.IntPair;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Item;
 import java.util.LinkedList;
 import java.util.Queue;
 
+/**
+ * Class representing the bookshelf of a player.
+ */
 public class Bookshelf {
+    /**
+     * 2D array of {@code Item}s that are currently in {@code this}.
+     */
     private final Item[][] bookshelf;
 
+    /**
+     * Construct of the class. It initializes {@code this} with all positions free.
+     */
     public Bookshelf() {
         this.bookshelf = new Item[6][5];
         for (int i = 0; i < bookshelf.length; i++) {
@@ -17,6 +26,12 @@ public class Bookshelf {
         }
     }
 
+    /**
+     * Check if items can be inserted in a column of {@code this}.
+     * @param itemsSize number of {@code Item}s to insert.
+     * @param column column of {@code this} where the items need to be inserted.
+     * @return {@code true} iff {@code itemsSize} number of items can be inserted in {@code column}.
+     */
     public boolean canInsert(int itemsSize, int column) {
         if (itemsSize > 3 || itemsSize < 0) return false;
 
@@ -27,6 +42,11 @@ public class Bookshelf {
         return true;
     }
 
+    /**
+     * Insert an {@code Item} in the first available position in {@code column} in {@code this}.
+     * @param item {@code Item} to insert.
+     * @param column column where to insert {@code item}.
+     */
     public void insert(Item item, int column) {
         for(int i = bookshelf.length - 1; i >= 0; i--) {
             if (bookshelf[i][column] == null) {
@@ -36,10 +56,31 @@ public class Bookshelf {
         }
     }
 
-    public Item tileAt(int x, int y) {
-        return bookshelf[x][y];
+    /**
+     * Get {@code Item} in a position of {@code this}.
+     * @param row row where to look for.
+     * @param column column where to look for.
+     * @return {@code Item} in position {@code row} and {@code column} of {@code this}. If the position is free, it
+     * returns {@code null}.
+     */
+    public Item tileAt(int row, int column) {
+        return bookshelf[row][column];
     }
 
+    /**
+     * Get {@code Item} in a position of {@code this}.
+     * @param position {@code Position} where to look for.
+     * @return {@code Item} found at {@code Position} of {@code this}. If no {@code Item} at {@code Position} is found,
+     * it returns {@code null}.
+     */
+    public Item tileAt(Position position) {
+        return tileAt(position.getRow(), position.getColumn());
+    }
+
+    /**
+     * Check if {@code this} has no available positions.
+     * @return {@code true} iff {@code this} has no available positions.
+     */
     public boolean isFull() {
         for(int i = 0; i < bookshelf.length; i++) {
             for(int j = 0; j < bookshelf[i].length; j++) {
@@ -49,9 +90,13 @@ public class Bookshelf {
         return true;
     }
 
+    /**
+     * Get the score given by islands of like {@code Item}s in {@code this}.
+     * @return total score achieved by all islands of like {@code Item}s in {@code this}.
+     */
     public int getBookshelfScore() {
         boolean[][] visited = new boolean[6][5];
-        Queue<IntPair> q = new LinkedList<>();
+        Queue<Position> q = new LinkedList<>();
 
         int currentIslandSize;
         int result = 0;
@@ -60,10 +105,10 @@ public class Bookshelf {
                 if (visited[i][j] || bookshelf[i][j] == null) continue;
 
                 currentIslandSize = 0;
-                q.add(new IntPair(i, j));
+                q.add(new Position(i, j));
 
                 while(!q.isEmpty()) {
-                    IntPair p = q.remove();
+                    Position p = q.remove();
                     int row = p.getRow();
                     int column = p.getColumn();
 
@@ -71,16 +116,16 @@ public class Bookshelf {
                     currentIslandSize++;
 
                     if (row+1 < bookshelf.length && bookshelf[row+1][column] == bookshelf[row][column] && !visited[row+1][column]) {
-                        q.add(new IntPair(row+1, column));
+                        q.add(new Position(row+1, column));
                     }
                     if (row-1 > 0 && bookshelf[row-1][column] == bookshelf[row][column] && !visited[row-1][column]) {
-                        q.add(new IntPair(row-1, column));
+                        q.add(new Position(row-1, column));
                     }
                     if (column+1 < bookshelf[row].length && bookshelf[row][column+1] == bookshelf[row][column] && !visited[row][column+1]) {
-                        q.add(new IntPair(row, column+1));
+                        q.add(new Position(row, column+1));
                     }
                     if (column-1 > 0 && bookshelf[row][column-1] == bookshelf[row][column] && !visited[row][column-1]) {
-                        q.add(new IntPair(row, column-1));
+                        q.add(new Position(row, column-1));
                     }
                 }
 
@@ -90,6 +135,11 @@ public class Bookshelf {
         return result;
     }
 
+    /**
+     * Convert the size of an island into a score.
+     * @param islandSize the size of an island.
+     * @return score corresponding to {@code IslandSize}.
+     */
     private int getIslandScore(int islandSize) {
         if (islandSize >= 6) return 8;
         else if (islandSize == 5) return 5;
