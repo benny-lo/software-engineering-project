@@ -3,10 +3,11 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Item;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
- * Class representing the bookshelf of a player.
+ * Class representing the bookshelf of a player. The bottom row and leftmost column have index 0.
  */
 public class Bookshelf {
     /**
@@ -15,12 +16,25 @@ public class Bookshelf {
     private final Item[][] bookshelf;
 
     /**
-     * Construct of the class. It initializes {@code this} with all positions free.
+     * number of rows of {@code this}.
      */
-    public Bookshelf() {
-        this.bookshelf = new Item[6][5];
-        for (int i = 0; i < bookshelf.length; i++) {
-            for (int j = 0; j < bookshelf[i].length; j++) {
+    private final int rows;
+
+    /**
+     * number of columns of {@code this}.
+     */
+    private final int columns;
+
+    /**
+     * Construct of the class. It initializes {@code this} with all positions free ({@code null}).
+     */
+    public Bookshelf(int rows, int columns) {
+        this.rows = rows;
+        this.columns = columns;
+
+        this.bookshelf = new Item[rows][columns];
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
                 bookshelf[i][j] = null;
             }
         }
@@ -29,13 +43,14 @@ public class Bookshelf {
     /**
      * Check if items can be inserted in a column of {@code this}.
      * @param itemsSize number of {@code Item}s to insert.
-     * @param column column of {@code this} where the items need to be inserted.
-     * @return {@code true} iff {@code itemsSize} number of items can be inserted in {@code column}.
+     * @param column column of {@code this} where the items need to be inserted (0-indexed).
+     * @return {@code true} iff {@code itemsSize} items can be inserted in {@code column}.
      */
     public boolean canInsert(int itemsSize, int column) {
-        if (itemsSize > 3 || itemsSize < 0) return false;
+        if (itemsSize < 0 || itemsSize > rows) return false;
+        if (column < 0 || column >= columns) return false;
 
-        for(int i = 0; i < itemsSize; i++) {
+        for(int i = rows - 1; i >= rows - itemsSize; i--) {
             if (bookshelf[i][column] != null) return false;
         }
 
@@ -48,11 +63,22 @@ public class Bookshelf {
      * @param column column where to insert {@code item}.
      */
     public void insert(Item item, int column) {
-        for(int i = bookshelf.length - 1; i >= 0; i--) {
+        for(int i = 0; i < rows; i++) {
             if (bookshelf[i][column] == null) {
                 bookshelf[i][column] = item;
                 return;
             }
+        }
+    }
+
+    /**
+     * Insert some {@code Item}s in {@code column} of {@code this}.
+     * @param items {@code List<Item>} to insert in {@code this} in order from first to last.
+     * @param column column where to insert the {@code Item}s from {@code List<Item>}.
+     */
+    public void insert(List<Item> items, int column) {
+        for(Item item : items) {
+            insert(item, column);
         }
     }
 
@@ -82,10 +108,8 @@ public class Bookshelf {
      * @return {@code true} iff {@code this} has no available positions.
      */
     public boolean isFull() {
-        for(int i = 0; i < bookshelf.length; i++) {
-            for(int j = 0; j < bookshelf[i].length; j++) {
-                if (bookshelf[i][j] == null) return false;
-            }
+        for(int i = 0; i < columns; i++) {
+            if (bookshelf[rows - 1][i] == null) return false;
         }
         return true;
     }
@@ -100,8 +124,8 @@ public class Bookshelf {
 
         int currentIslandSize;
         int result = 0;
-        for(int i = 0; i < bookshelf.length; i++) {
-            for(int j = 0; j < bookshelf[i].length; j++) {
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
                 if (visited[i][j] || bookshelf[i][j] == null) continue;
 
                 currentIslandSize = 0;
@@ -115,13 +139,13 @@ public class Bookshelf {
                     visited[row][column] = true;
                     currentIslandSize++;
 
-                    if (row+1 < bookshelf.length && bookshelf[row+1][column] == bookshelf[row][column] && !visited[row+1][column]) {
+                    if (row+1 < rows && bookshelf[row+1][column] == bookshelf[row][column] && !visited[row+1][column]) {
                         q.add(new Position(row+1, column));
                     }
                     if (row-1 > 0 && bookshelf[row-1][column] == bookshelf[row][column] && !visited[row-1][column]) {
                         q.add(new Position(row-1, column));
                     }
-                    if (column+1 < bookshelf[row].length && bookshelf[row][column+1] == bookshelf[row][column] && !visited[row][column+1]) {
+                    if (column+1 < columns && bookshelf[row][column+1] == bookshelf[row][column] && !visited[row][column+1]) {
                         q.add(new Position(row, column+1));
                     }
                     if (column-1 > 0 && bookshelf[row][column-1] == bookshelf[row][column] && !visited[row][column-1]) {
@@ -146,5 +170,21 @@ public class Bookshelf {
         else if (islandSize == 4) return 3;
         else if (islandSize == 3) return 2;
         else return 0;
+    }
+
+    /**
+     * Getter for the number of rows of {@code this}.
+     * @return number of rows of {@code this}.
+     */
+    public int getRows() {
+        return rows;
+    }
+
+    /**
+     * Getter for number of columns of {@code this}.
+     * @return number of columns of {@code this}.
+     */
+    public int getColumns() {
+        return columns;
     }
 }

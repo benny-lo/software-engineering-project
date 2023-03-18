@@ -36,7 +36,7 @@ public class BagTest {
         Bag bag = new Bag(1);
         Item item = bag.extract();
 
-        assertNotEquals(item, null);
+        assertNotNull(item);
     }
 
     /**
@@ -63,6 +63,6 @@ public class BagTest {
         }
 
         item = bag.extract();
-        assertNotEquals(item, null);
+        assertNotNull(item);
     }
 }
