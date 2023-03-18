@@ -131,11 +131,12 @@ public class Grid {
         }
     }
 
-    public Item selectTiles(int x1, int y1) throws TileException{
+    public ArrayList<Item> selectTiles(int x1, int y1) throws TileException{
         this.grid=grid;
-
         if(selectable(x1, y1)) {
-            return tileAt(x1, y1);
+            ArrayList<Item> items = new ArrayList<Item>();
+            items.add(tileAt(x1, y1));
+            return items;
         }else {
             throw new TileException("You can't get this tile");
         }
@@ -144,8 +145,8 @@ public class Grid {
     public ArrayList<Item> selectTiles(int x1, int y1, int x2, int y2) throws TileException{
         if(adjacent(x1,y1,x2,y2)) {
             ArrayList<Item> items = new ArrayList<Item>();
-            items.add(selectTiles(x1, y1));
-            items.add(selectTiles(x2, y2));
+            items.add(tileAt(x1, y1));
+            items.add(tileAt(x2, y2));
             return items;
         }else{
             throw new TileException("Tiles aren't adjacent");
@@ -164,14 +165,14 @@ public class Grid {
 
     public ArrayList<Item> selectTiles(int x1, int y1, int x2, int y2, int x3, int y3) throws TileException{
         if(adjacent(x1,y1,x2,y2)) {
-            ArrayList<Item> items = new ArrayList<Item>();
-            items.add(selectTiles(x1, y1));
-            items.add(selectTiles(x2, y2));
-            if(consecutive(x1,y1,x2,y2,x3,y3)){
-                items.add(selectTiles(x3, y3));
-                return items;
-            }else{
+            if(!consecutive(x1,y1,x2,y2,x3,y3)){
                 throw new TileException("The third tile isn't consecutive");
+            }else {
+                ArrayList<Item> items = new ArrayList<Item>();
+                items.add(tileAt(x1, y1));
+                items.add(tileAt(x2, y2));
+                items.add(tileAt(x3, y3));
+                return items;
             }
         }else{
             throw new TileException("Tiles aren't adjacent");
