@@ -47,7 +47,7 @@ public class LivingRoom {
             grid[8][5] = null;
         }
 
-        if (numberPlayers == 4) {
+        if (numberPlayers >= 4) {
             grid[0][4] = null;
             grid[1][5] = null;
             grid[3][1] = null;
@@ -103,10 +103,10 @@ public class LivingRoom {
     public boolean selectable(int row, int column){
         if (isEmpty(row, column)) return false;
 
-        if (row+1 < 9 && !isEmpty(row+1, column)) return true;
-        if (row > 0 && !isEmpty(row-1, column)) return true;
-        if (column+1 < 9 && !isEmpty(row, column+1)) return true;
-        if (column > 0 && !isEmpty(row, column-1)) return true;
+        if (row+1 < 9 && isEmpty(row+1, column)) return true;
+        if (row > 0 && isEmpty(row-1, column)) return true;
+        if (column+1 < 9 && isEmpty(row, column+1)) return true;
+        if (column > 0 && isEmpty(row, column-1)) return true;
 
         return false;
     }
@@ -123,5 +123,13 @@ public class LivingRoom {
             grid[p.getRow()][p.getColumn()] = null;
         }
         return selection;
+    }
+    public void printLivingRoom(){
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
+                System.out.print(grid[i][j] + " ");
+            }
+            System.out.println();
+        }
     }
 }
