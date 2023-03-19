@@ -19,7 +19,7 @@ public class Bag {
     public Bag(int numberPerType) {
         this.elements = new Stack<>();
         for(Item item : Item.values()) {
-            if (item == Item.LOCKED || item == Item.FREE) continue;
+            if (item == Item.LOCKED) continue;
             for(int i = 0; i < numberPerType; i++) elements.push(item);
         }
         Collections.shuffle(elements);

@@ -36,7 +36,6 @@ public class CommonGoalCardPattern2Test {
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
         items.remove(items.size() - 1);
-        items.remove(items.size() - 1);
 
         bookshelf.insert(items, 0);
         assertFalse(pattern.check(bookshelf));
@@ -51,7 +50,6 @@ public class CommonGoalCardPattern2Test {
         Bookshelf bookshelf = new Bookshelf(7, 3);
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
-        items.remove(items.size() - 1);
         items.remove(items.size() - 1);
 
         bookshelf.insert(items, 0);
@@ -71,7 +69,6 @@ public class CommonGoalCardPattern2Test {
         Bookshelf bookshelf = new Bookshelf(7, 3);
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
-        items.remove(items.size() - 1);
         items.remove(items.size() - 1);
 
         bookshelf.insert(items, 0);

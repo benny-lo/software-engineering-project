@@ -10,6 +10,5 @@ public enum Item {
     FRAME,
     CUP,
     PLANT,
-    LOCKED,
-    FREE
+    LOCKED
 }
