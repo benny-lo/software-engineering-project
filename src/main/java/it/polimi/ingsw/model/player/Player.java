@@ -27,7 +27,7 @@ public class Player {
      */
     public Player(String nickname, PersonalGoalPatternInterface pattern) {
         this.nickname = nickname;
-        this.bookshelf = new Bookshelf();
+        this.bookshelf = new Bookshelf(6, 5);
         this.personalGoalCard = new PersonalGoalCard(pattern);
         this.personalScore = 0;
         this.bookshelfScore = 0;
