@@ -23,10 +23,11 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
         this.maskPositions = maskPositions;
     }
 
+    @Override
     public int check(Bookshelf bookshelf) {
         int matchings = 0;
-        for(int i = 0; i < 6; i++) {
-            for(int j = 0; j < 5; j++) {
+        for(int i = 0; i < bookshelf.getRows(); i++) {
+            for(int j = 0; j < bookshelf.getColumns(); j++) {
                 Position p = new Position(i, j);
                 if (maskPositions.get(p) == bookshelf.tileAt(p)) matchings++;
             }
