@@ -18,7 +18,6 @@ public class CommonGoalPattern1 implements CommonGoalPatternInterface {
         Position curr;
         for(int i = 0; i < bookshelf.getRows()-1; i++) {
             for(int j = 0; j < bookshelf.getColumns()-1; j++) {
-                if (s.size() == 2) return true;
                 curr = null;
                 if (s.size() > 0) curr = s.peek();
 
@@ -26,10 +25,12 @@ public class CommonGoalPattern1 implements CommonGoalPatternInterface {
                 if (curr != null && i - curr.getRow() <= 1 && j - curr.getColumn() <= 1) continue;
                 if (curr != null && bookshelf.tileAt(curr) != bookshelf.tileAt(i, j)) continue;
                 s.push(new Position(i, j));
+
+                if (s.size() == 2) return true;
             }
         }
 
-        return s.size() == 2;
+        return false;
     }
 
     /**

@@ -9,7 +9,7 @@ import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit tests for common goal cards having pattern 1
+ * Unit tests for common goal card pattern 1.
  */
 public class CommonGoalCardPattern1Test {
     /**
