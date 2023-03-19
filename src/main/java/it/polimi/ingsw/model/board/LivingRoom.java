@@ -1,4 +1,8 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.model.board;
+
+import it.polimi.ingsw.model.Bag;
+import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.model.Position;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +11,7 @@ import java.util.List;
  * Class representing the LivingRoom of the game. The top row and leftmost column have index 0.
  */
 public class LivingRoom {
-    private final Item [][] grid;
+    private final Item[][] grid;
 
     /**
      * Class constructor: it sets the prohibited squares and fills the rest of the squares with items.
