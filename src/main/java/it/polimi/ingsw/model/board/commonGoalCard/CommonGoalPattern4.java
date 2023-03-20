@@ -16,9 +16,9 @@ public class CommonGoalPattern4 implements CommonGoalPatternInterface{
     {
         int groups = 0;
         boolean[][] disjoint = new boolean[bookshelf.getRows()][bookshelf.getColumns()];
-        for(int i=0;i<bookshelf.getRows();i++)
+        for(int i=0;i<bookshelf.getRows()-1;i++)
         {
-            for(int j=0;j<bookshelf.getColumns();j++)
+            for(int j=0;j<bookshelf.getColumns()-1;j++)
             {
                 disjoint[i][j] = false;
             }
