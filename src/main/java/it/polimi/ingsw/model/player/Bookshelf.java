@@ -2,7 +2,8 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Item;
-import java.util.LinkedList;
+
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
@@ -120,7 +121,7 @@ public class Bookshelf {
      */
     public int getBookshelfScore() {
         boolean[][] visited = new boolean[6][5];
-        Queue<Position> q = new LinkedList<>();
+        Queue<Position> q = new ArrayDeque<>();
 
         int currentIslandSize;
         int result = 0;
@@ -136,6 +137,7 @@ public class Bookshelf {
                     int row = p.getRow();
                     int column = p.getColumn();
 
+                    if (visited[row][column]) continue;
                     visited[row][column] = true;
                     currentIslandSize++;
 
