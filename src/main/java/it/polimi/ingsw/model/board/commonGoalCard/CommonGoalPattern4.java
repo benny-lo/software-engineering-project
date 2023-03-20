@@ -16,16 +16,9 @@ public class CommonGoalPattern4 implements CommonGoalPatternInterface{
     {
         int groups = 0;
         boolean[][] disjoint = new boolean[bookshelf.getRows()][bookshelf.getColumns()];
-        for(int i=0;i<bookshelf.getRows()-1;i++)
-        {
-            for(int j=0;j<bookshelf.getColumns()-1;j++)
-            {
-                disjoint[i][j] = false;
-            }
-        }
-        for(int i=0; i<bookshelf.getRows()-1;i++)
-        {
 
+        for(int i=0; i<bookshelf.getRows();i++)
+        {
             for(int j=0;j<bookshelf.getColumns()-1;j++)
             {
                 if(bookshelf.tileAt(i,j) == null)
@@ -45,35 +38,25 @@ public class CommonGoalPattern4 implements CommonGoalPatternInterface{
         {
             return true;
         }
-        else
+
+        for(int j=0;j<bookshelf.getColumns();j++)
         {
-            for(int j=0;j<bookshelf.getColumns()-1;j++)
+            for(int i=0;i<bookshelf.getRows()-1;i++)
             {
-                for(int i=0;i<bookshelf.getRows()-1;i++)
+                if(bookshelf.tileAt(i,j) == null)
                 {
-                    if(bookshelf.tileAt(i,j) == null)
-                    {
-                        continue;
-                    }
-                    if(bookshelf.tileAt(i,j)==bookshelf.tileAt(i+1,j) && not_already(disjoint,i,j) && not_already(disjoint,i+1,j))
-                    {
-                        groups++;
-                        disjoint[i][j] = true;
-                        disjoint[i+1][j] = true;
-                    }
+                    continue;
+                }
+                if(bookshelf.tileAt(i,j)==bookshelf.tileAt(i+1,j) && not_already(disjoint,i,j) && not_already(disjoint,i+1,j))
+                {
+                    groups++;
+                    disjoint[i][j] = true;
+                    disjoint[i+1][j] = true;
                 }
             }
         }
 
         return groups >= 6;
-
-
-
-
-
-
-
-
     }
 
     private boolean not_already(boolean[][] array,int x,int y)
