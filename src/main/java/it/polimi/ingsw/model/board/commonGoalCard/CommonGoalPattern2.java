@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.Item;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Class representing the following pattern:
@@ -32,6 +33,6 @@ public class CommonGoalPattern2 implements CommonGoalPatternInterface {
             if (bookshelf.tileAt(i, column) == null) continue;
             elements.add(bookshelf.tileAt(i, column));
         }
-        return elements.size() >= 6;
+        return elements.size() >= Stream.of(Item.values()).filter((item) -> item != Item.LOCKED).toList().size();
     }
 }
