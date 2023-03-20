@@ -5,7 +5,10 @@ import it.polimi.ingsw.model.Item;
 
 import java.util.HashSet;
 import java.util.Set;
-
+/**
+ * Class representing the following pattern:
+ * Two rows of {@code Item}s of 5 different kinds
+ */
 public class CommonGoalPattern6 implements CommonGoalPatternInterface{
     @Override
 

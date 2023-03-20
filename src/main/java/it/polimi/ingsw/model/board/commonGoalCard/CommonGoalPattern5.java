@@ -6,6 +6,11 @@ import it.polimi.ingsw.model.player.Bookshelf;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Class representing the following pattern:
+ * Three full columns of  {@code Item}s of up to 3 different kinds
+ * The {@code Item}s of the three columns do not have to be of the same kind.
+ */
 public class CommonGoalPattern5 implements CommonGoalPatternInterface{
     @Override
     public boolean check(Bookshelf bookshelf)

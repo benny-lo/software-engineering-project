@@ -6,7 +6,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import it.polimi.ingsw.model.Item;
-
+/**
+ * Class representing the following pattern:
+ * Four full rows of  {@code Item}s of up to three different kind
+ * The {@code Item}s of the four rows do not have to be of the same kind.
+ */
 public class CommonGoalPattern7 implements CommonGoalPatternInterface{
     @Override
 

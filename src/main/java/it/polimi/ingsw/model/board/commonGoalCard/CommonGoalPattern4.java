@@ -25,8 +25,13 @@ public class CommonGoalPattern4 implements CommonGoalPatternInterface{
         }
         for(int i=0; i<bookshelf.getRows()-1;i++)
         {
+
             for(int j=0;j<bookshelf.getColumns()-1;j++)
             {
+                if(bookshelf.tileAt(i,j) == null)
+                {
+                    continue;
+                }
                 if (bookshelf.tileAt(i, j) == bookshelf.tileAt(i, j + 1) && not_already(disjoint,i,j) && not_already(disjoint,i,j+1))
                 {
                     groups++;
@@ -46,6 +51,10 @@ public class CommonGoalPattern4 implements CommonGoalPatternInterface{
             {
                 for(int i=0;i<bookshelf.getRows()-1;i++)
                 {
+                    if(bookshelf.tileAt(i,j) == null)
+                    {
+                        continue;
+                    }
                     if(bookshelf.tileAt(i,j)==bookshelf.tileAt(i+1,j) && not_already(disjoint,i,j) && not_already(disjoint,i+1,j))
                     {
                         groups++;
@@ -57,6 +66,7 @@ public class CommonGoalPattern4 implements CommonGoalPatternInterface{
         }
 
         return groups >= 6;
+
 
 
 
