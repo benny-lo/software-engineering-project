@@ -8,8 +8,8 @@ public class CommonGoalPattern9 implements CommonGoalPatternInterface {
     public boolean check(Bookshelf bookshelf) {
         Item tile;
         int[] counter=new int[6];
-        for(int i=0; i<6; i++){
-            for(int j=0; j<5; j++){
+        for(int i=0; i< bookshelf.getRows(); i++){
+            for(int j=0; j< bookshelf.getColumns(); j++){
                 tile=bookshelf.tileAt(i,j);
                 if(tile==Item.CAT) counter[0]++;
                 if(tile==Item.BOOK) counter[1]++;
