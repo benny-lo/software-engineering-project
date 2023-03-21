@@ -21,7 +21,10 @@ public class CommonGoalPattern6 implements CommonGoalPatternInterface{
             set.clear();
             for(int j=0;j<bookshelf.getColumns();j++)
             {
-                set.add(bookshelf.tileAt(i,j));
+                if(bookshelf.tileAt(i,j) != null)
+                {
+                    set.add(bookshelf.tileAt(i,j));
+                }
             }
             if(set.size() == 5)
             {
