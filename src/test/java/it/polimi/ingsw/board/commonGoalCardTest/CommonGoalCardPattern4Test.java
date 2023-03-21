@@ -87,12 +87,14 @@ public class CommonGoalCardPattern4Test {
             {
                 bookshelf.insert(Item.CAT,i);
                 bookshelf.insert(Item.BOOK,i+1);
+                i++;
             }
 
             for(int n=0;n<bookshelf.getColumns()/2;n++)
             {
                 bookshelf.insert(Item.FRAME,n);
                 bookshelf.insert(Item.CAT,n+1);
+                n++;
             }
         }
 

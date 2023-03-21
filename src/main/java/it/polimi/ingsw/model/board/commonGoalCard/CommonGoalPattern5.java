@@ -22,9 +22,12 @@ public class CommonGoalPattern5 implements CommonGoalPatternInterface{
             set.clear();
             for(int j=0;j<bookshelf.getRows()-1;j++)
             {
-                set.add(bookshelf.tileAt(j,i));
+                if(bookshelf.tileAt(j,i) != null)
+                {
+                    set.add(bookshelf.tileAt(j,i));
+                }
             }
-            if(set.size() <= 3)
+            if(set.size() <= 3 && set.size() > 0)
             {
                 groups++;
             }
