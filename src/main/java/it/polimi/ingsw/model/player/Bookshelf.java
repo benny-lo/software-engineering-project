@@ -124,6 +124,14 @@ public class Bookshelf {
         return bookshelf.tileAt(bookshelf.getRows() - 1, column) != null;
     }
 
+    /**Check if @param row is full
+     * @return {@code true} iff {@code this} has no available positions.
+     */
+    public boolean isFullRow(Bookshelf bookshelf, int row)
+    {
+        return bookshelf.tileAt(row,bookshelf.getColumns()-1 ) != null;
+    }
+
     /**
      * Get the score given by islands of like {@code Item}s in {@code this}.
      * @return total score achieved by all islands of like {@code Item}s in {@code this}.

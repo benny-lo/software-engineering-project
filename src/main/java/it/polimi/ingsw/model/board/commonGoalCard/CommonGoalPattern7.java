@@ -20,15 +20,19 @@ public class CommonGoalPattern7 implements CommonGoalPatternInterface{
         int groups = 0;
         for(int i=0;i<bookshelf.getRows();i++)
         {
-            set.clear();
-            for(int j=0;j<bookshelf.getColumns();j++)
+            if (bookshelf.isFullRow(bookshelf, i))
             {
-                set.add(bookshelf.tileAt(i,j));
+                set.clear();
+                for(int j=0;j<bookshelf.getColumns();j++)
+                {
+                    set.add(bookshelf.tileAt(i,j));
+                }
+                if(set.size() <= 3)
+                {
+                    groups++;
+                }
             }
-            if(set.size() <= 3)
-            {
-                groups++;
-            }
+
         }
 
         return groups >= 4;
