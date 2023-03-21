@@ -10,11 +10,13 @@ public class CommonGoalPattern11 implements CommonGoalPatternInterface{
             if(bookshelf.tileAt(i,0)==bookshelf.tileAt(i+1,1) &&
                     bookshelf.tileAt(i,0)==bookshelf.tileAt(i+2,2) &&
                     bookshelf.tileAt(i,0)==bookshelf.tileAt(i+3,3) &&
-                    bookshelf.tileAt(i,0)==bookshelf.tileAt(i+4,4)) return true;
+                    bookshelf.tileAt(i,0)==bookshelf.tileAt(i+4,4) &&
+                    bookshelf.tileAt(i,0)!=null) return true;
             if(bookshelf.tileAt(i,4)==bookshelf.tileAt(i+1,3) &&
                     bookshelf.tileAt(i,4)==bookshelf.tileAt(i+2,2) &&
                     bookshelf.tileAt(i,4)==bookshelf.tileAt(i+3,1) &&
-                    bookshelf.tileAt(i,4)==bookshelf.tileAt(i+4,0)) return true;
+                    bookshelf.tileAt(i,4)==bookshelf.tileAt(i+4,0)&&
+                    bookshelf.tileAt(i,4)!=null) return true;
         }
         return false;
     }
