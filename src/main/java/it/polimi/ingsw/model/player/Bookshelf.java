@@ -116,6 +116,15 @@ public class Bookshelf {
     }
 
     /**
+     * Check if @param column is full.
+     * @return {@code true} iff {@code this} has no available positions.
+     */
+    public boolean isFullCol(Bookshelf bookshelf, int column)
+    {
+        return bookshelf.tileAt(bookshelf.getRows() - 1, column) != null;
+    }
+
+    /**
      * Get the score given by islands of like {@code Item}s in {@code this}.
      * @return total score achieved by all islands of like {@code Item}s in {@code this}.
      */
