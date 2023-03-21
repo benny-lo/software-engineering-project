@@ -17,20 +17,49 @@ public class CommonGoalPattern5 implements CommonGoalPatternInterface{
     {
         int groups = 0;
         Set<Item> set = new HashSet<>();
+
         for(int i=0;i<bookshelf.getColumns()-1;i++)
         {
-            set.clear();
-            for(int j=0;j<bookshelf.getRows()-1;j++)
+            if(!isFullCol(bookshelf, i))
             {
-                set.add(bookshelf.tileAt(j,i));
+                i++;
             }
-            if(set.size() <= 3)
+            else
             {
-                groups++;
+                set.clear();
+                for(int j=0;j<bookshelf.getRows()-1;j++)
+                {
+                    if(bookshelf.tileAt(j,i) != null)
+                    {
+                        set.add(bookshelf.tileAt(j,i));
+                    }
+                }
+                if(set.size() <= 3 && set.size() > 0)
+                {
+                    groups++;
+                }
+
+
             }
+
         }
+
 
         return groups >= 3;
 
+    }
+
+    public boolean isFullCol(Bookshelf bookshelf, int column)
+    {
+        for(int i=0;i<bookshelf.getRows();i++)
+        {
+
+            if(bookshelf.tileAt(i,column) == null)
+            {
+                return false;
+            }
+
+        }
+        return true;
     }
 }
