@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CommonGoalCardPattern8Test {
+    /**
+     * test if the algorithm works correctly
+     */
     @Test
     public void correct(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
@@ -20,6 +23,10 @@ public class CommonGoalCardPattern8Test {
         }
         assertTrue(pattern.check(bookshelf));
     }
+
+    /**
+     * test if the algorithm works correctly
+     */
     @Test
     public void incorrect(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
@@ -32,6 +39,18 @@ public class CommonGoalCardPattern8Test {
         for(int i=0; i<3; i++){
             bookshelf.insert(Item.BOOK,2);
         }
+        assertFalse(pattern.check(bookshelf));
+    }
+
+    /**
+     * Test of pattern on an empty bookshelf.
+     */
+    @Test
+    public void emptyBookshelf()
+    {
+        CommonGoalPatternInterface pattern = new CommonGoalPattern8();
+        Bookshelf bookshelf = new Bookshelf(6,5);
+
         assertFalse(pattern.check(bookshelf));
     }
 

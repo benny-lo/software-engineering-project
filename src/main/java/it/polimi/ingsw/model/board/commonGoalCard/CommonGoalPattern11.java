@@ -2,8 +2,12 @@ package it.polimi.ingsw.model.board.commonGoalCard;
 
 import it.polimi.ingsw.model.player.Bookshelf;
 
-public class CommonGoalPattern11 implements CommonGoalPatternInterface{
+/**
+ * Class representing the following pattern:
+ * five tiles of the same type forming a diagonal
+ */
 
+public class CommonGoalPattern11 implements CommonGoalPatternInterface{
     @Override
     public boolean check(Bookshelf bookshelf) {
         for(int i=0; i<2; i++){

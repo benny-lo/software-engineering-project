@@ -10,6 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CommonGoalCardPattern10Test {
+    /**
+     * test if the algorithm works properly
+     */
     @Test
     public void correct(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
@@ -21,6 +24,10 @@ public class CommonGoalCardPattern10Test {
         }
         assertTrue(pattern.check(bookshelf));
     }
+
+    /**
+     * test if the algorithm works properly
+     */
     @Test
     public void incorrect(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
@@ -33,6 +40,17 @@ public class CommonGoalCardPattern10Test {
         for(int i=0; i<3; i++){
             bookshelf.insert(Item.BOOK,2);
         }
+        assertFalse(pattern.check(bookshelf));
+    }
+    /**
+     * Test of pattern on an empty bookshelf.
+     */
+    @Test
+    public void emptyBookshelf()
+    {
+        CommonGoalPatternInterface pattern = new CommonGoalPattern10();
+        Bookshelf bookshelf = new Bookshelf(6,5);
+
         assertFalse(pattern.check(bookshelf));
     }
 }
