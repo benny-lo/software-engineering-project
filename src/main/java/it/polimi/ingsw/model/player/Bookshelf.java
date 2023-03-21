@@ -2,7 +2,8 @@ package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Item;
-import java.util.LinkedList;
+
+import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
 
@@ -115,12 +116,29 @@ public class Bookshelf {
     }
 
     /**
+     * Check if @param column is full.
+     * @return {@code true} iff {@code this} has no available positions.
+     */
+    public boolean isFullCol(Bookshelf bookshelf, int column)
+    {
+        return bookshelf.tileAt(bookshelf.getRows() - 1, column) != null;
+    }
+
+    /**Check if @param row is full
+     * @return {@code true} iff {@code this} has no available positions.
+     */
+    public boolean isFullRow(Bookshelf bookshelf, int row)
+    {
+        return bookshelf.tileAt(row,bookshelf.getColumns()-1 ) != null;
+    }
+
+    /**
      * Get the score given by islands of like {@code Item}s in {@code this}.
      * @return total score achieved by all islands of like {@code Item}s in {@code this}.
      */
     public int getBookshelfScore() {
         boolean[][] visited = new boolean[6][5];
-        Queue<Position> q = new LinkedList<>();
+        Queue<Position> q = new ArrayDeque<>();
 
         int currentIslandSize;
         int result = 0;
@@ -136,6 +154,7 @@ public class Bookshelf {
                     int row = p.getRow();
                     int column = p.getColumn();
 
+                    if (visited[row][column]) continue;
                     visited[row][column] = true;
                     currentIslandSize++;
 
