@@ -25,21 +25,23 @@ public class PersonalGoalCard {
      * @return the personal score of {@code bookshelf}.
      */
     public int getPersonalScore(Bookshelf bookshelf) {
-        int matchings = pattern.check(bookshelf);
-        return matchingToScore(matchings);
+        int matches = pattern.check(bookshelf);
+        return matchingToScore(matches);
     }
 
     /**
      * Translate matching into the corresponding personal score.
-     * @param matchings number of matchings.
+     * @param matches number of matches.
      * @return score corresponding to {@code matching}.
      */
-    private int matchingToScore(int matchings) {
-        if (matchings == 1) return 1;
-        else if (matchings == 2) return 2;
-        else if (matchings == 3) return 4;
-        else if (matchings == 4) return 6;
-        else if (matchings == 5) return 9;
-        else return 12;
+    private int matchingToScore(int matches) {
+        if (matches == 0) return 0;
+        else if (matches == 1) return 1;
+        else if (matches == 2) return 2;
+        else if (matches == 3) return 4;
+        else if (matches == 4) return 6;
+        else if (matches == 5) return 9;
+        else if (matches == 6) return 12;
+        else return -1;
     }
 }

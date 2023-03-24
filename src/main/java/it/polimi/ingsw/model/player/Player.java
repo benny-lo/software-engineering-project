@@ -75,11 +75,8 @@ public class Player {
      */
 
     public void insertTiles(List<Item> items, int column){
-        if (getBookshelf().canInsert(items.size(), column)){
-            for (Item item : items) {
-                getBookshelf().insert(item, column);
-            }
-        }
+        if (getBookshelf().canInsert(items.size(), column))
+            getBookshelf().insert(items, column);
     }
 
     /**

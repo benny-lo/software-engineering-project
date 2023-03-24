@@ -4,10 +4,10 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.player.Bookshelf;
 
-import java.util.Map;
+import java.util.*;
 
 /**
- * Implementation of PersonalGoalPatternInterface
+ * Implementation of PersonalGoalPatternInterface.
  */
 public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     /**
@@ -25,13 +25,10 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
 
     @Override
     public int check(Bookshelf bookshelf) {
-        int matchings = 0;
-        for(int i = 0; i < bookshelf.getRows(); i++) {
-            for(int j = 0; j < bookshelf.getColumns(); j++) {
-                Position p = new Position(i, j);
-                if (maskPositions.get(p) == bookshelf.tileAt(p)) matchings++;
-            }
+        int matches = 0;
+        for(Position p: maskPositions.keySet()){
+            if(bookshelf.tileAt(p) == maskPositions.get(p)) matches++;
         }
-        return matchings;
+        return matches;
     }
 }
