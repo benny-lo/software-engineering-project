@@ -3,7 +3,7 @@ package it.polimi.ingsw.board.commonGoalCardTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPattern3;
+import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternCountGroups;
 import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class CommonGoalCardPattern3Test {
      */
     @Test
     public void testOnEmptyBookshelf() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern3();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
         Bookshelf bookshelf = new Bookshelf(6, 6);
 
         assertFalse(pattern.check(bookshelf));
@@ -32,7 +32,7 @@ public class CommonGoalCardPattern3Test {
      */
     @Test
     public void testOnFullBookshelfAllSame() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern3();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
         Bookshelf bookshelf = new Bookshelf(4, 4);
 
         List<Item> items = new ArrayList<>();
@@ -51,7 +51,7 @@ public class CommonGoalCardPattern3Test {
      */
     @Test
     public void testOnFullBookshelfDistinctColumns() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern3();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
         Bookshelf bookshelf = new Bookshelf(4, 4);
 
         List<Item> items = new ArrayList<>();
@@ -71,7 +71,7 @@ public class CommonGoalCardPattern3Test {
      */
     @Test
     public void testOnFullBookshelfButOnePlace() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern3();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
         Bookshelf bookshelf = new Bookshelf(4, 4);
 
         for(int i = 0; i < 3; i++) bookshelf.insert(Stream.of(Item.values()).limit(4).toList(), i);
@@ -85,7 +85,7 @@ public class CommonGoalCardPattern3Test {
      */
     @Test
     public void testOnBookshelfTwoGroupsColumns() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern3();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
         Bookshelf  bookshelf = new Bookshelf(4, 4);
         List<Item> items1 = new ArrayList<>();
         List<Item> items2 = new ArrayList<>();
@@ -106,7 +106,7 @@ public class CommonGoalCardPattern3Test {
      */
     @Test
     public void testOnBookshelfTShapedCatsAndTwoGroupsBooks() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern3();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
         Bookshelf bookshelf = new Bookshelf(5, 4);
 
         List<Item> items1 = new ArrayList<>();
@@ -116,6 +116,9 @@ public class CommonGoalCardPattern3Test {
         for(int i = 0; i < 2; i++) items2.add(Item.BOOK);
         items2.add(Item.CAT);
         for(int i = 0; i < 2; i++) items2.add(Item.CAT);
+
+        bookshelf.insert(items1, 0);
+        for(int i = 1; i < 4; i++) bookshelf.insert(items2, 1);
 
         assertFalse(pattern.check(bookshelf));
     }

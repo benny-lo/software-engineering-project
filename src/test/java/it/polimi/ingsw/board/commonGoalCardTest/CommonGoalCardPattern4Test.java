@@ -2,7 +2,7 @@ package it.polimi.ingsw.board.commonGoalCardTest;
 import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternInterface;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPattern4;
+import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternCountGroups;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +17,7 @@ public class CommonGoalCardPattern4Test {
     @Test
     public void exactlySix()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern4();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf(6,6);
         for(int j=0;j<2;j++)
         {
@@ -34,7 +34,7 @@ public class CommonGoalCardPattern4Test {
     @Test
     public void emptyBookshelf()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern4();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf(6,6);
 
         assertFalse(pattern.check(bookshelf));
@@ -46,7 +46,7 @@ public class CommonGoalCardPattern4Test {
     @Test
     public void lessThanSix()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern4();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf(6,6);
         bookshelf.insert(Item.CAT,0);
         bookshelf.insert(Item.CAT,1);
@@ -60,7 +60,7 @@ public class CommonGoalCardPattern4Test {
     @Test
     public void commonItems()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern4();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf(6,6);
         for (int i = 0; i < bookshelf.getColumns(); i++)
         {
@@ -79,7 +79,7 @@ public class CommonGoalCardPattern4Test {
     @Test
     public void twelveNotAdjacent()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern4();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf(6,6);
         for(int j=0;j<2;j++)
         {
