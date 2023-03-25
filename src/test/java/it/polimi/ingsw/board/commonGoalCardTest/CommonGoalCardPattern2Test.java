@@ -3,7 +3,7 @@ package it.polimi.ingsw.board.commonGoalCardTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPattern2;
+import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternDistinctItems;
 import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class CommonGoalCardPattern2Test {
      */
     @Test
     public void testOnEmptyBookshelf() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern2();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
         Bookshelf bookshelf = new Bookshelf(7, 3);
         assertFalse(pattern.check(bookshelf));
     }
@@ -31,7 +31,7 @@ public class CommonGoalCardPattern2Test {
      */
     @Test
     public void testOnFilledBookshelfAllKinds() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern2();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
         Bookshelf bookshelf = new Bookshelf(7, 3);
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
@@ -46,7 +46,7 @@ public class CommonGoalCardPattern2Test {
      */
     @Test
     public void testOnBookshelfFullTypeAndAllButOne() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern2();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
         Bookshelf bookshelf = new Bookshelf(7, 3);
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
@@ -65,8 +65,8 @@ public class CommonGoalCardPattern2Test {
      */
     @Test
     public void testOnBookshelfFullTypeTwoColumns() {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern2();
-        Bookshelf bookshelf = new Bookshelf(7, 3);
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
+        Bookshelf bookshelf = new Bookshelf(6, 3);
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
         items.remove(items.size() - 1);

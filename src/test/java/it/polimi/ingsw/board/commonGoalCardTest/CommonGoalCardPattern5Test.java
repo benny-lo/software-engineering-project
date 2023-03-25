@@ -1,8 +1,9 @@
 package it.polimi.ingsw.board.commonGoalCardTest;
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPattern5;
+
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternDistinctItems;
 import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ public class CommonGoalCardPattern5Test {
     @Test
     public void emptyBookshelf()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern5();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf(6,6);
         assertFalse(pattern.check(bookshelf));
     }
@@ -28,7 +29,7 @@ public class CommonGoalCardPattern5Test {
     @Test
     public void fourKinds()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern5();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf(5,6);
         for(int i=0;i<3;i++)
         {
@@ -46,7 +47,7 @@ public class CommonGoalCardPattern5Test {
     @Test
     public void threeKinds()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern5();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf(5,6);
         for(int i=0;i<3;i++)
         {
@@ -64,7 +65,7 @@ public class CommonGoalCardPattern5Test {
     @Test
     public void twoColumns()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern5();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf(5,6);
         for(int i=0;i<2;i++)
         {
@@ -83,7 +84,7 @@ public class CommonGoalCardPattern5Test {
     @Test
     public void notFull()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern5();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf(5,6);
         for(int i=0;i<3;i++)
         {

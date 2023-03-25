@@ -1,9 +1,10 @@
 package it.polimi.ingsw.board.commonGoalCardTest;
+import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternDistinctItems;
 import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPattern6;
+
 import it.polimi.ingsw.model.Item;
 
 /**
@@ -17,7 +18,7 @@ public class CommonGoalCardPattern6Test {
     @Test
     public void emptyBookshelf()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern6();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf(6,6);
         assertFalse(pattern.check(bookshelf));
     }
@@ -28,7 +29,7 @@ public class CommonGoalCardPattern6Test {
     @Test
     public void fourKinds()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern6();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf(5,5);
         for(int i=0;i<2;i++)
         {
@@ -51,7 +52,7 @@ public class CommonGoalCardPattern6Test {
     @Test
     public void oneRow()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern6();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf(5,5);
         bookshelf.insert(Item.CUP,0);
         bookshelf.insert(Item.CAT,1);
@@ -69,7 +70,7 @@ public class CommonGoalCardPattern6Test {
     @Test
     public void threeRows()
     {
-        CommonGoalPatternInterface pattern = new CommonGoalPattern6();
+        CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf(5,5);
         for(int i=0;i<bookshelf.getRows();i++)
         {

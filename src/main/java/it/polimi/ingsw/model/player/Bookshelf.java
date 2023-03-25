@@ -119,17 +119,20 @@ public class Bookshelf {
      * Check if @param column is full.
      * @return {@code true} iff {@code this} has no available positions.
      */
-    public boolean isFullCol(Bookshelf bookshelf, int column)
+    public boolean isFullCol(int column)
     {
-        return bookshelf.tileAt(bookshelf.getRows() - 1, column) != null;
+        return tileAt(getRows() - 1, column) != null;
     }
 
     /**Check if @param row is full
      * @return {@code true} iff {@code this} has no available positions.
      */
-    public boolean isFullRow(Bookshelf bookshelf, int row)
+    public boolean isFullRow(int row)
     {
-        return bookshelf.tileAt(row,bookshelf.getColumns()-1 ) != null;
+        for(int column = 0; column < getColumns(); column++) {
+            if (tileAt(row, column) == null) return false;
+        }
+        return true;
     }
 
     /**
