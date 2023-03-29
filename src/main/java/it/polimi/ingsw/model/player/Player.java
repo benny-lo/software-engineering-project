@@ -127,4 +127,8 @@ public class Player {
     public int getBookshelfScore(){
         return bookshelfScore;
     }
+
+    public boolean firstToFinish(){
+        return this.endingToken != null;
+    }
 }
