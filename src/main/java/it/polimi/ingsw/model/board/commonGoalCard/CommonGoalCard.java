@@ -20,28 +20,20 @@ public class CommonGoalCard {
     private final Stack<ScoringToken> tokens;
 
     /**
-     * identifier of {@code this}.
-     */
-    private final int id;
-
-    /**
      * Constructor of the class.
      * @param pattern interface representing the pattern used by {@code this}.
-     * @param id identifier to associate to {@code this}.
      */
-    public CommonGoalCard(CommonGoalPatternInterface pattern, int id) {
+    public CommonGoalCard(int id, int numPlayers, CommonGoalPatternInterface pattern) {
         this.pattern = pattern;
         this.tokens = new Stack<>();
-        this.id = id;
-    }
 
-    /**
-     * Put a token on the stack of scoring tokens of {@code this}.
-     * @param score score of token to place on the stack.
-     */
-    public void pushToken(int score) {
-        ScoringToken token = new ScoringToken(score, id);
-        tokens.push(token);
+        if (numPlayers >= 4) {
+            for(int i = 1; i <= 4; i++) tokens.push(new ScoringToken(2*i, id));
+        } else if (numPlayers == 3) {
+            for(int i = 2; i <= 4; i++) tokens.push(new ScoringToken(2*i, id));
+        } else {
+            for(int i = 1; i <= 2; i++) tokens.push(new ScoringToken(4*i, id));
+        }
     }
 
     /**

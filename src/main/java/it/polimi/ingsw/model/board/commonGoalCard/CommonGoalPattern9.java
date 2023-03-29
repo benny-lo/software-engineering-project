@@ -11,21 +11,14 @@ import it.polimi.ingsw.model.player.Bookshelf;
 public class CommonGoalPattern9 implements CommonGoalPatternInterface {
     @Override
     public boolean check(Bookshelf bookshelf) {
-        Item tile;
-        int[] counter=new int[6];
+        int[] counter=new int[Item.values().length];
         for(int i=0; i< bookshelf.getRows(); i++){
             for(int j=0; j< bookshelf.getColumns(); j++){
-                tile=bookshelf.tileAt(i,j);
-                if(tile==Item.CAT) counter[0]++;
-                if(tile==Item.BOOK) counter[1]++;
-                if(tile==Item.CUP) counter[2]++;
-                if(tile==Item.FRAME) counter[3]++;
-                if(tile==Item.PLANT) counter[4]++;
-                if(tile==Item.GAME) counter[5]++;
+                counter[bookshelf.tileAt(i, j).ordinal()]++;
             }
         }
-        for(int i=0; i<6; i++){
-            if(counter[i]>=8) return true;
+        for(int i = 0; i < counter.length; i++){
+            if(counter[i] >= 8) return true;
         }
         return false;
     }
