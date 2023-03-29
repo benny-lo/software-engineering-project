@@ -17,6 +17,8 @@ public class CommonGoalPattern12 implements CommonGoalPatternInterface{
             for(int j=0; j< bookshelf.getRows(); j++){
                 if(bookshelf.tileAt(j,i)!=null){
                     counter[i]++;
+                }else{
+                    j=bookshelf.getRows();
                 }
             }
         }
