@@ -128,6 +128,10 @@ public class Player {
         return bookshelfScore;
     }
 
+    /**
+     * This method tells if the {@code this} is the first to fill their {@code Bookshelf}.
+     * @return It returns a boolean, true iff {@code Player} has the {@code endingToken}, else false.
+     */
     public boolean firstToFinish(){
         return this.endingToken != null;
     }

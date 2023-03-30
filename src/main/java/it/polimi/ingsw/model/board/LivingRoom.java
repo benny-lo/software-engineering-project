@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.board;
 
-import it.polimi.ingsw.model.Bag;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 
@@ -106,9 +105,16 @@ public class LivingRoom {
         if (row+1 < 9 && isEmpty(row+1, column)) return true;
         if (row > 0 && isEmpty(row-1, column)) return true;
         if (column+1 < 9 && isEmpty(row, column+1)) return true;
-        if (column > 0 && isEmpty(row, column-1)) return true;
+        return column > 0 && isEmpty(row, column - 1);
+    }
 
-        return false;
+    /**
+     * Check if the content of square of {@code this} in a specific position contains a selectable item.
+     * @param position It's the position of the {@code Item}.
+     * @return {@code true} iff the content of the square in {@code Position} can be selected.
+     */
+    public boolean selectable(Position position){
+        return selectable(position.getRow(), position.getColumn());
     }
 
     /**
