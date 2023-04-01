@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import org.junit.jupiter.api.Test;
 
@@ -24,12 +25,10 @@ public class PlayerTest {
         Item item = Item.CAT;
         Position position = new Position(1,0);
         PersonalGoalPattern pattern = new PersonalGoalPattern(new HashMap<>(Map.of(position, item)));
-        Player player = new Player("Nickname", pattern);
+        Player player = new Player();
+        player.setPersonalGoalCard(new PersonalGoalCard(pattern));
 
-        assertNotNull(player);
-        assertNotNull(player.getBookshelf());
-        assertNotNull(player.getPersonalGoalCard());
         assertEquals(0, player.getPersonalScore());
-        assertEquals(0, player.getBookshelfScore());
+        assertEquals(0, player.getBookshelf().getBookshelfScore());
     }
 }

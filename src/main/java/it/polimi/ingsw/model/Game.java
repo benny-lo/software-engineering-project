@@ -4,110 +4,120 @@ import it.polimi.ingsw.model.board.BoardManager;
 import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Class representing the Game.
  */
-public class Game implements GameInterface{
+public class Game implements GameInterface {
     private int numberPlayers;
-    private final int numberGoalCards;
-    private Player currentPlayer;
-    private Map<String, Player> players;
-    private final BoardManager boardManager;
+    private final int numberCommonGoalCards;
+    private String currentPlayer;
+    private final Map<String, Player> players;
+    private BoardManager boardManager;
     private CommonGoalCardManager commonGoalCardManager;
 
     /**
      * Game's Constructor: it initializes {@code Game}.
-     * @param numberGoalCards It can be initialised to '1' or '2'.
+     * @param numberCommonGoalCards It can be initialised to '1' or '2'.
      */
-    public Game(int numberGoalCards) {
-        this.numberGoalCards = numberGoalCards;
-        this.boardManager = new BoardManager();
+    public Game(int numberCommonGoalCards) {
+        this.numberPlayers = 0;
+        this.numberCommonGoalCards = numberCommonGoalCards;
+        this.currentPlayer = null;
+        this.players = new HashMap<>();
+        this.boardManager = null;
+        this.commonGoalCardManager = null;
     }
 
     /**
      * This private method creates a {@code PersonalGoalCard} for each {@code Player}.
      */
-    private void createPersonalCard(){}
+    private void distributePersonalCards() {
+        // TODO: distribute the personal goal cards to the players.
+    }
+
     @Override
     public void addPlayer(String nickname){
-        createPersonalCard();
-        //players.put(nickname, new Player(nickname, "pattern"))
+        this.players.put(nickname, new Player());
         this.numberPlayers += 1;
-        //da implementare
     }
+
     @Override
     public void setup(){
-        this.commonGoalCardManager = new CommonGoalCardManager(getNumberGoalCards(), getNumberPlayers());
-        //da implementare
+        this.commonGoalCardManager = new CommonGoalCardManager(numberCommonGoalCards, numberPlayers);
+        this.boardManager = new BoardManager(numberPlayers);
+        this.distributePersonalCards();
     }
+
     @Override
     public void setCurrentPlayer(String nickname){
-        currentPlayer = getPlayer(nickname);
+        currentPlayer = nickname;
     }
+
     @Override
     public boolean canTakeItemTiles(List<Position> positions){
-        return getBoardManager().canTakeItemTiles(positions);
+        if (positions.size() == 0 || positions.size() > 3) return false;
+        if (!boardManager.canTakeItemTilesBoard(positions)) return false;
+
+        boolean availableColumn = false;
+        for(int i = 0; i < players.get(currentPlayer).getBookshelf().getColumns(); i++) {
+            if (players.get(currentPlayer).getBookshelf().canInsert(positions.size(), i)) availableColumn = true;
+        }
+        return availableColumn;
     }
+
     @Override
     public void selectItemTiles(List<Position> positions){
-        //da implementare
+        //TODO: take the item tiles and give them to the current player.
     }
+
     @Override
-    public void insertItemTilesInBookshelf(int column, int[] order){
-        //da implementare
+    public void insertItemTilesInBookshelf(int column, List<Integer> order) {
+        //TODO: insert the items in the column and in the right order.
     }
+
     @Override
-    public String getWinner(){
-        int max = 0;
+    public String getWinner() {
+        boolean nobodyFinished = true;
+        for(String s : players.keySet()) {
+            if (players.get(s).firstToFinish()) nobodyFinished = false;
+        }
+        if (!nobodyFinished) return null;
+
+        int max = -1;
         String winner = null;
 
         for (String s: players.keySet()){
-            if (getScore(s) > max){
-                max = getScore(s);
+            if (players.get(s).getTotalScore() > max){
+                max = players.get(s).getTotalScore();
             }
         }
 
         for (String s: players.keySet()){
-            if (getScore(s) == max && getPlayer(s).firstToFinish())
+            if (players.get(s).getTotalScore() == max && players.get(s).firstToFinish())
                 return s;
-            else if (getScore(s) == max) {
+            else if (players.get(s).getTotalScore() == max) {
                 winner = s;
             }
         }
         return winner;
     }
+
     @Override
-    public int getScore(String nickname){
-        return getPlayer(nickname).getTotalScore();
-    }
-    @Override
-    public Player getPlayer(String nickname){
-        return players.get(nickname);
+    public int getPublicScore(String nickname) {
+        return this.players.get(nickname).getPublicScore();
     }
 
     @Override
-    public int getNumberPlayers(){
-        return numberPlayers;
+    public int getPersonalScore(String nickname) {
+        return this.players.get(nickname).getPersonalScore();
     }
 
     @Override
-    public int getNumberGoalCards() {
-        return numberGoalCards;
-    }
-
-    @Override
-    public Player getCurrentPlayer() {
+    public String getCurrentPlayer() {
         return currentPlayer;
-    }
-    @Override
-    public BoardManager getBoardManager() {
-        return boardManager;
-    }
-    @Override
-    public CommonGoalCardManager getCommonGoalCardManager() {
-        return commonGoalCardManager;
     }
 }

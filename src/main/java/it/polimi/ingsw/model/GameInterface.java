@@ -1,9 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.board.BoardManager;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalCardManager;
-import it.polimi.ingsw.model.player.Player;
-
 import java.util.List;
 
 /**
@@ -42,11 +38,11 @@ public interface GameInterface {
     void selectItemTiles(List<Position> positions);
 
     /**
-     *  Da scrivere
-     * @param column
-     * @param order
+     * This method inserts the items selected by the current player in its bookshelf.
+     * @param column the column to insert in.
+     * @param order the list representing a permutation of the items.
      */
-    void insertItemTilesInBookshelf(int column, int[] order);
+    void insertItemTilesInBookshelf(int column, List<Integer> order);
 
     /**
      * This method compares the {@code totalScore} of the {@code Player}s, and the {@code Player} with the highest {@code totalScore} is the winner.
@@ -56,46 +52,22 @@ public interface GameInterface {
     String getWinner();
 
     /**
-     * This method gets the {@code Player}'s {@code totalScore}.
+     * This method gets the {@code Player}'s public score(bookshelf, common goals and ending token).
      * @param nickname It's the {@code Players}'s name.
-     * @return It returns the {@code totalScore} of a {@code Player}.
+     * @return It returns the public score of a {@code Player}.
      */
-    int getScore(String nickname);
+    int getPublicScore(String nickname);
 
     /**
-     * This method gets the {@code Player} with this {@code nickname}.
-     * @param nickname It's the {@code Players}'s name.
-     * @return It returns the {@code Player} with this {@code nickname}.
+     * This method gets the {@code Player}'s personal score(personal goal).
+     * @param nickname the {@code Player}'s name.
+     * @return the personal score of a {@code Player}.
      */
-    Player getPlayer(String nickname);
+    int getPersonalScore(String nickname);
 
     /**
-     * This method returns the number of players in the {@code Game}.
-     * @return It returns {@code numberPlayers}.
+     * This method returns the nickname of the current {@code Player}.
+     * @return It returns the nickname of {@code currentPlayer}.
      */
-    int getNumberPlayers();
-
-    /**
-     * This method returns the number of {@code CommonGoalCard}s in the {@code Game}.
-     * @return It returns {@code numberGoalCards}.
-     */
-    int getNumberGoalCards();
-
-    /**
-     * This method returns the current {@code Player}.
-     * @return It returns {@code currentPlayer}.
-     */
-    Player getCurrentPlayer();
-
-    /**
-     * This method returns the current {@code BoardManager}.
-     * @return It returns {@code BoardManager}.
-     */
-    BoardManager getBoardManager();
-
-    /**
-     * This method returns the current {@code CommonGoalCardManager}.
-     * @return It returns {@code CommonGoalCardManager}.
-     */
-    CommonGoalCardManager getCommonGoalCardManager();
+    String getCurrentPlayer();
 }
