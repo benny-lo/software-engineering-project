@@ -64,13 +64,14 @@ public class CommonGoalCardManager {
     /**
      * Perform check on all not yet achieved common goal cards and gets the scoring tokens.
      * @param bookshelf the bookshelf.
-     * @param canTake list of indices of common goal cards to consider.
+     * @param cannotTake list of indices of common goal cards not to consider.
      * @return the scoring token from the common goal cards achieved.
      */
-    public List<ScoringToken> check(Bookshelf bookshelf, List<Integer> canTake) {
+    public List<ScoringToken> check(Bookshelf bookshelf, List<Integer> cannotTake) {
         List<ScoringToken> tokens = new ArrayList<>();
-        for(Integer idx : canTake) {
-            if (cards.get(idx).checkPattern(bookshelf)) tokens.add(cards.get(idx).popToken());
+        for(int i = 0; i < cards.size(); i++) {
+            if (cannotTake.contains(i)) continue;
+            if (cards.get(i).checkPattern(bookshelf)) tokens.add(cards.get(i).popToken());
         }
         return tokens;
     }
