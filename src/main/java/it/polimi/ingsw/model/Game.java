@@ -81,7 +81,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * Take ending token if bookshelf is full and it is available;
+     * Take ending token if bookshelf is full, and it is available;
      * Refill board if needed and bag is non-empty;
      * Check common goals.
      */

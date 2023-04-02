@@ -30,6 +30,7 @@ public class Player {
 
     /**
      * Add to {@code this} the items taken from the living room.
+     *
      * @param items list of the items taken from the living room.
      */
     public void takeItems(List<Item> items) {
@@ -38,6 +39,7 @@ public class Player {
 
     /**
      * Setter for the personal goal card.
+     *
      * @param card the card to set.
      */
     public void setPersonalGoalCard(PersonalGoalCard card) {
@@ -46,9 +48,10 @@ public class Player {
 
     /**
      * Add a {@code ScoringToken} to {@code this} checking token's type.
+     *
      * @param token {@code ScoringToken} obtained completing a {@code CommonGoalCard}.
      */
-    public void addScoringToken(ScoringToken token){
+    public void addScoringToken(ScoringToken token) {
         scoringTokens.add(token);
     }
 
@@ -61,6 +64,7 @@ public class Player {
 
     /**
      * Get the types of the scoring tokens already taken.
+     *
      * @return list containing types of scoring tokens taken by {@code this}.
      */
     public List<Integer> cannotTake() {
@@ -68,14 +72,15 @@ public class Player {
     }
 
     /**
-     *Insert a list of {@code Item}s in the {@code Bookshelf} of {@code this} in the {@code column}.
+     * Insert a list of {@code Item}s in the {@code Bookshelf} of {@code this} in the {@code column}.
+     *
      * @param column a {@code column} selected by the Player.
-     * @param order the order to give to the items.
+     * @param order  the order to give to the items.
      */
-    public void insertTiles(int column, List<Integer> order){
+    public void insertTiles(int column, List<Integer> order) {
         List<Item> permutedItems = new ArrayList<>();
-        for(int i = 0; i < order.size(); i++) {
-            permutedItems.add(itemsTakenFromLivingRoom.get(order.get(i)));
+        for (Integer integer : order) {
+            permutedItems.add(itemsTakenFromLivingRoom.get(integer));
         }
         if (getBookshelf().canInsert(order.size(), column))
             getBookshelf().insert(permutedItems, column);
@@ -84,9 +89,10 @@ public class Player {
 
     /**
      * Get the public score of {@code this}.
+     *
      * @return sum of {@code ScoringToken}s.
      */
-    public int getPublicScore(){
+    public int getPublicScore() {
         return (endingToken ? 1 : 0) +
                 bookshelf.getBookshelfScore() +
                 scoringTokens.stream().map(ScoringToken::getScore).reduce(0, Integer::sum);
@@ -94,31 +100,35 @@ public class Player {
 
     /**
      * Get the total score of {@code this}.
+     *
      * @return sum of {@code ScoringToken}s, {@code personalScore} and {@code bookshelfScore}.
      */
-    public int getTotalScore(){
+    public int getTotalScore() {
         return getPublicScore() + getPersonalScore();
     }
 
     /**
      * Get the {@code Bookshelf} of {@code this}.
+     *
      * @return {@code Bookshelf} of {@code this}.
      */
-    public Bookshelf getBookshelf(){
+    public Bookshelf getBookshelf() {
         return bookshelf;
     }
 
     /**
      * Get the {@code personalScore} of {@code this}.
+     *
      * @return {@code personalScore} of {@code this}.
      */
-    public int getPersonalScore(){
+    public int getPersonalScore() {
         if (personalGoalCard == null) return 0;
         return personalGoalCard.getPersonalScore(bookshelf);
     }
 
     /**
      * This method tells if the {@code this} is the first to fill their {@code Bookshelf}.
+     *
      * @return It returns a boolean, true iff {@code Player} has the {@code endingToken}, else false.
      */
     public boolean firstToFinish() {
