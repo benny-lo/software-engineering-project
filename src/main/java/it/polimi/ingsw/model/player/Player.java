@@ -75,8 +75,10 @@ public class Player {
      */
 
     public void insertTiles(List<Item> items, int column){
-        if (getBookshelf().canInsert(items.size(), column))
+        if (getBookshelf().canInsert(items.size(), column) && items.size() <= 3)
             getBookshelf().insert(items, column);
+        updatePersonalScore();
+        updateBookshelfScore();
     }
 
     /**
@@ -134,5 +136,23 @@ public class Player {
      */
     public boolean firstToFinish(){
         return this.endingToken != null;
+    }
+
+    /**
+     * This method return the scoring tokens achieved by the {@code Player}.
+     * @return It returns the scoring tokens, it can return null.
+     */
+    public ScoringToken getScoringToken(int i) {
+        if (i < 0 || i > 1)
+            return null;
+        return scoringToken[i];
+    }
+
+    /**
+     * This method return the ending token achieved by the {@code Player}.
+     * @return It returns the ending token, it can return null.
+     */
+    public ScoringToken getEndingToken() {
+        return endingToken;
     }
 }
