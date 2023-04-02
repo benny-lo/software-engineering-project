@@ -60,6 +60,14 @@ public class Player {
     }
 
     /**
+     * Get the types of the scoring tokens already taken.
+     * @return list containing types of scoring tokens taken by {@code this}.
+     */
+    public List<Integer> cannotTake() {
+        return scoringTokens.stream().map(ScoringToken::getType).toList();
+    }
+
+    /**
      *Insert a list of {@code Item}s in the {@code Bookshelf} of {@code this} in the {@code column}.
      * @param column a {@code column} selected by the Player.
      * @param order the order to give to the items.

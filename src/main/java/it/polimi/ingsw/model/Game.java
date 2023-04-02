@@ -70,12 +70,32 @@ public class Game implements GameInterface {
 
     @Override
     public void selectItemTiles(List<Position> positions){
-        //TODO: take the item tiles and give them to the current player.
+        List<Item> selectedItems = boardManager.selectItemTiles(positions);
+        players.get(currentPlayer).takeItems(selectedItems);
     }
 
     @Override
     public void insertItemTilesInBookshelf(int column, List<Integer> order) {
-        //TODO: insert the items in the column and in the right order.
+        players.get(currentPlayer).insertTiles(column, order);
+        endTurn();
+    }
+
+    /**
+     * Take ending token if bookshelf is full and it is available;
+     * Refill board if needed and bag is non-empty;
+     * Check common goals.
+     */
+    private void endTurn() {
+        if (players.get(currentPlayer).getBookshelf().isFull() && boardManager.isEndingTileToken()) {
+            boardManager.takeEndingToken();
+            players.get(currentPlayer).addEndingToken();
+        }
+
+        boardManager.fill();
+
+        List<ScoringToken> tokens = commonGoalCardManager.check(players.get(currentPlayer).getBookshelf(),
+                                                        players.get(currentPlayer).cannotTake());
+        tokens.forEach((t) -> players.get(currentPlayer).addScoringToken(t));
     }
 
     @Override
