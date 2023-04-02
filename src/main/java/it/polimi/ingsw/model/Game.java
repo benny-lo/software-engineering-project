@@ -59,7 +59,6 @@ public class Game implements GameInterface {
 
     @Override
     public boolean canTakeItemTiles(List<Position> positions){
-        if (positions.size() == 0 || positions.size() > 3) return false;
         if (!boardManager.canTakeItemTilesBoard(positions)) return false;
 
         boolean availableColumn = false;

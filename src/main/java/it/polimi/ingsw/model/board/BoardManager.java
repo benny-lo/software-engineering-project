@@ -23,10 +23,10 @@ public class BoardManager {
     }
 
     /**
-     * This method fills the free squares of the {@code LivingRoom} with {@code Item}s.
+     * This method fills the free squares of the {@code LivingRoom} with {@code Item}s, if needed.
      */
     public void fill() {
-        livingRoom.fill(bag);
+        if (livingRoom.isRefillNeeded()) livingRoom.fill(bag);
     }
 
     /**
@@ -35,23 +35,11 @@ public class BoardManager {
      * @return It returns a boolean, true iff all the {@code Item} can be taken, else false.
      */
     public boolean canTakeItemTilesBoard(List<Position> positions){
+        if (positions.size() == 0 || positions.size() > 3) return false;
         for(Position p: positions){
-            if(!livingRoom.selectable(p) || !isAlone(p)) return false;
+            if(!livingRoom.selectable(p)) return false;
         }
         return horizontalOrVertical(positions);
-    }
-
-    /**
-     * Check if a position of the living room is adjacent to at least another tile in the living room.
-     * @param position the position to check the neighbours of.
-     * @return {@code true} iff the position has no non-empty neighbour.
-     */
-    private boolean isAlone(Position position) {
-        if (livingRoom.selectable(new Position(position.getRow() - 1, position.getColumn()))) return false;
-        if (livingRoom.selectable(new Position(position.getRow() + 1, position.getColumn()))) return false;
-        if (livingRoom.selectable(new Position(position.getRow(), position.getColumn() - 1))) return false;
-        if (livingRoom.selectable(new Position(position.getRow(), position.getColumn() + 1))) return false;
-        return true;
     }
 
     /**

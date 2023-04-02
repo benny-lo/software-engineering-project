@@ -66,11 +66,37 @@ public class LivingRoom {
     public void fill(Bag bag){
         for(int i = 0; i < 9; i++){
             for(int j = 0; j < 9; j++){
+                if (bag.isEmpty()) return;
                 if(grid[i][j] == null){
                     grid[i][j] = bag.extract();
                 }
             }
         }
+    }
+
+    /**
+     * Check if there are only isolated tiles in {@code this}.
+     * @return {@code true} iff only isolated tiles.
+     */
+    public boolean isRefillNeeded() {
+        for(int i = 0; i < 9; i++) {
+            for(int j = 0; j < 9; j++) {
+                if (!isAlone(new Position(i, j))) return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Check if a position has at least a non-empty neighbour.
+     * @param position the position to check on.
+     * @return {@code true} iff {@code position} has a non-empty neighbour.
+     */
+    private boolean isAlone(Position position) {
+        return (position.getRow()+1 < 9 && !isEmpty(position.getRow() + 1, position.getColumn())) ||
+                (position.getRow()-1 > 0 && !isEmpty(position.getRow() - 1, position.getColumn())) ||
+                (position.getColumn()+1 < 9 && !isEmpty(position.getRow(), position.getColumn() + 1)) ||
+                (position.getColumn()-1 > 0 && !isEmpty(position.getRow(), position.getColumn() - 1));
     }
 
     /**
@@ -99,7 +125,8 @@ public class LivingRoom {
      * @param column the column.
      * @return {@code true} iff the content of the square in position ({@code row}, {@code column}) can be selected.
      */
-    public boolean selectable(int row, int column){
+    public boolean selectable(int row, int column) {
+        if ((row < 0 || row >= 9) || (column < 0 || column > 9)) return false;
         if (isEmpty(row, column)) return false;
 
         if (row+1 < 9 && isEmpty(row+1, column)) return true;
