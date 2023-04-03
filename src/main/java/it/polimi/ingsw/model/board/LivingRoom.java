@@ -81,7 +81,7 @@ public class LivingRoom {
     public boolean isRefillNeeded() {
         for(int i = 0; i < 9; i++) {
             for(int j = 0; j < 9; j++) {
-                if (!isAlone(new Position(i, j))) return false;
+                if (!isEmpty(i, j) && !isAlone(new Position(i, j))) return false;
             }
         }
         return true;
@@ -93,10 +93,10 @@ public class LivingRoom {
      * @return {@code true} iff {@code position} has a non-empty neighbour.
      */
     private boolean isAlone(Position position) {
-        return (position.getRow()+1 < 9 && !isEmpty(position.getRow() + 1, position.getColumn())) ||
+        return !((position.getRow()+1 < 9 && !isEmpty(position.getRow() + 1, position.getColumn())) ||
                 (position.getRow()-1 > 0 && !isEmpty(position.getRow() - 1, position.getColumn())) ||
                 (position.getColumn()+1 < 9 && !isEmpty(position.getRow(), position.getColumn() + 1)) ||
-                (position.getColumn()-1 > 0 && !isEmpty(position.getRow(), position.getColumn() - 1));
+                (position.getColumn()-1 > 0 && !isEmpty(position.getRow(), position.getColumn() - 1)));
     }
 
     /**
