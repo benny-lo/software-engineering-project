@@ -15,18 +15,27 @@ public class BoardManager {
 
     /**
      * BoardManager's Constructor: it initializes the {@code Bag} and the {@code LivingRoom}.
+     * @param numberPlayers It's the number of players in the game.
      */
     public BoardManager(int numberPlayers) {
         this.endingToken = true;
         this.bag = new Bag(22);
-        this.livingRoom = new LivingRoom(numberPlayers, bag);
+        this.livingRoom = new LivingRoom(numberPlayers);
+        fill();
     }
 
     /**
      * This method fills the free squares of the {@code LivingRoom} with {@code Item}s, if needed.
      */
-    public void fill() {
-        if (livingRoom.isRefillNeeded()) livingRoom.fill(bag);
+    public void fill(){
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if (bag.isEmpty()) return;
+                if(livingRoom.tileAt(i, j) == null){
+                    livingRoom.setTile(bag.extract(), new Position(i, j));
+                }
+            }
+        }
     }
 
     /**

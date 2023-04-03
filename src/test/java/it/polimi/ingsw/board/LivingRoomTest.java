@@ -16,23 +16,35 @@ import java.util.List;
  */
 
 public class LivingRoomTest {
+    private void fill(Bag bag, LivingRoom livingRoom){
+        for(int i = 0; i < 9; i++){
+            for(int j = 0; j < 9; j++){
+                if (bag.isEmpty()) return;
+                if(livingRoom.tileAt(i, j) == null){
+                    livingRoom.setTile(bag.extract(), new Position(i, j));
+                }
+            }
+        }
+    }
     @Test
     public void constructorTest(){
-        Bag bag= new Bag(22);
-        LivingRoom grid=new LivingRoom(2, bag);
+        LivingRoom grid=new LivingRoom(2);
         grid.printLivingRoom();
         System.out.println("\n");
-        grid=new LivingRoom(3, bag);
+        grid=new LivingRoom(3);
         grid.printLivingRoom();
         System.out.println("\n");
-        grid=new LivingRoom(4, bag);
+        grid=new LivingRoom(4);
         grid.printLivingRoom();
     }
 
+
     @Test
     public void selectableTest(){
+        LivingRoom grid = new LivingRoom(2);
         Bag bag = new Bag(22);
-        LivingRoom grid = new LivingRoom(2, bag);
+        fill(bag, grid);
+
         assertFalse(grid.selectable(0,3));
         assertTrue(grid.selectable(1,3));
         assertTrue(grid.selectable(2,3));
@@ -45,7 +57,7 @@ public class LivingRoomTest {
      */
     @Test
     public void checkRefillOnEmptyLivingRoom() {
-        LivingRoom livingRoom = new LivingRoom(2, new Bag(0));
+        LivingRoom livingRoom = new LivingRoom(2);
         assertTrue(livingRoom.isRefillNeeded());
     }
 
@@ -54,7 +66,8 @@ public class LivingRoomTest {
      */
     @Test
     public void checkRefillOnFullLivingRoom2Players() {
-        LivingRoom livingRoom = new LivingRoom(2, new Bag(22));
+        LivingRoom livingRoom = new LivingRoom(2);
+        fill(new Bag(22), livingRoom);
         assertFalse(livingRoom.isRefillNeeded());
     }
 
@@ -63,8 +76,11 @@ public class LivingRoomTest {
      */
     @Test
     public void testRemovalSingleItem() {
-        LivingRoom livingRoom = new LivingRoom(2, new Bag(22));
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        livingRoom.setTile(Item.CAT, new Position(2, 3));
         assertTrue(livingRoom.selectable(2, 3));
+
         List<Position> positions = new ArrayList<>();
         positions.add(new Position(2, 3));
 

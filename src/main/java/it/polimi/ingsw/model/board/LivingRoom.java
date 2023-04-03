@@ -16,9 +16,8 @@ public class LivingRoom {
     /**
      * Class constructor: it sets the prohibited squares and fills the rest of the squares with items.
      * @param numberPlayers number of players in the game.
-     * @param bag the bag used to extract items.
      */
-    public LivingRoom(int numberPlayers, Bag bag) {
+    public LivingRoom(int numberPlayers) {
         this.grid = new Item[9][9];
 
         for(int i = 0; i < 9; i++) {
@@ -56,22 +55,16 @@ public class LivingRoom {
             grid[7][3] = null;
             grid[8][4] = null;
         }
-        fill(bag);
     }
 
     /**
-     * Fill the free squares of the board with items.
-     * @param bag {@code Bag} object used to extract items from.
+     * This method sets the {@code Item} in an empty position.
+     * @param item Item is placed in the grid.
+     * @param position The coordinates where the {@code Item} is placed.
      */
-    public void fill(Bag bag){
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                if (bag.isEmpty()) return;
-                if(grid[i][j] == null){
-                    grid[i][j] = bag.extract();
-                }
-            }
-        }
+    public void setTile(Item item, Position position){
+        if(grid[position.getRow()][position.getColumn()] == null)
+            grid[position.getRow()][position.getColumn()] = item;
     }
 
     /**

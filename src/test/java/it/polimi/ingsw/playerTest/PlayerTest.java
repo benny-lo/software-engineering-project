@@ -14,12 +14,12 @@ import java.util.*;
 
 
 /**
- * Unit tests of {@code Player}. WIP
+ * Unit tests of {@code Player}.
  */
 
 public class PlayerTest {
     /**
-     * Test {@code Player} constructor.
+     * Test {@code Player}'s constructor.
      */
     @Test
     public void testPlayerConstructor(){
