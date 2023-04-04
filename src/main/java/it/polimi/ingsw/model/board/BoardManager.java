@@ -57,15 +57,22 @@ public class BoardManager {
      * @return {@code true} iff the positions are all in the same row/column.
      */
     private boolean horizontalOrVertical(List<Position> positions) {
-        int x = positions.get(0).getRow();
-        int y = positions.get(0).getColumn();
+        List<Position> sortedPosition = positions.stream().sorted().toList();
 
         boolean horizontal = true, vertical = true;
-        for(Position p : positions) {
-            if (p.getRow() != x) horizontal = false;
-            if (p.getColumn() != y) vertical = false;
+        for(int i = 1; i < sortedPosition.size(); i++) {
+            if (sortedPosition.get(i).getRow() != sortedPosition.get(i-1).getRow() ||
+            sortedPosition.get(i).getColumn() != sortedPosition.get(i-1).getColumn() + 1) {
+                horizontal = false;
+            }
+
+            if (sortedPosition.get(i).getColumn() != sortedPosition.get(i-1).getColumn() ||
+            sortedPosition.get(i).getRow() != sortedPosition.get(i-1).getRow() + 1) {
+                vertical = false;
+            }
         }
-        return horizontal || vertical; 
+
+        return horizontal || vertical;
     }
 
     /**
@@ -87,11 +94,8 @@ public class BoardManager {
 
     /**
      * This method gives the {@code endingToken} to the first player that has filled their {@code Bookshelf}.
-     * @return {@code true} iff the ending token was taken.
      */
-    public boolean takeEndingToken(){
-        boolean res = endingToken;
+    public void takeEndingToken(){
         endingToken = false;
-        return res;
     }
 }
