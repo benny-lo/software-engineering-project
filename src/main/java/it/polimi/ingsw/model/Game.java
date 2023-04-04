@@ -50,6 +50,7 @@ public class Game implements GameInterface {
         this.commonGoalCardManager = new CommonGoalCardManager(numberCommonGoalCards, numberPlayers);
         this.boardManager = new BoardManager(numberPlayers);
         this.distributePersonalCards();
+        this.boardManager.fill();
     }
 
     @Override
@@ -86,7 +87,7 @@ public class Game implements GameInterface {
      * Check common goals.
      */
     private void endTurn() {
-        if (players.get(currentPlayer).getBookshelf().isFull() && boardManager.isEndingTileToken()) {
+        if (players.get(currentPlayer).getBookshelf().isFull() && boardManager.isEndingToken()) {
             boardManager.takeEndingToken();
             players.get(currentPlayer).addEndingToken();
         }

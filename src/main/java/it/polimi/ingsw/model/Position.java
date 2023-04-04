@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.Objects;
 
-public class Position {
+public class Position implements Comparable<Position> {
     private final int row;
     private final int column;
 
@@ -22,14 +22,22 @@ public class Position {
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
-        if (!(obj instanceof Position)) return false;
+        if (!(obj instanceof Position other)) return false;
 
-        Position other = (Position) obj;
         return (row == other.getRow()) && (column == other.getColumn());
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(row, column);
+    }
+
+    @Override
+    public int compareTo(Position other){
+        if (row != other.getRow())
+            return row - other.getRow();
+        else if (column != other.getColumn())
+            return column - other.getColumn();
+        return 0;
     }
 }

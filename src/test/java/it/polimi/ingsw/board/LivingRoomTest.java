@@ -138,7 +138,7 @@ public class LivingRoomTest {
 
 
     /**
-     * Test {@code LivingRoom}'s method {@code selectable} with a series of random tiles.
+     * Test {@code LivingRoom}'s method {@code selectable} with a series of tiles.
      */
     @Test
     public void testSelectable(){

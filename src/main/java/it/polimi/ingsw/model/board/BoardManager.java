@@ -21,18 +21,19 @@ public class BoardManager {
         this.endingToken = true;
         this.bag = new Bag(22);
         this.livingRoom = new LivingRoom(numberPlayers);
-        fill();
     }
 
     /**
      * This method fills the free squares of the {@code LivingRoom} with {@code Item}s, if needed.
      */
     public void fill(){
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
-                if (bag.isEmpty()) return;
-                if(livingRoom.tileAt(i, j) == null){
-                    livingRoom.setTile(bag.extract(), new Position(i, j));
+        if (livingRoom.isRefillNeeded()){
+            for(int i = 0; i < 9; i++){
+                for(int j = 0; j < 9; j++){
+                    if (bag.isEmpty()) return;
+                    if(livingRoom.tileAt(i, j) == null){
+                        livingRoom.setTile(bag.extract(), new Position(i, j));
+                    }
                 }
             }
         }
@@ -88,7 +89,7 @@ public class BoardManager {
      * This method checks if someone has taken the {@code endingToken}.
      * @return It returns a boolean, true iff the {@code endingToken} hasn't been taken yet, else false.
      */
-    public boolean isEndingTileToken(){
+    public boolean isEndingToken(){
         return endingToken;
     }
 
@@ -97,5 +98,13 @@ public class BoardManager {
      */
     public void takeEndingToken(){
         endingToken = false;
+    }
+
+    /**
+     * This method gives the {@code livingRoom}.
+     * @return It returns the {@code livingRoom}.
+     */
+    public LivingRoom getLivingRoom() {
+        return livingRoom;
     }
 }
