@@ -26,17 +26,6 @@ public class LivingRoomTest {
             }
         }
     }
-/*    @Test
-    public void constructorTest(){
-        LivingRoom grid=new LivingRoom(2);
-        grid.printLivingRoom();
-        System.out.println("\n");
-        grid=new LivingRoom(3);
-        grid.printLivingRoom();
-        System.out.println("\n");
-        grid=new LivingRoom(4);
-        grid.printLivingRoom();
-    } */
 
     /**
      * Test {@code LivingRoom}'s method {@code setTile}, setting an {@code Item} on a null tile.
@@ -148,6 +137,9 @@ public class LivingRoomTest {
     }
 
 
+    /**
+     * Test {@code LivingRoom}'s method {@code selectable} with a series of random tiles.
+     */
     @Test
     public void testSelectable(){
         LivingRoom grid = new LivingRoom(2);
@@ -194,14 +186,51 @@ public class LivingRoomTest {
     }
 
     /**
-     * Test {@code LivingRoom}'s method {@code selectable} on an {@code Item} without free sides.
+     *Test {@code LivingRoom}'s method {@code selectable} with an {@code Item} with a free side.
      */
     @Test
-    public void testSelectableOnItemWithAFreeSide(){
+    public void testSelectableItemWithAFreeSide(){
         LivingRoom livingRoom = new LivingRoom(2);
         Bag bag = new Bag(22);
         fill(bag, livingRoom);
 
         assertTrue(livingRoom.selectable(2, 3));
+    }
+
+    /**
+     *Test {@code LivingRoom}'s method {@code selectable} with an {@code Item} with 2 free sides.
+     */
+    @Test
+    public void testSelectableItemWith2FreeSides(){
+        LivingRoom livingRoom = new LivingRoom(2);
+        Bag bag = new Bag(22);
+        fill(bag, livingRoom);
+
+        assertTrue(livingRoom.selectable(1, 4));
+    }
+
+    /**
+     *Test {@code LivingRoom}'s method {@code selectable} with an {@code Item} with 3 free sides.
+     */
+    @Test
+    public void testSelectableItemWith3FreeSides(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        livingRoom.setTile(Item.CAT, new Position(1, 4));
+        livingRoom.setTile(Item.CAT, new Position(2, 4));
+
+        assertTrue(livingRoom.selectable(1, 4));
+    }
+
+    /**
+     *Test {@code LivingRoom}'s method {@code selectable} with an {@code Item} with 4 free sides.
+     */
+    @Test
+    public void testSelectableItemWith4FreeSides(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        livingRoom.setTile(Item.CAT, new Position(2, 5));
+
+        assertTrue(livingRoom.selectable(2, 5));
     }
 }
