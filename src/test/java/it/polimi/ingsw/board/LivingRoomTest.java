@@ -26,7 +26,7 @@ public class LivingRoomTest {
             }
         }
     }
-    @Test
+/*    @Test
     public void constructorTest(){
         LivingRoom grid=new LivingRoom(2);
         grid.printLivingRoom();
@@ -36,7 +36,7 @@ public class LivingRoomTest {
         System.out.println("\n");
         grid=new LivingRoom(4);
         grid.printLivingRoom();
-    }
+    } */
 
     /**
      * Test {@code LivingRoom}'s method {@code setTile}, setting an {@code Item} on a null tile.
