@@ -38,18 +38,42 @@ public class LivingRoomTest {
         grid.printLivingRoom();
     }
 
-
+    /**
+     * Test {@code LivingRoom}'s method {@code setTile}, setting an {@code Item} on a null tile.
+     */
     @Test
-    public void selectableTest(){
-        LivingRoom grid = new LivingRoom(2);
-        Bag bag = new Bag(22);
-        fill(bag, grid);
+    public void testSetTileOnNull(){
+        LivingRoom livingRoom = new LivingRoom(2);
 
-        assertFalse(grid.selectable(0,3));
-        assertTrue(grid.selectable(1,3));
-        assertTrue(grid.selectable(2,3));
-        assertFalse(grid.selectable(3,3));
-        assertFalse(grid.selectable(4,3));
+        livingRoom.setTile(Item.CAT, new Position(5, 5));
+        assertEquals(Item.CAT, livingRoom.tileAt(5, 5));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code setTile}, setting an {@code Item} on an occupied tile.
+     */
+    @Test
+    public void testSetTileOnAnOccupiedTile(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        livingRoom.setTile(Item.CAT, new Position(5, 5));
+        assertEquals(Item.CAT, livingRoom.tileAt(5, 5));
+
+        livingRoom.setTile(Item.BOOK, new Position(5, 5));
+        assertEquals(Item.CAT, livingRoom.tileAt(5, 5));
+        assertNotEquals(Item.BOOK, livingRoom.tileAt(5, 5));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code setTile}, setting an {@code Item} on a locked tile.
+     */
+    @Test
+    public void testSetTileOnAnLockedTile(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        livingRoom.setTile(Item.CAT, new Position(0, 0));
+        assertEquals(Item.LOCKED, livingRoom.tileAt(0, 0));
+        assertNotEquals(Item.CAT, livingRoom.tileAt(5, 5));
     }
 
     /**
@@ -72,6 +96,40 @@ public class LivingRoomTest {
     }
 
     /**
+     * Test {@code LivingRoom}'s method {@code tileAt} on a locked {@code Item}.
+     */
+    @Test
+    public void testTileAtOnLockedTile(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        assertEquals(Item.LOCKED, livingRoom.tileAt(0,0));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code tileAt} on null.
+     */
+    @Test
+    public void testTileAtOnNull(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        assertNull(livingRoom.tileAt(5,5));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code tileAt} on an occupied tile with an {@code Item}.
+     */
+    @Test
+    public void testTileAtOnOccupiedTile(){
+        LivingRoom livingRoom = new LivingRoom(2);
+        Bag bag = new Bag(22);
+        fill(bag, livingRoom);
+
+        assertNotEquals(Item.LOCKED, livingRoom.tileAt(5,5));
+        assertNotNull(livingRoom.tileAt(5,5));
+    }
+
+
+    /**
      * Test removal of an item from living room.
      */
     @Test
@@ -87,5 +145,63 @@ public class LivingRoomTest {
         Item item = livingRoom.tileAt(2, 3);
         assertEquals(livingRoom.selectTiles(positions), List.of(item));
         assertNull(livingRoom.tileAt(2, 3));
+    }
+
+
+    @Test
+    public void testSelectable(){
+        LivingRoom grid = new LivingRoom(2);
+        Bag bag = new Bag(22);
+        fill(bag, grid);
+
+        assertFalse(grid.selectable(0,3));
+        assertTrue(grid.selectable(1,3));
+        assertTrue(grid.selectable(2,3));
+        assertFalse(grid.selectable(3,3));
+        assertFalse(grid.selectable(4,3));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code selectable} on null.
+     */
+    @Test
+    public void testSelectableOnNull(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        assertFalse(livingRoom.selectable(5, 5));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code selectable} on a locked {@code Item}.
+     */
+    @Test
+    public void testSelectableOnLockedTile(){
+        LivingRoom livingRoom = new LivingRoom(2);
+
+        assertFalse(livingRoom.selectable(0, 0));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code selectable} on an {@code Item} without free sides.
+     */
+    @Test
+    public void testSelectableOnItemWithoutFreeSides(){
+        LivingRoom livingRoom = new LivingRoom(2);
+        Bag bag = new Bag(22);
+        fill(bag, livingRoom);
+
+        assertFalse(livingRoom.selectable(5, 5));
+    }
+
+    /**
+     * Test {@code LivingRoom}'s method {@code selectable} on an {@code Item} without free sides.
+     */
+    @Test
+    public void testSelectableOnItemWithAFreeSide(){
+        LivingRoom livingRoom = new LivingRoom(2);
+        Bag bag = new Bag(22);
+        fill(bag, livingRoom);
+
+        assertTrue(livingRoom.selectable(2, 3));
     }
 }
