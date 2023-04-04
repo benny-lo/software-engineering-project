@@ -51,7 +51,6 @@ public class CommonGoalCardManager {
         patterns.add(new CommonGoalPatternDistinctItems(4, true, 1, 3));
         patterns.add(new CommonGoalPattern8());
         patterns.add(new CommonGoalPattern9());
-        patterns.add(new CommonGoalPattern9());
         patterns.add(new CommonGoalPattern10());
         patterns.add(new CommonGoalPattern11());
         patterns.add(new CommonGoalPattern12());
