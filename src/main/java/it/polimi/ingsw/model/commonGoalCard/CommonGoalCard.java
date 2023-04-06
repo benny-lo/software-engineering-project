@@ -1,6 +1,7 @@
-package it.polimi.ingsw.model.board.commonGoalCard;
+package it.polimi.ingsw.model.commonGoalCard;
 
 import it.polimi.ingsw.model.ScoringToken;
+import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 
 import java.util.Stack;

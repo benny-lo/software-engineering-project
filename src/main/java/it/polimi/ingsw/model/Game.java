@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.board.BoardManager;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalCardManager;
+import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 
 import java.util.HashMap;

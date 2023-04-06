@@ -1,8 +1,8 @@
-package it.polimi.ingsw.board.commonGoalCardTest;
+package it.polimi.ingsw.commonGoalCardTest.commonGoalPatternTest;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPattern9;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternInterface;
+import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPattern9;
+import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 

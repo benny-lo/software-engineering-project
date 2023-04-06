@@ -1,4 +1,4 @@
-package it.polimi.ingsw.board;
+package it.polimi.ingsw.boardTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,10 +1,10 @@
-package it.polimi.ingsw.board.commonGoalCardTest;
+package it.polimi.ingsw.commonGoalCardTest.commonGoalPatternTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternDistinctItems;
-import it.polimi.ingsw.model.board.commonGoalCard.CommonGoalPatternInterface;
+import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternDistinctItems;
+import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 

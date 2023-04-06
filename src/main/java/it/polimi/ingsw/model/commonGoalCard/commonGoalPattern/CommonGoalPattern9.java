@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.board.commonGoalCard;
+package it.polimi.ingsw.model.commonGoalCard.commonGoalPattern;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.player.Bookshelf;
@@ -20,8 +20,8 @@ public class CommonGoalPattern9 implements CommonGoalPatternInterface {
                 }
             }
         }
-        for(int i = 0; i < counter.length; i++){
-            if(counter[i] >= MINIMUM) return true;
+        for (int j : counter) {
+            if (j >= MINIMUM) return true;
         }
         return false;
     }
