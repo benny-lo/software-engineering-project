@@ -16,7 +16,7 @@ public class CommonGoalCard {
     private final CommonGoalPatternInterface pattern;
 
     /**
-     * tokens that players can take from {@code this}.
+     * Tokens that players can take from {@code this}.
      */
     private final Stack<ScoringToken> tokens;
 
@@ -32,7 +32,7 @@ public class CommonGoalCard {
             for(int i = 1; i <= 4; i++) tokens.push(new ScoringToken(2*i, id));
         } else if (numPlayers == 3) {
             for(int i = 2; i <= 4; i++) tokens.push(new ScoringToken(2*i, id));
-        } else {
+        } else if (numPlayers == 2) {
             for(int i = 1; i <= 2; i++) tokens.push(new ScoringToken(4*i, id));
         }
     }

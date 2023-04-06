@@ -5,9 +5,7 @@ import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.*;
 import it.polimi.ingsw.model.player.Bookshelf;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CommonGoalCardManager {
     /**
@@ -29,36 +27,67 @@ public class CommonGoalCardManager {
     }
 
     /**
+     * Class constructor exclusively used for testing: it initializes the common goal cards of the game.
+     * @param numPlayers number of players in the game.
+     * @param test Test.
+     */
+    public CommonGoalCardManager(int numPlayers, String test) {
+        cards = new ArrayList<>();
+        cards.add(new CommonGoalCard(0, numPlayers, new CommonGoalPattern8()));
+        cards.add(new CommonGoalCard(1, numPlayers, new CommonGoalPattern9()));
+    }
+
+    /**
      * Choose the common goals of the game.
      * @param numCommonGoalCards the number of common goal cards.
      * @return list containing all common goals of the game.
      */
     private List<CommonGoalPatternInterface> randomCommonGoals(int numCommonGoalCards) {
-        List<CommonGoalPatternInterface> patterns = new ArrayList<>();
-        patterns.add(new CommonGoalPatternCountGroups(4, 4, (s) -> {
-            if (s.size() != 4) return false;
-            List<Position> l = s.stream().sorted((p1, p2) -> (p1.getRow() != p2.getRow()) ? p1.getRow() - p2.getRow() : p1.getColumn() - p2.getColumn()).toList();
-            Position firstPos = l.get(0);
-            if (l.get(1).getRow() != firstPos.getRow() || l.get(1).getColumn() != firstPos.getColumn() + 1) return false;
-            if (l.get(2).getRow() != firstPos.getRow() + 1 || l.get(2).getColumn() != firstPos.getColumn()) return false;
-            if (l.get(3).getRow() != firstPos.getRow() + 1 || l.get(3).getColumn() != firstPos.getColumn() + 1) return false;
-            return true;
-        }));
-        patterns.add(new CommonGoalPatternDistinctItems(2, false, 6, 6));
-        patterns.add(new CommonGoalPatternCountGroups(4, 4, (s) -> s.size() == 4));
-        patterns.add(new CommonGoalPatternCountGroups(2, 6, (s) -> s.size() == 2));
-        patterns.add(new CommonGoalPatternDistinctItems(3, false, 1, 3));
-        patterns.add(new CommonGoalPatternDistinctItems(2, true, 5, 5));
-        patterns.add(new CommonGoalPatternDistinctItems(4, true, 1, 3));
-        patterns.add(new CommonGoalPattern8());
-        patterns.add(new CommonGoalPattern9());
-        patterns.add(new CommonGoalPattern10());
-        patterns.add(new CommonGoalPattern11());
-        patterns.add(new CommonGoalPattern12());
+        List<CommonGoalPatternInterface> pattern = new ArrayList<>();
+        List<Integer> numberPattern = new ArrayList<>();
+        Random random = new Random();
 
-        Collections.shuffle(patterns);
+        numberPattern.add(random.nextInt(12));
+        if (numCommonGoalCards == 2)
+            numberPattern.add(random.nextInt(12));
 
-        return patterns.stream().limit(numCommonGoalCards).toList();
+        for(Integer i : numberPattern) {
+            if (i == 0)
+                pattern.add(new CommonGoalPatternCountGroups(4, 4, (s) -> {
+                    if (s.size() != 4) return false;
+                    List<Position> l = s.stream().sorted((p1, p2) -> (p1.getRow() != p2.getRow()) ? p1.getRow() - p2.getRow() : p1.getColumn() - p2.getColumn()).toList();
+                    Position firstPos = l.get(0);
+                    if (l.get(1).getRow() != firstPos.getRow() || l.get(1).getColumn() != firstPos.getColumn() + 1)
+                        return false;
+                    if (l.get(2).getRow() != firstPos.getRow() + 1 || l.get(2).getColumn() != firstPos.getColumn())
+                        return false;
+                    return l.get(3).getRow() == firstPos.getRow() + 1 && l.get(3).getColumn() == firstPos.getColumn() + 1;
+                }));
+            if (i == 1)
+                pattern.add(new CommonGoalPatternDistinctItems(2, false, 6, 6));
+            if (i == 2)
+                pattern.add(new CommonGoalPatternCountGroups(4, 4, (s) -> s.size() == 4));
+            if (i == 3)
+                pattern.add(new CommonGoalPatternCountGroups(2, 6, (s) -> s.size() == 2));
+            if (i == 4)
+                pattern.add(new CommonGoalPatternDistinctItems(3, false, 1, 3));
+            if (i == 5)
+                pattern.add(new CommonGoalPatternDistinctItems(2, true, 5, 5));
+            if (i == 6)
+                pattern.add(new CommonGoalPatternDistinctItems(4, true, 1, 3));
+            if (i == 7)
+                pattern.add(new CommonGoalPattern8());
+            if (i == 8)
+                pattern.add(new CommonGoalPattern9());
+            if (i == 9)
+                pattern.add(new CommonGoalPattern10());
+            if (i == 10)
+                pattern.add(new CommonGoalPattern11());
+            if (i == 11)
+                pattern.add(new CommonGoalPattern12());
+        }
+
+        return pattern;
     }
 
     /**
