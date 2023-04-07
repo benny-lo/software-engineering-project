@@ -262,4 +262,14 @@ public class PlayerTest {
 
         assertEquals(player.cannotTake(), List.of(0, 1));
     }
+
+    /**
+     * Test {@code Player}'s method {@code firstToFinish}, when the {@code Player} doesn't have an ending token.
+     */
+    @Test
+    public void testFirstToFinishWithoutEndingToken(){
+        Player player = new Player();
+
+        assertFalse(player.firstToFinish());
+    }
 }

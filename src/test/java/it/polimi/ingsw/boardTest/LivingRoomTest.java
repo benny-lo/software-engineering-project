@@ -16,15 +16,25 @@ import java.util.List;
  */
 
 public class LivingRoomTest {
-    private void fill(Bag bag, LivingRoom livingRoom){
-        for(int i = 0; i < 9; i++){
-            for(int j = 0; j < 9; j++){
+    private void fill(Bag bag, LivingRoom livingRoom) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 9; j++) {
                 if (bag.isEmpty()) return;
-                if(livingRoom.tileAt(i, j) == null){
+                if (livingRoom.tileAt(i, j) == null) {
                     livingRoom.setTile(bag.extract(), new Position(i, j));
                 }
             }
         }
+    }
+
+    /**
+     * Test {@code LivingRoom}'s constructor, it is not null.
+     */
+    @Test
+    public void testLivingRoomConstructor(){
+        LivingRoom livingRoom = new LivingRoom(4);
+
+        assertNotNull(livingRoom);
     }
 
     /**
