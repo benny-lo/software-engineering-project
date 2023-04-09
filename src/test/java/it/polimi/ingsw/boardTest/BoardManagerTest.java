@@ -39,7 +39,7 @@ public class BoardManagerTest {
     }
 
     /**
-     *  Test {@code BoardManager}'s method {@code fill} on an locked {@code Item}.
+     *  Test {@code BoardManager}'s method {@code fill} on a locked {@code Item}.
      */
     @Test
     public void testFillOnLockedTile(){

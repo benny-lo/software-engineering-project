@@ -1,0 +1,33 @@
+{
+  "rows" : 9,
+  "columns" : 9,
+  "grid" : [
+    [
+      "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED"
+    ],
+    [
+      "LOCKED", "LOCKED", "LOCKED", null, null, "LOCKED", "LOCKED", "LOCKED", "LOCKED"
+    ],
+    [
+      "LOCKED", "LOCKED", "LOCKED", null, null, null, "LOCKED", "LOCKED", "LOCKED"
+    ],
+    [
+      "LOCKED", "LOCKED", null, null, null, null, null, null, "LOCKED"
+    ],
+    [
+      "LOCKED", null, null, null, null, null, null, null, "LOCKED"
+    ],
+    [
+      "LOCKED", null, null, null, null, null, null, "LOCKED", "LOCKED"
+    ],
+    [
+      "LOCKED", "LOCKED", "LOCKED", null, null, null, "LOCKED", "LOCKED", "LOCKED"
+    ],
+    [
+      "LOCKED", "LOCKED", "LOCKED", "LOCKED", null, null, "LOCKED", "LOCKED", "LOCKED"
+    ],
+    [
+      "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED", "LOCKED"
+    ]
+  ]
+}

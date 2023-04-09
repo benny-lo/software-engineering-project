@@ -1,8 +1,12 @@
 package it.polimi.ingsw.model.board;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.List;
 
 /**
@@ -20,7 +24,26 @@ public class BoardManager {
     public BoardManager(int numberPlayers) {
         this.endingToken = true;
         this.bag = new Bag(22);
-        this.livingRoom = new LivingRoom(numberPlayers);
+
+        Gson gson = new GsonBuilder().serializeNulls()
+                .disableJdkUnsafe()
+                .create();
+
+        String filename = "configuration/livingRoom/living_room_" + numberPlayers + ".json";
+
+        LivingRoom tmp;
+        try {
+            FileReader reader = new FileReader(filename);
+            tmp = gson.fromJson(reader, LivingRoom.class);
+        } catch(FileNotFoundException e) {
+            tmp = null;
+            System.err.println("""
+                    Configuration file for livingRoom not found.
+                    The configuration file should be in configuration/livingRoom
+                    with name living_room_{numberPlayers}""");
+        }
+
+        this.livingRoom = tmp;
     }
 
     /**
@@ -28,8 +51,8 @@ public class BoardManager {
      */
     public void fill(){
         if (livingRoom.isRefillNeeded()){
-            for(int i = 0; i < 9; i++){
-                for(int j = 0; j < 9; j++){
+            for(int i = 0; i < livingRoom.getRows(); i++){
+                for(int j = 0; j < livingRoom.getColumns(); j++){
                     if (bag.isEmpty()) return;
                     if(livingRoom.tileAt(i, j) == null){
                         livingRoom.setTile(bag.extract(), new Position(i, j));

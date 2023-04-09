@@ -11,6 +11,8 @@ import java.util.List;
  * The unavailable squares are filled with {@code Item.LOCKED}.
  */
 public class LivingRoom {
+    private final int rows;
+    private final int columns;
     private final Item[][] grid;
 
     /**
@@ -18,6 +20,8 @@ public class LivingRoom {
      * @param numberPlayers number of players in the game.
      */
     public LivingRoom(int numberPlayers) {
+        this.rows = 9;
+        this.columns = 9;
         this.grid = new Item[9][9];
 
         for(int i = 0; i < 9; i++) {
@@ -57,6 +61,28 @@ public class LivingRoom {
         }
     }
 
+    public LivingRoom() {
+        this.rows = 0;
+        this.columns = 0;
+        this.grid = new Item[0][0];
+    }
+
+    /**
+     * Getter for rows.
+     * @return private field rows.
+     */
+    public int getRows() {
+        return rows;
+    }
+
+    /**
+     * Getter for columns.
+     * @return private field columns.
+     */
+    public int getColumns() {
+        return columns;
+    }
+
     /**
      * This method sets the {@code Item} in an empty position.
      * @param item Item is placed in the grid.
@@ -72,8 +98,8 @@ public class LivingRoom {
      * @return {@code true} iff only isolated tiles.
      */
     public boolean isRefillNeeded() {
-        for(int i = 0; i < 9; i++) {
-            for(int j = 0; j < 9; j++) {
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
                 if (!isEmpty(i, j) && !isAlone(new Position(i, j))) return false;
             }
         }
@@ -86,9 +112,9 @@ public class LivingRoom {
      * @return {@code true} iff {@code position} has a non-empty neighbour.
      */
     private boolean isAlone(Position position) {
-        return !((position.getRow()+1 < 9 && !isEmpty(position.getRow() + 1, position.getColumn())) ||
+        return !((position.getRow()+1 < rows && !isEmpty(position.getRow() + 1, position.getColumn())) ||
                 (position.getRow()-1 > 0 && !isEmpty(position.getRow() - 1, position.getColumn())) ||
-                (position.getColumn()+1 < 9 && !isEmpty(position.getRow(), position.getColumn() + 1)) ||
+                (position.getColumn()+1 < columns && !isEmpty(position.getRow(), position.getColumn() + 1)) ||
                 (position.getColumn()-1 > 0 && !isEmpty(position.getRow(), position.getColumn() - 1)));
     }
 
@@ -119,12 +145,12 @@ public class LivingRoom {
      * @return {@code true} iff the content of the square in position ({@code row}, {@code column}) can be selected.
      */
     public boolean selectable(int row, int column) {
-        if ((row < 0 || row >= 9) || (column < 0 || column > 9)) return false;
+        if ((row < 0 || row >= rows) || (column < 0 || column > columns)) return false;
         if (isEmpty(row, column)) return false;
 
-        if (row+1 < 9 && isEmpty(row+1, column)) return true;
+        if (row+1 < rows && isEmpty(row+1, column)) return true;
         if (row > 0 && isEmpty(row-1, column)) return true;
-        if (column+1 < 9 && isEmpty(row, column+1)) return true;
+        if (column+1 < columns && isEmpty(row, column+1)) return true;
         return column > 0 && isEmpty(row, column - 1);
     }
 
