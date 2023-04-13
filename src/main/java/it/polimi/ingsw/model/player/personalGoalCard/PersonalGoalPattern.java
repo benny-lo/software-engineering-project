@@ -23,6 +23,10 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
         this.maskPositions = maskPositions;
     }
 
+    public PersonalGoalPattern(){
+        maskPositions = new HashMap<>();
+    }
+
     @Override
     public int check(Bookshelf bookshelf) {
         int matches = 0;

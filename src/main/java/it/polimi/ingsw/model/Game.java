@@ -1,12 +1,17 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.board.BoardManager;
 import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
+import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
+import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.*;
 
 /**
  * Class representing the Game.
@@ -35,8 +40,45 @@ public class Game implements GameInterface {
     /**
      * This private method creates a {@code PersonalGoalCard} for each {@code Player}.
      */
-    private void distributePersonalCards() {
-        // TODO: distribute the personal goal cards to the players.
+    private void distributePersonalCards(){
+        Random random = new Random();
+        Gson gson = new GsonBuilder().serializeNulls()
+                .setPrettyPrinting()
+                .disableJdkUnsafe()
+                .enableComplexMapKeySerialization()
+                .create();
+        List<Integer> alreadyTaken = new ArrayList<>();
+        int selected = -1;
+        String filename;
+        FileReader reader;
+        PersonalGoalPattern personalGoalPattern ;
+        PersonalGoalCard personalGoalCard;
+
+
+        for(String name : players.keySet()){
+            while (selected == -1 || alreadyTaken.contains(selected)){
+                selected = random.nextInt(12);
+            }
+
+            alreadyTaken.add(selected);
+
+            filename = "configuration/personalGoalCards/personal_goal_card_" + selected + ".json";
+
+            try {
+                reader = new FileReader(filename);
+                 personalGoalPattern = gson.fromJson(reader,new TypeToken<PersonalGoalPattern>(){}.getType());
+            } catch(FileNotFoundException e){
+                personalGoalPattern = null;
+                System.err.println("""
+                    Configuration file for personalGoalCard not found.
+                    The configuration file should be in configuration/personalGoalCard
+                    with name personal_goal_card_{selected}""");
+            }
+
+            personalGoalCard = new PersonalGoalCard(personalGoalPattern);
+
+            players.get(name).setPersonalGoalCard(personalGoalCard);
+        }
     }
 
     @Override
@@ -47,6 +89,8 @@ public class Game implements GameInterface {
 
     @Override
     public void setup(){
+        if (numberPlayers < 2 || numberPlayers > 4)
+            return;
         this.commonGoalCardManager = new CommonGoalCardManager(numberCommonGoalCards, numberPlayers);
         this.boardManager = new BoardManager(numberPlayers);
         this.distributePersonalCards();
@@ -95,7 +139,7 @@ public class Game implements GameInterface {
         boardManager.fill();
 
         List<ScoringToken> tokens = commonGoalCardManager.check(players.get(currentPlayer).getBookshelf(),
-                                                        players.get(currentPlayer).cannotTake());
+                players.get(currentPlayer).cannotTake());
         tokens.forEach((t) -> players.get(currentPlayer).addScoringToken(t));
     }
 
@@ -139,5 +183,21 @@ public class Game implements GameInterface {
     @Override
     public String getCurrentPlayer() {
         return currentPlayer;
+    }
+
+    public int getNumberPlayers() {
+        return numberPlayers;
+    }
+
+    public Map<String, Player> getPlayers() {
+        return players;
+    }
+
+    public BoardManager getBoardManager() {
+        return boardManager;
+    }
+
+    public CommonGoalCardManager getCommonGoalCardManager() {
+        return commonGoalCardManager;
     }
 }

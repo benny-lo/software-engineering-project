@@ -1,0 +1,46 @@
+{
+  "maskPositions" : [
+    [
+      {
+        "row": 3,
+        "column": 2
+      },
+      "GAME"
+    ],
+    [
+      {
+        "row": 1,
+        "column": 3
+      },
+      "CUP"
+    ],
+    [
+      {
+        "row": 2,
+        "column": 4
+      },
+      "BOOK"
+    ],
+    [
+      {
+        "row": 0,
+        "column": 4
+      },
+      "FRAME"
+    ],
+    [
+      {
+        "row": 3,
+        "column": 0
+      },
+      "CAT"
+    ],
+    [
+      {
+        "row": 4,
+        "column": 1
+      },
+      "PLANT"
+    ]
+  ]
+}

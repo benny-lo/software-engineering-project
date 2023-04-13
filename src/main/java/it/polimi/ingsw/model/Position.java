@@ -11,6 +11,11 @@ public class Position implements Comparable<Position> {
         this.column = column;
     }
 
+    public Position(){
+        row = -1;
+        column = -1;
+    }
+
     public int getRow() {
         return this.row;
     }
