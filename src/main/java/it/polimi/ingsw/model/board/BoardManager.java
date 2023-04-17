@@ -36,7 +36,7 @@ public class BoardManager {
             FileReader reader = new FileReader(filename);
             tmp = gson.fromJson(reader, LivingRoom.class);
         } catch(FileNotFoundException e) {
-            tmp = null;
+            tmp = new LivingRoom();
             System.err.println("""
                     Configuration file for livingRoom not found.
                     The configuration file should be in configuration/livingRoom

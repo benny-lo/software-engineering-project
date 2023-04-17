@@ -72,6 +72,27 @@ public class Player {
     }
 
     /**
+     * Check if {@code this} can insert the items it owns in {@code column} and in {@code order}.
+     * @param column the column of the bookshelf to insert into.
+     * @param order the permutation representing the order.
+     * @return {@code true} iff the move is valid.
+     */
+    public boolean canInsertTiles(int column, List<Integer> order) {
+        if (itemsTakenFromLivingRoom == null) return false;
+
+        if (!bookshelf.canInsert(itemsTakenFromLivingRoom.size(), column)) return false;
+        if (order.size() != itemsTakenFromLivingRoom.size()) return false;
+
+        Set<Integer> s = new HashSet<>();
+        for(Integer i : order) {
+            if (i < 0 || i >= order.size()) return false;
+            s.add(i);
+        }
+
+        return itemsTakenFromLivingRoom.size() == s.size();
+    }
+
+    /**
      * Insert a list of {@code Item}s in the {@code Bookshelf} of {@code this} in the {@code column}.
      *
      * @param column a {@code column} selected by the Player.
@@ -82,8 +103,8 @@ public class Player {
         for (Integer integer : order) {
             permutedItems.add(itemsTakenFromLivingRoom.get(integer));
         }
-        if (getBookshelf().canInsert(order.size(), column))
-            getBookshelf().insert(permutedItems, column);
+
+        getBookshelf().insert(permutedItems, column);
         itemsTakenFromLivingRoom = null;
     }
 

@@ -19,6 +19,12 @@ public interface GameInterface {
     void setup();
 
     /**
+     * Getter for the number of players.
+     * @return the number of players of {@code this}.
+     */
+    int getNumberPlayers();
+
+    /**
      * It sets the {@code currentPlayer}.
      * @param nickname {@code nickname} is the {@code currentPlayer}'s name.
      */
@@ -36,6 +42,14 @@ public interface GameInterface {
      * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
      */
     void selectItemTiles(List<Position> positions);
+
+    /**
+     * Check if we can insert the chosen elements in {@code column} and in the given {@code order}.
+     * @param column the column of the bookshelf.
+     * @param order a permutation representing the order to insert the elements in.
+     * @return {@code true} iff the move is valid.
+     */
+    boolean canInsertItemTilesInBookshelf(int column, List<Integer> order);
 
     /**
      * This method inserts the items selected by the current player in its bookshelf.

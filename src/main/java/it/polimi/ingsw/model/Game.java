@@ -120,6 +120,11 @@ public class Game implements GameInterface {
     }
 
     @Override
+    public boolean canInsertItemTilesInBookshelf(int column, List<Integer> order) {
+        return players.get(currentPlayer).canInsertTiles(column, order);
+    }
+
+    @Override
     public void insertItemTilesInBookshelf(int column, List<Integer> order) {
         players.get(currentPlayer).insertTiles(column, order);
         endTurn();
@@ -185,6 +190,7 @@ public class Game implements GameInterface {
         return currentPlayer;
     }
 
+    @Override
     public int getNumberPlayers() {
         return numberPlayers;
     }
