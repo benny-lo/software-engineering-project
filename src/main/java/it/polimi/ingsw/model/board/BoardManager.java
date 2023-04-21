@@ -29,7 +29,7 @@ public class BoardManager {
                 .disableJdkUnsafe()
                 .create();
 
-        String filename = "configuration/livingRoom/living_room_" + numberPlayers + ".json";
+        String filename = "src/main/resources/configuration/livingRoom/living_room_" + numberPlayers + ".json";
 
         LivingRoom tmp;
         try {

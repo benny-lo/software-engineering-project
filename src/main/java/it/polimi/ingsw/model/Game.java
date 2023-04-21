@@ -62,7 +62,7 @@ public class Game implements GameInterface {
 
             alreadyTaken.add(selected);
 
-            filename = "configuration/personalGoalCards/personal_goal_card_" + selected + ".json";
+            filename = "src/main/resources/configuration/personalGoalCards/personal_goal_card_" + selected + ".json";
 
             try {
                 reader = new FileReader(filename);
