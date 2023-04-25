@@ -16,7 +16,8 @@ public class Controller implements ActionListener {
     /**
      * The maximum number of players that can join the game.
      */
-    private final int maxNumberPlayers;
+    private final int numberPlayers;
+    private final int numberCommonGoalCards;
 
     /**
      * Nickname of the first player. If game has not started yet, it is null.
@@ -35,9 +36,10 @@ public class Controller implements ActionListener {
      */
     private TurnPhase turnPhase;
 
-    public Controller(int maxNumberPlayers, int numberCommonGoalCards) {
+    public Controller(int NumberPlayers, int numberCommonGoalCards) {
+        this.numberCommonGoalCards = numberCommonGoalCards;
         this.game = new Game(numberCommonGoalCards);
-        this.maxNumberPlayers = maxNumberPlayers;
+        this.numberPlayers = NumberPlayers;
         this.firstPlayer = null;
         this.playerQueue = new ArrayDeque<>();
         this.views = new HashMap<>();
@@ -84,7 +86,7 @@ public class Controller implements ActionListener {
         game.addPlayer(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
 
-        if (game.getNumberPlayers() == this.maxNumberPlayers) {
+        if (game.getNumberPlayers() == this.numberPlayers) {
             setupGame();
         }
     }
@@ -137,6 +139,14 @@ public class Controller implements ActionListener {
         game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
 
         nextTurn();
+    }
+
+    public int getNumberPlayers() {
+        return numberPlayers;
+    }
+
+    public int getNumberCommonGoalCards() {
+        return numberCommonGoalCards;
     }
 }
 
