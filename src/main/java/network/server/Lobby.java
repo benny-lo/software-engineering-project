@@ -18,7 +18,8 @@ public class Lobby {
     /**
      * List of virtual views, representing all players connected either waiting for a game or in game.
      */
-    private List<VirtualView> views;
+    private final List<VirtualView> views;
+    private int gameId;
 
     public Lobby() {
         controllers = new HashMap<>();
@@ -33,7 +34,24 @@ public class Lobby {
         return ret;
     }
 
+    public void addController(int numberPlayers, int numberCommonGoalCards){
+        controllers.put(gameId, new Controller(numberPlayers, numberCommonGoalCards));
+        gameId++;
+    }
+
     public void addVirtualView(VirtualView view) {
         views.add(view);
+    }
+
+    public Map<Integer, Controller> getControllers() {
+        return controllers;
+    }
+
+    public List<VirtualView> getViews() {
+        return views;
+    }
+
+    public int getGameId() {
+        return gameId;
     }
 }

@@ -22,13 +22,14 @@ public class Controller implements ActionListener {
     /**
      * Nickname of the first player. If game has not started yet, it is null.
      */
-    private final String firstPlayer;
+    private String firstPlayer;
 
     /**
      * Queue containing the players, the first one is the current player.
      */
     private Queue<String> playerQueue;
     private final Map<String, VirtualView> views;
+    private boolean firstTime;
 
     /**
      * Current turn phase: either selection from living room or selection of column in the bookshelf.
@@ -36,14 +37,15 @@ public class Controller implements ActionListener {
      */
     private TurnPhase turnPhase;
 
-    public Controller(int NumberPlayers, int numberCommonGoalCards) {
+    public Controller(int numberPlayers, int numberCommonGoalCards) {
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.game = new Game(numberCommonGoalCards);
-        this.numberPlayers = NumberPlayers;
+        this.numberPlayers = numberPlayers;
         this.firstPlayer = null;
         this.playerQueue = new ArrayDeque<>();
         this.views = new HashMap<>();
         this.turnPhase = null;
+        this.firstTime = true;
     }
 
     private void setupGame() {
@@ -77,7 +79,10 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(JoinAction action) {
-        if (firstPlayer == null) {
+        if (firstTime) {
+            firstPlayer = action.getSenderNickname();
+            firstTime = false;
+        } else if (firstPlayer == null) {
             // TODO: notify error to player.
             return;
         }
