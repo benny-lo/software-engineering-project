@@ -1,9 +1,10 @@
 package network.server.rmi;
 
-import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.GameInfo;
 import it.polimi.ingsw.utils.action.JoinAction;
+import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
+import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.view.VirtualView;
 import network.client.ClientRMIInterface;
 import network.server.Lobby;
@@ -59,12 +60,26 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
     }
 
     @Override
-    public List<Item> selectFromLivingRoom(List<Position> position) throws RemoteException {
-        return null;
+    public boolean selectFromLivingRoom(List<Position> positions) throws RemoteException {
+        for (int i = 0; i < lobby.getControllers().size(); i++){
+            if (lobby.getControllers().get(i).getCurrentPlayer().equals(view.getNickname())){
+                lobby.getControllers().get(i).update(new SelectionFromLivingRoomAction(view.getNickname(), positions));
+                return true;
+            }
+        }
+        //TODO : notify error, player not found
+        return false;
     }
 
     @Override
     public boolean putInBookshelf(int column, List<Integer> permutation) {
+        for (int i = 0; i < lobby.getControllers().size(); i++){
+            if (lobby.getControllers().get(i).getCurrentPlayer().equals(view.getNickname())){
+                lobby.getControllers().get(i).update(new SelectionColumnAndOrderAction(view.getNickname(), column, permutation));
+                return true;
+            }
+        }
+        //TODO : notify error, player not found
         return false;
     }
 }

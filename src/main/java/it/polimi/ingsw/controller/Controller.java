@@ -59,7 +59,7 @@ public class Controller implements ActionListener {
         game.setCurrentPlayer(firstPlayer);
         turnPhase = TurnPhase.LIVING_ROOM;
 
-        // TODO: notify to game.getCurrentPlayer
+        //TODO: notify to game.getCurrentPlayer
     }
 
     private void nextTurn() {
@@ -71,9 +71,9 @@ public class Controller implements ActionListener {
         // TODO: notify previous player of end turn.
 
         if (firstPlayer.equals(game.getCurrentPlayer()) && game.getWinner() != null) {
-            // TODO: endgame logic.
+            //TODO: endgame logic.
         } else {
-            // TODO: notify current player of start turn.
+            //TODO: notify current player of start turn.
         }
     }
 
@@ -83,7 +83,7 @@ public class Controller implements ActionListener {
             firstPlayer = action.getSenderNickname();
             firstTime = false;
         } else if (firstPlayer == null) {
-            // TODO: notify error to player.
+            //TODO: notify error to player.
             return;
         }
 
@@ -98,46 +98,46 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(ReconnectionAction action) {
-        // TODO
+        //TODO
     }
 
     @Override
     public void update(SelectionFromLivingRoomAction action) {
         if (!action.getSenderNickname().equals(game.getCurrentPlayer())) {
-            // TODO: send error to player.
+            //TODO: send error to player.
             return;
         }
 
         if (turnPhase != TurnPhase.LIVING_ROOM) {
-            // TODO: send error to player.
+            //TODO: send error to player.
             return;
         }
 
         if (!game.canTakeItemTiles(action.getSelectedPositions())) {
-            // TODO: send error to player.
+            //TODO: send error to player.
             return;
         }
 
         game.selectItemTiles(action.getSelectedPositions());
         turnPhase = TurnPhase.BOOKSHELF;
 
-        // TODO: request bookshelf info.
+        //TODO: request bookshelf info.
     }
 
     @Override
     public void update(SelectionColumnAndOrderAction action) {
         if (action.getSenderNickname().equals(game.getCurrentPlayer())) {
-            // TODO: send error to player.
+            //TODO: send error to player.
             return;
         }
 
         if (turnPhase != TurnPhase.BOOKSHELF) {
-            // TODO: send error to player.
+            //TODO: send error to player.
             return;
         }
 
         if (!game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            // TODO: send error to player.
+            //TODO: send error to player.
             return;
         }
 
@@ -152,6 +152,10 @@ public class Controller implements ActionListener {
 
     public int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
+    }
+
+    public String getCurrentPlayer(){
+        return playerQueue.peek();
     }
 }
 
