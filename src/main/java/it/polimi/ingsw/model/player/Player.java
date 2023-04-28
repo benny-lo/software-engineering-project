@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model.player;
 
 import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
+import it.polimi.ingsw.view.rep.BookshelfRep;
 import it.polimi.ingsw.view.rep.PersonalGoalCardRep;
 
 import java.util.*;
@@ -18,6 +20,7 @@ public class Player {
     private final List<ScoringToken> scoringTokens;
     private boolean endingToken;
     private final List<PersonalGoalCardRep> personalGoalCardReps;
+    private final List<BookshelfRep> bookshelfReps;
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
@@ -29,6 +32,7 @@ public class Player {
         this.scoringTokens = new ArrayList<>();
         this.endingToken = false;
         this.personalGoalCardReps = new ArrayList<>();
+        this.bookshelfReps = new ArrayList<>();
     }
 
     /**
@@ -107,7 +111,15 @@ public class Player {
             permutedItems.add(itemsTakenFromLivingRoom.get(integer));
         }
 
-        getBookshelf().insert(permutedItems, column);
+        bookshelf.insert(permutedItems, column);
+        int count = 0;
+        for(int i = bookshelf.getRows() - 1; count < permutedItems.size(); i--) {
+            if (bookshelf.tileAt(i, column) == null) continue;
+            count++;
+            for(BookshelfRep rep : bookshelfReps) {
+                rep.updateRep(new Position(i, column), bookshelf.tileAt(i, column));
+            }
+        }
         itemsTakenFromLivingRoom = null;
     }
 
@@ -162,5 +174,14 @@ public class Player {
     public void setPersonalGoalCardRep(PersonalGoalCardRep rep) {
         personalGoalCardReps.add(rep);
         if (personalGoalCard != null) rep.updateRep(personalGoalCard.getId());
+    }
+
+    public void setBookshelfRep(BookshelfRep rep) {
+        bookshelfReps.add(rep);
+        for(int i = 0; i < bookshelf.getRows(); i++) {
+            for(int j = 0; j < bookshelf.getColumns(); j++) {
+                rep.updateRep(new Position(i, j), bookshelf.tileAt(i, j));
+            }
+        }
     }
 }

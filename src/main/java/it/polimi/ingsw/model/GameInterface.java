@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.view.rep.*;
+
 import java.util.List;
 
 /**
@@ -84,4 +86,16 @@ public interface GameInterface {
      * @return It returns the nickname of {@code currentPlayer}.
      */
     String getCurrentPlayer();
+
+    void setEndingTokenRep(EndingTokenRep rep);
+
+    void setScoreRep(ScoreRep rep);
+
+    void setBookshelfRep(BookshelfRep rep);
+
+    void setCommonGoalCardsRep(CommonGoalCardsRep rep);
+
+    void setLivingRoomRep(LivingRoomRep rep);
+
+    void setPersonalGoalCardRep(PersonalGoalCardRep rep);
 }

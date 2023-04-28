@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
+import it.polimi.ingsw.view.rep.*;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -23,6 +24,8 @@ public class Game implements GameInterface {
     private final Map<String, Player> players;
     private BoardManager boardManager;
     private CommonGoalCardManager commonGoalCardManager;
+    private final List<EndingTokenRep> endingTokenReps;
+    private final List<ScoreRep> scoreReps;
 
     /**
      * Game's Constructor: it initializes {@code Game}.
@@ -35,6 +38,8 @@ public class Game implements GameInterface {
         this.players = new HashMap<>();
         this.boardManager = null;
         this.commonGoalCardManager = null;
+        this.endingTokenReps = new ArrayList<>();
+        this.scoreReps = new ArrayList<>();
     }
 
     /**
@@ -138,6 +143,9 @@ public class Game implements GameInterface {
     private void endTurn() {
         if (players.get(currentPlayer).getBookshelf().isFull() && boardManager.isEndingToken()) {
             boardManager.takeEndingToken();
+            for(EndingTokenRep rep : endingTokenReps) {
+                rep.updateRep(currentPlayer);
+            }
             players.get(currentPlayer).addEndingToken();
         }
 
@@ -146,6 +154,12 @@ public class Game implements GameInterface {
         List<ScoringToken> tokens = commonGoalCardManager.check(players.get(currentPlayer).getBookshelf(),
                 players.get(currentPlayer).cannotTake());
         tokens.forEach((t) -> players.get(currentPlayer).addScoringToken(t));
+
+        for(ScoreRep rep : scoreReps) {
+            for(String nickname : players.keySet()) {
+                rep.updateRep(nickname, players.get(nickname).getTotalScore());
+            }
+        }
     }
 
     @Override
@@ -173,6 +187,38 @@ public class Game implements GameInterface {
             }
         }
         return winner;
+    }
+
+    @Override
+    public void setEndingTokenRep(EndingTokenRep rep) {
+        endingTokenReps.add(rep);
+    }
+
+    @Override
+    public void setScoreRep(ScoreRep rep) {
+        scoreReps.add(rep);
+    }
+
+    @Override
+    public void setBookshelfRep(BookshelfRep rep) {
+        players.get(rep.getOwner()).setBookshelfRep(rep);
+    }
+
+    @Override
+    public void setCommonGoalCardsRep(CommonGoalCardsRep rep) {
+        if (commonGoalCardManager == null) return;
+        commonGoalCardManager.setCommonGoalCardsRep(rep);
+    }
+
+    @Override
+    public void setLivingRoomRep(LivingRoomRep rep) {
+        if (boardManager == null) return;
+        boardManager.setLivingRoomRep(rep);
+    }
+
+    @Override
+    public void setPersonalGoalCardRep(PersonalGoalCardRep rep) {
+        players.get(rep.getOwner()).setPersonalGoalCardRep(rep);
     }
 
     @Override
