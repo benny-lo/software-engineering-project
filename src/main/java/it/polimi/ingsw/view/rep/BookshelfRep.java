@@ -3,26 +3,21 @@ package it.polimi.ingsw.view.rep;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 
-public class BookshelfRep {
+public class BookshelfRep extends Rep {
     private final Item[][] bookshelf;
-    private boolean change;
 
     public BookshelfRep(int rows, int columns) {
+        super();
         bookshelf = new Item[rows][columns];
-        change = false;
     }
 
     public Item[][] getBookshelf() {
-        change = false;
+        peek();
         return bookshelf;
     }
 
-    public boolean hasChanged() {
-        return change;
-    }
-
     public void updateRep(Position position, Item item) {
-        change = true;
+        update();
         bookshelf[position.getRow()][position.getColumn()] = item;
     }
 }

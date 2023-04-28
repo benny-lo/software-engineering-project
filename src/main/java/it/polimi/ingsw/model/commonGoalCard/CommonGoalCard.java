@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 
+import java.util.EmptyStackException;
 import java.util.Stack;
 
 /**
@@ -20,6 +21,8 @@ public class CommonGoalCard {
      */
     private final Stack<ScoringToken> tokens;
 
+    private final int id;
+
     /**
      * Constructor of the class.
      * @param pattern interface representing the pattern used by {@code this}.
@@ -27,6 +30,7 @@ public class CommonGoalCard {
     public CommonGoalCard(int id, int numPlayers, CommonGoalPatternInterface pattern) {
         this.pattern = pattern;
         this.tokens = new Stack<>();
+        this.id = id;
 
         if (numPlayers >= 4) {
             for(int i = 1; i <= 4; i++) tokens.push(new ScoringToken(2*i, id));
@@ -52,5 +56,17 @@ public class CommonGoalCard {
      */
     public boolean checkPattern(Bookshelf bookshelf) {
         return pattern.check(bookshelf);
+    }
+
+    public int getTopStack() {
+        try {
+            return tokens.peek().getScore();
+        } catch(EmptyStackException e) {
+            return 0;
+        }
+    }
+
+    public int getId() {
+        return id;
     }
 }

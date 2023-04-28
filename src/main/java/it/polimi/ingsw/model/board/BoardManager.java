@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.view.rep.LivingRoomRep;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,6 +18,7 @@ public class BoardManager {
     private boolean endingToken;
     private final LivingRoom livingRoom;
     private final Bag bag;
+    private final List<LivingRoomRep> livingRoomReps;
 
     /**
      * BoardManager's Constructor: it initializes the {@code Bag} and the {@code LivingRoom}.
@@ -24,6 +27,7 @@ public class BoardManager {
     public BoardManager(int numberPlayers) {
         this.endingToken = true;
         this.bag = new Bag(22);
+        this.livingRoomReps = new ArrayList<>();
 
         Gson gson = new GsonBuilder().serializeNulls()
                 .disableJdkUnsafe()
@@ -55,7 +59,11 @@ public class BoardManager {
                 for(int j = 0; j < livingRoom.getColumns(); j++){
                     if (bag.isEmpty()) return;
                     if(livingRoom.tileAt(i, j) == null){
-                        livingRoom.setTile(bag.extract(), new Position(i, j));
+                        Position p = new Position(i, j);
+                        livingRoom.setTile(bag.extract(), p);
+                        for(LivingRoomRep rep : livingRoomReps) {
+                            rep.updateRep(p, livingRoom.tileAt(p.getRow(), p.getColumn()));
+                        }
                     }
                 }
             }
@@ -104,7 +112,7 @@ public class BoardManager {
      * @param positions The positions to select the {@code Item} from.
      * @return The list of selected {@code Item}s.
      */
-    public List<Item> selectItemTiles(List<Position> positions){
+    public List<Item> selectItemTiles(List<Position> positions) {
        return livingRoom.selectTiles(positions);
     }
 
@@ -129,5 +137,9 @@ public class BoardManager {
      */
     public LivingRoom getLivingRoom() {
         return livingRoom;
+    }
+
+    public void setLivingRoomRep(LivingRoomRep rep) {
+        livingRoomReps.add(rep);
     }
 }

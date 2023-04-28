@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.*;
 import it.polimi.ingsw.model.player.Bookshelf;
+import it.polimi.ingsw.view.rep.CommonGoalCardsRep;
 
 import java.util.*;
 
@@ -12,6 +13,7 @@ public class CommonGoalCardManager {
      * List with all the cards.
      */
     private final List<CommonGoalCard> cards;
+    private final List<CommonGoalCardsRep> commonGoalCardsReps;
 
     /**
      * Class constructor: it initializes the common goal cards of the game.
@@ -19,10 +21,16 @@ public class CommonGoalCardManager {
      * @param numPlayers number of players in the game.
      */
     public CommonGoalCardManager(int numCommonGoalCards, int numPlayers) {
-        List<CommonGoalPatternInterface> commonGoals = randomCommonGoals(numCommonGoalCards);
+        List<CommonGoalPatternInterface> commonGoals = commonGoals();
         cards = new ArrayList<>();
-        for(int i = 0; i < commonGoals.size(); i++) {
-            cards.add(new CommonGoalCard(i, numPlayers, commonGoals.get(i)));
+        commonGoalCardsReps = new ArrayList<>();
+        List<Integer> ids = new ArrayList<>();
+        for(int i = 0; i < 12; i++) ids.add(i);
+        Collections.shuffle(ids);
+
+        for(int i = 0; i < numCommonGoalCards; i++) {
+            int id = ids.get(i);
+            cards.add(new CommonGoalCard(id, numPlayers, commonGoals.get(id)));
         }
     }
 
@@ -33,25 +41,18 @@ public class CommonGoalCardManager {
      */
     public CommonGoalCardManager(int numPlayers, String test) {
         cards = new ArrayList<>();
+        commonGoalCardsReps = new ArrayList<>();
         cards.add(new CommonGoalCard(0, numPlayers, new CommonGoalPattern8()));
         cards.add(new CommonGoalCard(1, numPlayers, new CommonGoalPattern9()));
     }
 
     /**
-     * Choose the common goals of the game.
-     * @param numCommonGoalCards the number of common goal cards.
+     * All possible common goals.
      * @return list containing all common goals of the game.
      */
-    private List<CommonGoalPatternInterface> randomCommonGoals(int numCommonGoalCards) {
+    private List<CommonGoalPatternInterface> commonGoals() {
         List<CommonGoalPatternInterface> pattern = new ArrayList<>();
-        List<Integer> numberPattern = new ArrayList<>();
-        Random random = new Random();
-
-        numberPattern.add(random.nextInt(12));
-        if (numCommonGoalCards == 2)
-            numberPattern.add(random.nextInt(12));
-
-        for(Integer i : numberPattern) {
+        for(int i = 0; i < 12; i++) {
             if (i == 0)
                 pattern.add(new CommonGoalPatternCountGroups(4, 4, (s) -> {
                     if (s.size() != 4) return false;
@@ -100,8 +101,20 @@ public class CommonGoalCardManager {
         List<ScoringToken> tokens = new ArrayList<>();
         for(int i = 0; i < cards.size(); i++) {
             if (cannotTake.contains(i)) continue;
-            if (cards.get(i).checkPattern(bookshelf)) tokens.add(cards.get(i).popToken());
+            if (cards.get(i).checkPattern(bookshelf)) {
+                tokens.add(cards.get(i).popToken());
+                for(CommonGoalCardsRep rep : commonGoalCardsReps) {
+                    rep.updateRep(cards.get(i).getId(), cards.get(i).getTopStack());
+                }
+            }
         }
         return tokens;
+    }
+
+    public void setCommonGoalCardsRep(CommonGoalCardsRep rep) {
+        commonGoalCardsReps.add(rep);
+        for(CommonGoalCard card : cards) {
+            rep.updateRep(card.getId(), card.getTopStack());
+        }
     }
 }
