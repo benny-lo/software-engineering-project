@@ -61,7 +61,7 @@ public class PlayerTest {
         Position position_4 = new Position(0,2);
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(new HashMap<>(Map.of(position_1, item_c, position_2, item_b, position_3, item_f, position_4, item_p)));
-        PersonalGoalCard card = new PersonalGoalCard(pattern);
+        PersonalGoalCard card = new PersonalGoalCard(0, pattern);
         Player player = new Player();
 
         player.setPersonalGoalCard(card);
@@ -212,7 +212,7 @@ public class PlayerTest {
         Position position_4 = new Position(0,2);
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(new HashMap<>(Map.of(position_1, item_c, position_2, item_b, position_3, item_f, position_4, item_p)));
-        PersonalGoalCard card = new PersonalGoalCard(pattern);
+        PersonalGoalCard card = new PersonalGoalCard(0, pattern);
         Player player = new Player();
 
         player.setPersonalGoalCard(card);

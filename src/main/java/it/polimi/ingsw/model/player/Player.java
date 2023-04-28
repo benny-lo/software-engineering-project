@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.player;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
+import it.polimi.ingsw.view.rep.PersonalGoalCardRep;
 
 import java.util.*;
 
@@ -16,6 +17,7 @@ public class Player {
     private PersonalGoalCard personalGoalCard;
     private final List<ScoringToken> scoringTokens;
     private boolean endingToken;
+    private final List<PersonalGoalCardRep> personalGoalCardReps;
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
@@ -26,6 +28,7 @@ public class Player {
         this.personalGoalCard = null;
         this.scoringTokens = new ArrayList<>();
         this.endingToken = false;
+        this.personalGoalCardReps = new ArrayList<>();
     }
 
     /**
@@ -154,5 +157,10 @@ public class Player {
      */
     public boolean firstToFinish() {
         return this.endingToken;
+    }
+
+    public void setPersonalGoalCardRep(PersonalGoalCardRep rep) {
+        personalGoalCardReps.add(rep);
+        if (personalGoalCard != null) rep.updateRep(personalGoalCard.getId());
     }
 }

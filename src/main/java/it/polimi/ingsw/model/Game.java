@@ -75,7 +75,7 @@ public class Game implements GameInterface {
                     with name personal_goal_card_{selected}""");
             }
 
-            personalGoalCard = new PersonalGoalCard(personalGoalPattern);
+            personalGoalCard = new PersonalGoalCard(selected, personalGoalPattern);
 
             players.get(name).setPersonalGoalCard(personalGoalCard);
         }

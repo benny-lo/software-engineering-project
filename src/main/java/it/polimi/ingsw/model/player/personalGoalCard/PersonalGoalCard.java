@@ -10,13 +10,15 @@ public class PersonalGoalCard {
      * Interface representing a general bookshelf pattern.
      */
     private final PersonalGoalPatternInterface pattern;
+    private final int id;
 
     /**
      * Construct of the class.
      * @param pattern interface representing the pattern used by {@code this}.
      */
-    public PersonalGoalCard(PersonalGoalPatternInterface pattern) {
+    public PersonalGoalCard(int id, PersonalGoalPatternInterface pattern) {
         this.pattern = pattern;
+        this.id = id;
     }
 
     /**
@@ -43,5 +45,9 @@ public class PersonalGoalCard {
         else if (matches == 5) return 9;
         else if (matches == 6) return 12;
         else return -1;
+    }
+
+    public int getId() {
+        return id;
     }
 }

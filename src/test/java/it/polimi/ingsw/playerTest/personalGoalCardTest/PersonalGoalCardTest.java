@@ -30,7 +30,7 @@ public class PersonalGoalCardTest {
         mask.put(new Position(2, 1), item);
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(mask);
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(pattern);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, pattern);
 
         assertNotNull(personalGoalCard);
     }
@@ -52,7 +52,7 @@ public class PersonalGoalCardTest {
         mask.put(new Position(1, 1), item);
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(mask);
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(pattern);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, pattern);
 
         assertEquals(0, personalGoalCard.getPersonalScore(bookshelf));
     }
@@ -74,7 +74,7 @@ public class PersonalGoalCardTest {
         mask.put(new Position(1, 1), item1);
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(mask);
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(pattern);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, pattern);
 
         assertEquals(2, personalGoalCard.getPersonalScore(bookshelf));
     }
@@ -104,7 +104,7 @@ public class PersonalGoalCardTest {
 
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(mask);
-        PersonalGoalCard personalGoalCard = new PersonalGoalCard(pattern);
+        PersonalGoalCard personalGoalCard = new PersonalGoalCard(0, pattern);
 
         assertEquals(-1, personalGoalCard.getPersonalScore(bookshelf));
     }
