@@ -1,5 +1,7 @@
 package network.server.rmi;
 
+import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.GameInfo;
 import it.polimi.ingsw.utils.action.JoinAction;
@@ -15,71 +17,75 @@ import java.util.List;
 
 public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface {
     private final Lobby lobby;
-    private VirtualView view;
 
     public ServerRMI(Lobby lobby) throws RemoteException {
         this.lobby = lobby;
-        this.view = null;
     }
 
     @Override
-    public List<GameInfo> login(ClientRMIInterface client, String nickname) {
-        for (VirtualView view : lobby.getViews())
-            if (view.getNickname().equals(nickname))
-                //TODO : notify error in login
-                return null;
-        view = new VirtualView(nickname);
-        lobby.addVirtualView(view);
+    public List<GameInfo> login(String nickname, ClientRMIInterface clientRMIInterface) {
+        if(lobby.getView(nickname) != null) {
+            return null;
+            // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
+        }
+        VirtualView view = new VirtualView(nickname);
         return lobby.getGameInfo();
     }
 
     @Override
-    public boolean selectGame(int id) {
-        for(GameInfo game : lobby.getGameInfo()){
-            if (game.getId() == id && (game.getNumberPlayers() - game.getNumberPlayersSignedIn()) > 0){
-                lobby.getControllers().get(id).update(new JoinAction(view.getNickname(), view));
-                game.addPlayer();
-                return true;
-            }
-        }
-        //TODO : notify error in game selection
-        return false;
+    public boolean selectGame(String nickname, int id) {
+        VirtualView view = lobby.getView(nickname);
+        if (view == null) return false;
+
+        if (!lobby.getControllers().containsKey(id)) return false;
+
+        lobby.getControllers().get(id).update(new JoinAction(nickname, lobby.getView(nickname)));
+
+        return !view.isError();
     }
 
     @Override
-    public boolean createGame(int numberPlayers, int numberCommonGoals) {
+    public boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) {
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2)
-            //TODO : notify error in game creation
             return false;
 
-        //TODO: lobby has to be synchronized, otherwise gameId could change if another client create a game in the same moment
-        lobby.addController(numberPlayers, numberCommonGoals);
-        lobby.getControllers().get(lobby.getGameId()).update(new JoinAction(view.getNickname(), view));
-        lobby.getGameInfo().get(lobby.getGameId()).addPlayer();
+        VirtualView view = lobby.getView(nickname);
+        if (view == null) return false;
+
+        Controller controller = new Controller(numberPlayers, numberCommonGoals);
+        controller.update(new JoinAction(nickname, view));
+
+        if (view.isError()) return false;
+
+        lobby.addController(controller);
         return true;
     }
 
     @Override
-    public boolean selectFromLivingRoom(List<Position> positions) throws RemoteException {
-        for (int i = 0; i < lobby.getControllers().size(); i++){
-            if (lobby.getControllers().get(i).getCurrentPlayer().equals(view.getNickname())){
-                lobby.getControllers().get(i).update(new SelectionFromLivingRoomAction(view.getNickname(), positions));
-                return true;
-            }
-        }
-        //TODO : notify error, player not found
-        return false;
+    public List<Item> selectFromLivingRoom(String nickname, List<Position> positions) throws RemoteException {
+        VirtualView view = lobby.getView(nickname);
+        if (view == null) return null;
+
+        Controller controller = view.getController();
+        if (controller == null) return null;
+
+        controller.update(new SelectionFromLivingRoomAction(nickname, positions));
+
+        if (view.isError()) return null;
+
+        return view.getItemsChosen();
     }
 
     @Override
-    public boolean putInBookshelf(int column, List<Integer> permutation) {
-        for (int i = 0; i < lobby.getControllers().size(); i++){
-            if (lobby.getControllers().get(i).getCurrentPlayer().equals(view.getNickname())){
-                lobby.getControllers().get(i).update(new SelectionColumnAndOrderAction(view.getNickname(), column, permutation));
-                return true;
-            }
-        }
-        //TODO : notify error, player not found
-        return false;
+    public boolean putInBookshelf(String nickname, int column, List<Integer> permutation) {
+        VirtualView view = lobby.getView(nickname);
+        if (view == null) return false;
+
+        Controller controller = view.getController();
+        if (controller == null) return false;
+
+        controller.update(new SelectionColumnAndOrderAction(nickname, column, permutation));
+
+        return !view.isError();
     }
 }

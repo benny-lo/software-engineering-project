@@ -19,11 +19,12 @@ public class Lobby {
      * List of virtual views, representing all players connected either waiting for a game or in game.
      */
     private final List<VirtualView> views;
-    private int gameId;
+    private int availableId;
 
     public Lobby() {
         controllers = new HashMap<>();
         views = new ArrayList<>();
+        availableId = 0;
     }
 
     public List<GameInfo> getGameInfo() {
@@ -34,9 +35,9 @@ public class Lobby {
         return ret;
     }
 
-    public void addController(int numberPlayers, int numberCommonGoalCards){
-        controllers.put(gameId, new Controller(numberPlayers, numberCommonGoalCards));
-        gameId++;
+    public void addController(Controller controller){
+        controllers.put(availableId, controller);
+        availableId++;
     }
 
     public void addVirtualView(VirtualView view) {
@@ -47,11 +48,10 @@ public class Lobby {
         return controllers;
     }
 
-    public List<VirtualView> getViews() {
-        return views;
-    }
-
-    public int getGameId() {
-        return gameId;
+    public VirtualView getView(String nickname) {
+        for(VirtualView view : views) {
+            if (view.getNickname().equals(nickname)) return view;
+        }
+        return null;
     }
 }

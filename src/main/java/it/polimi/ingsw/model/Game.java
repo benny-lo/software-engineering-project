@@ -222,6 +222,11 @@ public class Game implements GameInterface {
     }
 
     @Override
+    public void setItemsChosenRep(ItemsChosenRep rep) {
+        players.get(rep.getOwner()).setItemsChosenRep(rep);
+    }
+
+    @Override
     public int getPublicScore(String nickname) {
         return this.players.get(nickname).getPublicScore();
     }

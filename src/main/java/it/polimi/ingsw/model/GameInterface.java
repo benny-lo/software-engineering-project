@@ -98,4 +98,6 @@ public interface GameInterface {
     void setLivingRoomRep(LivingRoomRep rep);
 
     void setPersonalGoalCardRep(PersonalGoalCardRep rep);
+
+    void setItemsChosenRep(ItemsChosenRep rep);
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.view.rep.BookshelfRep;
+import it.polimi.ingsw.view.rep.ItemsChosenRep;
 import it.polimi.ingsw.view.rep.PersonalGoalCardRep;
 
 import java.util.*;
@@ -21,6 +22,7 @@ public class Player {
     private boolean endingToken;
     private final List<PersonalGoalCardRep> personalGoalCardReps;
     private final List<BookshelfRep> bookshelfReps;
+    private ItemsChosenRep itemsChosenRep;
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
@@ -42,6 +44,8 @@ public class Player {
      */
     public void takeItems(List<Item> items) {
         itemsTakenFromLivingRoom = items;
+        List<Item> copy = new ArrayList<>(items);
+        itemsChosenRep.updateRep(copy);
     }
 
     /**
@@ -183,5 +187,9 @@ public class Player {
                 rep.updateRep(new Position(i, j), bookshelf.tileAt(i, j));
             }
         }
+    }
+
+    public void setItemsChosenRep(ItemsChosenRep rep) {
+        this.itemsChosenRep = rep;
     }
 }

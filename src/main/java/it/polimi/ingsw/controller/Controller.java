@@ -60,6 +60,7 @@ public class Controller implements ActionListener {
         turnPhase = TurnPhase.LIVING_ROOM;
 
         //TODO: notify to game.getCurrentPlayer
+        //TODO: add listeners to model.
     }
 
     private void nextTurn() {
@@ -83,7 +84,7 @@ public class Controller implements ActionListener {
             firstPlayer = action.getSenderNickname();
             firstTime = false;
         } else if (firstPlayer == null) {
-            //TODO: notify error to player.
+            action.getView().setError();
             return;
         }
 
@@ -104,40 +105,38 @@ public class Controller implements ActionListener {
     @Override
     public void update(SelectionFromLivingRoomAction action) {
         if (!action.getSenderNickname().equals(game.getCurrentPlayer())) {
-            //TODO: send error to player.
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
         if (turnPhase != TurnPhase.LIVING_ROOM) {
-            //TODO: send error to player.
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
         if (!game.canTakeItemTiles(action.getSelectedPositions())) {
-            //TODO: send error to player.
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
         game.selectItemTiles(action.getSelectedPositions());
         turnPhase = TurnPhase.BOOKSHELF;
-
-        //TODO: request bookshelf info.
     }
 
     @Override
     public void update(SelectionColumnAndOrderAction action) {
         if (action.getSenderNickname().equals(game.getCurrentPlayer())) {
-            //TODO: send error to player.
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
         if (turnPhase != TurnPhase.BOOKSHELF) {
-            //TODO: send error to player.
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
         if (!game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            //TODO: send error to player.
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
