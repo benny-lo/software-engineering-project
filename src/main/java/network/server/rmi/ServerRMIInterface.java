@@ -15,4 +15,5 @@ public interface ServerRMIInterface extends Remote {
     boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) throws RemoteException;
     List<Item> selectFromLivingRoom(String nickname, List<Position> position) throws RemoteException;
     boolean putInBookshelf(String nickname, int column, List<Integer> permutation) throws RemoteException;
+    boolean addMessage(String nickname, String text);
 }

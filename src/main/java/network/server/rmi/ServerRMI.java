@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.GameInfo;
+import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
@@ -29,6 +30,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
             // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
         }
         VirtualView view = new VirtualView(nickname);
+        lobby.addVirtualView(view);
         return lobby.getGameInfo();
     }
 
@@ -85,6 +87,19 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
         if (controller == null) return false;
 
         controller.update(new SelectionColumnAndOrderAction(nickname, column, permutation));
+
+        return !view.isError();
+    }
+
+    @Override
+    public boolean addMessage(String nickname, String text) {
+        VirtualView view = lobby.getView(nickname);
+        if (view == null) return false;
+
+        Controller controller = view.getController();
+        if (controller == null) return false;
+
+        controller.update(new ChatMessageAction(nickname, text));
 
         return !view.isError();
     }
