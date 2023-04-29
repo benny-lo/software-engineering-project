@@ -8,4 +8,5 @@ public interface ActionListener {
     void update(ReconnectionAction action);
     void update(SelectionFromLivingRoomAction action);
     void update(SelectionColumnAndOrderAction action);
+    void update(ChatMessageAction action);
 }

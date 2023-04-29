@@ -2,6 +2,8 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameInterface;
+import it.polimi.ingsw.model.chat.Chat;
+import it.polimi.ingsw.model.chat.ChatInterface;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.VirtualView;
 
@@ -12,6 +14,7 @@ public class Controller implements ActionListener {
      * the model.
      */
     private final GameInterface game;
+    private final ChatInterface chat;
 
     /**
      * The maximum number of players that can join the game.
@@ -40,6 +43,7 @@ public class Controller implements ActionListener {
     public Controller(int numberPlayers, int numberCommonGoalCards) {
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.game = new Game(numberCommonGoalCards);
+        this.chat = new Chat();
         this.numberPlayers = numberPlayers;
         this.firstPlayer = null;
         this.playerQueue = new ArrayDeque<>();
@@ -143,6 +147,15 @@ public class Controller implements ActionListener {
         game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
 
         nextTurn();
+    }
+
+    @Override
+    public void update(ChatMessageAction action) {
+        if (game.getCurrentPlayer() == null) {
+            views.get(action.getSenderNickname()).setError();
+        }
+
+        chat.addMessage(action.getSenderNickname(), action.getText());
     }
 
     public int getNumberPlayers() {
