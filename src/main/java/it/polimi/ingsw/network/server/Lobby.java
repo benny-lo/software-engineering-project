@@ -1,4 +1,4 @@
-package network.server;
+package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.utils.GameInfo;

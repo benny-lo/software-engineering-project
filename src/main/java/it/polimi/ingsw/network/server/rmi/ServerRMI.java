@@ -1,16 +1,16 @@
-package network.server.rmi;
+package it.polimi.ingsw.network.server.rmi;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.network.server.Lobby;
 import it.polimi.ingsw.utils.GameInfo;
 import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.view.VirtualView;
-import network.client.ClientRMIInterface;
-import network.server.Lobby;
+import it.polimi.ingsw.network.client.ClientRMIInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -24,7 +24,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
     }
 
     @Override
-    public List<GameInfo> login(String nickname, ClientRMIInterface clientRMIInterface) {
+    public List<GameInfo> login(String nickname, ClientRMIInterface clientRMIInterface) throws RemoteException {
         if(lobby.getView(nickname) != null) {
             return null;
             // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
@@ -35,7 +35,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
     }
 
     @Override
-    public boolean selectGame(String nickname, int id) {
+    public boolean selectGame(String nickname, int id) throws RemoteException {
         VirtualView view = lobby.getView(nickname);
         if (view == null) return false;
 
@@ -47,7 +47,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
     }
 
     @Override
-    public boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) {
+    public boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) throws RemoteException {
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2)
             return false;
 
@@ -79,7 +79,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
     }
 
     @Override
-    public boolean putInBookshelf(String nickname, int column, List<Integer> permutation) {
+    public boolean putInBookshelf(String nickname, int column, List<Integer> permutation) throws RemoteException {
         VirtualView view = lobby.getView(nickname);
         if (view == null) return false;
 
@@ -92,7 +92,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
     }
 
     @Override
-    public boolean addMessage(String nickname, String text) {
+    public boolean addMessage(String nickname, String text) throws RemoteException {
         VirtualView view = lobby.getView(nickname);
         if (view == null) return false;
 
