@@ -45,7 +45,7 @@ public class Player {
     public void takeItems(List<Item> items) {
         itemsTakenFromLivingRoom = items;
         List<Item> copy = new ArrayList<>(items);
-        itemsChosenRep.updateRep(copy);
+        if (itemsChosenRep != null) itemsChosenRep.updateRep(copy);
     }
 
     /**

@@ -75,7 +75,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
 
         if (view.isError()) return null;
 
-        return view.getItemsChosen();
+        return view.getItemsChosenRep().getItemsChosen();
     }
 
     @Override

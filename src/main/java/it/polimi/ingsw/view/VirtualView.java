@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.view.rep.*;
 
 import java.util.ArrayList;
@@ -54,8 +53,8 @@ public class VirtualView {
         return commonGoalCardsRep;
     }
 
-    public List<Item> getItemsChosen() {
-        return itemsChosenRep.getItemsChosen();
+    public ItemsChosenRep getItemsChosenRep() {
+        return itemsChosenRep;
     }
 
     public void setController(Controller controller) {

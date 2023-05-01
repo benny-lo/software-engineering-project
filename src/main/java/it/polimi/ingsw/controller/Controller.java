@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatInterface;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.VirtualView;
+import it.polimi.ingsw.view.rep.BookshelfRep;
 
 import java.util.*;
 
@@ -63,8 +64,25 @@ public class Controller implements ActionListener {
         game.setCurrentPlayer(firstPlayer);
         turnPhase = TurnPhase.LIVING_ROOM;
 
+        List<VirtualView> viewsList = new ArrayList<>();
+        for(String nickname : views.keySet()) {
+            viewsList.add(views.get(nickname));
+        }
+
+        for(VirtualView view : viewsList) {
+            game.setEndingTokenRep(view.getEndingTokenRep());
+            for(BookshelfRep rep : view.getBookshelfRep()) {
+                for(String nickname : views.keySet()) {
+                    rep.setOwner(nickname);
+                    game.setBookshelfRep(rep);
+                }
+            }
+            game.setCommonGoalCardsRep(view.getCommonGoalCardsRep());
+            game.setLivingRoomRep(view.getLivingRoomRep());
+            game.setPersonalGoalCardRep(view.getPersonalGoalRep());
+            game.setItemsChosenRep(view.getItemsChosenRep());
+        }
         //TODO: notify to game.getCurrentPlayer
-        //TODO: add listeners to model.
     }
 
     private void nextTurn() {
