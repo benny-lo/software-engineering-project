@@ -9,6 +9,12 @@ import java.util.Map;
 
 public class ClientRMI implements ClientRMIInterface {
     private ClientView view;
+
+    @Override
+    public void sendWaiting(int missing) throws RemoteException {
+        // TODO
+    }
+
     @Override
     public void sendLivingRoom(Item[][] livingRoom) throws RemoteException {
         view.setLivingRoom(livingRoom);
@@ -20,8 +26,8 @@ public class ClientRMI implements ClientRMIInterface {
     }
 
     @Override
-    public void sendEndingToken() throws RemoteException {
-        view.setEndingToken();
+    public void sendEndingToken(String endingToken) throws RemoteException {
+        view.setEndingToken(endingToken);
     }
 
     @Override
@@ -42,6 +48,11 @@ public class ClientRMI implements ClientRMIInterface {
     @Override
     public void sendScores(Map<String, Integer> scores) throws RemoteException {
         view.setScores(scores);
+    }
+
+    @Override
+    public void sendStartTurn() throws RemoteException {
+        // TODO
     }
 
     @Override

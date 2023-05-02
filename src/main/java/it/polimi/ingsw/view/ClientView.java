@@ -13,7 +13,7 @@ public class ClientView {
     private int numberCommonGoalCards;
     private Item[][] livingRoom;
     private final Map<String, Item[][]> bookshelves;
-    private boolean endingToken;
+    private String endingToken;
     private int personalGoalCard;
     private final List<int[]> commonGoalCards;
     private Map<String, Integer> scores;
@@ -23,7 +23,7 @@ public class ClientView {
     public ClientView() {
         bookshelves = new HashMap<>();
         commonGoalCards = new ArrayList<>();
-        endingToken = false;
+        endingToken = null;
         endGame = false;
         chat = new ArrayList<>();
     }
@@ -36,8 +36,8 @@ public class ClientView {
         bookshelves.put(nickname, bookshelf);
     }
 
-    public void setEndingToken() {
-        endingToken = true;
+    public void setEndingToken(String endingToken) {
+        this.endingToken = endingToken;
     }
 
     public void setPersonalGoalCard(int id) {

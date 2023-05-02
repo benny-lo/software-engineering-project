@@ -26,15 +26,14 @@ public class Controller implements ActionListener {
     /**
      * Nickname of the first player. If game has not started yet, it is null.
      */
-    private String firstPlayer;
+    private final String firstPlayer;
 
     /**
      * Queue containing the players, the first one is the current player.
      */
     private Queue<String> playerQueue;
     private final Map<String, VirtualView> views;
-    private boolean firstTime;
-
+    private boolean ended;
     /**
      * Current turn phase: either selection from living room or selection of column in the bookshelf.
      * If the game has not started yet, it is null.
@@ -50,11 +49,10 @@ public class Controller implements ActionListener {
         this.playerQueue = new ArrayDeque<>();
         this.views = new HashMap<>();
         this.turnPhase = null;
-        this.firstTime = true;
+        this.ended = false;
     }
 
     private void setupGame() {
-        game.setup();
         List<String> players = new ArrayList<>(playerQueue);
         Collections.shuffle(players);
 
@@ -81,8 +79,18 @@ public class Controller implements ActionListener {
             game.setLivingRoomRep(view.getLivingRoomRep());
             game.setPersonalGoalCardRep(view.getPersonalGoalRep());
             game.setItemsChosenRep(view.getItemsChosenRep());
+            chat.setChatListener(view.getChatRep());
         }
-        //TODO: notify to game.getCurrentPlayer
+
+        for(VirtualView view : viewsList) {
+            view.sendLivingRoom();
+            view.sendBookshelves();
+            view.sendPersonalGoalCard();
+            view.sendCommonGoalCard();
+            view.sendEndingToken();
+        }
+
+        views.get(game.getCurrentPlayer()).sendStartTurn();
     }
 
     private void nextTurn() {
@@ -91,28 +99,29 @@ public class Controller implements ActionListener {
         game.setCurrentPlayer(playerQueue.peek());
         turnPhase = TurnPhase.LIVING_ROOM;
 
-        // TODO: notify previous player of end turn.
-
         if (firstPlayer.equals(game.getCurrentPlayer()) && game.getWinner() != null) {
-            //TODO: endgame logic.
+            ended = true;
+            for(String nickname : views.keySet()) {
+                views.get(nickname).sendEndGame();
+            }
         } else {
-            //TODO: notify current player of start turn.
+            VirtualView current = views.get(game.getCurrentPlayer());
+            current.sendStartTurn();
         }
     }
 
     @Override
     public void update(JoinAction action) {
-        if (firstTime) {
-            firstPlayer = action.getSenderNickname();
-            firstTime = false;
-        } else if (firstPlayer == null) {
-            action.getView().setError();
+        if (game.getCurrentPlayer() == null || ended) {
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
         playerQueue.add(action.getSenderNickname());
         game.addPlayer(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
+
+        // TODO: send waiting message.
 
         if (game.getNumberPlayers() == this.numberPlayers) {
             setupGame();
@@ -126,6 +135,10 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(SelectionFromLivingRoomAction action) {
+        if (ended) {
+            views.get(action.getSenderNickname()).setError();
+        }
+
         if (!action.getSenderNickname().equals(game.getCurrentPlayer())) {
             views.get(action.getSenderNickname()).setError();
             return;
@@ -142,11 +155,20 @@ public class Controller implements ActionListener {
         }
 
         game.selectItemTiles(action.getSelectedPositions());
+
+        for(String nickname : views.keySet()) {
+            views.get(nickname).sendLivingRoom();
+        }
+
         turnPhase = TurnPhase.BOOKSHELF;
     }
 
     @Override
     public void update(SelectionColumnAndOrderAction action) {
+        if (ended) {
+            views.get(action.getSenderNickname()).setError();
+        }
+
         if (action.getSenderNickname().equals(game.getCurrentPlayer())) {
             views.get(action.getSenderNickname()).setError();
             return;
@@ -164,11 +186,23 @@ public class Controller implements ActionListener {
 
         game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
 
+        for(String nickname : views.keySet()) {
+            views.get(nickname).sendLivingRoom();
+            views.get(nickname).sendBookshelves();
+            views.get(nickname).sendPersonalGoalCard();
+            views.get(nickname).sendCommonGoalCard();
+            views.get(nickname).sendEndingToken();
+        }
+
         nextTurn();
     }
 
     @Override
     public void update(ChatMessageAction action) {
+        if (ended) {
+            views.get(action.getSenderNickname()).setError();
+        }
+
         if (game.getCurrentPlayer() == null) {
             views.get(action.getSenderNickname()).setError();
         }

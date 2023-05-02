@@ -30,6 +30,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
             // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
         }
         VirtualView view = new VirtualView(nickname);
+        view.setToClient(clientRMIInterface);
         lobby.addVirtualView(view);
         return lobby.getGameInfo();
     }
@@ -42,7 +43,10 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
         if (!lobby.getControllers().containsKey(id)) return false;
 
         lobby.getControllers().get(id).update(new JoinAction(nickname, lobby.getView(nickname)));
-
+        boolean error = view.isError();
+        if (!error) {
+            view.setController(lobby.getControllers().get(id));
+        }
         return !view.isError();
     }
 
@@ -59,6 +63,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
 
         if (view.isError()) return false;
 
+        view.setController(controller);
         lobby.addController(controller);
         return true;
     }
