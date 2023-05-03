@@ -6,10 +6,10 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.view.rep.LivingRoomRep;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class representing a BoardManager.
@@ -33,13 +33,12 @@ public class BoardManager {
                 .disableJdkUnsafe()
                 .create();
 
-        String filename = "src/main/resources/configuration/livingRoom/living_room_" + numberPlayers + ".json";
+        String filename = "/configuration/livingRoom/living_room_" + numberPlayers + ".json";
 
         LivingRoom tmp;
-        try {
-            FileReader reader = new FileReader(filename);
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))){
             tmp = gson.fromJson(reader, LivingRoom.class);
-        } catch(FileNotFoundException e) {
+        } catch(IOException e) {
             tmp = new LivingRoom();
             System.err.println("""
                     Configuration file for livingRoom not found.

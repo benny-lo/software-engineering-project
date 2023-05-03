@@ -10,8 +10,7 @@ import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.view.rep.*;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -55,7 +54,6 @@ public class Game implements GameInterface {
         List<Integer> alreadyTaken = new ArrayList<>();
         int selected = -1;
         String filename;
-        FileReader reader;
         PersonalGoalPattern personalGoalPattern ;
         PersonalGoalCard personalGoalCard;
 
@@ -67,12 +65,11 @@ public class Game implements GameInterface {
 
             alreadyTaken.add(selected);
 
-            filename = "src/main/resources/configuration/personalGoalCards/personal_goal_card_" + selected + ".json";
+            filename = "/configuration/personalGoalCards/personal_goal_card_" + selected + ".json";
 
-            try {
-                reader = new FileReader(filename);
+            try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
                  personalGoalPattern = gson.fromJson(reader,new TypeToken<PersonalGoalPattern>(){}.getType());
-            } catch(FileNotFoundException e){
+            } catch(IOException e){
                 personalGoalPattern = null;
                 System.err.println("""
                     Configuration file for personalGoalCard not found.
