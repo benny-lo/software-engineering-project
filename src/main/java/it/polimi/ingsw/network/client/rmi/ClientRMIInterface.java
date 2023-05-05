@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.client;
+package it.polimi.ingsw.network.client.rmi;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;

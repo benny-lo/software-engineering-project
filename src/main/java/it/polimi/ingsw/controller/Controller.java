@@ -99,6 +99,7 @@ public class Controller implements ActionListener {
         game.setCurrentPlayer(playerQueue.peek());
         turnPhase = TurnPhase.LIVING_ROOM;
 
+        assert firstPlayer != null;
         if (firstPlayer.equals(game.getCurrentPlayer()) && game.getWinner() != null) {
             ended = true;
             for(String nickname : views.keySet()) {
@@ -220,6 +221,10 @@ public class Controller implements ActionListener {
 
     public String getCurrentPlayer(){
         return playerQueue.peek();
+    }
+
+    public int getNumberPlayersSignedIn(){
+        return playerQueue.size();
     }
 }
 

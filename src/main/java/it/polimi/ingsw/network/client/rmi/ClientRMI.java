@@ -1,14 +1,31 @@
-package it.polimi.ingsw.network.client;
+package it.polimi.ingsw.network.client.rmi;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.network.ServerSettings;
+import it.polimi.ingsw.network.server.rmi.ServerRMIInterface;
 import it.polimi.ingsw.view.ClientView;
 
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Map;
 
 public class ClientRMI implements ClientRMIInterface {
     private ClientView view;
+    private ServerRMIInterface serverRMIInterface;
+
+    public ClientRMI() { //TODO : it doesnt work, i will fix it
+        try{
+            Registry registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
+            serverRMIInterface = (ServerRMIInterface) registry.lookup("ServerRMI");
+            serverRMIInterface.login("questoèunproblema", this);
+        }
+        catch (Exception e){
+            System.err.println("ClientRMI error");
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void sendWaiting(int missing) throws RemoteException {
