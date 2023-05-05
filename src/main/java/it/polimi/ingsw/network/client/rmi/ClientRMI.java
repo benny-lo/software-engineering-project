@@ -6,20 +6,23 @@ import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.server.rmi.ServerRMIInterface;
 import it.polimi.ingsw.view.ClientView;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Map;
 
-public class ClientRMI implements ClientRMIInterface {
+public class ClientRMI implements ClientRMIInterface, Serializable {
     private ClientView view;
     private ServerRMIInterface serverRMIInterface;
 
-    public ClientRMI() { //TODO : it doesnt work, i will fix it
+    public ClientRMI() {
         try{
+            //TODO: interaction between this and ClientView
             Registry registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
             serverRMIInterface = (ServerRMIInterface) registry.lookup("ServerRMI");
-            serverRMIInterface.login("questoèunproblema", this);
+            serverRMIInterface.login("nickname_here", this);
+            System.out.println("ClientRMI is connected.");
         }
         catch (Exception e){
             System.err.println("ClientRMI error");

@@ -46,7 +46,7 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
     public List<GameInfo> login(String nickname, ClientRMIInterface clientRMIInterface) throws RemoteException {
         if(lobby.getView(nickname) != null) {
             return null;
-            // TODO : consider the case in which view is present because client was disconnected and is reconnecting.
+            // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
         }
         VirtualView view = new VirtualView(nickname);
         view.setToClient(clientRMIInterface);

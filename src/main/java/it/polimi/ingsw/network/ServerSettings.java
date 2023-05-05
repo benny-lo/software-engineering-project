@@ -8,18 +8,18 @@ import java.io.Reader;
 import java.util.Objects;
 
 public final class ServerSettings {
-    private static String hostName;
-    private static int rmiPort;
-    private static int socketPort;
+    private static final String hostName;
+    private static final int rmiPort;
+    private static final int socketPort;
 
-    private ServerSettings() {
+    static {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
                 .disableJdkUnsafe()
                 .create();
-        Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream("/configuration/server_config.json")));
+        Reader reader = new InputStreamReader(Objects.requireNonNull(ServerSettingsFake.class.getResourceAsStream("/configuration/server_config.json")));
         ServerSettingsFake settings = gson.fromJson(reader, ServerSettingsFake.class);
-        hostName = settings.hostNameF;
+        hostName =  settings.hostNameF;
         rmiPort = settings.rmiPortF;
         socketPort = settings.socketPortF;
     }
@@ -37,8 +37,14 @@ public final class ServerSettings {
     }
 
     private static class ServerSettingsFake {
-        private String hostNameF;
-        private int rmiPortF;
-        private int socketPortF;
+        private final String hostNameF;
+        private final int rmiPortF;
+        private final int socketPortF;
+
+        private ServerSettingsFake() {
+            this.hostNameF = null;
+            this.rmiPortF = 0;
+            this.socketPortF = 0;
+        }
     }
 }
