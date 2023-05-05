@@ -2,7 +2,7 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.chat.Message;
-import it.polimi.ingsw.network.client.ClientRMIInterface;
+import it.polimi.ingsw.network.client.rmi.ClientRMIInterface;
 import it.polimi.ingsw.view.rep.*;
 
 import java.rmi.RemoteException;

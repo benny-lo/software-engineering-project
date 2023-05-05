@@ -4,23 +4,42 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.server.Lobby;
+
+import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.utils.GameInfo;
 import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.view.VirtualView;
-import it.polimi.ingsw.network.client.ClientRMIInterface;
+import it.polimi.ingsw.network.client.rmi.ClientRMIInterface;
+
 
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+
 
 public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface {
     private final Lobby lobby;
 
     public ServerRMI(Lobby lobby) throws RemoteException {
+        super();
         this.lobby = lobby;
+        startServerRMI();
+    }
+
+    private void startServerRMI(){
+        try {
+            Registry registry = LocateRegistry.createRegistry(ServerSettings.getRmiPort());
+            registry.bind("ServerRMI", this);
+            System.out.println("ServerRMI is running...");
+        } catch (Exception e) {
+            System.err.println("Server exception: " + e);
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -42,8 +61,11 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
 
         if (!lobby.getControllers().containsKey(id)) return false;
 
+        if (lobby.getControllers().get(id).getNumberPlayers() - lobby.getControllers().get(id).getNumberPlayersSignedIn() <= 0) return false;
+
         lobby.getControllers().get(id).update(new JoinAction(nickname, lobby.getView(nickname)));
         boolean error = view.isError();
+
         if (!error) {
             view.setController(lobby.getControllers().get(id));
         }

@@ -3,13 +3,14 @@ package it.polimi.ingsw.utils;
 public class GameInfo {
     private final int id;
     private final int numberPlayers;
-    private int numberPlayersSignedIn;
+    private final int numberPlayersSignedIn;
     private final int numberCommonGoals;
 
-    public GameInfo(int id, int numberPlayers, int numberCommonGoals) {
+    public GameInfo(int id, int numberPlayers, int numberCommonGoals, int numberPlayersSignedIn) {
         this.id = id;
         this.numberPlayers = numberPlayers;
         this.numberCommonGoals = numberCommonGoals;
+        this.numberPlayersSignedIn = numberPlayersSignedIn;
     }
 
     public int getId() { return id; }
@@ -19,8 +20,4 @@ public class GameInfo {
         return numberPlayersSignedIn;
     }
     public int getNumberCommonGoals() { return numberCommonGoals; }
-
-    public void addPlayer() {
-        numberPlayersSignedIn++;
-    }
 }

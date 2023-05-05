@@ -1,14 +1,34 @@
-package it.polimi.ingsw.network.client;
+package it.polimi.ingsw.network.client.rmi;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.network.ServerSettings;
+import it.polimi.ingsw.network.server.rmi.ServerRMIInterface;
 import it.polimi.ingsw.view.ClientView;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Map;
 
-public class ClientRMI implements ClientRMIInterface {
+public class ClientRMI implements ClientRMIInterface, Serializable {
     private ClientView view;
+    private ServerRMIInterface serverRMIInterface;
+
+    public ClientRMI() {
+        try{
+            //TODO: interaction between this and ClientView
+            Registry registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
+            serverRMIInterface = (ServerRMIInterface) registry.lookup("ServerRMI");
+            serverRMIInterface.login("nickname_here", this);
+            System.out.println("ClientRMI is connected.");
+        }
+        catch (Exception e){
+            System.err.println("ClientRMI error");
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public void sendWaiting(int missing) throws RemoteException {

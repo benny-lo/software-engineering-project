@@ -30,7 +30,8 @@ public class Lobby {
     public List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
         for (Integer id : controllers.keySet()) {
-            ret.add(new GameInfo(id, controllers.get(id).getNumberPlayers(), controllers.get(id).getNumberCommonGoalCards()));
+            if (controllers.get(id).getNumberPlayers() != controllers.get(id).getNumberPlayersSignedIn())       //If a game is full it's not displayed.
+                ret.add(new GameInfo(id, controllers.get(id).getNumberPlayers(), controllers.get(id).getNumberCommonGoalCards(), controllers.get(id).getNumberPlayersSignedIn()));
         }
         return ret;
     }
