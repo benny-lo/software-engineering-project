@@ -6,12 +6,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.server.Lobby;
 
 import it.polimi.ingsw.network.ServerSettings;
-import it.polimi.ingsw.utils.GameInfo;
-import it.polimi.ingsw.utils.action.ChatMessageAction;
-import it.polimi.ingsw.utils.action.JoinAction;
-import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
-import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
-import it.polimi.ingsw.view.VirtualView;
+import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
 import it.polimi.ingsw.network.client.rmi.ClientRMIInterface;
 
 
@@ -44,90 +39,31 @@ public class ServerRMI extends UnicastRemoteObject implements ServerRMIInterface
 
     @Override
     public List<GameInfo> login(String nickname, ClientRMIInterface clientRMIInterface) throws RemoteException {
-        if(lobby.getView(nickname) != null) {
-            return null;
-            // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
-        }
-        VirtualView view = new VirtualView(nickname);
-        view.setToClient(clientRMIInterface);
-        lobby.addVirtualView(view);
-        return lobby.getGameInfo();
+        return lobby.login(nickname, new UpdateSenderRMI(clientRMIInterface));
     }
 
     @Override
     public boolean selectGame(String nickname, int id) throws RemoteException {
-        VirtualView view = lobby.getView(nickname);
-        if (view == null) return false;
-
-        if (!lobby.getControllers().containsKey(id)) return false;
-
-        if (lobby.getControllers().get(id).getNumberPlayers() - lobby.getControllers().get(id).getNumberPlayersSignedIn() <= 0) return false;
-
-        lobby.getControllers().get(id).update(new JoinAction(nickname, lobby.getView(nickname)));
-        boolean error = view.isError();
-
-        if (!error) {
-            view.setController(lobby.getControllers().get(id));
-        }
-        return !view.isError();
+        return lobby.selectGame(nickname, id);
     }
 
     @Override
     public boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) throws RemoteException {
-        if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2)
-            return false;
-
-        VirtualView view = lobby.getView(nickname);
-        if (view == null) return false;
-
-        Controller controller = new Controller(numberPlayers, numberCommonGoals);
-        controller.update(new JoinAction(nickname, view));
-
-        if (view.isError()) return false;
-
-        view.setController(controller);
-        lobby.addController(controller);
-        return true;
+        return lobby.createGame(nickname, numberPlayers, numberCommonGoals);
     }
 
     @Override
     public List<Item> selectFromLivingRoom(String nickname, List<Position> positions) throws RemoteException {
-        VirtualView view = lobby.getView(nickname);
-        if (view == null) return null;
-
-        Controller controller = view.getController();
-        if (controller == null) return null;
-
-        controller.update(new SelectionFromLivingRoomAction(nickname, positions));
-
-        if (view.isError()) return null;
-
-        return view.getItemsChosenRep().getItemsChosen();
+        return lobby.selectFromLivingRoom(nickname, positions);
     }
 
     @Override
     public boolean putInBookshelf(String nickname, int column, List<Integer> permutation) throws RemoteException {
-        VirtualView view = lobby.getView(nickname);
-        if (view == null) return false;
-
-        Controller controller = view.getController();
-        if (controller == null) return false;
-
-        controller.update(new SelectionColumnAndOrderAction(nickname, column, permutation));
-
-        return !view.isError();
+        return lobby.putInBookshelf(nickname, column, permutation);
     }
 
     @Override
     public boolean addMessage(String nickname, String text) throws RemoteException {
-        VirtualView view = lobby.getView(nickname);
-        if (view == null) return false;
-
-        Controller controller = view.getController();
-        if (controller == null) return false;
-
-        controller.update(new ChatMessageAction(nickname, text));
-
-        return !view.isError();
+        return lobby.addMessage(nickname, text);
     }
 }

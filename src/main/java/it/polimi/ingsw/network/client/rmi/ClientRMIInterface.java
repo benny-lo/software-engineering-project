@@ -1,21 +1,19 @@
 package it.polimi.ingsw.network.client.rmi;
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.Map;
 
 public interface ClientRMIInterface extends Remote {
-    void sendWaiting(int missing) throws RemoteException;
-    void sendLivingRoom(Item[][] livingRoom) throws RemoteException;
-    void sendBookshelf(String nickname, Item[][] bookshelf) throws RemoteException;
-    void sendEndingToken(String endingToken) throws RemoteException;
-    void sendPersonalGoalCard(int id) throws RemoteException;
-    void sendCommonGoalCard(int id, int top) throws RemoteException;
-    void sendMessage(Message message) throws RemoteException;
-    void sendScores(Map<String, Integer> scores) throws RemoteException;
-    void sendStartTurn() throws RemoteException;
-    void sendEndGame() throws RemoteException;
+    void sendLivingRoomUpdate(LivingRoomUpdate update) throws RemoteException;
+    void sendBookshelfUpdate(BookshelfUpdate update) throws RemoteException;
+    void sendWaitingUpdate(WaitingUpdate update) throws RemoteException;
+    void sendScoresUpdate(ScoresUpdate update) throws RemoteException;
+    void sendEndingTokenUpdate(EndingTokenUpdate update) throws RemoteException;
+    void sendCommonGoalCardUpdate(CommonGoalCardUpdate update) throws RemoteException;
+    void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) throws RemoteException;
+    void sendChatUpdate(ChatUpdate update) throws RemoteException;
+    void sendStartTurnUpdate(StartTurnUpdate update) throws RemoteException;
+    void sendEndGameUpdate(EndGameUpdate update) throws RemoteException;
 }

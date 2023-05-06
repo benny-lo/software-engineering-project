@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.server.rmi.ServerRMIInterface;
+import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.ClientView;
 
 import java.io.Serializable;
@@ -31,52 +32,52 @@ public class ClientRMI implements ClientRMIInterface, Serializable {
     }
 
     @Override
-    public void sendWaiting(int missing) throws RemoteException {
-        // TODO
+    public void sendLivingRoomUpdate(LivingRoomUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendLivingRoom(Item[][] livingRoom) throws RemoteException {
-        view.setLivingRoom(livingRoom);
+    public void sendBookshelfUpdate(BookshelfUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendBookshelf(String nickname, Item[][] bookshelf) throws RemoteException {
-        view.setBookshelf(nickname, bookshelf);
+    public void sendWaitingUpdate(WaitingUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendEndingToken(String endingToken) throws RemoteException {
-        view.setEndingToken(endingToken);
+    public void sendScoresUpdate(ScoresUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendPersonalGoalCard(int id) throws RemoteException {
-        view.setPersonalGoalCard(id);
+    public void sendEndingTokenUpdate(EndingTokenUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendCommonGoalCard(int id, int top) throws RemoteException {
-        view.setCommonGoalCards(id, top);
+    public void sendCommonGoalCardUpdate(CommonGoalCardUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendMessage(Message message) throws RemoteException {
-        view.setChatMessage(message);
+    public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendScores(Map<String, Integer> scores) throws RemoteException {
-        view.setScores(scores);
+    public void sendChatUpdate(ChatUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendStartTurn() throws RemoteException {
-        // TODO
+    public void sendStartTurnUpdate(StartTurnUpdate update) throws RemoteException {
+
     }
 
     @Override
-    public void sendEndGame() throws RemoteException {
-        view.setEndGame();
+    public void sendEndGameUpdate(EndGameUpdate update) throws RemoteException {
+
     }
 }

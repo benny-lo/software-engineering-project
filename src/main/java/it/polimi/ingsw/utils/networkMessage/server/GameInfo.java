@@ -1,23 +1,20 @@
-package it.polimi.ingsw.utils;
+package it.polimi.ingsw.utils.networkMessage.server;
 
-public class GameInfo {
+import java.io.Serializable;
+
+public class GameInfo implements Serializable {
     private final int id;
     private final int numberPlayers;
-    private final int numberPlayersSignedIn;
     private final int numberCommonGoals;
 
-    public GameInfo(int id, int numberPlayers, int numberCommonGoals, int numberPlayersSignedIn) {
+    public GameInfo(int id, int numberPlayers, int numberCommonGoals) {
         this.id = id;
         this.numberPlayers = numberPlayers;
         this.numberCommonGoals = numberCommonGoals;
-        this.numberPlayersSignedIn = numberPlayersSignedIn;
     }
 
     public int getId() { return id; }
     public int getNumberPlayers() { return numberPlayers; }
 
-    public int getNumberPlayersSignedIn(){
-        return numberPlayersSignedIn;
-    }
     public int getNumberCommonGoals() { return numberCommonGoals; }
 }

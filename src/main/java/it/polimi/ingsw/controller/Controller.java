@@ -223,8 +223,8 @@ public class Controller implements ActionListener {
         return playerQueue.peek();
     }
 
-    public int getNumberPlayersSignedIn(){
-        return playerQueue.size();
+    public boolean isStarted() {
+        return turnPhase != null;
     }
 }
 

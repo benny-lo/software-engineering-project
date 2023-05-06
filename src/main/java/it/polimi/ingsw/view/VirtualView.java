@@ -2,7 +2,8 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.chat.Message;
-import it.polimi.ingsw.network.client.rmi.ClientRMIInterface;
+import it.polimi.ingsw.network.server.UpdateSender;
+import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.rep.*;
 
 import java.rmi.RemoteException;
@@ -19,7 +20,7 @@ public class VirtualView {
     private final ItemsChosenRep itemsChosenRep;
     private final ChatRep chatRep;
     private Controller controller;
-    private ClientRMIInterface toClient;
+    private UpdateSender toClient;
     private boolean error;
 
     public VirtualView(String nickname) {
@@ -74,47 +75,33 @@ public class VirtualView {
         return controller;
     }
 
-    public void setToClient(ClientRMIInterface toClient) {
+    public void setToClient(UpdateSender toClient) {
         this.toClient = toClient;
     }
 
     public void sendBookshelves() {
         for(BookshelfRep rep : bookshelfRep) {
             if (rep.hasChanged()) {
-                try {
-                    toClient.sendBookshelf(rep.getOwner(), rep.getBookshelf());
-                } catch (RemoteException e) {
-                    System.out.println("lost connection to " + nickname);
-                }
+                toClient.sendBookshelfUpdate(
+                        new BookshelfUpdate(rep.getOwner(), rep.getBookshelf())
+                );
             }
         }
     }
 
     public void sendLivingRoom() {
         if (!livingRoomRep.hasChanged()) return;
-        try {
-            toClient.sendLivingRoom(livingRoomRep.getLivingRoom());
-        } catch (RemoteException e) {
-            System.out.println("lost connection to " + nickname);
-        }
+        toClient.sendLivingRoomUpdate(new LivingRoomUpdate(livingRoomRep.getLivingRoom()));
     }
 
     public void sendEndingToken() {
         if (!endingTokenRep.hasChanged()) return;
-        try {
-            toClient.sendEndingToken(endingTokenRep.getEndingToken());
-        } catch (RemoteException e) {
-            System.out.println("lost connection to " + nickname);
-        }
+        toClient.sendEndingTokenUpdate(new EndingTokenUpdate(endingTokenRep.getEndingToken()));
     }
 
     public void sendPersonalGoalCard() {
         if (personalGoalRep.hasChanged()) return;
-        try {
-            toClient.sendPersonalGoalCard(personalGoalRep.getPersonalGoalCard());
-        } catch (RemoteException e) {
-            System.out.println("lost connection to " + nickname);
-        }
+        toClient.sendPersonalGoalCardUpdate(new PersonalGoalCardUpdate(personalGoalRep.getPersonalGoalCard()));
     }
 
     public void sendCommonGoalCard() {
@@ -122,23 +109,15 @@ public class VirtualView {
 
         List<Integer> ids = commonGoalCardsRep.getIDs();
         List<Integer> tops = commonGoalCardsRep.getTops();
-        try {
-            for(int i = 0; i < Math.min(ids.size(), tops.size()); i++) {
-                toClient.sendCommonGoalCard(ids.get(i), tops.get(i));
-            }
-        } catch (RemoteException e) {
-            System.out.println("lost connection to " + nickname);
+        for(int i = 0; i < Math.min(ids.size(), tops.size()); i++) {
+            toClient.sendCommonGoalCardUpdate(new CommonGoalCardUpdate(ids.get(i), tops.get(i)));
         }
     }
 
     public void sendMessage() {
         if (!chatRep.hasChanged()) return;
         for(Message message : chatRep.getChat()) {
-            try {
-                toClient.sendMessage(message);
-            } catch (RemoteException e) {
-                System.out.println("lost connection to " + nickname);
-            }
+            toClient.sendChatUpdate(new ChatUpdate(message.getNickname(), message.getText()));
         }
     }
 
@@ -146,7 +125,7 @@ public class VirtualView {
 
     public void sendStartTurn() {
         try {
-            toClient.sendStartTurn();
+            toClient.sendStartTurnUpdate();
         } catch (RemoteException e) {
             System.out.println("lost connection to " + nickname);
         }
@@ -154,7 +133,7 @@ public class VirtualView {
 
     public void sendEndGame() {
         try{
-            toClient.sendEndGame();
+            toClient.sendEndGameUpdate();
         } catch (RemoteException e) {
             System.out.println("lost connection to " + nickname);
         }

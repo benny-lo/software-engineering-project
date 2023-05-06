@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.server.rmi;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.utils.GameInfo;
+import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
 import it.polimi.ingsw.network.client.rmi.ClientRMIInterface;
 
 import java.rmi.Remote;
