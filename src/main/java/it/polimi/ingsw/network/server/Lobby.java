@@ -54,7 +54,7 @@ public class Lobby {
         return null;
     }
 
-    public List<GameInfo> login(String nickname, UpdateSender client) {
+    public synchronized List<GameInfo> login(String nickname, UpdateSender client) {
         if(getView(nickname) != null) {
             return null;
             // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
@@ -65,7 +65,7 @@ public class Lobby {
         return getGameInfo();
     }
 
-    public boolean selectGame(String nickname, int id) {
+    public synchronized boolean selectGame(String nickname, int id) {
         VirtualView view = getView(nickname);
         if (view == null) return false;
 
@@ -83,7 +83,7 @@ public class Lobby {
         return !view.isError();
     }
 
-    public boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) {
+    public synchronized boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) {
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2)
             return false;
 
@@ -100,7 +100,7 @@ public class Lobby {
         return true;
     }
 
-    public List<Item> selectFromLivingRoom(String nickname, List<Position> positions) {
+    public synchronized List<Item> selectFromLivingRoom(String nickname, List<Position> positions) {
         VirtualView view = getView(nickname);
         if (view == null) return null;
 
@@ -114,7 +114,7 @@ public class Lobby {
         return view.getItemsChosenRep().getItemsChosen();
     }
 
-    public boolean putInBookshelf(String nickname, int column, List<Integer> permutation) {
+    public synchronized boolean putInBookshelf(String nickname, int column, List<Integer> permutation) {
         VirtualView view = getView(nickname);
         if (view == null) return false;
 
@@ -126,7 +126,7 @@ public class Lobby {
         return !view.isError();
     }
 
-    public boolean addMessage(String nickname, String text) {
+    public synchronized boolean addMessage(String nickname, String text) {
         VirtualView view = getView(nickname);
         if (view == null) return false;
 
