@@ -53,20 +53,27 @@ public class Controller implements ActionListener {
     }
 
     private void setupGame() {
+        // Choosing a random order for the players.
         List<String> players = new ArrayList<>(playerQueue);
         Collections.shuffle(players);
 
+        // Initializing the queue with the chosen order,
+        // and setting the first player.
         playerQueue = new ArrayDeque<>(players);
         String firstPlayer = playerQueue.peek();
 
+        // Setting the first player in game and
+        // setting the current turn phase.
         game.setCurrentPlayer(firstPlayer);
         turnPhase = TurnPhase.LIVING_ROOM;
 
+        // Getting the list of all virtual views.
         List<VirtualView> viewsList = new ArrayList<>();
         for(String nickname : views.keySet()) {
             viewsList.add(views.get(nickname));
         }
 
+        // for each view, setting its listeners to the model.
         for(VirtualView view : viewsList) {
             game.setEndingTokenRep(view.getEndingTokenRep());
             for(BookshelfRep rep : view.getBookshelfRep()) {
@@ -79,18 +86,22 @@ public class Controller implements ActionListener {
             game.setLivingRoomRep(view.getLivingRoomRep());
             game.setPersonalGoalCardRep(view.getPersonalGoalRep());
             game.setItemsChosenRep(view.getItemsChosenRep());
+            game.setScoreRep(view.getScoreRep());
             chat.setChatListener(view.getChatRep());
         }
 
+        // Sending initial updates about the reps.
         for(VirtualView view : viewsList) {
             view.sendLivingRoom();
             view.sendBookshelves();
             view.sendPersonalGoalCard();
             view.sendCommonGoalCard();
             view.sendEndingToken();
+            view.sendScores();
         }
 
-        views.get(game.getCurrentPlayer()).sendStartTurn();
+        // Notifying the first player their turn has started.
+        views.get(game.getCurrentPlayer()).sendStartTurn(game.getCurrentPlayer());
     }
 
     private void nextTurn() {
@@ -100,14 +111,25 @@ public class Controller implements ActionListener {
         turnPhase = TurnPhase.LIVING_ROOM;
 
         assert firstPlayer != null;
-        if (firstPlayer.equals(game.getCurrentPlayer()) && game.getWinner() != null) {
+        if (firstPlayer.equals(game.getCurrentPlayer()) && game.IsEndingTokenAssigned()) {
             ended = true;
-            for(String nickname : views.keySet()) {
-                views.get(nickname).sendEndGame();
+
+            List<String> nicknames = playerQueue.stream().toList();
+            int bestScore = -1;
+            String winner = null;
+            for(String nickname : nicknames) {
+                if (game.getPublicScore(nickname) + game.getPersonalScore(nickname)
+                        > bestScore) {
+                    winner = nickname;
+                }
+            }
+
+            for(String nick : views.keySet()) {
+                views.get(nick).sendEndGame(winner);
             }
         } else {
             VirtualView current = views.get(game.getCurrentPlayer());
-            current.sendStartTurn();
+            current.sendStartTurn(game.getCurrentPlayer());
         }
     }
 
@@ -122,7 +144,12 @@ public class Controller implements ActionListener {
         game.addPlayer(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
 
-        // TODO: send waiting message.
+        for(String nick : views.keySet()) {
+            views.get(nick).sendWaiting(
+                    action.getSenderNickname(),
+                    numberPlayers - playerQueue.size()
+            );
+        }
 
         if (game.getNumberPlayers() == this.numberPlayers) {
             setupGame();
@@ -193,6 +220,7 @@ public class Controller implements ActionListener {
             views.get(nickname).sendPersonalGoalCard();
             views.get(nickname).sendCommonGoalCard();
             views.get(nickname).sendEndingToken();
+            views.get(nickname).sendScores();
         }
 
         nextTurn();
@@ -209,6 +237,10 @@ public class Controller implements ActionListener {
         }
 
         chat.addMessage(action.getSenderNickname(), action.getText());
+
+        for(String nick : views.keySet()) {
+            views.get(nick).sendMessage();
+        }
     }
 
     public int getNumberPlayers() {
@@ -227,4 +259,3 @@ public class Controller implements ActionListener {
         return turnPhase != null;
     }
 }
-

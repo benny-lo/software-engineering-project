@@ -61,11 +61,10 @@ public interface GameInterface {
     void insertItemTilesInBookshelf(int column, List<Integer> order);
 
     /**
-     * This method compares the {@code totalScore} of the {@code Player}s, and the {@code Player} with the highest {@code totalScore} is the winner.
-     * If there is a tie between 2 or more {@code Player}s, the {@code Player} with the {@code endingToken} is the winner.
-     * @return It returns the winner's name.
+     * Method to check if the ending token was assigned to any of the players.
+     * @return {@code true} iff there is a player that owns the ending token.
      */
-    String getWinner();
+    boolean IsEndingTokenAssigned();
 
     /**
      * This method gets the {@code Player}'s public score(bookshelf, common goals and ending token).

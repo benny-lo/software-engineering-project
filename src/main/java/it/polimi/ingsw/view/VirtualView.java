@@ -3,6 +3,7 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.network.server.UpdateSender;
+import it.polimi.ingsw.utils.Rank;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.rep.*;
 
@@ -18,6 +19,7 @@ public class VirtualView {
     private final PersonalGoalCardRep personalGoalRep;
     private final CommonGoalCardsRep commonGoalCardsRep;
     private final ItemsChosenRep itemsChosenRep;
+    private final ScoreRep scoreRep;
     private final ChatRep chatRep;
     private Controller controller;
     private UpdateSender toClient;
@@ -32,6 +34,7 @@ public class VirtualView {
         this.commonGoalCardsRep = new CommonGoalCardsRep();
         this.itemsChosenRep = new ItemsChosenRep(nickname);
         this.chatRep = new ChatRep();
+        this.scoreRep = new ScoreRep();
         this.controller = null;
         this.error = false;
     }
@@ -62,6 +65,9 @@ public class VirtualView {
 
     public ItemsChosenRep getItemsChosenRep() {
         return itemsChosenRep;
+    }
+    public ScoreRep getScoreRep() {
+        return scoreRep;
     }
     public ChatRep getChatRep() {
         return chatRep;
@@ -121,22 +127,25 @@ public class VirtualView {
         }
     }
 
-    // TODO: scores
-
-    public void sendStartTurn() {
-        try {
-            toClient.sendStartTurnUpdate();
-        } catch (RemoteException e) {
-            System.out.println("lost connection to " + nickname);
+    public void sendScores() {
+        if (!scoreRep.hasChanged()) return;
+        List<Rank> scores = new ArrayList<>();
+        for(String nick : scoreRep.getScores().keySet()) {
+            scores.add(new Rank(nick, scoreRep.getScores().get(nick)));
         }
+        toClient.sendScoresUpdate(new ScoresUpdate(scores));
     }
 
-    public void sendEndGame() {
-        try{
-            toClient.sendEndGameUpdate();
-        } catch (RemoteException e) {
-            System.out.println("lost connection to " + nickname);
-        }
+    public void sendStartTurn(String currentPlayer) {
+        toClient.sendStartTurnUpdate(new StartTurnUpdate(currentPlayer));
+    }
+
+    public void sendEndGame(String winner) {
+        toClient.sendEndGameUpdate(new EndGameUpdate(winner));
+    }
+
+    public void sendWaiting(String nick, int missing) {
+        toClient.sendWaitingUpdate(new WaitingUpdate(nick, missing));
     }
 
     public void setError() {

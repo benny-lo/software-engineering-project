@@ -160,40 +160,25 @@ public class Game implements GameInterface {
     }
 
     @Override
-    public String getWinner() {
-        boolean nobodyFinished = true;
-        for(String s : players.keySet()) {
-            if (players.get(s).firstToFinish()) nobodyFinished = false;
+    public boolean IsEndingTokenAssigned() {
+        for(String nickname : players.keySet()) {
+            if (players.get(nickname).firstToFinish()) return true;
         }
-        if (!nobodyFinished) return null;
-
-        int max = -1;
-        String winner = null;
-
-        for (String s: players.keySet()){
-            if (players.get(s).getTotalScore() > max){
-                max = players.get(s).getTotalScore();
-            }
-        }
-
-        for (String s: players.keySet()){
-            if (players.get(s).getTotalScore() == max && players.get(s).firstToFinish())
-                return s;
-            else if (players.get(s).getTotalScore() == max) {
-                winner = s;
-            }
-        }
-        return winner;
+        return false;
     }
 
     @Override
     public void setEndingTokenRep(EndingTokenRep rep) {
         endingTokenReps.add(rep);
+
     }
 
     @Override
     public void setScoreRep(ScoreRep rep) {
         scoreReps.add(rep);
+        for(String nickname : players.keySet()) {
+            rep.updateRep(nickname, players.get(nickname).getTotalScore());
+        }
     }
 
     @Override

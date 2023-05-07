@@ -1,6 +1,8 @@
 package it.polimi.ingsw.utils.networkMessage.server;
 
-public class EndGameUpdate {
+import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
+
+public class EndGameUpdate extends NetworkMessage {
     private final String winner;
 
     public EndGameUpdate(String winner) {
