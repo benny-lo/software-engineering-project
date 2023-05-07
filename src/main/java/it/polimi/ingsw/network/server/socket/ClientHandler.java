@@ -105,7 +105,7 @@ public class ClientHandler implements Runnable, Sender {
         sendAsync(update);
     }
 
-    private void send(NetworkMessage networkMessage) {
+    private synchronized void send(NetworkMessage networkMessage) {
         try {
             out.writeObject(networkMessage);
         } catch (IOException e) {
