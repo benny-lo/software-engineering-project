@@ -135,8 +135,8 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(JoinAction action) {
-        if (game.getCurrentPlayer() == null || ended) {
-            views.get(action.getSenderNickname()).setError();
+        if (game.getCurrentPlayer() != null || ended) {
+            action.getView().setError();
             return;
         }
 
