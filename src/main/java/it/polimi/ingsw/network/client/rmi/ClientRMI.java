@@ -21,7 +21,7 @@ public class ClientRMI implements ClientRMIInterface, Serializable {
         try{
             //TODO: interaction between this and ClientView
             Registry registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
-            serverRMIInterface = (ServerRMIInterface) registry.lookup("ServerRMI");
+            serverRMIInterface = (ServerRMIInterface) registry.lookup("ServerRMIInterface");
             serverRMIInterface.login("nickname_here", this);
             System.out.println("ClientRMI is connected.");
         }

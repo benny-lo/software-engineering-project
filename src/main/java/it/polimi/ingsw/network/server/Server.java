@@ -25,7 +25,7 @@ public class Server {
         Server server = new Server();
 
         server.startServerRMI(server.getLobby());
-        server.startServerSocket(server.getLobby());
+        server.startServerTCP(server.getLobby());
 
         System.out.println("server is read ...");
     }
@@ -67,7 +67,7 @@ public class Server {
         }
     }
 
-    private void startServerSocket(Lobby lobby) {
+    private void startServerTCP(Lobby lobby) {
         serverTCP = new ServerTCP(lobby);
         (new Thread(this::waitForClients)).start();
     }

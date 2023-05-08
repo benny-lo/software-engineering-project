@@ -28,14 +28,14 @@ public class ServerTCP implements Receiver {
                     ((GameSelection) object).getNickname(),
                     ((GameSelection) object).getId()
             );
-            sender.sendAccepted(new AcceptedAction(ret));
+            sender.sendAccepted(new AcceptedAction(ret, "GAME_SELECTION"));
         } else if (object instanceof GameInitialization) {
             boolean ret = lobby.createGame(
                     ((GameInitialization) object).getNickname(),
                     ((GameInitialization) object).getNumberPlayers(),
                     ((GameInitialization) object).getNumberCommonGoalCards()
                     );
-            sender.sendAccepted(new AcceptedAction(ret));
+            sender.sendAccepted(new AcceptedAction(ret, "GAME_INITIALIZATION"));
         } else if (object instanceof LivingRoomSelection) {
             List<Item> ret = lobby.selectFromLivingRoom(
                     ((LivingRoomSelection) object).getNickname(),
@@ -48,13 +48,13 @@ public class ServerTCP implements Receiver {
                     ((BookshelfInsertion) object).getColumn(),
                     ((BookshelfInsertion) object).getPermutation()
             );
-            sender.sendAccepted(new AcceptedAction(ret));
+            sender.sendAccepted(new AcceptedAction(ret, "BOOKSHELF_INSERTION"));
         } else if (object instanceof ChatUpdate) {
             boolean ret = lobby.addMessage(
                     ((ChatUpdate) object).getNickname(),
                     ((ChatUpdate) object).getText()
             );
-            sender.sendAccepted(new AcceptedAction(ret));
+            sender.sendAccepted(new AcceptedAction(ret, "CHAT_WRITE"));
         }
     }
 }
