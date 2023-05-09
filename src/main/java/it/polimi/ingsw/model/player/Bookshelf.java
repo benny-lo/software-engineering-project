@@ -10,7 +10,7 @@ import java.util.Queue;
 /**
  * Class representing the bookshelf of a player. The bottom row and leftmost column have index 0.
  */
-public class Bookshelf {
+public class Bookshelf{
     /**
      * 2D array of {@code Item}s that are currently in {@code this}.
      */

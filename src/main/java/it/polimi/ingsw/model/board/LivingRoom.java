@@ -10,7 +10,7 @@ import java.util.List;
  * Class representing the LivingRoom of the game. The top row and leftmost column have index 0.
  * The unavailable squares are filled with {@code Item.LOCKED}.
  */
-public class LivingRoom {
+public class LivingRoom{
     private final int rows;
     private final int columns;
     private final Item[][] grid;
@@ -175,13 +175,5 @@ public class LivingRoom {
             grid[p.getRow()][p.getColumn()] = null;
         }
         return selection;
-    }
-    public void printLivingRoom(){
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                System.out.print(grid[i][j] + " ");
-            }
-            System.out.println();
-        }
     }
 }

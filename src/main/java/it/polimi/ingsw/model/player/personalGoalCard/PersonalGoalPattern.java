@@ -35,4 +35,9 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
         }
         return matches;
     }
+
+    @Override
+    public Map<Position, Item> getMaskPositions() {
+        return null;
+    }
 }
