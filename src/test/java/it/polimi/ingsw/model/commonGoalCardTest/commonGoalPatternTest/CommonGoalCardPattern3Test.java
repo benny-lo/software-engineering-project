@@ -1,4 +1,4 @@
-package it.polimi.ingsw.commonGoalCardTest.commonGoalPatternTest;
+package it.polimi.ingsw.model.commonGoalCardTest.commonGoalPatternTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

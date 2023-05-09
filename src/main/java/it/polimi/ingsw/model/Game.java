@@ -91,8 +91,6 @@ public class Game implements GameInterface {
 
     @Override
     public void setup(){
-        if (numberPlayers < 2 || numberPlayers > 4)
-            return;
         this.commonGoalCardManager = new CommonGoalCardManager(numberCommonGoalCards, numberPlayers);
         this.boardManager = new BoardManager(numberPlayers);
         this.distributePersonalCards();

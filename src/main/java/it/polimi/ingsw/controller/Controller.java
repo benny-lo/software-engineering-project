@@ -26,7 +26,7 @@ public class Controller implements ActionListener {
     /**
      * Nickname of the first player. If game has not started yet, it is null.
      */
-    private final String firstPlayer;
+    private String firstPlayer;
 
     /**
      * Queue containing the players, the first one is the current player.
@@ -60,7 +60,7 @@ public class Controller implements ActionListener {
         // Initializing the queue with the chosen order,
         // and setting the first player.
         playerQueue = new ArrayDeque<>(players);
-        String firstPlayer = playerQueue.peek();
+        firstPlayer = playerQueue.peek();
 
         // Setting the first player in game and
         // setting the current turn phase.
@@ -99,6 +99,9 @@ public class Controller implements ActionListener {
             view.sendEndingToken();
             view.sendScores();
         }
+
+        // Initializing the managers and distributing the personal cards.
+        game.setup();
 
         // Notifying the first player their turn has started.
         views.get(game.getCurrentPlayer()).sendStartTurn(game.getCurrentPlayer());
@@ -165,6 +168,7 @@ public class Controller implements ActionListener {
     public void update(SelectionFromLivingRoomAction action) {
         if (ended) {
             views.get(action.getSenderNickname()).setError();
+            return;
         }
 
         if (!action.getSenderNickname().equals(game.getCurrentPlayer())) {
@@ -195,9 +199,10 @@ public class Controller implements ActionListener {
     public void update(SelectionColumnAndOrderAction action) {
         if (ended) {
             views.get(action.getSenderNickname()).setError();
+            return;
         }
 
-        if (action.getSenderNickname().equals(game.getCurrentPlayer())) {
+        if (!action.getSenderNickname().equals(game.getCurrentPlayer())) {
             views.get(action.getSenderNickname()).setError();
             return;
         }
@@ -257,5 +262,34 @@ public class Controller implements ActionListener {
 
     public boolean isStarted() {
         return turnPhase != null;
+    }
+
+    // EXCLUSIVELY FOR TESTING
+    public List<String> getAllPlayers(){
+        return new LinkedList<>(playerQueue);
+    }
+
+    public void setEnded() {
+        ended = true;
+    }
+
+    public void setTurnPhase(TurnPhase turnPhase) {
+        this.turnPhase = turnPhase;
+    }
+
+    public void setCurrentPlayer(String nickname){
+        String p;
+        assert playerQueue.peek() != null;
+        while(!playerQueue.peek().equals(nickname)){
+            p = playerQueue.poll();
+            playerQueue.add(p);
+            assert playerQueue.peek() != null;
+        }
+
+        game.setCurrentPlayer(nickname);
+    }
+
+    public GameInterface getGame(){
+        return game;
     }
 }

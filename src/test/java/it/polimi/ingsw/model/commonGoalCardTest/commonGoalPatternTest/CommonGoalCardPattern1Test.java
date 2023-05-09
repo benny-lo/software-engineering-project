@@ -1,4 +1,4 @@
-package it.polimi.ingsw.commonGoalCardTest.commonGoalPatternTest;
+package it.polimi.ingsw.model.commonGoalCardTest.commonGoalPatternTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,8 +23,7 @@ public class CommonGoalCardPattern1Test {
         Position firstPos = l.get(0);
         if (l.get(1).getRow() != firstPos.getRow() || l.get(1).getColumn() != firstPos.getColumn() + 1) return false;
         if (l.get(2).getRow() != firstPos.getRow() + 1 || l.get(2).getColumn() != firstPos.getColumn()) return false;
-        if (l.get(3).getRow() != firstPos.getRow() + 1 || l.get(3).getColumn() != firstPos.getColumn() + 1) return false;
-        return true;
+        return l.get(3).getRow() == firstPos.getRow() + 1 && l.get(3).getColumn() == firstPos.getColumn() + 1;
     };
 
     /**

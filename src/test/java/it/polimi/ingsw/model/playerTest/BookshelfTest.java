@@ -1,4 +1,4 @@
-package it.polimi.ingsw.playerTest;
+package it.polimi.ingsw.model.playerTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 

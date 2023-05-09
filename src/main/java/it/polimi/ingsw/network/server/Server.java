@@ -27,7 +27,7 @@ public class Server {
         server.startServerRMI(server.getLobby());
         server.startServerTCP(server.getLobby());
 
-        System.out.println("server is read ...");
+        System.out.println("server is ready ...");
     }
 
     public Server() {

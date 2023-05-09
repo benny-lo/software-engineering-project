@@ -1,4 +1,4 @@
-package it.polimi.ingsw.playerTest.personalGoalCardTest;
+package it.polimi.ingsw.model.playerTest.personalGoalCardTest;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
