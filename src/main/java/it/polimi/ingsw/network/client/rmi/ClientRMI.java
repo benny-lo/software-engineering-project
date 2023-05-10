@@ -1,9 +1,7 @@
 package it.polimi.ingsw.network.client.rmi;
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.network.ServerSettings;
-import it.polimi.ingsw.network.server.rmi.ServerRMIInterface;
+import it.polimi.ingsw.network.server.rmi.ConnectionRMIInterface;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.ClientView;
 
@@ -11,18 +9,17 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Map;
 
 public class ClientRMI implements ClientRMIInterface, Serializable {
     private ClientView view;
-    private ServerRMIInterface serverRMIInterface;
+    private ConnectionRMIInterface connectionRMIInterface;
 
     public ClientRMI() {
         try{
             //TODO: interaction between this and ClientView
             Registry registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
-            serverRMIInterface = (ServerRMIInterface) registry.lookup("ServerRMIInterface");
-            serverRMIInterface.login("nickname_here", this);
+            connectionRMIInterface = (ConnectionRMIInterface) registry.lookup("ServerRMIInterface");
+            connectionRMIInterface.login("nickname_here", this);
             System.out.println("ClientRMI is connected.");
         }
         catch (Exception e){
