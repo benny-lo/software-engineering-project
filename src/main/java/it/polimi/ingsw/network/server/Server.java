@@ -1,10 +1,10 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.network.ServerSettings;
-import it.polimi.ingsw.network.server.rmi.ServerRMI;
+import it.polimi.ingsw.network.server.rmi.HandlerRMI;
 import it.polimi.ingsw.network.server.rmi.ServerRMIInterface;
 import it.polimi.ingsw.network.server.socket.ClientHandler;
-import it.polimi.ingsw.network.server.socket.ServerTCP;
+import it.polimi.ingsw.network.server.socket.HandlerTCP;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,14 +18,14 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Server {
     private final Lobby lobby;
-    private ServerRMI serverRMI;
-    private ServerTCP serverTCP;
+    private HandlerRMI handlerRMI;
+    private HandlerTCP handlerTCP;
 
     public static void main(String[] args) {
         Server server = new Server();
 
-        server.startServerRMI(server.getLobby());
-        server.startServerTCP(server.getLobby());
+        server.startHandlerRMI(server.getLobby());
+        server.startHandlerTCP(server.getLobby());
 
         System.out.println("server is ready ...");
     }
@@ -34,12 +34,12 @@ public class Server {
         this.lobby = new Lobby();
     }
 
-    private void startServerRMI(Lobby lobby) {
+    private void startHandlerRMI(Lobby lobby) {
         ServerRMIInterface stub = null;
         try {
-            serverRMI = new ServerRMI(lobby);
+            handlerRMI = new HandlerRMI(lobby);
             stub = (ServerRMIInterface)
-                    UnicastRemoteObject.exportObject(serverRMI, ServerSettings.getRmiPort());
+                    UnicastRemoteObject.exportObject(handlerRMI, ServerSettings.getRmiPort());
         } catch (RemoteException e) {
             System.err.println("failed to export serverRMI");
             e.printStackTrace();
@@ -56,7 +56,7 @@ public class Server {
         try {
             registry.bind("ServerRMIInterface", stub);
         } catch (AccessException e) {
-            System.err.println("no permission to perform action");
+            System.err.println("no permission bind server stub to registry");
             e.printStackTrace();
         } catch (AlreadyBoundException e) {
             System.err.println("already bound to registry object with name ServerRMIInterface");
@@ -67,8 +67,8 @@ public class Server {
         }
     }
 
-    private void startServerTCP(Lobby lobby) {
-        serverTCP = new ServerTCP(lobby);
+    private void startHandlerTCP(Lobby lobby) {
+        handlerTCP = new HandlerTCP(lobby);
         (new Thread(this::waitForClients)).start();
     }
 
@@ -85,7 +85,7 @@ public class Server {
         while(true) {
             try {
                 Socket socket = server.accept();
-                (new Thread(new ClientHandler(socket, serverTCP))).start();
+                (new Thread(new ClientHandler(socket, handlerTCP))).start();
             } catch (IOException e) {
                 System.err.println("server closed");
                 e.printStackTrace();

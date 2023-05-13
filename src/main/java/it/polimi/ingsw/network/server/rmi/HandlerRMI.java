@@ -12,10 +12,10 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 
-public class ServerRMI implements ServerRMIInterface {
+public class HandlerRMI implements ServerRMIInterface {
     private final Lobby lobby;
 
-    public ServerRMI(Lobby lobby){
+    public HandlerRMI(Lobby lobby){
         this.lobby = lobby;
     }
 
