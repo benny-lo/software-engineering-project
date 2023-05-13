@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.server.socket;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.network.server.Sender;
+import it.polimi.ingsw.network.Sender;
 import it.polimi.ingsw.network.server.Lobby;
 import it.polimi.ingsw.network.server.Receiver;
 import it.polimi.ingsw.utils.networkMessage.client.*;
@@ -9,10 +9,10 @@ import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.util.List;
 
-public class HandlerTCP implements Receiver {
+public class ServerTCP implements Receiver {
     private final Lobby lobby;
 
-    public HandlerTCP(Lobby lobby) {
+    public ServerTCP(Lobby lobby) {
         this.lobby = lobby;
     }
 
