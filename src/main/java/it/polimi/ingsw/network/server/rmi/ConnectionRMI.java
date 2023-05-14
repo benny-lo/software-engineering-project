@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.server.Lobby;
 
 import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
-import it.polimi.ingsw.network.client.rmi.ClientRMIInterface;
+import it.polimi.ingsw.network.client.rmi.ClientConnectionRMIInterface;
 
 
 import java.rmi.RemoteException;
@@ -20,8 +20,8 @@ public class ConnectionRMI implements ConnectionRMIInterface {
     }
 
     @Override
-    public List<GameInfo> login(String nickname, ClientRMIInterface clientRMIInterface) throws RemoteException {
-        return lobby.login(nickname, new UpdateSenderRMI(clientRMIInterface));
+    public List<GameInfo> login(String nickname, ClientConnectionRMIInterface clientConnectionRMIInterface) throws RemoteException {
+        return lobby.login(nickname, new UpdateSenderRMI(clientConnectionRMIInterface));
     }
 
     @Override

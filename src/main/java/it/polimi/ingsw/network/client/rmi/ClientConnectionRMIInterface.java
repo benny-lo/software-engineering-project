@@ -5,7 +5,7 @@ import it.polimi.ingsw.utils.networkMessage.server.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-public interface ClientRMIInterface extends Remote {
+public interface ClientConnectionRMIInterface extends Remote {
     void sendLivingRoomUpdate(LivingRoomUpdate update) throws RemoteException;
     void sendBookshelfUpdate(BookshelfUpdate update) throws RemoteException;
     void sendWaitingUpdate(WaitingUpdate update) throws RemoteException;
