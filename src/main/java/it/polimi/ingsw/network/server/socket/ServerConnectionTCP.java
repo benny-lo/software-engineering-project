@@ -9,10 +9,10 @@ import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.util.List;
 
-public class ConnectionTCP implements Receiver {
+public class ServerConnectionTCP implements Receiver {
     private final Lobby lobby;
 
-    public ConnectionTCP(Lobby lobby) {
+    public ServerConnectionTCP(Lobby lobby) {
         this.lobby = lobby;
     }
 

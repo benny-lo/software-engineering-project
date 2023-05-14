@@ -2,15 +2,13 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
-import it.polimi.ingsw.network.client.RequestSender;
-import it.polimi.ingsw.network.client.UpdateReceiver;
 import it.polimi.ingsw.utils.Rank;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.util.List;
 import java.util.Map;
 
-public abstract class ClientView implements UpdateReceiver {
+public abstract class ClientView {
     protected String nickname;
     protected int numberPlayers;
     protected int numberCommonGoalCards;
@@ -22,7 +20,6 @@ public abstract class ClientView implements UpdateReceiver {
     protected List<Rank> scores;
     protected boolean endGame;
     protected List<Message> chat;
-    protected RequestSender sender;
 
     public abstract void onAcceptedAction(AcceptedAction message);
     public abstract void onBookshelfUpdate(BookshelfUpdate update);

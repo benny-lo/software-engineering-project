@@ -2,10 +2,10 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.server.Lobby;
-import it.polimi.ingsw.network.server.rmi.ConnectionRMI;
-import it.polimi.ingsw.network.server.rmi.ConnectionRMIInterface;
+import it.polimi.ingsw.network.server.rmi.ServerConnectionRMI;
+import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.network.server.socket.ClientHandler;
-import it.polimi.ingsw.network.server.socket.ConnectionTCP;
+import it.polimi.ingsw.network.server.socket.ServerConnectionTCP;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,8 +19,8 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Server {
     private final Lobby lobby;
-    private ConnectionRMI connectionRMI;
-    private ConnectionTCP connectionTCP;
+    private ServerConnectionRMI connectionRMI;
+    private ServerConnectionTCP serverConnectionTCP;
 
     public static void main(String[] args) {
         Server server = new Server();
@@ -36,10 +36,10 @@ public class Server {
     }
 
     private void startConnectionRMI(Lobby lobby) {
-        ConnectionRMIInterface stub = null;
+        ServerConnectionRMIInterface stub = null;
         try {
-            connectionRMI = new ConnectionRMI(lobby);
-            stub = (ConnectionRMIInterface)
+            connectionRMI = new ServerConnectionRMI(lobby);
+            stub = (ServerConnectionRMIInterface)
                     UnicastRemoteObject.exportObject(connectionRMI, ServerSettings.getRmiPort());
         } catch (RemoteException e) {
             System.err.println("failed to export serverRMI");
@@ -69,7 +69,7 @@ public class Server {
     }
 
     private void startConnectionTCP(Lobby lobby) {
-        connectionTCP = new ConnectionTCP(lobby);
+        serverConnectionTCP = new ServerConnectionTCP(lobby);
         (new Thread(this::waitForClients)).start();
     }
 
@@ -86,7 +86,7 @@ public class Server {
         while(true) {
             try {
                 Socket socket = server.accept();
-                (new Thread(new ClientHandler(socket, connectionTCP))).start();
+                (new Thread(new ClientHandler(socket, serverConnectionTCP))).start();
             } catch (IOException e) {
                 System.err.println("server closed");
                 e.printStackTrace();

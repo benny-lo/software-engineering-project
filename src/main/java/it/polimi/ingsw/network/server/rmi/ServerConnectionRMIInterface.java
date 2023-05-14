@@ -9,7 +9,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public interface ConnectionRMIInterface extends Remote {
+public interface ServerConnectionRMIInterface extends Remote {
     List<GameInfo> login(String nickname, ClientConnectionRMIInterface clientConnectionRMIInterface) throws RemoteException;
     boolean selectGame(String nickname, int id) throws RemoteException;
     boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) throws RemoteException;
