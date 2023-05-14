@@ -2,71 +2,36 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.utils.Rank;
+import it.polimi.ingsw.utils.networkMessage.server.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ClientView {
-    private int numberPlayers;
-    private int numberCommonGoalCards;
-    private Item[][] livingRoom;
-    private final Map<String, Item[][]> bookshelves;
-    private String endingToken;
-    private int personalGoalCard;
-    private final List<int[]> commonGoalCards;
-    private Map<String, Integer> scores;
-    private boolean endGame;
-    private final List<Message> chat;
+public abstract class ClientView {
+    protected String nickname;
+    protected int numberPlayers;
+    protected int numberCommonGoalCards;
+    protected Item[][] livingRoom;
+    protected Map<String, Item[][]> bookshelves;
+    protected String endingToken;
+    protected int personalGoalCardId;
+    protected List<int[]> commonGoalCards;
+    protected List<Rank> scores;
+    protected boolean endGame;
+    protected List<Message> chat;
 
-    public ClientView() {
-        bookshelves = new HashMap<>();
-        commonGoalCards = new ArrayList<>();
-        endingToken = null;
-        endGame = false;
-        chat = new ArrayList<>();
-    }
-
-    public void setLivingRoom(Item[][] livingRoom) {
-        this.livingRoom = livingRoom;
-    }
-
-    public void setBookshelf(String nickname, Item[][] bookshelf) {
-        bookshelves.put(nickname, bookshelf);
-    }
-
-    public void setEndingToken(String endingToken) {
-        this.endingToken = endingToken;
-    }
-
-    public void setPersonalGoalCard(int id) {
-        personalGoalCard = id;
-    }
-
-    public void setCommonGoalCards(int id, int top) {
-        for(int[] card : commonGoalCards) {
-            if (card[0] == id) {
-                card[1] = top;
-                return;
-            }
-        }
-
-        int[] card = new int[2];
-        card[0] = id;
-        card[1] = top;
-        commonGoalCards.add(card);
-    }
-
-    public void setScores(Map<String, Integer> scores) {
-        this.scores = scores;
-    }
-
-    public void setEndGame() {
-        endGame = true;
-    }
-
-    public void setChatMessage(Message message) {
-        chat.add(message);
-    }
+    public abstract void onAcceptedAction(AcceptedAction message);
+    public abstract void onBookshelfUpdate(BookshelfUpdate update);
+    public abstract void onChatUpdate(ChatUpdate update);
+    public abstract void onCommonGoalCardUpdate(CommonGoalCardUpdate update);
+    public abstract void onEndGameUpdate(EndGameUpdate update);
+    public abstract void onEndingTokenUpdate(EndingTokenUpdate update);
+    public abstract void onGamesList(GamesList gamesList);
+    public abstract void onItemsSelected(ItemsSelected itemsSelected);
+    public abstract void onLivingRoomUpdate(LivingRoomUpdate update);
+    public abstract void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update);
+    public abstract void onScoresUpdate(ScoresUpdate update);
+    public abstract void onStartTurnUpdate(StartTurnUpdate update);
+    public abstract void onWaitingUpdate(WaitingUpdate update);
 }
