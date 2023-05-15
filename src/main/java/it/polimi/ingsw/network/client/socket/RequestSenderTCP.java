@@ -59,7 +59,7 @@ public class RequestSenderTCP implements RequestSender, ObjectReceiver {
         } else if (object instanceof LivingRoomUpdate) {
             updateReceiver.onLivingRoomUpdate((LivingRoomUpdate) object);
         } else if (object instanceof BookshelfUpdate) {
-            updateReceiver.onBookshelfUUpdate((BookshelfUpdate) object);
+            updateReceiver.onBookshelfUpdate((BookshelfUpdate) object);
         } else if (object instanceof EndingTokenUpdate) {
             updateReceiver.onEndingTokenUpdate((EndingTokenUpdate) object);
         } else if (object instanceof WaitingUpdate) {

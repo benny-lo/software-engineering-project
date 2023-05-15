@@ -9,7 +9,6 @@ import it.polimi.ingsw.network.client.rmi.RequestSenderRMI;
 import it.polimi.ingsw.network.client.socket.RequestSenderTCP;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.utils.Rank;
-import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -18,22 +17,33 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ClientView implements UpdateReceiver {
     protected String nickname;
+    protected String currentPlayer;
+    protected String winner;
     protected int numberPlayers;
     protected int numberCommonGoalCards;
     protected Item[][] livingRoom;
     protected Map<String, Item[][]> bookshelves;
     protected String endingToken;
-    protected int personalGoalCardId;
+    protected int personalGoalCard;
     protected List<int[]> commonGoalCards;
     protected List<Rank> scores;
     protected boolean endGame;
     protected List<Message> chat;
+    protected List<Item> itemsChosen;
     protected RequestSender sender;
+
+    public ClientView() {
+        bookshelves = new HashMap<>();
+        commonGoalCards = new ArrayList<>();
+        chat = new ArrayList<>();
+    }
 
     public void startRMI() {
         // TODO: exceptions

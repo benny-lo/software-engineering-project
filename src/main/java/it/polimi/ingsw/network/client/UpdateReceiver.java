@@ -7,7 +7,7 @@ public interface UpdateReceiver {
     void onAcceptedAction(AcceptedAction message);
     void onItemsSelected(ItemsSelected message);
     void onLivingRoomUpdate(LivingRoomUpdate update);
-    void onBookshelfUUpdate(BookshelfUpdate update);
+    void onBookshelfUpdate(BookshelfUpdate update);
     void onWaitingUpdate(WaitingUpdate update);
     void onScoresUpdate(ScoresUpdate update);
     void onEndingTokenUpdate(EndingTokenUpdate update);
