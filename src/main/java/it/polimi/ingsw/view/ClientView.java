@@ -2,13 +2,26 @@ package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.network.ServerSettings;
+import it.polimi.ingsw.network.client.RequestSender;
+import it.polimi.ingsw.network.client.UpdateReceiver;
+import it.polimi.ingsw.network.client.rmi.RequestSenderRMI;
+import it.polimi.ingsw.network.client.socket.RequestSenderTCP;
+import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.utils.Rank;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
+import java.io.IOException;
+import java.net.Socket;
+import java.rmi.AccessException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ClientView {
+public abstract class ClientView implements UpdateReceiver {
     protected String nickname;
     protected int numberPlayers;
     protected int numberCommonGoalCards;
@@ -20,18 +33,45 @@ public abstract class ClientView {
     protected List<Rank> scores;
     protected boolean endGame;
     protected List<Message> chat;
+    protected RequestSender sender;
 
-    public abstract void onAcceptedAction(AcceptedAction message);
-    public abstract void onBookshelfUpdate(BookshelfUpdate update);
-    public abstract void onChatUpdate(ChatUpdate update);
-    public abstract void onCommonGoalCardUpdate(CommonGoalCardUpdate update);
-    public abstract void onEndGameUpdate(EndGameUpdate update);
-    public abstract void onEndingTokenUpdate(EndingTokenUpdate update);
-    public abstract void onGamesList(GamesList gamesList);
-    public abstract void onItemsSelected(ItemsSelected itemsSelected);
-    public abstract void onLivingRoomUpdate(LivingRoomUpdate update);
-    public abstract void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update);
-    public abstract void onScoresUpdate(ScoresUpdate update);
-    public abstract void onStartTurnUpdate(StartTurnUpdate update);
-    public abstract void onWaitingUpdate(WaitingUpdate update);
+    public void startRMI() {
+        // TODO: exceptions
+        Registry registry;
+        try {
+            registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
+        } catch (RemoteException e) {
+            System.err.println("RMI registry error");
+            throw new RuntimeException(e);
+        }
+
+        ServerConnectionRMIInterface stub;
+        try {
+            stub = (ServerConnectionRMIInterface) registry.lookup("ServerConnectionRMIInterface");
+        } catch (AccessException e) {
+            System.err.println("wrong access privileges for RMI");
+            throw new RuntimeException(e);
+        } catch (NotBoundException e) {
+            System.err.println("name not found for RMI");
+            throw new RuntimeException(e);
+        } catch (RemoteException e) {
+            System.err.println("something went wrong for RMI");
+            throw new RuntimeException(e);
+        }
+
+        sender = new RequestSenderRMI(stub, this);
+    }
+
+    public void startTCP() {
+        // TODO: exceptions
+        Socket socket;
+        try {
+            socket = new Socket(ServerSettings.getHostName(), ServerSettings.getSocketPort());
+        } catch (IOException e) {
+            System.err.println("not able to open TCP connection to Server");
+            throw new RuntimeException(e);
+        }
+
+        sender = new RequestSenderTCP(socket, this);
+    }
 }

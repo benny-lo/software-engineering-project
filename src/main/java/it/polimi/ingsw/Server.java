@@ -19,7 +19,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Server {
     private final Lobby lobby;
-    private ServerConnectionRMI connectionRMI;
+    private ServerConnectionRMI serverConnectionRMI;
     private ServerConnectionTCP serverConnectionTCP;
 
     public static void main(String[] args) {
@@ -38,9 +38,9 @@ public class Server {
     private void startConnectionRMI(Lobby lobby) {
         ServerConnectionRMIInterface stub = null;
         try {
-            connectionRMI = new ServerConnectionRMI(lobby);
+            serverConnectionRMI = new ServerConnectionRMI(lobby);
             stub = (ServerConnectionRMIInterface)
-                    UnicastRemoteObject.exportObject(connectionRMI, ServerSettings.getRmiPort());
+                    UnicastRemoteObject.exportObject(serverConnectionRMI, ServerSettings.getRmiPort());
         } catch (RemoteException e) {
             System.err.println("failed to export serverRMI");
             e.printStackTrace();
@@ -55,7 +55,7 @@ public class Server {
         }
 
         try {
-            registry.bind("ServerRMIInterface", stub);
+            registry.bind("ServerConnectionRMIInterface", stub);
         } catch (AccessException e) {
             System.err.println("no permission to perform action");
             e.printStackTrace();
