@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.client.RequestSender;
-import it.polimi.ingsw.network.client.UpdateReceiver;
 import it.polimi.ingsw.network.client.rmi.RequestSenderRMI;
 import it.polimi.ingsw.network.client.socket.RequestSenderTCP;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
@@ -22,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ClientView implements UpdateReceiver {
+public abstract class UpdateReceiver implements it.polimi.ingsw.network.client.UpdateReceiver {
     protected String nickname;
     protected String currentPlayer;
     protected String winner;
@@ -39,7 +38,7 @@ public abstract class ClientView implements UpdateReceiver {
     protected List<Item> itemsChosen;
     protected RequestSender sender;
 
-    public ClientView() {
+    public UpdateReceiver() {
         bookshelves = new HashMap<>();
         commonGoalCards = new ArrayList<>();
         chat = new ArrayList<>();
@@ -69,7 +68,12 @@ public abstract class ClientView implements UpdateReceiver {
             throw new RuntimeException(e);
         }
 
-        sender = new RequestSenderRMI(stub, this);
+        try {
+            sender = new RequestSenderRMI(stub, this);
+        } catch(RemoteException e) {
+            System.err.println("rmi client-side failed");
+            throw new RuntimeException(e);
+        }
     }
 
     public void startTCP() {

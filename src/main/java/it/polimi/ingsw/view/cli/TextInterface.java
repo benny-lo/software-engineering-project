@@ -5,11 +5,11 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.utils.Rank;
 import it.polimi.ingsw.utils.networkMessage.server.*;
-import it.polimi.ingsw.view.ClientView;
+import it.polimi.ingsw.view.UpdateReceiver;
 
 import java.util.List;
 
-public class TextInterface extends ClientView implements InputReceiver {
+public class TextInterface extends UpdateReceiver implements InputReceiver {
     private final InputHandler inputHandler;
     private boolean inChat;
     public TextInterface() {

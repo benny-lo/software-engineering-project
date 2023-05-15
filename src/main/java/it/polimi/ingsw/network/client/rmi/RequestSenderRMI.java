@@ -5,19 +5,20 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.client.RequestSender;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.utils.networkMessage.server.*;
-import it.polimi.ingsw.view.ClientView;
+import it.polimi.ingsw.view.UpdateReceiver;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInterface, Serializable {
+public class RequestSenderRMI extends UnicastRemoteObject implements RequestSender, ClientConnectionRMIInterface {
     private final ServerConnectionRMIInterface serverConnectionRMIInterface;
-    private final ClientView view;
+    private final UpdateReceiver updateReceiver;
 
-    public RequestSenderRMI(ServerConnectionRMIInterface serverConnectionRMIInterface, ClientView view) {
+    public RequestSenderRMI(ServerConnectionRMIInterface serverConnectionRMIInterface, UpdateReceiver updateReceiver) throws RemoteException {
+        super();
         this.serverConnectionRMIInterface = serverConnectionRMIInterface;
-        this.view = view;
+        this.updateReceiver = updateReceiver;
     }
 
     @Override
@@ -30,7 +31,7 @@ public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInter
             e.printStackTrace();
         }
 
-        view.onGamesList(new GamesList(ret));
+        updateReceiver.onGamesList(new GamesList(ret));
     }
 
     @Override
@@ -43,7 +44,7 @@ public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInter
             e.printStackTrace();
         }
 
-        view.onAcceptedAction(new AcceptedAction(ret, "GAME_SELECTION"));
+        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "GAME_SELECTION"));
     }
 
     @Override
@@ -56,7 +57,7 @@ public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInter
             e.printStackTrace();
         }
 
-        view.onAcceptedAction(new AcceptedAction(ret, "GAME_INITIALIZATION"));
+        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "GAME_INITIALIZATION"));
     }
 
     @Override
@@ -69,7 +70,7 @@ public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInter
             e.printStackTrace();
         }
 
-        view.onItemsSelected(new ItemsSelected(ret));
+        updateReceiver.onItemsSelected(new ItemsSelected(ret));
     }
 
     @Override
@@ -82,7 +83,7 @@ public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInter
             e.printStackTrace();
         }
 
-        view.onAcceptedAction(new AcceptedAction(ret, "BOOKSHELF_INSERTION"));
+        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "BOOKSHELF_INSERTION"));
     }
 
     @Override
@@ -95,56 +96,56 @@ public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInter
             e.printStackTrace();
         }
 
-        view.onAcceptedAction(new AcceptedAction(ret, "CHAT_WRITE"));
+        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "CHAT_WRITE"));
     }
 
     @Override
     public void sendLivingRoomUpdate(LivingRoomUpdate update) throws RemoteException {
-        view.onLivingRoomUpdate(update);
+        updateReceiver.onLivingRoomUpdate(update);
     }
 
     @Override
     public void sendBookshelfUpdate(BookshelfUpdate update) throws RemoteException {
-        view.onBookshelfUpdate(update);
+        updateReceiver.onBookshelfUpdate(update);
     }
 
     @Override
     public void sendWaitingUpdate(WaitingUpdate update) throws RemoteException {
-        view.onWaitingUpdate(update);
+        updateReceiver.onWaitingUpdate(update);
     }
 
     @Override
     public void sendScoresUpdate(ScoresUpdate update) throws RemoteException {
-        view.onScoresUpdate(update);
+        updateReceiver.onScoresUpdate(update);
     }
 
     @Override
     public void sendEndingTokenUpdate(EndingTokenUpdate update) throws RemoteException {
-        view.onEndingTokenUpdate(update);
+        updateReceiver.onEndingTokenUpdate(update);
     }
 
     @Override
     public void sendCommonGoalCardUpdate(CommonGoalCardUpdate update) throws RemoteException {
-        view.onCommonGoalCardUpdate(update);
+        updateReceiver.onCommonGoalCardUpdate(update);
     }
 
     @Override
     public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) throws RemoteException {
-        view.onPersonalGoalCardUpdate(update);
+        updateReceiver.onPersonalGoalCardUpdate(update);
     }
 
     @Override
     public void sendChatUpdate(ChatUpdate update) throws RemoteException {
-        view.onChatUpdate(update);
+        updateReceiver.onChatUpdate(update);
     }
 
     @Override
     public void sendStartTurnUpdate(StartTurnUpdate update) throws RemoteException {
-        view.onStartTurnUpdate(update);
+        updateReceiver.onStartTurnUpdate(update);
     }
 
     @Override
     public void sendEndGameUpdate(EndGameUpdate update) throws RemoteException {
-        view.onEndGameUpdate(update);
+        updateReceiver.onEndGameUpdate(update);
     }
 }
