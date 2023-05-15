@@ -11,7 +11,6 @@ public class Client {
         } else if (args[0].equals("TCP")) {
             view.startTCP();
         } else {
-            System.err.println("invalid command-line arguments");
             System.exit(1);
         }
     }

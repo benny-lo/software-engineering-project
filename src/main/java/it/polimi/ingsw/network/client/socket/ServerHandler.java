@@ -23,8 +23,8 @@ public class ServerHandler implements Runnable {
     @Override
     public void run() {
         try {
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
+            this.in = new ObjectInputStream(socket.getInputStream());
+
             Object input;
 
             while (true) {
@@ -41,6 +41,7 @@ public class ServerHandler implements Runnable {
 
     public synchronized void send(NetworkMessageWithSender message) {
         try {
+            out = new ObjectOutputStream(socket.getOutputStream());
             out.writeObject(message);
         } catch (IOException e) {
             System.err.println("RequestSenderTCP: line 41 = I/O failed");

@@ -51,7 +51,6 @@ public class RequestSenderTCP implements RequestSender, ObjectReceiver {
 
     @Override
     public void receive(Object object) {
-
         if (object instanceof GamesList) {
             updateReceiver.onGamesList((GamesList) object);
         } else if (object instanceof ItemsSelected) {

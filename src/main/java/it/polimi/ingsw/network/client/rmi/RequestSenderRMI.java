@@ -7,10 +7,11 @@ import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.ClientView;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.List;
 
-public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInterface {
+public class RequestSenderRMI implements RequestSender, ClientConnectionRMIInterface, Serializable {
     private final ServerConnectionRMIInterface serverConnectionRMIInterface;
     private final ClientView view;
 

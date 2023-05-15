@@ -37,6 +37,10 @@ public class TextInterface extends ClientView implements InputReceiver {
                         "\tnumber of players: " + info.getNumberPlayers() + "\n" +
                         "\tnumber of common goal cards: " + info.getNumberCommonGoals());
             }
+
+            if (games.size() == 0) {
+                System.out.println("there are no available games. create a new one");
+            }
         }
     }
 
