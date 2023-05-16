@@ -31,50 +31,63 @@ public class InputHandler implements Runnable {
             if (!tokenizer.hasMoreTokens()) continue;
 
             String command = tokenizer.nextToken();
-            if (command.equals("/login")) {
-                if (tokenizer.countTokens() == 1) {
-                    String nickname = tokenizer.nextToken();
-                    inputReceiver.login(nickname);
-                }
-            } else if (command.equals("/create_game")) {
-                if (tokenizer.countTokens() == 2) {
-                    int numberPlayer = Integer.parseInt(tokenizer.nextToken());
-                    int numberCommonGoalCards = Integer.parseInt(tokenizer.nextToken());
-                    inputReceiver.createGame(numberPlayer, numberCommonGoalCards);
-                }
-            } else if (command.equals("/join_game")) {
-                if (tokenizer.countTokens() == 1) {
-                    int id = Integer.parseInt(tokenizer.nextToken());
-                    inputReceiver.joinGame(id);
-                }
-            } else if (command.equals("/living_room")) {
-                if (tokenizer.countTokens() % 2 == 0) {
-                    List<Position> positions = new ArrayList<>();
-                    while(tokenizer.hasMoreTokens()) {
-                        int x = Integer.parseInt(tokenizer.nextToken());
-                        int y = Integer.parseInt(tokenizer.nextToken());
-                        positions.add(new Position(x, y));
+            switch (command) {
+                case "/help":
+                    System.out.println("Commands list: \n\t login \n\t create_game \n\t select_game \n\t living_room \n\t bookshelf \n\t enter_chat \n\t exit_chat");
+                case "/login":
+                    if (tokenizer.countTokens() == 1) {
+                        String nickname = tokenizer.nextToken();
+                        inputReceiver.login(nickname);
                     }
-                    inputReceiver.livingRoom(positions);
-                }
-            } else if (command.equals("/bookshelf")) {
-                if (tokenizer.countTokens() > 1) {
-                    int column = Integer.parseInt(tokenizer.nextToken());
+                    break;
+                case "/create_game":
+                    if (tokenizer.countTokens() == 2) {
+                        int numberPlayer = Integer.parseInt(tokenizer.nextToken());
+                        int numberCommonGoalCards = Integer.parseInt(tokenizer.nextToken());
+                        inputReceiver.createGame(numberPlayer, numberCommonGoalCards);
+                    }
+                    break;
+                case "/select_game":
+                    if (tokenizer.countTokens() == 1) {
+                        int id = Integer.parseInt(tokenizer.nextToken());
+                        inputReceiver.joinGame(id);
+                    }
+                    break;
+                case "/living_room":
+                    if (tokenizer.countTokens() % 2 == 0) {
+                        List<Position> positions = new ArrayList<>();
+                        while (tokenizer.hasMoreTokens()) {
+                            int x = Integer.parseInt(tokenizer.nextToken());
+                            int y = Integer.parseInt(tokenizer.nextToken());
+                            positions.add(new Position(x, y));
+                        }
+                        inputReceiver.livingRoom(positions);
+                    }
+                    break;
+                case "/bookshelf":
+                    if (tokenizer.countTokens() > 1) {
+                        int column = Integer.parseInt(tokenizer.nextToken());
 
-                    List<Integer> permutation = new ArrayList<>();
-                    while(tokenizer.hasMoreTokens()) {
-                        permutation.add(Integer.parseInt(tokenizer.nextToken()));
+                        List<Integer> permutation = new ArrayList<>();
+                        while (tokenizer.hasMoreTokens()) {
+                            permutation.add(Integer.parseInt(tokenizer.nextToken()));
+                        }
+                        inputReceiver.bookshelf(column, permutation);
                     }
-                    inputReceiver.bookshelf(column, permutation);
-                }
-            } else if (command.equals("/enter_chat")) {
-                if (tokenizer.countTokens() == 0) {
-                    inputReceiver.enterChat();
-                }
-            } else if (command.equals("/exit_chat")) {
-                if (tokenizer.countTokens() == 0) {
-                    inputReceiver.exitChat();
-                }
+                    break;
+                case "/enter_chat":
+                    if (tokenizer.countTokens() == 0) {
+                        inputReceiver.enterChat();
+                    }
+                    break;
+                case "/exit_chat":
+                    if (tokenizer.countTokens() == 0) {
+                        inputReceiver.exitChat();
+                    }
+                    break;
+                default:
+                    System.out.println("This command does not exists");
+                    break;
             }
         }
     }

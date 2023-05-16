@@ -93,24 +93,12 @@ public class Printable implements ViewInterface{
             System.out.print("  ");
         } else {
             switch (item) {
-                case CAT:
-                    System.out.print((char) 27 + "[32mC ");
-                    break;
-                case BOOK:
-                    System.out.print((char) 27 + "[37mB ");
-                    break;
-                case GAME:
-                    System.out.print((char) 27 + "[33mG ");
-                    break;
-                case FRAME:
-                    System.out.print((char) 27 + "[34mF ");
-                    break;
-                case CUP:
-                    System.out.print((char) 27 + "[36mC ");
-                    break;
-                case PLANT:
-                    System.out.print((char) 27 + "[35mP ");
-                    break;
+                case CAT -> System.out.print((char) 27 + "[32mC ");
+                case BOOK -> System.out.print((char) 27 + "[37mB ");
+                case GAME -> System.out.print((char) 27 + "[33mG ");
+                case FRAME -> System.out.print((char) 27 + "[34mF ");
+                case CUP -> System.out.print((char) 27 + "[36mC ");
+                case PLANT -> System.out.print((char) 27 + "[35mP ");
             }
         }
     }
@@ -118,9 +106,9 @@ public class Printable implements ViewInterface{
     @Override
     public void printLivingroom(Item[][] livingroom) {
         System.out.println("Livingroom: ");
-        for(int i=0; i<livingroom.length; i++){
-            for(int j=0; j< livingroom[i].length; j++) {
-                printItem(livingroom[i][j]);
+        for (Item[] items : livingroom) {
+            for (Item item : items) {
+                printItem(item);
                 System.out.println();
             }
         }
