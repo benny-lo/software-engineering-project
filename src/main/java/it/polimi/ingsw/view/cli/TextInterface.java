@@ -8,6 +8,7 @@ import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.ClientView;
 
 import java.util.List;
+import java.util.Map;
 
 public class TextInterface extends ClientView implements InputReceiver {
     private final InputHandler inputHandler;
@@ -33,13 +34,13 @@ public class TextInterface extends ClientView implements InputReceiver {
             clearScreen();
 
             for (GameInfo info : games) {
-                System.out.println("id " + info.getId() + ":\n" +
-                        "\tnumber of players: " + info.getNumberPlayers() + "\n" +
-                        "\tnumber of common goal cards: " + info.getNumberCommonGoals());
+                System.out.println("Id " + info.getId() + ":\n" +
+                        "\tNumber of players: " + info.getNumberPlayers() + "\n" +
+                        "\tNumber of common goal cards: " + info.getNumberCommonGoals());
             }
 
             if (games.size() == 0) {
-                System.out.println("there are no available games. create a new one");
+                System.out.println("There are no available games. Create a new one (Number of player and number of CommonGoalCard)");
             }
         }
     }
@@ -48,7 +49,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onAcceptedAction(AcceptedAction message) {
         synchronized (System.out) {
             if (!message.getAccepted()) {
-                System.out.println("Try again!");
+                System.out.println("Action denied. Try again!");
             }
         }
     }
@@ -57,7 +58,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onItemsSelected(ItemsSelected message) {
         synchronized (System.out) {
             itemsChosen = message.getItems();
-            if (itemsChosen == null) System.out.println("Try again!");
+            if (itemsChosen == null) System.out.println("Invalid tile selection! Try again.");
 
             if (!inChat && !endGame) {
                 clearScreen();
@@ -94,7 +95,8 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onWaitingUpdate(WaitingUpdate update) {
         synchronized (System.out) {
             System.out.println(update.getJustConnected() + " just connected");
-            System.out.println("waiting for " + update.getMissing() + " players ...");
+            if(update.getMissing()!=0) System.out.println("Waiting for " + update.getMissing() + " players ...");
+            else System.out.println("Game starts!");
         }
     }
 
@@ -235,7 +237,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     private void printGameRep() {
-        System.out.println("the current player is " + currentPlayer);
+        System.out.println("The current player is " + currentPlayer);
         System.out.println();
 
         printLivingRoom();
@@ -247,39 +249,60 @@ public class TextInterface extends ClientView implements InputReceiver {
         printScores();
     }
 
+    public void printItem(Item item) {
+        if (item == null) {
+            System.out.print("  ");
+        } else {
+            switch (item) {
+                case CAT -> System.out.print((char) 27 + "[32mC ");
+                case BOOK -> System.out.print((char) 27 + "[37mB ");
+                case GAME -> System.out.print((char) 27 + "[33mG ");
+                case FRAME -> System.out.print((char) 27 + "[34mF ");
+                case CUP -> System.out.print((char) 27 + "[36mC ");
+                case PLANT -> System.out.print((char) 27 + "[35mP ");
+            }
+        }
+    }
+
     private void printLivingRoom() {
         if (livingRoom == null) return;
 
+        System.out.println("Livingroom: ");
         for (Item[] items : livingRoom) {
             for (Item item : items) {
-                System.out.print(item + " ");
+                printItem(item);
+                System.out.println();
             }
-            System.out.println();
         }
         System.out.println();
     }
 
     private void printBookshelves() {
-        for(String nick : bookshelves.keySet()) {
-            System.out.println(nick + " 's bookshelf:");
-            for(int i = 0; i < bookshelves.get(nick).length; i++) {
-                for(int j = 0; j < bookshelves.get(nick)[i].length; j++) {
-                    System.out.print(bookshelves.get(nick)[i][j] + " ");
-                }
+        for(Map.Entry<String, Item[][]> entry: bookshelves.entrySet()){
+            System.out.println(entry.getKey() + "'s bookshelf:");
+            printBookshelf(entry.getValue());
+        }
+        System.out.println();
+    }
+
+    private void printBookshelf(Item[][] array) {
+        for(int i= array.length-1; i>=0; i--){
+            for(int j=0; j< array[i].length; j++) {
+                printItem(array[i][j]);
                 System.out.println();
             }
-            System.out.println();
         }
+        System.out.println();
     }
 
     private void printPersonalGoalCard() {
         if (personalGoalCard == 0) return;
-        System.out.println("your personal goal card is " + personalGoalCard);
+        System.out.println("Your personal goal card is " + personalGoalCard);
         System.out.println();
     }
 
     private void printCommonGoalCards() {
-        System.out.println("your common goal cards are:");
+        System.out.println("Your common goal cards are:");
         for(int[] card : commonGoalCards) {
             System.out.println("id: " + card[0] + " top: " + card[1]);
         }
@@ -288,7 +311,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     private void printItemsChosen() {
         if (itemsChosen == null) return;
-        System.out.print("you chose the items: ");
+        System.out.print("You chose the items: ");
         for(Item item : itemsChosen) {
             System.out.print(item + " ");
         }
@@ -298,7 +321,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     private void printEndingToken() {
         if (endingToken == null) {
-            System.out.println("nobody has the ending token");
+            System.out.println("Nobody has the ending token");
         } else {
             System.out.println(endingToken + " has the ending token");
         }
@@ -306,8 +329,8 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     private void printScores() {
-        if (scores == null) return;
-        System.out.println("rankings:");
+        if(scores==null) return;
+        System.out.println("Rankings:");
         for(Rank rank : scores) {
             System.out.println(rank.getNickname() + ": " + rank.getScore());
         }
@@ -316,12 +339,12 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     private void printChat() {
         if (chat.size() == 0) {
-            System.out.println("no message in chat yet");
+            System.out.println("No message in chat yet");
             return;
         }
 
         for(Message message: chat) {
-            System.out.println(message.getText() + "wrote " + message.getText());
+            System.out.println(message.getText() + "wrote: " + message.getText());
         }
         System.out.println();
     }
@@ -330,7 +353,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         if (winner.equals(nickname)) {
             System.out.println("You are the winner");
         } else {
-            System.out.println("the winner is " + winner);
+            System.out.println("The winner is " + winner);
         }
 
         printScores();
