@@ -1,15 +1,15 @@
 package it.polimi.ingsw.network.server.rmi;
 
-import it.polimi.ingsw.network.client.rmi.ClientRMIInterface;
+import it.polimi.ingsw.network.client.rmi.ClientConnectionRMIInterface;
 import it.polimi.ingsw.network.server.UpdateSender;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.rmi.RemoteException;
 
 public class UpdateSenderRMI implements UpdateSender {
-    private final ClientRMIInterface client;
+    private final ClientConnectionRMIInterface client;
 
-    public UpdateSenderRMI(ClientRMIInterface client) {
+    public UpdateSenderRMI(ClientConnectionRMIInterface client) {
         this.client = client;
     }
 

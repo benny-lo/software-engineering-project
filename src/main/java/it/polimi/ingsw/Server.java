@@ -1,10 +1,11 @@
-package it.polimi.ingsw.network.server;
+package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
-import it.polimi.ingsw.network.server.rmi.ServerRMI;
-import it.polimi.ingsw.network.server.rmi.ServerRMIInterface;
+import it.polimi.ingsw.network.server.Lobby;
+import it.polimi.ingsw.network.server.rmi.ServerConnectionRMI;
+import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.network.server.socket.ClientHandler;
-import it.polimi.ingsw.network.server.socket.ServerTCP;
+import it.polimi.ingsw.network.server.socket.ServerConnectionTCP;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -18,14 +19,14 @@ import java.rmi.server.UnicastRemoteObject;
 
 public class Server {
     private final Lobby lobby;
-    private ServerRMI serverRMI;
-    private ServerTCP serverTCP;
+    private ServerConnectionRMI serverConnectionRMI;
+    private ServerConnectionTCP serverConnectionTCP;
 
     public static void main(String[] args) {
         Server server = new Server();
 
-        server.startServerRMI(server.getLobby());
-        server.startServerTCP(server.getLobby());
+        server.startConnectionRMI(server.getLobby());
+        server.startConnectionTCP(server.getLobby());
 
         System.out.println("server is ready ...");
     }
@@ -34,12 +35,12 @@ public class Server {
         this.lobby = new Lobby();
     }
 
-    private void startServerRMI(Lobby lobby) {
-        ServerRMIInterface stub = null;
+    private void startConnectionRMI(Lobby lobby) {
+        ServerConnectionRMIInterface stub = null;
         try {
-            serverRMI = new ServerRMI(lobby);
-            stub = (ServerRMIInterface)
-                    UnicastRemoteObject.exportObject(serverRMI, ServerSettings.getRmiPort());
+            serverConnectionRMI = new ServerConnectionRMI(lobby);
+            stub = (ServerConnectionRMIInterface)
+                    UnicastRemoteObject.exportObject(serverConnectionRMI, ServerSettings.getRmiPort());
         } catch (RemoteException e) {
             System.err.println("failed to export serverRMI");
             e.printStackTrace();
@@ -54,7 +55,7 @@ public class Server {
         }
 
         try {
-            registry.bind("ServerRMIInterface", stub);
+            registry.bind("ServerConnectionRMIInterface", stub);
         } catch (AccessException e) {
             System.err.println("no permission to perform action");
             e.printStackTrace();
@@ -67,8 +68,8 @@ public class Server {
         }
     }
 
-    private void startServerTCP(Lobby lobby) {
-        serverTCP = new ServerTCP(lobby);
+    private void startConnectionTCP(Lobby lobby) {
+        serverConnectionTCP = new ServerConnectionTCP(lobby);
         (new Thread(this::waitForClients)).start();
     }
 
@@ -85,7 +86,7 @@ public class Server {
         while(true) {
             try {
                 Socket socket = server.accept();
-                (new Thread(new ClientHandler(socket, serverTCP))).start();
+                (new Thread(new ClientHandler(socket, serverConnectionTCP))).start();
             } catch (IOException e) {
                 System.err.println("server closed");
                 e.printStackTrace();
