@@ -146,7 +146,7 @@ public class Controller implements ActionListener {
     @Override
     public void update(JoinAction action) {
         if (game.getCurrentPlayer() != null || ended) {
-            action.getView().setError();
+            action.getView().sendAcceptedAction(false, "SELECT_GAME");
             return;
         }
 
@@ -173,27 +173,17 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(SelectionFromLivingRoomAction action) {
-        if (ended) {
-            views.get(action.getSenderNickname()).setError();
-            return;
-        }
-
-        if (!action.getSenderNickname().equals(game.getCurrentPlayer())) {
-            views.get(action.getSenderNickname()).setError();
-            return;
-        }
-
-        if (turnPhase != TurnPhase.LIVING_ROOM) {
-            views.get(action.getSenderNickname()).setError();
-            return;
-        }
-
-        if (!game.canTakeItemTiles(action.getSelectedPositions())) {
-            views.get(action.getSenderNickname()).setError();
+        if (ended ||
+                !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
+                turnPhase != TurnPhase.LIVING_ROOM ||
+                !game.canTakeItemTiles(action.getSelectedPositions())) {
+            views.get(action.getSenderNickname()).sendItemsSelected();
             return;
         }
 
         game.selectItemTiles(action.getSelectedPositions());
+
+        views.get(action.getSenderNickname()).sendItemsSelected();
 
         for(String nickname : views.keySet()) {
             views.get(nickname).sendLivingRoom();
@@ -204,23 +194,11 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(SelectionColumnAndOrderAction action) {
-        if (ended) {
-            views.get(action.getSenderNickname()).setError();
-            return;
-        }
-
-        if (!action.getSenderNickname().equals(game.getCurrentPlayer())) {
-            views.get(action.getSenderNickname()).setError();
-            return;
-        }
-
-        if (turnPhase != TurnPhase.BOOKSHELF) {
-            views.get(action.getSenderNickname()).setError();
-            return;
-        }
-
-        if (!game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            views.get(action.getSenderNickname()).setError();
+        if (ended ||
+                !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
+                turnPhase != TurnPhase.BOOKSHELF ||
+                !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
+            views.get(action.getSenderNickname()).sendAcceptedAction(false, "SELECT_BOOKSHELF");
             return;
         }
 
@@ -240,12 +218,9 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(ChatMessageAction action) {
-        if (ended) {
-            views.get(action.getSenderNickname()).setError();
-        }
-
-        if (game.getCurrentPlayer() == null) {
-            views.get(action.getSenderNickname()).setError();
+        if (ended || game.getCurrentPlayer() == null) {
+            views.get(action.getSenderNickname()).sendAcceptedAction(false, "WRITE_CHAT");
+            return;
         }
 
         chat.addMessage(action.getSenderNickname(), action.getText());
