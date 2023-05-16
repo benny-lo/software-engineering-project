@@ -1,8 +1,8 @@
 package it.polimi.ingsw.model.chat;
 
-import it.polimi.ingsw.view.rep.ChatRep;
+import it.polimi.ingsw.view.change.ChatListener;
 
 public interface ChatInterface {
     void addMessage(String nickname, String text);
-    void setChatListener(ChatRep rep);
+    void setChatListener(ChatListener rep);
 }

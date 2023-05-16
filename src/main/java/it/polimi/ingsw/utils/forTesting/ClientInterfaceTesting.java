@@ -12,9 +12,12 @@ public interface ClientInterfaceTesting {
     void sendWaitingUpdate(WaitingUpdate update);
     void sendScoresUpdate(ScoresUpdate update);
     void sendEndingTokenUpdate(EndingTokenUpdate update);
-    void sendCommonGoalCardUpdate(CommonGoalCardUpdate update);
+    void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update);
     void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update);
     void sendChatUpdate(ChatUpdate update);
     void sendStartTurnUpdate(StartTurnUpdate update);
     void sendEndGameUpdate(EndGameUpdate update);
+    void sendListOfGames(GamesList gamesList);
+    void sendAcceptedAction(AcceptedAction acceptedAction);
+    void sendItemsSelected(ItemsSelected itemsSelected);
 }

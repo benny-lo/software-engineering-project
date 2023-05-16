@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.view.rep.*;
+import it.polimi.ingsw.view.change.*;
 
 import java.util.List;
 
@@ -86,17 +86,17 @@ public interface GameInterface {
      */
     String getCurrentPlayer();
 
-    void setEndingTokenRep(EndingTokenRep rep);
+    void setEndingTokenListener(EndingTokenListener listener);
 
-    void setScoreRep(ScoreRep rep);
+    void setScoreListener(ScoreListener listener);
 
-    void setBookshelfRep(BookshelfRep rep);
+    void setBookshelfListener(BookshelfListener listener);
 
-    void setCommonGoalCardsRep(CommonGoalCardsRep rep);
+    void setCommonGoalCardsListener(CommonGoalCardsListener listener);
 
-    void setLivingRoomRep(LivingRoomRep rep);
+    void setLivingRoomListener(LivingRoomListener listener);
 
-    void setPersonalGoalCardRep(PersonalGoalCardRep rep);
+    void setPersonalGoalCardListener(PersonalGoalCardListener listener);
 
-    void setItemsChosenRep(ItemsChosenRep rep);
+    void setItemsChosenListener(ItemsChosenListener listener);
 }

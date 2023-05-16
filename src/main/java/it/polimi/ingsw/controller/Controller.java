@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatInterface;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.VirtualView;
-import it.polimi.ingsw.view.rep.BookshelfRep;
 
 import java.util.*;
 
@@ -18,9 +17,13 @@ public class Controller implements ActionListener {
     private final ChatInterface chat;
 
     /**
-     * The maximum number of players that can join the game.
+     * The number of players that can join the game.
      */
     private final int numberPlayers;
+
+    /**
+     * The number of common goal cards to be used (1 or 2).
+     */
     private final int numberCommonGoalCards;
 
     /**
@@ -32,8 +35,17 @@ public class Controller implements ActionListener {
      * Queue containing the players, the first one is the current player.
      */
     private Queue<String> playerQueue;
+
+    /**
+     * Map associating nickname of the players with the virtual views.
+     */
     private final Map<String, VirtualView> views;
+
+    /**
+     * Flag representing whether the game has ended.
+     */
     private boolean ended;
+
     /**
      * Current turn phase: either selection from living room or selection of column in the bookshelf.
      * If the game has not started yet, it is null.
@@ -75,19 +87,14 @@ public class Controller implements ActionListener {
 
         // for each view, setting its listeners to the model.
         for(VirtualView view : viewsList) {
-            game.setEndingTokenRep(view.getEndingTokenRep());
-            for(BookshelfRep rep : view.getBookshelfRep()) {
-                for(String nickname : views.keySet()) {
-                    rep.setOwner(nickname);
-                    game.setBookshelfRep(rep);
-                }
-            }
-            game.setCommonGoalCardsRep(view.getCommonGoalCardsRep());
-            game.setLivingRoomRep(view.getLivingRoomRep());
-            game.setPersonalGoalCardRep(view.getPersonalGoalRep());
-            game.setItemsChosenRep(view.getItemsChosenRep());
-            game.setScoreRep(view.getScoreRep());
-            chat.setChatListener(view.getChatRep());
+            game.setEndingTokenListener(view.getEndingTokenListener());
+            game.setBookshelfListener(view.getBookshelfListener());
+            game.setCommonGoalCardsListener(view.getCommonGoalCardsListener());
+            game.setLivingRoomListener(view.getLivingRoomListener());
+            game.setPersonalGoalCardListener(view.getPersonalGoalCardListener());
+            game.setItemsChosenListener(view.getItemsChosenListener());
+            game.setScoreListener(view.getScoreListener());
+            chat.setChatListener(view.getChatListener());
         }
 
         // Sending initial updates about the reps.

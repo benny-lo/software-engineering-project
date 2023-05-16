@@ -8,7 +8,6 @@ import it.polimi.ingsw.network.client.UpdateReceiver;
 import it.polimi.ingsw.network.client.rmi.RequestSenderRMI;
 import it.polimi.ingsw.network.client.socket.RequestSenderTCP;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
-import it.polimi.ingsw.utils.Rank;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -32,16 +31,17 @@ public abstract class ClientView implements UpdateReceiver {
     protected Map<String, Item[][]> bookshelves;
     protected String endingToken;
     protected int personalGoalCard;
-    protected List<int[]> commonGoalCards;
-    protected List<Rank> scores;
+    protected Map<Integer, Integer> commonGoalCards;
+    protected Map<String, Integer> scores;
     protected boolean endGame;
     protected List<Message> chat;
     protected List<Item> itemsChosen;
     protected RequestSender sender;
 
     public ClientView() {
+        livingRoom = new Item[9][9];
         bookshelves = new HashMap<>();
-        commonGoalCards = new ArrayList<>();
+        commonGoalCards = new HashMap<>();
         chat = new ArrayList<>();
     }
 

@@ -1,18 +1,17 @@
 package it.polimi.ingsw.utils.networkMessage.server;
 
-import it.polimi.ingsw.utils.Rank;
 import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 
-import java.util.List;
+import java.util.Map;
 
 public class ScoresUpdate extends NetworkMessage {
-    private final List<Rank> scores;
+    private final Map<String, Integer> scores;
 
-    public ScoresUpdate(List<Rank> scores) {
+    public ScoresUpdate(Map<String, Integer> scores) {
         this.scores = scores;
     }
 
-    public List<Rank> getScores() {
+    public Map<String, Integer> getScores() {
         return scores;
     }
 }

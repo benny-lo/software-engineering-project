@@ -1,16 +1,19 @@
 package it.polimi.ingsw.utils.networkMessage.server;
 
 import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 
-public class LivingRoomUpdate extends NetworkMessage {
-    private final Item[][] livingRoom;
+import java.util.Map;
 
-    public LivingRoomUpdate(Item[][] livingRoom) {
+public class LivingRoomUpdate extends NetworkMessage {
+    private final Map<Position, Item> livingRoom;
+
+    public LivingRoomUpdate(Map<Position, Item> livingRoom) {
         this.livingRoom = livingRoom;
     }
 
-    public Item[][] getLivingRoom() {
+    public Map<Position, Item> getLivingRoomUpdate() {
         return livingRoom;
     }
 }

@@ -1,17 +1,16 @@
-package it.polimi.ingsw.view.rep;
+package it.polimi.ingsw.view.change;
 
-public class PersonalGoalCardRep extends Rep {
+public class PersonalGoalCardListener extends ModelListener {
     private int id;
     String owner;
 
-    public PersonalGoalCardRep(String owner) {
+    public PersonalGoalCardListener(String owner) {
         super();
         this.owner = owner;
-        this.id = -1;
     }
 
     public int getPersonalGoalCard() {
-        peek();
+        changed = false;
         return id;
     }
 
@@ -19,8 +18,8 @@ public class PersonalGoalCardRep extends Rep {
         return owner;
     }
 
-    public void updateRep(int id) {
-        update();
+    public void updateState(int id) {
+        changed = true;
         this.id = id;
     }
 }

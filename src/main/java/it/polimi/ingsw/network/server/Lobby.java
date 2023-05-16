@@ -1,13 +1,13 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
+import it.polimi.ingsw.utils.networkMessage.server.GamesList;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.util.ArrayList;
@@ -25,6 +25,10 @@ public class Lobby {
      * List of virtual views, representing all players connected either waiting for a game or in game.
      */
     private final List<VirtualView> views;
+
+    /**
+     * Smallest available id for the next game to be created.
+     */
     private int availableId;
 
     public Lobby() {
@@ -54,24 +58,51 @@ public class Lobby {
         return null;
     }
 
-    public synchronized List<GameInfo> login(String nickname, UpdateSender client) {
+    public synchronized void login(String nickname, Sender client) {
         if(getView(nickname) != null) {
-            return null;
+            client.sendListOfGames(new GamesList(null));
+            return;
             // TODO: consider the case in which view is present because client was disconnected and is reconnecting.
         }
+
         VirtualView view = new VirtualView(nickname);
         view.setToClient(client);
         views.add(view);
-        return getGameInfo();
+
+        view.sendListOfGames(getGameInfo());
     }
 
-    public synchronized boolean selectGame(String nickname, int id) {
+    public synchronized void createGame(String nickname, int numberPlayers, int numberCommonGoals) {
         VirtualView view = getView(nickname);
-        if (view == null) return false;
+        if (view == null) return;
 
-        if (!controllers.containsKey(id)) return false;
+        if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
+            view.sendAcceptedAction(false, "INIT_GAME");
+            return;
+        }
 
-        if (controllers.get(id).isStarted()) return false;
+        Controller controller = new Controller(numberPlayers, numberCommonGoals);
+        controller.update(new JoinAction(nickname, view));
+
+        if (view.isError()) {
+            view.sendAcceptedAction(false, "INIT_GAME");
+        }
+
+        view.setController(controller);
+        addController(controller);
+
+        view.sendAcceptedAction(true, "INIT_GAME");
+    }
+
+
+    public synchronized void selectGame(String nickname, int id) {
+        VirtualView view = getView(nickname);
+        if (view == null) return;
+
+        if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
+            view.sendAcceptedAction(false, "SELECT_GAME");
+            return;
+        }
 
         controllers.get(id).update(new JoinAction(nickname, view));
         boolean error = view.isError();
@@ -80,61 +111,53 @@ public class Lobby {
             view.setController(controllers.get(id));
         }
 
-        return !view.isError();
+        view.sendAcceptedAction(!view.isError(), "SELECT_GAME");
     }
 
-    public synchronized boolean createGame(String nickname, int numberPlayers, int numberCommonGoals) {
-        if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2)
-            return false;
-
+    public synchronized void selectFromLivingRoom(String nickname, List<Position> positions) {
         VirtualView view = getView(nickname);
-        if (view == null) return false;
-
-        Controller controller = new Controller(numberPlayers, numberCommonGoals);
-        controller.update(new JoinAction(nickname, view));
-
-        if (view.isError()) return false;
-
-        view.setController(controller);
-        addController(controller);
-        return true;
-    }
-
-    public synchronized List<Item> selectFromLivingRoom(String nickname, List<Position> positions) {
-        VirtualView view = getView(nickname);
-        if (view == null) return null;
+        if (view == null) {
+            return;
+        }
 
         Controller controller = view.getController();
-        if (controller == null) return null;
+        if (controller == null) {
+            view.sendAcceptedAction(false, "SELECT_LIVINGROOM");
+            return;
+        }
 
         controller.update(new SelectionFromLivingRoomAction(nickname, positions));
 
-        if (view.isError()) return null;
-
-        return view.getItemsChosenRep().getItemsChosen();
+        if (view.isError()) view.sendAcceptedAction(false, "SELECT_LIVINGROOM");
     }
 
-    public synchronized boolean putInBookshelf(String nickname, int column, List<Integer> permutation) {
+    public synchronized void putInBookshelf(String nickname, int column, List<Integer> permutation) {
         VirtualView view = getView(nickname);
-        if (view == null) return false;
+        if (view == null) return;
 
         Controller controller = view.getController();
-        if (controller == null) return false;
+        if (controller == null) {
+            view.sendAcceptedAction(false, "INSERT_BOOKSHELF");
+            return;
+        }
 
         controller.update(new SelectionColumnAndOrderAction(nickname, column, permutation));
 
-        return !view.isError();
+        view.sendAcceptedAction(!view.isError(), "INSERT_BOOKSHELF");
     }
 
-    public synchronized boolean addMessage(String nickname, String text) {
+    public synchronized void addMessage(String nickname, String text) {
         VirtualView view = getView(nickname);
-        if (view == null) return false;
+        if (view == null) return;
 
         Controller controller = view.getController();
-        if (controller == null) return false;
+        if (controller == null) {
+            view.sendAcceptedAction(false, "WRITE_CHAT");
+            return;
+        }
 
         controller.update(new ChatMessageAction(nickname, text));
 
-        return !view.isError();
+        view.sendAcceptedAction(!view.isError(), "WRITE_CHAT");
     }
 }

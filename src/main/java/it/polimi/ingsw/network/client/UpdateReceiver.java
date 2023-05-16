@@ -2,8 +2,6 @@ package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
-import java.io.Serializable;
-
 public interface UpdateReceiver {
     void onGamesList(GamesList message);
     void onAcceptedAction(AcceptedAction message);
@@ -13,7 +11,7 @@ public interface UpdateReceiver {
     void onWaitingUpdate(WaitingUpdate update);
     void onScoresUpdate(ScoresUpdate update);
     void onEndingTokenUpdate(EndingTokenUpdate update);
-    void onCommonGoalCardUpdate(CommonGoalCardUpdate update);
+    void onCommonGoalCardUpdate(CommonGoalCardsUpdate update);
     void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update);
     void onChatUpdate(ChatUpdate update);
     void onStartTurnUpdate(StartTurnUpdate update);

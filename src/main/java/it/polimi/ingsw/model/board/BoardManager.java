@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.view.rep.LivingRoomRep;
+import it.polimi.ingsw.view.change.LivingRoomListener;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class BoardManager {
     private boolean endingToken;
     private final LivingRoom livingRoom;
     private final Bag bag;
-    private final List<LivingRoomRep> livingRoomReps;
+    private final List<LivingRoomListener> livingRoomReps;
 
     /**
      * BoardManager's Constructor: it initializes the {@code Bag} and the {@code LivingRoom}.
@@ -60,8 +60,8 @@ public class BoardManager {
                     if(livingRoom.tileAt(i, j) == null){
                         Position p = new Position(i, j);
                         livingRoom.setTile(bag.extract(), p);
-                        for(LivingRoomRep rep : livingRoomReps) {
-                            rep.updateRep(p, livingRoom.tileAt(p.getRow(), p.getColumn()));
+                        for(LivingRoomListener rep : livingRoomReps) {
+                            rep.updateState(p, livingRoom.tileAt(p.getRow(), p.getColumn()));
                         }
                     }
                 }
@@ -138,7 +138,7 @@ public class BoardManager {
         return livingRoom;
     }
 
-    public void setLivingRoomRep(LivingRoomRep rep) {
-        livingRoomReps.add(rep);
+    public void setLivingRoomRep(LivingRoomListener listener) {
+        livingRoomReps.add(listener);
     }
 }

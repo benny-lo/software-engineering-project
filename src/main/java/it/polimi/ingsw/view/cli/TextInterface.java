@@ -3,18 +3,17 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
-import it.polimi.ingsw.utils.Rank;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.ClientView;
 
 import java.util.List;
+import java.util.Map;
 
 public class TextInterface extends ClientView implements InputReceiver {
-    private final InputHandler inputHandler;
     private boolean inChat;
     public TextInterface() {
         super();
-        this.inputHandler = new InputHandler(this);
+        InputHandler inputHandler = new InputHandler(this);
         (new Thread(inputHandler)).start();
 
         System.out.println("Welcome to MyShelfie");
@@ -69,7 +68,10 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
         synchronized (System.out) {
-            livingRoom = update.getLivingRoom();
+            Map<Position, Item> ups = update.getLivingRoomUpdate();
+            for(Position p : ups.keySet()) {
+                livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
+            }
 
             if (!inChat && !endGame) {
                 clearScreen();
@@ -81,7 +83,10 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void onBookshelfUpdate(BookshelfUpdate update) {
         synchronized (System.out) {
-            bookshelves.put(update.getOwner(), update.getBookshelf());
+            Map<Position, Item> ups = update.getBookshelf();
+            for(Position p : ups.keySet()) {
+                bookshelves.get(update.getOwner())[p.getRow()][p.getColumn()] = ups.get(p);
+            }
 
             if (!inChat && !endGame) {
                 clearScreen();
@@ -101,7 +106,9 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
         synchronized (System.out) {
-            scores = update.getScores();
+            for(String nick : update.getScores().keySet()) {
+                scores.put(nick, update.getScores().get(nick));
+            }
 
             if (!inChat && !endGame) {
                 clearScreen();
@@ -123,13 +130,12 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     @Override
-    public void onCommonGoalCardUpdate(CommonGoalCardUpdate update) {
+    public void onCommonGoalCardUpdate(CommonGoalCardsUpdate update) {
         synchronized (System.out) {
-            int[] card = new int[2];
-            card[0] = update.getId();
-            card[1] = update.getTop();
-
-            commonGoalCards.add(card);
+            Map<Integer, Integer> cardsChanged = update.getCommonGoalCardsUpdate();
+            for(Integer id : cardsChanged.keySet()) {
+                commonGoalCards.put(id, cardsChanged.get(id));
+            }
 
             if (!inChat && !endGame) {
                 clearScreen();
@@ -280,8 +286,8 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     private void printCommonGoalCards() {
         System.out.println("your common goal cards are:");
-        for(int[] card : commonGoalCards) {
-            System.out.println("id: " + card[0] + " top: " + card[1]);
+        for(Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
+            System.out.println("id: " + card.getKey() + " top: " + card.getValue());
         }
         System.out.println();
     }
@@ -307,8 +313,8 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     private void printScores() {
         System.out.println("rankings:");
-        for(Rank rank : scores) {
-            System.out.println(rank.getNickname() + ": " + rank.getScore());
+        for(Map.Entry<String, Integer> e : scores.entrySet()) {
+            System.out.println(e.getKey() + ": " + e.getValue());
         }
         System.out.println();
     }

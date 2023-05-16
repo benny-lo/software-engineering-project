@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.*;
 import it.polimi.ingsw.model.player.Bookshelf;
-import it.polimi.ingsw.view.rep.CommonGoalCardsRep;
+import it.polimi.ingsw.view.change.CommonGoalCardsListener;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public class CommonGoalCardManager {
      * List with all the cards.
      */
     private final List<CommonGoalCard> cards;
-    private final List<CommonGoalCardsRep> commonGoalCardsReps;
+    private final List<CommonGoalCardsListener> commonGoalCardsReps;
 
     /**
      * Class constructor: it initializes the common goal cards of the game.
@@ -103,18 +103,18 @@ public class CommonGoalCardManager {
             if (cannotTake.contains(i)) continue;
             if (cards.get(i).checkPattern(bookshelf)) {
                 tokens.add(cards.get(i).popToken());
-                for(CommonGoalCardsRep rep : commonGoalCardsReps) {
-                    rep.updateRep(cards.get(i).getId(), cards.get(i).getTopStack());
+                for(CommonGoalCardsListener rep : commonGoalCardsReps) {
+                    rep.updateState(cards.get(i).getId(), cards.get(i).getTopStack());
                 }
             }
         }
         return tokens;
     }
 
-    public void setCommonGoalCardsRep(CommonGoalCardsRep rep) {
+    public void setCommonGoalCardsRep(CommonGoalCardsListener rep) {
         commonGoalCardsReps.add(rep);
         for(CommonGoalCard card : cards) {
-            rep.updateRep(card.getId(), card.getTopStack());
+            rep.updateState(card.getId(), card.getTopStack());
         }
     }
 }

@@ -1,12 +1,12 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.network.server.UpdateSender;
+import it.polimi.ingsw.network.server.Sender;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.forTesting.ClientTesting;
-import it.polimi.ingsw.utils.forTesting.UpdateSenderClientTesting;
+import it.polimi.ingsw.utils.forTesting.SenderClientTesting;
 import it.polimi.ingsw.view.VirtualView;
 import org.junit.jupiter.api.Test;
 
@@ -37,15 +37,15 @@ public class ControllerTest {
     public void testSuccessfulJoinAction(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         assertTrue(controller.getAllPlayers().contains(view0.getNickname()));
@@ -59,21 +59,21 @@ public class ControllerTest {
     public void testUnsuccessfulJoinAction1(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         ClientTesting client2 = new ClientTesting();
-        UpdateSender updateSender2 = new UpdateSenderClientTesting(client2);
+        Sender Sender2 = new SenderClientTesting(client2);
         VirtualView view2 = new VirtualView("tick");
-        view2.setToClient(updateSender2);
+        view2.setToClient(Sender2);
         controller.update(new JoinAction(view2.getNickname(), view2));
 
         assertTrue(controller.isStarted());
@@ -92,23 +92,23 @@ public class ControllerTest {
     public void testUnsuccessfulJoinAction2(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setEnded();
 
         ClientTesting client2 = new ClientTesting();
-        UpdateSender updateSender2 = new UpdateSenderClientTesting(client2);
+        Sender Sender2 = new SenderClientTesting(client2);
         VirtualView view2 = new VirtualView("tick");
-        view2.setToClient(updateSender2);
+        view2.setToClient(Sender2);
         controller.update(new JoinAction(view2.getNickname(), view2));
 
 
@@ -126,15 +126,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction1(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -152,15 +152,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction2(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -177,15 +177,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction3(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -202,15 +202,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction4(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -227,15 +227,15 @@ public class ControllerTest {
     public void testSuccessfulSelectionFromLivingRoomAction(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -252,15 +252,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder1(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -278,15 +278,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder2(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -303,15 +303,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder3(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -328,15 +328,15 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder4(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -383,15 +383,15 @@ public class ControllerTest {
     public void testSuccessfulSelectionColumnAndOrder(){
         Controller controller = new Controller(2, 2);
         ClientTesting client0 = new ClientTesting();
-        UpdateSender updateSender0 = new UpdateSenderClientTesting(client0);
+        Sender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new VirtualView("nick");
-        view0.setToClient(updateSender0);
+        view0.setToClient(Sender0);
         controller.update(new JoinAction(view0.getNickname(), view0));
 
         ClientTesting client1 = new ClientTesting();
-        UpdateSender updateSender1 = new UpdateSenderClientTesting(client1);
+        Sender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new VirtualView("rick");
-        view1.setToClient(updateSender1);
+        view1.setToClient(Sender1);
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());

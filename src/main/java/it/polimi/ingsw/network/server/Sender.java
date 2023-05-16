@@ -1,12 +1,19 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.network.server.UpdateSender;
-import it.polimi.ingsw.utils.networkMessage.server.AcceptedAction;
-import it.polimi.ingsw.utils.networkMessage.server.GamesList;
-import it.polimi.ingsw.utils.networkMessage.server.ItemsSelected;
+import it.polimi.ingsw.utils.networkMessage.server.*;
 
-public interface Sender extends UpdateSender {
+public interface Sender {
+    void sendLivingRoomUpdate(LivingRoomUpdate update);
+    void sendBookshelfUpdate(BookshelfUpdate update);
+    void sendWaitingUpdate(WaitingUpdate update);
+    void sendScoresUpdate(ScoresUpdate update);
+    void sendEndingTokenUpdate(EndingTokenUpdate update);
+    void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update);
+    void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update);
+    void sendChatUpdate(ChatUpdate update);
+    void sendStartTurnUpdate(StartTurnUpdate update);
+    void sendEndGameUpdate(EndGameUpdate update);
     void sendListOfGames(GamesList gamesList);
-    void sendItemsSelection(ItemsSelected itemsSelected);
-    void sendAccepted(AcceptedAction acceptedAction);
+    void sendItemsSelected(ItemsSelected itemsSelected);
+    void sendAcceptedAction(AcceptedAction acceptedAction);
 }

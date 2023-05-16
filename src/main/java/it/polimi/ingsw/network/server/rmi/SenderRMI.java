@@ -1,15 +1,15 @@
 package it.polimi.ingsw.network.server.rmi;
 
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMIInterface;
-import it.polimi.ingsw.network.server.UpdateSender;
+import it.polimi.ingsw.network.server.Sender;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.rmi.RemoteException;
 
-public class UpdateSenderRMI implements UpdateSender {
+public class SenderRMI implements Sender {
     private final ClientConnectionRMIInterface client;
 
-    public UpdateSenderRMI(ClientConnectionRMIInterface client) {
+    public SenderRMI(ClientConnectionRMIInterface client) {
         this.client = client;
     }
 
@@ -60,7 +60,7 @@ public class UpdateSenderRMI implements UpdateSender {
     }
 
     @Override
-    public void sendCommonGoalCardUpdate(CommonGoalCardUpdate update) {
+    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) {
         try {
             client.sendCommonGoalCardUpdate(update);
         } catch(RemoteException e) {
@@ -100,6 +100,33 @@ public class UpdateSenderRMI implements UpdateSender {
         try {
             client.sendEndGameUpdate(update);
         } catch(RemoteException e) {
+            System.err.println("RMI connection with client failed");
+        }
+    }
+
+    @Override
+    public void sendListOfGames(GamesList gamesList) {
+        try {
+            client.sendListOfGames(gamesList);
+        } catch (RemoteException e) {
+            System.err.println("RMI connection with client failed");
+        }
+    }
+
+    @Override
+    public void sendItemsSelected(ItemsSelected itemsSelected) {
+        try {
+            client.sendItemsSelected(itemsSelected);
+        } catch (RemoteException e) {
+            System.err.println("RMI connection with client failed");
+        }
+    }
+
+    @Override
+    public void sendAcceptedAction(AcceptedAction acceptedAction) {
+        try {
+            client.sendAcceptedAction(acceptedAction);
+        } catch (RemoteException e) {
             System.err.println("RMI connection with client failed");
         }
     }

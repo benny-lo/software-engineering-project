@@ -1,40 +1,41 @@
 package it.polimi.ingsw.view;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.chat.Message;
-import it.polimi.ingsw.network.server.UpdateSender;
-import it.polimi.ingsw.utils.Rank;
+import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.network.server.Sender;
+import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.networkMessage.server.*;
-import it.polimi.ingsw.view.rep.*;
+import it.polimi.ingsw.view.change.*;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VirtualView {
     private final String nickname;
-    private final List<BookshelfRep> bookshelfRep;
-    private final LivingRoomRep livingRoomRep;
-    private final EndingTokenRep endingTokenRep;
-    private final PersonalGoalCardRep personalGoalRep;
-    private final CommonGoalCardsRep commonGoalCardsRep;
-    private final ItemsChosenRep itemsChosenRep;
-    private final ScoreRep scoreRep;
-    private final ChatRep chatRep;
+    private final BookshelfListener bookshelfListener;
+    private final LivingRoomListener livingRoomListener;
+    private final EndingTokenListener endingTokenListener;
+    private final PersonalGoalCardListener personalGoalCardListener;
+    private final CommonGoalCardsListener commonGoalCardsListener;
+    private final ItemsChosenListener itemsChosenListener;
+    private final ScoreListener scoreListener;
+    private final ChatListener chatListener;
     private Controller controller;
-    private UpdateSender toClient;
+    private Sender toClient;
     private boolean error;
 
     public VirtualView(String nickname) {
         this.nickname = nickname;
-        this.bookshelfRep = new ArrayList<>();
-        this.livingRoomRep = new LivingRoomRep(9, 9);
-        this.endingTokenRep = new EndingTokenRep();
-        this.personalGoalRep = new PersonalGoalCardRep(nickname);
-        this.commonGoalCardsRep = new CommonGoalCardsRep();
-        this.itemsChosenRep = new ItemsChosenRep(nickname);
-        this.chatRep = new ChatRep();
-        this.scoreRep = new ScoreRep();
+        this.bookshelfListener = new BookshelfListener();
+        this.livingRoomListener = new LivingRoomListener();
+        this.endingTokenListener = new EndingTokenListener();
+        this.personalGoalCardListener = new PersonalGoalCardListener(nickname);
+        this.commonGoalCardsListener = new CommonGoalCardsListener();
+        this.itemsChosenListener = new ItemsChosenListener(nickname);
+        this.chatListener = new ChatListener();
+        this.scoreListener = new ScoreListener();
         this.controller = null;
         this.error = false;
     }
@@ -43,34 +44,36 @@ public class VirtualView {
         return nickname;
     }
 
-    public List<BookshelfRep> getBookshelfRep() {
-        return bookshelfRep;
+    public BookshelfListener getBookshelfListener() {
+        return bookshelfListener;
     }
 
-    public LivingRoomRep getLivingRoomRep() {
-        return livingRoomRep;
+    public LivingRoomListener getLivingRoomListener() {
+        return livingRoomListener;
     }
 
-    public EndingTokenRep getEndingTokenRep() {
-        return endingTokenRep;
+    public EndingTokenListener getEndingTokenListener() {
+        return endingTokenListener;
     }
 
-    public PersonalGoalCardRep getPersonalGoalRep() {
-        return personalGoalRep;
+    public PersonalGoalCardListener getPersonalGoalCardListener() {
+        return personalGoalCardListener;
     }
 
-    public CommonGoalCardsRep getCommonGoalCardsRep() {
-        return commonGoalCardsRep;
+    public CommonGoalCardsListener getCommonGoalCardsListener() {
+        return commonGoalCardsListener;
     }
 
-    public ItemsChosenRep getItemsChosenRep() {
-        return itemsChosenRep;
+    public ItemsChosenListener getItemsChosenListener() {
+        return itemsChosenListener;
     }
-    public ScoreRep getScoreRep() {
-        return scoreRep;
+
+    public ScoreListener getScoreListener() {
+        return scoreListener;
     }
-    public ChatRep getChatRep() {
-        return chatRep;
+
+    public ChatListener getChatListener() {
+        return chatListener;
     }
 
     public void setController(Controller controller) {
@@ -81,58 +84,57 @@ public class VirtualView {
         return controller;
     }
 
-    public void setToClient(UpdateSender toClient) {
+    public void setToClient(Sender toClient) {
         this.toClient = toClient;
     }
 
     public void sendBookshelves() {
-        for(BookshelfRep rep : bookshelfRep) {
-            if (rep.hasChanged()) {
-                toClient.sendBookshelfUpdate(
-                        new BookshelfUpdate(rep.getOwner(), rep.getBookshelf())
-                );
-            }
+        if (!livingRoomListener.hasChanged()) return;
+        Map<Pair<String, Position>, Item> updates = bookshelfListener.getBookshelves();
+        List<String> nicks = updates.keySet().stream().map(Pair::getFirst).toList();
+
+        Map<String, Map<Position, Item>> toSend = new HashMap<>();
+        for(String nick : nicks) toSend.put(nick, new HashMap<>());
+
+        for(Pair<String, Position> key : updates.keySet()) {
+            toSend.get(key.getFirst()).put(key.getSecond(), updates.get(key));
+        }
+
+        for(String owner : toSend.keySet()) {
+            toClient.sendBookshelfUpdate(new BookshelfUpdate(owner, toSend.get(owner)));
         }
     }
 
     public void sendLivingRoom() {
-        if (!livingRoomRep.hasChanged()) return;
-        toClient.sendLivingRoomUpdate(new LivingRoomUpdate(livingRoomRep.getLivingRoom()));
+        if (!livingRoomListener.hasChanged()) return;
+        toClient.sendLivingRoomUpdate(new LivingRoomUpdate(livingRoomListener.getLivingRoom()));
     }
 
     public void sendEndingToken() {
-        if (!endingTokenRep.hasChanged()) return;
-        toClient.sendEndingTokenUpdate(new EndingTokenUpdate(endingTokenRep.getEndingToken()));
+        if (!endingTokenListener.hasChanged()) return;
+        toClient.sendEndingTokenUpdate(new EndingTokenUpdate(endingTokenListener.getEndingToken()));
     }
 
     public void sendPersonalGoalCard() {
-        if (personalGoalRep.hasChanged()) return;
-        toClient.sendPersonalGoalCardUpdate(new PersonalGoalCardUpdate(personalGoalRep.getPersonalGoalCard()));
+        if (personalGoalCardListener.hasChanged()) return;
+        toClient.sendPersonalGoalCardUpdate(new PersonalGoalCardUpdate(personalGoalCardListener.getPersonalGoalCard()));
     }
 
     public void sendCommonGoalCard() {
-        if (!commonGoalCardsRep.hasChanged()) return;
+        if (!commonGoalCardsListener.hasChanged()) return;
 
-        List<Integer> ids = commonGoalCardsRep.getIDs();
-        List<Integer> tops = commonGoalCardsRep.getTops();
-        for(int i = 0; i < Math.min(ids.size(), tops.size()); i++) {
-            toClient.sendCommonGoalCardUpdate(new CommonGoalCardUpdate(ids.get(i), tops.get(i)));
-        }
+        toClient.sendCommonGoalCardUpdate(new CommonGoalCardsUpdate(commonGoalCardsListener.getCards()));
     }
 
     public void sendMessage() {
-        if (!chatRep.hasChanged()) return;
-        for(Message message : chatRep.getChat()) {
-            toClient.sendChatUpdate(new ChatUpdate(message.getNickname(), message.getText()));
-        }
+        if (!chatListener.hasChanged()) return;
+        toClient.sendChatUpdate(new ChatUpdate(chatListener.getChat().getNickname(),
+                chatListener.getChat().getText()));
     }
 
     public void sendScores() {
-        if (!scoreRep.hasChanged()) return;
-        List<Rank> scores = new ArrayList<>();
-        for(String nick : scoreRep.getScores().keySet()) {
-            scores.add(new Rank(nick, scoreRep.getScores().get(nick)));
-        }
+        if (!scoreListener.hasChanged()) return;
+        Map<String, Integer> scores = scoreListener.getScores();
         toClient.sendScoresUpdate(new ScoresUpdate(scores));
     }
 
@@ -146,6 +148,18 @@ public class VirtualView {
 
     public void sendWaiting(String nick, int missing) {
         toClient.sendWaitingUpdate(new WaitingUpdate(nick, missing));
+    }
+
+    public void sendListOfGames(List<GameInfo> gamesList) {
+        toClient.sendListOfGames(new GamesList(gamesList));
+    }
+
+    public void sendItemsSelected() {
+        toClient.sendItemsSelected(new ItemsSelected(itemsChosenListener.getItemsChosen()));
+    }
+
+    public void sendAcceptedAction(boolean flag, String description) {
+        toClient.sendAcceptedAction(new AcceptedAction(flag, description));
     }
 
     public void setError() {

@@ -1,13 +1,13 @@
 package it.polimi.ingsw.model.chat;
 
-import it.polimi.ingsw.view.rep.ChatRep;
+import it.polimi.ingsw.view.change.ChatListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Chat implements ChatInterface {
     private final List<Message> messages;
-    private final List<ChatRep> chatReps;
+    private final List<ChatListener> chatReps;
 
     public Chat() {
         messages = new ArrayList<>();
@@ -18,16 +18,16 @@ public class Chat implements ChatInterface {
     public void addMessage(String nickname, String text) {
         Message message = new Message(nickname, text);
         messages.add(message);
-        for(ChatRep rep : chatReps) {
-            rep.updateRep(message);
+        for(ChatListener rep : chatReps) {
+            rep.updateState(message);
         }
     }
 
     @Override
-    public void setChatListener(ChatRep rep) {
+    public void setChatListener(ChatListener rep) {
         chatReps.add(rep);
         for(Message message : messages) {
-            rep.updateRep(message);
+            rep.updateState(message);
         }
     }
 }

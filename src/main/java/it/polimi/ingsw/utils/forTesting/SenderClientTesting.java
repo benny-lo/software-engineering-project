@@ -1,16 +1,16 @@
 package it.polimi.ingsw.utils.forTesting;
 
-import it.polimi.ingsw.network.server.UpdateSender;
+import it.polimi.ingsw.network.server.Sender;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
 /**
  * This class is exclusively for testing, and it mimics an UpdateSender class.
  */
 
-public class UpdateSenderClientTesting implements UpdateSender {
+public class SenderClientTesting implements Sender {
     private final ClientInterfaceTesting client;
 
-    public UpdateSenderClientTesting(ClientInterfaceTesting client) {
+    public SenderClientTesting(ClientInterfaceTesting client) {
         this.client = client;
     }
 
@@ -40,7 +40,7 @@ public class UpdateSenderClientTesting implements UpdateSender {
     }
 
     @Override
-    public void sendCommonGoalCardUpdate(CommonGoalCardUpdate update) {
+    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) {
         client.sendCommonGoalCardUpdate(update);
     }
 
@@ -62,5 +62,20 @@ public class UpdateSenderClientTesting implements UpdateSender {
     @Override
     public void sendEndGameUpdate(EndGameUpdate update) {
         client.sendEndGameUpdate(update);
+    }
+
+    @Override
+    public void sendListOfGames(GamesList gamesList) {
+        client.sendListOfGames(gamesList);
+    }
+
+    @Override
+    public void sendItemsSelected(ItemsSelected itemsSelected) {
+        client.sendItemsSelected(itemsSelected);
+    }
+
+    @Override
+    public void sendAcceptedAction(AcceptedAction acceptedAction) {
+
     }
 }

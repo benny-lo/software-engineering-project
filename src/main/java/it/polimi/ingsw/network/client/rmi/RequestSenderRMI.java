@@ -1,6 +1,5 @@
 package it.polimi.ingsw.network.client.rmi;
 
-import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.client.RequestSender;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
@@ -23,80 +22,62 @@ public class RequestSenderRMI extends UnicastRemoteObject implements RequestSend
 
     @Override
     public void login(String nickname) {
-        List<GameInfo> ret = null;
         try {
-            ret = serverConnectionRMIInterface.login(nickname, this);
+            serverConnectionRMIInterface.login(nickname, this);
         } catch (RemoteException e) {
             System.err.println("error in RequestSenderRMI#login");
             e.printStackTrace();
         }
-
-        updateReceiver.onGamesList(new GamesList(ret));
     }
 
     @Override
     public void selectGame(String nickname, int id) {
-        boolean ret = false;
         try {
-            ret = serverConnectionRMIInterface.selectGame(nickname, id);
+            serverConnectionRMIInterface.selectGame(nickname, id);
         } catch (RemoteException e) {
             System.err.println("error in RequestSenderRMI#selectGame");
             e.printStackTrace();
         }
-
-        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "GAME_SELECTION"));
     }
 
     @Override
     public void createGame(String nickname, int numberPlayers, int numberCommonGoals) {
-        boolean ret = false;
         try {
-            ret = serverConnectionRMIInterface.createGame(nickname, numberPlayers, numberCommonGoals);
+            serverConnectionRMIInterface.createGame(nickname, numberPlayers, numberCommonGoals);
         } catch (RemoteException e) {
             System.err.println("error in RequestSenderRMI#createGame");
             e.printStackTrace();
         }
-
-        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "GAME_INITIALIZATION"));
     }
 
     @Override
     public void selectFromLivingRoom(String nickname, List<Position> position) {
-        List<Item> ret = null;
         try {
-            ret = serverConnectionRMIInterface.selectFromLivingRoom(nickname, position);
+            serverConnectionRMIInterface.selectFromLivingRoom(nickname, position);
         } catch (RemoteException e) {
             System.err.println("error in RequestSenderRMI#selectFromLivingRoom");
             e.printStackTrace();
         }
-
-        updateReceiver.onItemsSelected(new ItemsSelected(ret));
     }
 
     @Override
     public void putInBookshelf(String nickname, int column, List<Integer> permutation) {
-        boolean ret = false;
         try {
-            ret = serverConnectionRMIInterface.putInBookshelf(nickname, column, permutation);
+            serverConnectionRMIInterface.putInBookshelf(nickname, column, permutation);
         } catch (RemoteException e) {
             System.err.println("error in RequestSenderRMI#putInBookshelf");
             e.printStackTrace();
         }
-
-        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "BOOKSHELF_INSERTION"));
     }
 
     @Override
     public void addMessage(String nickname, String text) {
-        boolean ret = false;
         try {
-            ret = serverConnectionRMIInterface.addMessage(nickname, text);
+            serverConnectionRMIInterface.addMessage(nickname, text);
         } catch (RemoteException e) {
             System.err.println("error in RequestSenderRMI#addMessage");
             e.printStackTrace();
         }
-
-        updateReceiver.onAcceptedAction(new AcceptedAction(ret, "CHAT_WRITE"));
     }
 
     @Override
@@ -125,7 +106,7 @@ public class RequestSenderRMI extends UnicastRemoteObject implements RequestSend
     }
 
     @Override
-    public void sendCommonGoalCardUpdate(CommonGoalCardUpdate update) throws RemoteException {
+    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) throws RemoteException {
         updateReceiver.onCommonGoalCardUpdate(update);
     }
 
@@ -147,5 +128,20 @@ public class RequestSenderRMI extends UnicastRemoteObject implements RequestSend
     @Override
     public void sendEndGameUpdate(EndGameUpdate update) throws RemoteException {
         updateReceiver.onEndGameUpdate(update);
+    }
+
+    @Override
+    public void sendListOfGames(GamesList list) throws RemoteException {
+        updateReceiver.onGamesList(list);
+    }
+
+    @Override
+    public void sendItemsSelected(ItemsSelected selected) throws RemoteException {
+        updateReceiver.onItemsSelected(selected);
+    }
+
+    @Override
+    public void sendAcceptedAction(AcceptedAction accepted) throws RemoteException {
+        updateReceiver.onAcceptedAction(accepted);
     }
 }

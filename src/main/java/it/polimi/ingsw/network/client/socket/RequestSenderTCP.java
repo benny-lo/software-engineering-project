@@ -65,8 +65,8 @@ public class RequestSenderTCP implements RequestSender, ObjectReceiver {
             updateReceiver.onWaitingUpdate((WaitingUpdate) object);
         } else if (object instanceof ScoresUpdate) {
             updateReceiver.onScoresUpdate((ScoresUpdate) object);
-        } else if (object instanceof CommonGoalCardUpdate) {
-            updateReceiver.onCommonGoalCardUpdate((CommonGoalCardUpdate) object);
+        } else if (object instanceof CommonGoalCardsUpdate) {
+            updateReceiver.onCommonGoalCardUpdate((CommonGoalCardsUpdate) object);
         } else if (object instanceof PersonalGoalCardUpdate) {
             updateReceiver.onPersonalGoalCardUpdate((PersonalGoalCardUpdate) object);
         } else if (object instanceof ChatUpdate) {

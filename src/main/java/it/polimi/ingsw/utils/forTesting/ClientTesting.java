@@ -2,13 +2,11 @@ package it.polimi.ingsw.utils.forTesting;
 
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
-import java.io.Serializable;
-
 /**
  * This class is exclusively for testing, and it mimics a Client class.
  */
 
-public class ClientTesting implements ClientInterfaceTesting, Serializable {
+public class ClientTesting implements ClientInterfaceTesting {
     @Override
     public void sendLivingRoomUpdate(LivingRoomUpdate update){
 
@@ -35,7 +33,7 @@ public class ClientTesting implements ClientInterfaceTesting, Serializable {
     }
 
     @Override
-    public void sendCommonGoalCardUpdate(CommonGoalCardUpdate update){
+    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update){
 
     }
 
@@ -56,6 +54,21 @@ public class ClientTesting implements ClientInterfaceTesting, Serializable {
 
     @Override
     public void sendEndGameUpdate(EndGameUpdate update){
+
+    }
+
+    @Override
+    public void sendListOfGames(GamesList gamesList) {
+
+    }
+
+    @Override
+    public void sendAcceptedAction(AcceptedAction acceptedAction) {
+
+    }
+
+    @Override
+    public void sendItemsSelected(ItemsSelected itemsSelected) {
 
     }
 }

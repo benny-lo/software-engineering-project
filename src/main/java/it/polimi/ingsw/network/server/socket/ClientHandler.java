@@ -42,17 +42,17 @@ public class ClientHandler implements Runnable, Sender {
 
     @Override
     public void sendListOfGames(GamesList gamesList) {
-        send(gamesList);
+        sendAsync(gamesList);
     }
 
     @Override
-    public void sendItemsSelection(ItemsSelected itemsSelected) {
-        send(itemsSelected);
+    public void sendItemsSelected(ItemsSelected itemsSelected) {
+        sendAsync(itemsSelected);
     }
 
     @Override
-    public void sendAccepted(AcceptedAction acceptedAction) {
-        send(acceptedAction);
+    public void sendAcceptedAction(AcceptedAction acceptedAction) {
+        sendAsync(acceptedAction);
     }
 
     @Override
@@ -81,7 +81,7 @@ public class ClientHandler implements Runnable, Sender {
     }
 
     @Override
-    public void sendCommonGoalCardUpdate(CommonGoalCardUpdate update) {
+    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) {
         sendAsync(update);
     }
 
