@@ -94,7 +94,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onWaitingUpdate(WaitingUpdate update) {
         synchronized (System.out) {
             System.out.println(update.getJustConnected() + " just connected");
-            System.out.println("waiting for " + update.getMissing() + "players ...");
+            System.out.println("waiting for " + update.getMissing() + " players ...");
         }
     }
 
@@ -306,6 +306,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     private void printScores() {
+        if (scores == null) return;
         System.out.println("rankings:");
         for(Rank rank : scores) {
             System.out.println(rank.getNickname() + ": " + rank.getScore());

@@ -36,7 +36,7 @@ public class Lobby {
     private List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
         for (Integer id : controllers.keySet()) {
-            if (controllers.get(id).isStarted())   //If a game has already started, it's not displayed.
+            if (!controllers.get(id).isStarted())   //If a game has already started, it's not displayed.
                 ret.add(new GameInfo(id, controllers.get(id).getNumberPlayers(), controllers.get(id).getNumberCommonGoalCards()));
         }
         return ret;
@@ -62,6 +62,7 @@ public class Lobby {
         VirtualView view = new VirtualView(nickname);
         view.setToClient(client);
         views.add(view);
+        System.out.println("user " + nickname + " is now connected with " + client);
         return getGameInfo();
     }
 

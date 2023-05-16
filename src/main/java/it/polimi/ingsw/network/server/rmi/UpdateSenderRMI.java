@@ -103,4 +103,9 @@ public class UpdateSenderRMI implements UpdateSender {
             System.err.println("RMI connection with client failed");
         }
     }
+
+    @Override
+    public String toString() {
+        return "RMI";
+    }
 }

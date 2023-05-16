@@ -117,4 +117,9 @@ public class ClientHandler implements Runnable, Sender {
     private void sendAsync(NetworkMessage message) {
         (new Thread(() -> send(message))).start();
     }
+
+    @Override
+    public String toString() {
+        return "TCP";
+    }
 }
