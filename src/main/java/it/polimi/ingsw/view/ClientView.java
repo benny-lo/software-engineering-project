@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.client.RequestSender;
+import it.polimi.ingsw.network.client.UpdateReceiver;
 import it.polimi.ingsw.network.client.rmi.RequestSenderRMI;
 import it.polimi.ingsw.network.client.socket.RequestSenderTCP;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class UpdateReceiver implements it.polimi.ingsw.network.client.UpdateReceiver {
+public abstract class ClientView implements UpdateReceiver {
     protected String nickname;
     protected String currentPlayer;
     protected String winner;
@@ -38,7 +39,7 @@ public abstract class UpdateReceiver implements it.polimi.ingsw.network.client.U
     protected List<Item> itemsChosen;
     protected RequestSender sender;
 
-    public UpdateReceiver() {
+    public ClientView() {
         bookshelves = new HashMap<>();
         commonGoalCards = new ArrayList<>();
         chat = new ArrayList<>();

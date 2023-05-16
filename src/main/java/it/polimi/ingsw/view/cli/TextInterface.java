@@ -5,11 +5,11 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.utils.Rank;
 import it.polimi.ingsw.utils.networkMessage.server.*;
-import it.polimi.ingsw.view.UpdateReceiver;
+import it.polimi.ingsw.view.ClientView;
 
 import java.util.List;
 
-public class TextInterface extends UpdateReceiver implements InputReceiver {
+public class TextInterface extends ClientView implements InputReceiver {
     private final InputHandler inputHandler;
     private boolean inChat;
     public TextInterface() {
@@ -250,9 +250,9 @@ public class TextInterface extends UpdateReceiver implements InputReceiver {
     private void printLivingRoom() {
         if (livingRoom == null) return;
 
-        for(int i = 0; i < livingRoom.length; i++) {
-            for(int j = 0; j < livingRoom[i].length; j++) {
-                System.out.print(livingRoom[i][j] + " ");
+        for (Item[] items : livingRoom) {
+            for (Item item : items) {
+                System.out.print(item + " ");
             }
             System.out.println();
         }
