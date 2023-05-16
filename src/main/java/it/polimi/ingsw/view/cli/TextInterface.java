@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 public class TextInterface extends ClientView implements InputReceiver {
-    private final InputHandler inputHandler;
     private boolean inChat;
+
     public TextInterface() {
         super();
-        this.inputHandler = new InputHandler(this);
+        InputHandler inputHandler = new InputHandler(this);
         (new Thread(inputHandler)).start();
 
         System.out.println("Welcome to MyShelfie");
@@ -70,7 +70,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
         synchronized (System.out) {
             Map<Position, Item> ups = update.getLivingRoomUpdate();
-            for(Position p : ups.keySet()) {
+            for (Position p : ups.keySet()) {
                 livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
             }
 
@@ -85,7 +85,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onBookshelfUpdate(BookshelfUpdate update) {
         synchronized (System.out) {
             Map<Position, Item> ups = update.getBookshelf();
-            for(Position p : ups.keySet()) {
+            for (Position p : ups.keySet()) {
                 bookshelves.get(update.getOwner())[p.getRow()][p.getColumn()] = ups.get(p);
             }
 
@@ -100,7 +100,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onWaitingUpdate(WaitingUpdate update) {
         synchronized (System.out) {
             System.out.println(update.getJustConnected() + " just connected");
-            if(update.getMissing()!=0) System.out.println("Waiting for " + update.getMissing() + " players ...");
+            if (update.getMissing() != 0) System.out.println("Waiting for " + update.getMissing() + " players ...");
             else System.out.println("Game starts!");
         }
     }
@@ -108,7 +108,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
         synchronized (System.out) {
-            for(String nick : update.getScores().keySet()) {
+            for (String nick : update.getScores().keySet()) {
                 scores.put(nick, update.getScores().get(nick));
             }
 
@@ -135,7 +135,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onCommonGoalCardUpdate(CommonGoalCardsUpdate update) {
         synchronized (System.out) {
             Map<Integer, Integer> cardsChanged = update.getCommonGoalCardsUpdate();
-            for(Integer id : cardsChanged.keySet()) {
+            for (Integer id : cardsChanged.keySet()) {
                 commonGoalCards.put(id, cardsChanged.get(id));
             }
 
@@ -273,7 +273,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     private void printLivingRoom() {
         if (livingRoom == null) return;
 
-        System.out.println("Livingroom: ");
+        System.out.println("LivingRoom: ");
         for (Item[] items : livingRoom) {
             for (Item item : items) {
                 printItem(item);
@@ -284,7 +284,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     private void printBookshelves() {
-        for(Map.Entry<String, Item[][]> entry: bookshelves.entrySet()){
+        for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
             System.out.println(entry.getKey() + "'s bookshelf:");
             printBookshelf(entry.getValue());
         }
@@ -292,8 +292,8 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     private void printBookshelf(Item[][] array) {
-        for(int i= array.length-1; i>=0; i--){
-            for(int j=0; j< array[i].length; j++) {
+        for (int i = array.length - 1; i >= 0; i--) {
+            for (int j = 0; j < array[i].length; j++) {
                 printItem(array[i][j]);
                 System.out.println();
             }
@@ -308,7 +308,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     private void printCommonGoalCards() {
         System.out.println("your common goal cards are:");
-        for(Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
+        for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
             System.out.println("id: " + card.getKey() + " top: " + card.getValue());
         }
         System.out.println();
@@ -317,7 +317,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     private void printItemsChosen() {
         if (itemsChosen == null) return;
         System.out.print("You chose the items: ");
-        for(Item item : itemsChosen) {
+        for (Item item : itemsChosen) {
             System.out.print(item + " ");
         }
         System.out.println();
@@ -336,30 +336,30 @@ public class TextInterface extends ClientView implements InputReceiver {
     private void printScores() {
         if (scores == null) return;
         System.out.println("rankings:");
-        for(Map.Entry<String, Integer> e : scores.entrySet()) {
+        for (Map.Entry<String, Integer> e : scores.entrySet()) {
             System.out.println(e.getKey() + ": " + e.getValue());
-        System.out.println();
+            System.out.println();
+        }
     }
 
-    private void printChat() {
+    private void printChat () {
         if (chat.size() == 0) {
             System.out.println("No message in chat yet");
             return;
         }
 
-        for(Message message: chat) {
+        for (Message message : chat) {
             System.out.println(message.getText() + "wrote: " + message.getText());
         }
         System.out.println();
     }
 
-    private void printEndGame() {
+    private void printEndGame () {
         if (winner.equals(nickname)) {
             System.out.println("You are the winner");
         } else {
             System.out.println("The winner is " + winner);
         }
-
         printScores();
     }
 }
