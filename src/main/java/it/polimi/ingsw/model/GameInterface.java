@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.view.change.*;
+import it.polimi.ingsw.view.modelListener.*;
 
 import java.util.List;
 

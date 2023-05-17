@@ -87,6 +87,11 @@ public abstract class ClientView implements UpdateReceiver {
             throw new RuntimeException(e);
         }
 
-        this.sender = new RequestSenderTCP(socket, this);
+        RequestSenderTCP sender = new RequestSenderTCP(socket, this);
+        sender.start();
+
+        this.sender = sender;
     }
+
+    public abstract void start();
 }

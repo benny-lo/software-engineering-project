@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.change;
+package it.polimi.ingsw.view.modelListener;
 
 public class EndingTokenListener extends ModelListener {
     private String owner;

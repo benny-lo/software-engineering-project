@@ -40,7 +40,7 @@ public class Lobby {
     private List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
         for (Integer id : controllers.keySet()) {
-            if (controllers.get(id).isStarted())   //If a game has already started, it's not displayed.
+            if (!controllers.get(id).isStarted())   //If a game has already started, it's not displayed.
                 ret.add(new GameInfo(id, controllers.get(id).getNumberPlayers(), controllers.get(id).getNumberCommonGoalCards()));
         }
         return ret;
@@ -99,7 +99,7 @@ public class Lobby {
         VirtualView view = getView(nickname);
         if (view == null) return;
 
-        if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
+        if (!controllers.containsKey(id) || !controllers.get(id).isStarted()) {
             view.sendAcceptedAction(false, "SELECT_GAME");
             return;
         }

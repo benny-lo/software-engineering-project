@@ -15,8 +15,11 @@ public class RequestSenderTCP implements RequestSender, ObjectReceiver {
 
     public RequestSenderTCP(Socket socket, UpdateReceiver updateReceiver) {
         this.serverHandler = new ServerHandler(socket, this);
-        (new Thread(serverHandler)).start();
         this.updateReceiver = updateReceiver;
+    }
+
+    public void start() {
+        (new Thread(serverHandler)).start();
     }
 
     @Override

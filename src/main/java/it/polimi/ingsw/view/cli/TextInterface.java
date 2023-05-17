@@ -11,13 +11,16 @@ import java.util.Map;
 
 public class TextInterface extends ClientView implements InputReceiver {
     private boolean inChat;
+    private final InputHandler inputHandler;
 
     public TextInterface() {
         super();
-        InputHandler inputHandler = new InputHandler(this);
-        (new Thread(inputHandler)).start();
-
+        inputHandler = new InputHandler(this);
         System.out.println("Welcome to MyShelfie");
+    }
+
+    public void start() {
+        (new Thread(inputHandler)).start();
     }
 
     @Override

@@ -4,9 +4,9 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
-import it.polimi.ingsw.view.change.BookshelfListener;
-import it.polimi.ingsw.view.change.ItemsChosenListener;
-import it.polimi.ingsw.view.change.PersonalGoalCardListener;
+import it.polimi.ingsw.view.modelListener.BookshelfListener;
+import it.polimi.ingsw.view.modelListener.ItemsChosenListener;
+import it.polimi.ingsw.view.modelListener.PersonalGoalCardListener;
 
 import java.util.*;
 

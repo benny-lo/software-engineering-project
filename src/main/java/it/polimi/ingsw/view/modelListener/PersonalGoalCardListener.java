@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.change;
+package it.polimi.ingsw.view.modelListener;
 
 public class PersonalGoalCardListener extends ModelListener {
     private int id;

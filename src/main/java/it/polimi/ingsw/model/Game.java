@@ -8,7 +8,7 @@ import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
-import it.polimi.ingsw.view.change.*;
+import it.polimi.ingsw.view.modelListener.*;
 
 import java.io.*;
 import java.util.*;

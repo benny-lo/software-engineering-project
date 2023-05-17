@@ -13,5 +13,7 @@ public class Client {
         } else {
             System.exit(1);
         }
+
+        view.start();
     }
 }

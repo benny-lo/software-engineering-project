@@ -147,6 +147,7 @@ public class Controller implements ActionListener {
     public void update(JoinAction action) {
         if (game.getCurrentPlayer() != null || ended) {
             action.getView().sendAcceptedAction(false, "SELECT_GAME");
+            action.getView().setError();
             return;
         }
 
@@ -178,6 +179,7 @@ public class Controller implements ActionListener {
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
             views.get(action.getSenderNickname()).sendItemsSelected();
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
@@ -199,6 +201,7 @@ public class Controller implements ActionListener {
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
             views.get(action.getSenderNickname()).sendAcceptedAction(false, "SELECT_BOOKSHELF");
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 
@@ -220,6 +223,7 @@ public class Controller implements ActionListener {
     public void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
             views.get(action.getSenderNickname()).sendAcceptedAction(false, "WRITE_CHAT");
+            views.get(action.getSenderNickname()).setError();
             return;
         }
 

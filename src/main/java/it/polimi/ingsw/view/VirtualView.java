@@ -6,7 +6,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.server.Sender;
 import it.polimi.ingsw.utils.Pair;
 import it.polimi.ingsw.utils.networkMessage.server.*;
-import it.polimi.ingsw.view.change.*;
+import it.polimi.ingsw.view.modelListener.*;
 
 import java.util.HashMap;
 import java.util.List;

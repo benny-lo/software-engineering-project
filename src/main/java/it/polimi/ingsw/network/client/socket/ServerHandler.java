@@ -2,7 +2,6 @@ package it.polimi.ingsw.network.client.socket;
 
 
 import it.polimi.ingsw.utils.networkMessage.NetworkMessageWithSender;
-import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,14 +17,21 @@ public class ServerHandler implements Runnable {
     public ServerHandler(Socket socket, ObjectReceiver receiver) {
         this.socket = socket;
         this.receiver = receiver;
+
+        try {
+            out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+        } catch(IOException e) {
+            System.err.println("failed to get I/O");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
         try {
-            this.in = new ObjectInputStream(socket.getInputStream());
-
             Object input;
+            in = new ObjectInputStream(socket.getInputStream());
 
             while (true) {
                 input = in.readObject();
@@ -41,8 +47,8 @@ public class ServerHandler implements Runnable {
 
     public synchronized void send(NetworkMessageWithSender message) {
         try {
-            out = new ObjectOutputStream(socket.getOutputStream());
             out.writeObject(message);
+            out.flush();
         } catch (IOException e) {
             System.err.println("RequestSenderTCP: line 41 = I/O failed");
             e.printStackTrace();

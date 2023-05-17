@@ -19,14 +19,21 @@ public class ClientHandler implements Runnable, Sender {
     public ClientHandler(Socket socket, Receiver receiver) {
         this.socket = socket;
         this.receiver = receiver;
+
+        try {
+            out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
+        } catch (IOException e) {
+            System.err.println("failed to get streams from socket");
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void run() {
         try {
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
             Object input;
+            in = new ObjectInputStream(socket.getInputStream());
 
             while(true) {
                 input = in.readObject();
@@ -108,6 +115,7 @@ public class ClientHandler implements Runnable, Sender {
     private synchronized void send(NetworkMessage networkMessage) {
         try {
             out.writeObject(networkMessage);
+            out.flush();
         } catch (IOException e) {
             System.out.println("failed to send message");
             e.printStackTrace();
