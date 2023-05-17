@@ -11,15 +11,14 @@ import java.util.Map;
 
 public class TextInterface extends ClientView implements InputReceiver {
     private boolean inChat;
-    private final InputHandler inputHandler;
 
     public TextInterface() {
         super();
-        inputHandler = new InputHandler(this);
         System.out.println("Welcome to MyShelfie");
     }
 
     public void start() {
+        InputHandler inputHandler = new InputHandler(this);
         (new Thread(inputHandler)).start();
     }
 
@@ -29,7 +28,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             List<GameInfo> games = message.getAvailable();
 
             if (games == null) {
-                System.out.println("Try again!");
+                System.out.println("Action denied. Try again!");
                 return;
             }
 
@@ -89,6 +88,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         synchronized (System.out) {
             Map<Position, Item> ups = update.getBookshelf();
             for (Position p : ups.keySet()) {
+                if (!bookshelves.containsKey(update.getOwner())) bookshelves.put(update.getOwner(), new Item[6][5]);
                 bookshelves.get(update.getOwner())[p.getRow()][p.getColumn()] = ups.get(p);
             }
 
@@ -261,15 +261,16 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void printItem(Item item) {
         if (item == null) {
             System.out.print("  ");
-        } else {
-            switch (item) {
-                case CAT -> System.out.print((char) 27 + "[32mC ");
-                case BOOK -> System.out.print((char) 27 + "[37mB ");
-                case GAME -> System.out.print((char) 27 + "[33mG ");
-                case FRAME -> System.out.print((char) 27 + "[34mF ");
-                case CUP -> System.out.print((char) 27 + "[36mC ");
-                case PLANT -> System.out.print((char) 27 + "[35mP ");
-            }
+            return;
+        }
+
+        switch (item) {
+            case CAT -> System.out.print((char) 27 + "[32mC ");
+            case BOOK -> System.out.print((char) 27 + "[37mB ");
+            case GAME -> System.out.print((char) 27 + "[33mG ");
+            case FRAME -> System.out.print((char) 27 + "[34mF ");
+            case CUP -> System.out.print((char) 27 + "[36mC ");
+            case PLANT -> System.out.print((char) 27 + "[35mP ");
         }
     }
 

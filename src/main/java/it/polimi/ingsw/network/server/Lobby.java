@@ -99,7 +99,7 @@ public class Lobby {
         VirtualView view = getView(nickname);
         if (view == null) return;
 
-        if (!controllers.containsKey(id) || !controllers.get(id).isStarted()) {
+        if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
             view.sendAcceptedAction(false, "SELECT_GAME");
             return;
         }

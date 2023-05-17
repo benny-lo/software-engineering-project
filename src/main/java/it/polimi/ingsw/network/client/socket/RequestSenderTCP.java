@@ -10,15 +10,17 @@ import java.net.Socket;
 import java.util.List;
 
 public class RequestSenderTCP implements RequestSender, ObjectReceiver {
-    private final ServerHandler serverHandler;
+    private final Socket socket;
+    private ServerHandler serverHandler;
     private final UpdateReceiver updateReceiver;
 
     public RequestSenderTCP(Socket socket, UpdateReceiver updateReceiver) {
-        this.serverHandler = new ServerHandler(socket, this);
+        this.socket = socket;
         this.updateReceiver = updateReceiver;
     }
 
     public void start() {
+        this.serverHandler = new ServerHandler(socket, this);
         (new Thread(serverHandler)).start();
     }
 
@@ -78,6 +80,8 @@ public class RequestSenderTCP implements RequestSender, ObjectReceiver {
             updateReceiver.onStartTurnUpdate((StartTurnUpdate) object);
         } else if (object instanceof EndGameUpdate) {
             updateReceiver.onEndGameUpdate((EndGameUpdate) object);
+        } else if (object instanceof AcceptedAction) {
+            updateReceiver.onAcceptedAction((AcceptedAction) object);
         }
     }
 }

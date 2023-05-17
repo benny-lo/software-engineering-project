@@ -16,29 +16,22 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 public class Server {
-    private final Lobby lobby;
-    private ServerConnectionRMI serverConnectionRMI;
-    private ServerConnectionTCP serverConnectionTCP;
+    public void launch(List<String> args) {
+        Lobby lobby = new Lobby();
 
-    public static void main(String[] args) {
-        Server server = new Server();
-
-        server.startConnectionRMI(server.getLobby());
-        server.startConnectionTCP(server.getLobby());
+        startConnectionRMI(lobby);
+        startConnectionTCP(lobby);
 
         System.out.println("server is ready ...");
     }
 
-    public Server() {
-        this.lobby = new Lobby();
-    }
-
     private void startConnectionRMI(Lobby lobby) {
         ServerConnectionRMIInterface stub = null;
+        ServerConnectionRMI serverConnectionRMI = new ServerConnectionRMI(lobby);
         try {
-            serverConnectionRMI = new ServerConnectionRMI(lobby);
             stub = (ServerConnectionRMIInterface)
                     UnicastRemoteObject.exportObject(serverConnectionRMI, ServerSettings.getRmiPort());
         } catch (RemoteException e) {
@@ -69,32 +62,26 @@ public class Server {
     }
 
     private void startConnectionTCP(Lobby lobby) {
-        serverConnectionTCP = new ServerConnectionTCP(lobby);
-        (new Thread(this::waitForClients)).start();
-    }
+        ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(lobby);
+        (new Thread(() -> {
+            ServerSocket server = null;
 
-    private void waitForClients() {
-        ServerSocket server = null;
-
-        try {
-            server = new ServerSocket(ServerSettings.getSocketPort());
-        } catch (IOException e) {
-            System.err.println("failed to start server socket");
-            e.printStackTrace();
-        }
-
-        while(true) {
             try {
-                Socket socket = server.accept();
-                (new Thread(new ClientHandler(socket, serverConnectionTCP))).start();
+                server = new ServerSocket(ServerSettings.getSocketPort());
             } catch (IOException e) {
-                System.err.println("server closed");
+                System.err.println("failed to start server socket");
                 e.printStackTrace();
             }
-        }
-    }
 
-    public Lobby getLobby() {
-        return lobby;
+            while(true) {
+                try {
+                    Socket socket = server.accept();
+                    (new Thread(new ClientHandler(socket, serverConnectionTCP))).start();
+                } catch (IOException e) {
+                    System.err.println("server closed");
+                    e.printStackTrace();
+                }
+            }
+        })).start();
     }
 }

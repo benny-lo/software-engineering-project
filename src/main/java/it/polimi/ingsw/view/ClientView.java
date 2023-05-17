@@ -42,6 +42,7 @@ public abstract class ClientView implements UpdateReceiver {
         livingRoom = new Item[9][9];
         bookshelves = new HashMap<>();
         commonGoalCards = new HashMap<>();
+        scores = new HashMap<>();
         chat = new ArrayList<>();
     }
 
