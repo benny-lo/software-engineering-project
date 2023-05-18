@@ -3,59 +3,59 @@ package it.polimi.ingsw.network.client.socket;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.network.client.RequestSender;
 import it.polimi.ingsw.network.client.UpdateReceiver;
+import it.polimi.ingsw.utils.networkMessage.NetworkMessageWithSender;
 import it.polimi.ingsw.utils.networkMessage.client.*;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.List;
 
-public class RequestSenderTCP implements RequestSender, ObjectReceiver {
+public class RequestSenderTCP implements RequestSender, Runnable {
     private final Socket socket;
-    private ServerHandler serverHandler;
     private final UpdateReceiver updateReceiver;
+    private ObjectInputStream in;
+    private final ObjectOutputStream out;
 
-    public RequestSenderTCP(Socket socket, UpdateReceiver updateReceiver) {
+    public RequestSenderTCP(Socket socket, UpdateReceiver updateReceiver) throws IOException {
         this.socket = socket;
         this.updateReceiver = updateReceiver;
-    }
-
-    public void start() {
-        this.serverHandler = new ServerHandler(socket, this);
-        (new Thread(serverHandler)).start();
+        this.out = new ObjectOutputStream(socket.getOutputStream());
     }
 
     @Override
     public void login(String nickname) {
-        serverHandler.send(new Nickname(nickname));
+        send(new Nickname(nickname));
     }
 
     @Override
     public void selectGame(String nickname, int id) {
-        serverHandler.send(new GameSelection(nickname, id));
+        send(new GameSelection(nickname, id));
     }
 
     @Override
     public void createGame(String nickname, int numberPlayers, int numberCommonGoals) {
-        serverHandler.send(new GameInitialization(nickname, numberPlayers, numberCommonGoals));
+        send(new GameInitialization(nickname, numberPlayers, numberCommonGoals));
     }
 
     @Override
     public void selectFromLivingRoom(String nickname, List<Position> position) {
-        serverHandler.send(new LivingRoomSelection(nickname, position));
+        send(new LivingRoomSelection(nickname, position));
     }
 
     @Override
     public void putInBookshelf(String nickname, int column, List<Integer> permutation) {
-        serverHandler.send(new BookshelfInsertion(nickname, column, permutation));
+        send(new BookshelfInsertion(nickname, column, permutation));
     }
 
     @Override
     public void addMessage(String nickname, String text) {
-        serverHandler.send(new ChatMessage(nickname, text));
+        send(new ChatMessage(nickname, text));
     }
 
-    @Override
-    public void receive(Object object) {
+    private void receive(Object object) {
         if (object instanceof GamesList) {
             updateReceiver.onGamesList((GamesList) object);
         } else if (object instanceof ItemsSelected) {
@@ -82,6 +82,36 @@ public class RequestSenderTCP implements RequestSender, ObjectReceiver {
             updateReceiver.onEndGameUpdate((EndGameUpdate) object);
         } else if (object instanceof AcceptedAction) {
             updateReceiver.onAcceptedAction((AcceptedAction) object);
+        }
+    }
+
+    @Override
+    public void run() {
+        try {
+            Object input;
+            in = new ObjectInputStream(socket.getInputStream());
+
+            while (true) {
+                input = in.readObject();
+                receive(input);
+            }
+        } catch (IOException e) {
+            System.err.println("RequestSenderTCP: line 28 = I/O failed");
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.err.println("RequestSenderTCP: line 31 = unknown class");
+        }
+    }
+
+    private void send(NetworkMessageWithSender message) {
+        synchronized (out) {
+            try {
+                out.writeObject(message);
+                out.flush();
+            } catch (IOException e) {
+                System.err.println("RequestSenderTCP: line 41 = I/O failed");
+                e.printStackTrace();
+            }
         }
     }
 }
