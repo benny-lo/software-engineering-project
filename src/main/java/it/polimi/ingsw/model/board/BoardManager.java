@@ -138,7 +138,12 @@ public class BoardManager {
         return livingRoom;
     }
 
-    public void setLivingRoomRep(LivingRoomListener listener) {
+    public void setLivingRoomListener(LivingRoomListener listener) {
         livingRoomReps.add(listener);
+        for(int i = 0; i < livingRoom.getRows(); i++) {
+            for(int j = 0; j < livingRoom.getColumns(); j++) {
+                listener.updateState(new Position(i, j), livingRoom.tileAt(i, j));
+            }
+        }
     }
 }

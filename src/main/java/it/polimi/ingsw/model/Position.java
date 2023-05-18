@@ -1,8 +1,9 @@
 package it.polimi.ingsw.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Position implements Comparable<Position> {
+public class Position implements Comparable<Position>, Serializable {
     private final int row;
     private final int column;
 

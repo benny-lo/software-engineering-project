@@ -138,10 +138,10 @@ public class Game implements GameInterface {
     private void endTurn() {
         if (players.get(currentPlayer).getBookshelf().isFull() && boardManager.isEndingToken()) {
             boardManager.takeEndingToken();
+            players.get(currentPlayer).addEndingToken();
             for(EndingTokenListener rep : endingTokenListeners) {
                 rep.updateState(currentPlayer);
             }
-            players.get(currentPlayer).addEndingToken();
         }
 
         boardManager.fill();
@@ -194,7 +194,7 @@ public class Game implements GameInterface {
     @Override
     public void setLivingRoomListener(LivingRoomListener listener) {
         if (boardManager == null) return;
-        boardManager.setLivingRoomRep(listener);
+        boardManager.setLivingRoomListener(listener);
     }
 
     @Override

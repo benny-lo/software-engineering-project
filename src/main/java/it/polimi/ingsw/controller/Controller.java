@@ -79,14 +79,11 @@ public class Controller implements ActionListener {
         game.setCurrentPlayer(firstPlayer);
         turnPhase = TurnPhase.LIVING_ROOM;
 
-        // Getting the list of all virtual views.
-        List<VirtualView> viewsList = new ArrayList<>();
-        for(String nickname : views.keySet()) {
-            viewsList.add(views.get(nickname));
-        }
+        // Initializing the managers and distributing the personal cards.
+        game.setup();
 
         // for each view, setting its listeners to the model.
-        for(VirtualView view : viewsList) {
+        for(VirtualView view : views.values()) {
             game.setEndingTokenListener(view.getEndingTokenListener());
             game.setBookshelfListener(view.getBookshelfListener());
             game.setCommonGoalCardsListener(view.getCommonGoalCardsListener());
@@ -98,20 +95,15 @@ public class Controller implements ActionListener {
         }
 
         // Sending initial updates about the reps.
-        for(VirtualView view : viewsList) {
+        for(VirtualView view : views.values()) {
             view.sendLivingRoom();
             view.sendBookshelves();
             view.sendPersonalGoalCard();
             view.sendCommonGoalCard();
             view.sendEndingToken();
             view.sendScores();
+            view.sendStartTurn(game.getCurrentPlayer());
         }
-
-        // Initializing the managers and distributing the personal cards.
-        game.setup();
-
-        // Notifying the first player their turn has started.
-        views.get(game.getCurrentPlayer()).sendStartTurn(game.getCurrentPlayer());
     }
 
     private void nextTurn() {
