@@ -44,6 +44,7 @@ public abstract class ClientView implements UpdateReceiver {
         livingRoom = new Item[9][9];
         bookshelves = new HashMap<>();
         commonGoalCards = new HashMap<>();
+        scores = new HashMap<>();
         chat = new ArrayList<>();
     }
 
@@ -89,10 +90,14 @@ public abstract class ClientView implements UpdateReceiver {
             throw new RuntimeException(e);
         }
 
-        RequestSenderTCP sender = new RequestSenderTCP(socket, this);
-        sender.start();
-
+        RequestSenderTCP sender = null;
+        try {
+            sender = new RequestSenderTCP(socket, this);
+        } catch (IOException e) {
+            System.out.println("failed to get streams from Socket");
+        }
         this.sender = sender;
+        (new Thread(sender)).start();
     }
 
     public abstract void start();

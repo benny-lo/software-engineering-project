@@ -20,6 +20,8 @@ public class ItemsChosenListener extends ModelListener {
 
     public List<Item> getItemsChosen() {
         changed = false;
+        if (itemsChosen == null) return null;
+
         List<Item> ret = new ArrayList<>(itemsChosen);
         itemsChosen = null;
         return ret;
