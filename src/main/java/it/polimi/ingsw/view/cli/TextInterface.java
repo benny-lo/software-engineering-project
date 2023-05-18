@@ -272,6 +272,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             case FRAME -> System.out.print((char) 27 + "[34mF ");
             case CUP -> System.out.print((char) 27 + "[36mC ");
             case PLANT -> System.out.print((char) 27 + "[35mP ");
+            case LOCKED -> System.out.print("  ");
         }
     }
 
