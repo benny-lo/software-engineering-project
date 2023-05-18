@@ -33,7 +33,7 @@ public class InputHandler implements Runnable {
             String command = tokenizer.nextToken();
             switch (command) {
                 case "/help":
-                    System.out.println("Commands list: \n\t login \n\t create_game \n\t select_game \n\t living_room \n\t bookshelf \n\t enter_chat \n\t exit_chat");
+                    System.out.println("Commands list: \n\t /login \n\t /create_game \n\t /select_game \n\t /living_room \n\t /bookshelf \n\t /enter_chat \n\t /exit_chat");
                 case "/login":
                     if (tokenizer.countTokens() == 1) {
                         String nickname = tokenizer.nextToken();

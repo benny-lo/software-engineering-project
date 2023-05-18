@@ -4,21 +4,27 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.utils.networkMessage.server.*;
+import it.polimi.ingsw.view.ClientStatus;
 import it.polimi.ingsw.view.ClientView;
 
 import java.util.List;
 import java.util.Map;
 
+import static it.polimi.ingsw.view.cli.TextInterfacePrinter.*;
+
 public class TextInterface extends ClientView implements InputReceiver {
     private boolean inChat;
     private final InputHandler inputHandler;
+    private ClientStatus status;
 
     public TextInterface() {
         super();
         inputHandler = new InputHandler(this);
-        System.out.println("Welcome to MyShelfie");
+        status = ClientStatus.LOGIN;
+        printWelcomeMessage();
     }
 
+    @Override
     public void start() {
         (new Thread(inputHandler)).start();
     }
@@ -44,6 +50,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             if (games.size() == 0) {
                 System.out.println("There are no available games. Create a new one (Number of player and number of CommonGoalCard)");
             }
+            status = ClientStatus.CREATE_OR_SELECT_GAME;
         }
     }
 
@@ -196,32 +203,59 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     @Override
     public void login(String nickname) {
+        if (status != ClientStatus.LOGIN){
+            printWrongStatus();
+            return;
+        }
+
+        if(!isValidNickname(nickname)){
+            incorrectNickname();
+            return;
+        }
+
         this.nickname = nickname;
         sender.login(nickname);
     }
 
     @Override
     public void createGame(int numberPlayers, int numberCommonGoalCards) {
+        if (status != ClientStatus.CREATE_OR_SELECT_GAME){
+            printWrongStatus();
+            return;
+        }
         sender.createGame(nickname, numberPlayers, numberCommonGoalCards);
     }
 
     @Override
     public void joinGame(int id) {
+        if (status != ClientStatus.CREATE_OR_SELECT_GAME){
+            printWrongStatus();
+            return;
+        }
         sender.selectGame(nickname, id);
     }
 
     @Override
     public void livingRoom(List<Position> positions) {
+        if (status != ClientStatus.GAME){
+            printWrongStatus();
+            return;
+        }
         sender.selectFromLivingRoom(nickname, positions);
     }
 
     @Override
     public void bookshelf(int column, List<Integer> permutation) {
+        if (status != ClientStatus.GAME){
+            printWrongStatus();
+            return;
+        }
         sender.putInBookshelf(nickname, column, permutation);
     }
 
     @Override
     public void enterChat() {
+        printInChat();
         inChat = true;
         clearScreen();
         printChat();
@@ -234,8 +268,13 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     @Override
     public void exitChat() {
+        if (!inChat){
+            printNotInChat();
+            return;
+        }
         inChat = false;
         clearScreen();
+        printExitChat();
         if (endGame) printEndGame();
         else printGameRep();
     }
