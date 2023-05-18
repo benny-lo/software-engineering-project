@@ -247,7 +247,6 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     private void printGameRep() {
         System.out.println("the current player is " + currentPlayer);
-        System.out.println();
 
         printLivingRoom();
         printBookshelves();
@@ -256,6 +255,8 @@ public class TextInterface extends ClientView implements InputReceiver {
         printItemsChosen();
         printEndingToken();
         printScores();
+
+        System.out.flush();
     }
 
     public void printItem(Item item) {
@@ -281,10 +282,9 @@ public class TextInterface extends ClientView implements InputReceiver {
         for (Item[] items : livingRoom) {
             for (Item item : items) {
                 printItem(item);
-                System.out.println();
             }
+            System.out.println();
         }
-        System.out.println();
     }
 
     private void printBookshelves() {
@@ -299,15 +299,14 @@ public class TextInterface extends ClientView implements InputReceiver {
         for (int i = array.length - 1; i >= 0; i--) {
             for (int j = 0; j < array[i].length; j++) {
                 printItem(array[i][j]);
-                System.out.println();
             }
+            System.out.println();
         }
     }
 
     private void printPersonalGoalCard() {
         if (personalGoalCard == 0) return;
         System.out.println("Your personal goal card is " + personalGoalCard);
-        System.out.println();
     }
 
     private void printCommonGoalCards() {
@@ -315,7 +314,6 @@ public class TextInterface extends ClientView implements InputReceiver {
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
             System.out.println("id: " + card.getKey() + " top: " + card.getValue());
         }
-        System.out.println();
     }
 
     private void printItemsChosen() {
@@ -325,7 +323,6 @@ public class TextInterface extends ClientView implements InputReceiver {
             System.out.print(item + " ");
         }
         System.out.println();
-        System.out.println();
     }
 
     private void printEndingToken() {
@@ -334,7 +331,6 @@ public class TextInterface extends ClientView implements InputReceiver {
         } else {
             System.out.println(endingToken + " has the ending token");
         }
-        System.out.println();
     }
 
     private void printScores() {
@@ -342,7 +338,6 @@ public class TextInterface extends ClientView implements InputReceiver {
         System.out.println("rankings:");
         for (Map.Entry<String, Integer> e : scores.entrySet()) {
             System.out.println(e.getKey() + ": " + e.getValue());
-            System.out.println();
         }
     }
 
@@ -355,7 +350,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         for (Message message : chat) {
             System.out.println(message.getText() + "wrote: " + message.getText());
         }
-        System.out.println();
+        System.out.flush();
     }
 
     private void printEndGame () {
@@ -365,5 +360,6 @@ public class TextInterface extends ClientView implements InputReceiver {
             System.out.println("The winner is " + winner);
         }
         printScores();
+        System.out.flush();
     }
 }
