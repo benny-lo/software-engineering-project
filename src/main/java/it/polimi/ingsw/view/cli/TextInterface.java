@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.utils.networkMessage.client.*;
 import it.polimi.ingsw.utils.networkMessage.server.*;
+import it.polimi.ingsw.view.ClientStatus;
 import it.polimi.ingsw.view.ClientView;
 
 import java.util.List;

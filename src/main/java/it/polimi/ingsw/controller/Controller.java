@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.modelListener.*;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameInterface;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
@@ -61,6 +60,12 @@ public class Controller implements ActionListener {
      * If the game has not started yet, it is null.
      */
     private TurnPhase turnPhase;
+
+    private final BookshelfListener bookshelvesListener;
+    private final CommonGoalCardsListener commonGoalCardsListener;
+    private final EndingTokenListener endingTokenListener;
+    private final LivingRoomListener livingRoomListener;
+    private final List<PersonalGoalCardListener> personalGoalCardListeners;
 
     public Controller(int numberPlayers, int numberCommonGoalCards) {
         this.numberPlayers = numberPlayers;
@@ -201,7 +206,7 @@ public class Controller implements ActionListener {
     @Override
     public void update(JoinAction action) {
         if (game != null || ended) {
-            action.getView().sendAcceptedAction(new AcceptedAction(false, "SELECT_GAME"));
+            action.getView().sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.LOGIN));
             return;
         }
 
@@ -250,7 +255,7 @@ public class Controller implements ActionListener {
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, "SELECT_BOOKSHELF"));
+            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
             return;
         }
 
@@ -270,7 +275,7 @@ public class Controller implements ActionListener {
     @Override
     public void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, "WRITE_CHAT"));
+            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
             return;
         }
 

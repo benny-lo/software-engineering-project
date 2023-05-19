@@ -9,6 +9,7 @@ import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.networkMessage.client.*;
 import it.polimi.ingsw.utils.networkMessage.server.AcceptedAction;
+import it.polimi.ingsw.utils.networkMessage.server.AcceptedActionTypes;
 import it.polimi.ingsw.utils.networkMessage.server.GamesList;
 import it.polimi.ingsw.utils.networkMessage.server.ItemsSelected;
 
@@ -49,7 +50,7 @@ public abstract class VirtualView implements ServerSender, ServerReceiver {
     @Override
     public void createGame(GameInitialization message) {
         if (controller != null) {
-            sendAcceptedAction(new AcceptedAction(false, "INIT_GAME"));
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
             return;
         }
         lobby.createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
@@ -58,7 +59,7 @@ public abstract class VirtualView implements ServerSender, ServerReceiver {
     @Override
     public void selectGame(GameSelection message) {
         if (controller != null) {
-            sendAcceptedAction(new AcceptedAction(false, "SELECT_GAME"));
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
             return;
         }
         lobby.selectGame(message.getId(), this);
@@ -77,7 +78,7 @@ public abstract class VirtualView implements ServerSender, ServerReceiver {
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
         if (controller == null) {
-            sendAcceptedAction(new AcceptedAction(false, "INSERT_BOOKSHELF"));
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
             return;
         }
 
@@ -87,7 +88,7 @@ public abstract class VirtualView implements ServerSender, ServerReceiver {
     @Override
     public void writeChat(ChatMessage message) {
         if (controller == null) {
-            sendAcceptedAction(new AcceptedAction(false, "WRITE_CHAT"));
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
             return;
         }
 

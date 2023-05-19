@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.networkMessage.server.AcceptedAction;
+import it.polimi.ingsw.utils.networkMessage.server.AcceptedActionTypes;
 import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
 import it.polimi.ingsw.utils.networkMessage.server.GamesList;
 import it.polimi.ingsw.network.VirtualView;
@@ -70,13 +71,13 @@ public class Lobby {
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
         if (getView(view.getNickname()) == null) {
-            view.sendAcceptedAction(new AcceptedAction(false, "INIT_GAME"));
+            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
             return;
         }
 
         // incorrect parameters.
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
-            view.sendAcceptedAction(new AcceptedAction(false, "INIT_GAME"));
+            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
             return;
         }
 
@@ -91,11 +92,11 @@ public class Lobby {
 
     public synchronized void selectGame(int id, VirtualView view) {
         if (getView(view.getNickname()) == null) {
-            view.sendAcceptedAction(new AcceptedAction(false, "SELECT_GAME"));
+            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
         }
 
         if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
-            view.sendAcceptedAction(new AcceptedAction(false, "SELECT_GAME"));
+            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
             return;
         }
 

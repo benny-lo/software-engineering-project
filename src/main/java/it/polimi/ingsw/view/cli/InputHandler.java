@@ -34,32 +34,40 @@ public class InputHandler implements Runnable {
 
             String command = tokenizer.nextToken();
             switch (command) {
-                case "/help":
+                case "/help" -> {
                     if (tokenizer.countTokens() == 0) {
                         printHelp();
                         inputReceiver.getStatus();
-                    } else {printIncorrectCommand();}
-                    break;
-                case "/login":
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                case "/login" -> {
                     if (tokenizer.countTokens() == 1) {
                         String nickname = tokenizer.nextToken();
                         inputReceiver.login(nickname);
-                    } else {printIncorrectCommand();}
-                    break;
-                case "/create_game":
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                case "/create_game" -> {
                     if (tokenizer.countTokens() == 2) {
                         int numberPlayer = Integer.parseInt(tokenizer.nextToken());
                         int numberCommonGoalCards = Integer.parseInt(tokenizer.nextToken());
                         inputReceiver.createGame(numberPlayer, numberCommonGoalCards);
-                    } else {printIncorrectCommand();}
-                    break;
-                case "/select_game":
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                case "/select_game" -> {
                     if (tokenizer.countTokens() == 1) {
                         int id = Integer.parseInt(tokenizer.nextToken());
-                        inputReceiver.joinGame(id);
-                    } else {printIncorrectCommand();}
-                    break;
-                case "/living_room":
+                        inputReceiver.selectGame(id);
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                case "/living_room" -> {
                     if (tokenizer.countTokens() % 2 == 0) {
                         List<Position> positions = new ArrayList<>();
                         while (tokenizer.hasMoreTokens()) {
@@ -68,9 +76,11 @@ public class InputHandler implements Runnable {
                             positions.add(new Position(x, y));
                         }
                         inputReceiver.livingRoom(positions);
-                    } else {printIncorrectCommand();}
-                    break;
-                case "/bookshelf":
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                case "/bookshelf" -> {
                     if (tokenizer.countTokens() > 1) {
                         int column = Integer.parseInt(tokenizer.nextToken());
 
@@ -79,21 +89,25 @@ public class InputHandler implements Runnable {
                             permutation.add(Integer.parseInt(tokenizer.nextToken()));
                         }
                         inputReceiver.bookshelf(column, permutation);
-                    } else {printIncorrectCommand();}
-                    break;
-                case "/enter_chat":
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                case "/enter_chat" -> {
                     if (tokenizer.countTokens() == 0) {
                         inputReceiver.enterChat();
-                    } else {printIncorrectCommand();}
-                    break;
-                case "/exit_chat":
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                case "/exit_chat" -> {
                     if (tokenizer.countTokens() == 0) {
                         inputReceiver.exitChat();
-                    } else {printIncorrectCommand();}
-                    break;
-                default:
-                    printWrongCommand();
-                    break;
+                    } else {
+                        printIncorrectCommand();
+                    }
+                }
+                default -> printWrongCommand();
             }
         }
     }
