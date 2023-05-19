@@ -17,7 +17,7 @@ import java.util.*;
  * Class representing the Game.
  */
 public class Game implements GameInterface {
-    private int numberPlayers;
+    private final int numberPlayers;
     private final int numberCommonGoalCards;
     private String currentPlayer;
     private final Map<String, Player> players;
@@ -231,11 +231,5 @@ public class Game implements GameInterface {
 
     public CommonGoalCardManager getCommonGoalCardManager() {
         return commonGoalCardManager;
-    }
-
-    // EXCLUSIVELY FOR TESTING
-    public void addPlayer(String nickname){
-        this.players.put(nickname, new Player(nickname));
-        numberPlayers++;
     }
 }
