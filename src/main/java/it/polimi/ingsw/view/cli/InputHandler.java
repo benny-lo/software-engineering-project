@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
+import static it.polimi.ingsw.view.cli.TextInterfacePrinter.*;
+
 public class InputHandler implements Runnable {
     private final InputReceiver inputReceiver;
     private final Scanner in;
@@ -33,25 +35,29 @@ public class InputHandler implements Runnable {
             String command = tokenizer.nextToken();
             switch (command) {
                 case "/help":
-                    System.out.println("Commands list: \n\t /login \n\t /create_game \n\t /select_game \n\t /living_room \n\t /bookshelf \n\t /enter_chat \n\t /exit_chat");
+                    if (tokenizer.countTokens() == 0) {
+                        printHelp();
+                        inputReceiver.getStatus();
+                    } else {printIncorrectCommand();}
+                    break;
                 case "/login":
                     if (tokenizer.countTokens() == 1) {
                         String nickname = tokenizer.nextToken();
                         inputReceiver.login(nickname);
-                    }
+                    } else {printIncorrectCommand();}
                     break;
                 case "/create_game":
                     if (tokenizer.countTokens() == 2) {
                         int numberPlayer = Integer.parseInt(tokenizer.nextToken());
                         int numberCommonGoalCards = Integer.parseInt(tokenizer.nextToken());
                         inputReceiver.createGame(numberPlayer, numberCommonGoalCards);
-                    }
+                    } else {printIncorrectCommand();}
                     break;
                 case "/select_game":
                     if (tokenizer.countTokens() == 1) {
                         int id = Integer.parseInt(tokenizer.nextToken());
                         inputReceiver.joinGame(id);
-                    }
+                    } else {printIncorrectCommand();}
                     break;
                 case "/living_room":
                     if (tokenizer.countTokens() % 2 == 0) {
@@ -62,7 +68,7 @@ public class InputHandler implements Runnable {
                             positions.add(new Position(x, y));
                         }
                         inputReceiver.livingRoom(positions);
-                    }
+                    } else {printIncorrectCommand();}
                     break;
                 case "/bookshelf":
                     if (tokenizer.countTokens() > 1) {
@@ -73,20 +79,20 @@ public class InputHandler implements Runnable {
                             permutation.add(Integer.parseInt(tokenizer.nextToken()));
                         }
                         inputReceiver.bookshelf(column, permutation);
-                    }
+                    } else {printIncorrectCommand();}
                     break;
                 case "/enter_chat":
                     if (tokenizer.countTokens() == 0) {
                         inputReceiver.enterChat();
-                    }
+                    } else {printIncorrectCommand();}
                     break;
                 case "/exit_chat":
                     if (tokenizer.countTokens() == 0) {
                         inputReceiver.exitChat();
-                    }
+                    } else {printIncorrectCommand();}
                     break;
                 default:
-                    System.out.println("This command does not exists");
+                    printWrongCommand();
                     break;
             }
         }

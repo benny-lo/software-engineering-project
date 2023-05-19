@@ -158,8 +158,8 @@ public class VirtualView {
         toClient.sendItemsSelected(new ItemsSelected(itemsChosenListener.getItemsChosen()));
     }
 
-    public void sendAcceptedAction(boolean flag, String description) {
-        toClient.sendAcceptedAction(new AcceptedAction(flag, description));
+    public void sendAcceptedAction(boolean flag, AcceptedActionTypes type) {
+        toClient.sendAcceptedAction(new AcceptedAction(flag, type));
     }
 
     public void setError() {

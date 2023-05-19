@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.GameInterface;
 import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatInterface;
 import it.polimi.ingsw.utils.action.*;
+import it.polimi.ingsw.utils.networkMessage.server.AcceptedActionTypes;
 import it.polimi.ingsw.view.VirtualView;
 
 import java.util.*;
@@ -138,7 +139,7 @@ public class Controller implements ActionListener {
     @Override
     public void update(JoinAction action) {
         if (game.getCurrentPlayer() != null || ended) {
-            action.getView().sendAcceptedAction(false, "SELECT_GAME");
+            action.getView().sendAcceptedAction(false, AcceptedActionTypes.SELECT_GAME);
             action.getView().setError();
             return;
         }
@@ -192,7 +193,7 @@ public class Controller implements ActionListener {
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(false, "SELECT_BOOKSHELF");
+            views.get(action.getSenderNickname()).sendAcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF);
             views.get(action.getSenderNickname()).setError();
             return;
         }
@@ -214,7 +215,7 @@ public class Controller implements ActionListener {
     @Override
     public void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(false, "WRITE_CHAT");
+            views.get(action.getSenderNickname()).sendAcceptedAction(false, AcceptedActionTypes.WRITE_CHAT);
             views.get(action.getSenderNickname()).setError();
             return;
         }

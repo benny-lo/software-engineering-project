@@ -130,4 +130,9 @@ public class SenderRMI implements Sender {
             System.err.println("RMI connection with client failed");
         }
     }
+
+    @Override
+    public String toString() {
+        return "RMI";
+    }
 }

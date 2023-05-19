@@ -6,6 +6,7 @@ import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
+import it.polimi.ingsw.utils.networkMessage.server.AcceptedActionTypes;
 import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
 import it.polimi.ingsw.utils.networkMessage.server.GamesList;
 import it.polimi.ingsw.view.VirtualView;
@@ -69,6 +70,8 @@ public class Lobby {
         view.setToClient(client);
         views.add(view);
 
+        System.out.println("user " + nickname + " is now connected with " + client);
+
         view.sendListOfGames(getGameInfo());
     }
 
@@ -77,7 +80,7 @@ public class Lobby {
         if (view == null) return;
 
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
-            view.sendAcceptedAction(false, "INIT_GAME");
+            view.sendAcceptedAction(false, AcceptedActionTypes.CREATE_GAME);
             return;
         }
 
@@ -85,13 +88,13 @@ public class Lobby {
         controller.update(new JoinAction(nickname, view));
 
         if (view.isError()) {
-            view.sendAcceptedAction(false, "INIT_GAME");
+            view.sendAcceptedAction(false, AcceptedActionTypes.CREATE_GAME);
         }
 
         view.setController(controller);
         addController(controller);
 
-        view.sendAcceptedAction(true, "INIT_GAME");
+        view.sendAcceptedAction(true, AcceptedActionTypes.CREATE_GAME);
     }
 
 
@@ -100,7 +103,7 @@ public class Lobby {
         if (view == null) return;
 
         if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
-            view.sendAcceptedAction(false, "SELECT_GAME");
+            view.sendAcceptedAction(false, AcceptedActionTypes.SELECT_GAME);
             return;
         }
 
@@ -111,7 +114,7 @@ public class Lobby {
             view.setController(controllers.get(id));
         }
 
-        view.sendAcceptedAction(!view.isError(), "SELECT_GAME");
+        view.sendAcceptedAction(!view.isError(), AcceptedActionTypes.SELECT_GAME);
     }
 
     public synchronized void selectFromLivingRoom(String nickname, List<Position> positions) {
@@ -122,13 +125,13 @@ public class Lobby {
 
         Controller controller = view.getController();
         if (controller == null) {
-            view.sendAcceptedAction(false, "SELECT_LIVINGROOM");
+            view.sendAcceptedAction(false, AcceptedActionTypes.SELECT_LIVINGROOM);
             return;
         }
 
         controller.update(new SelectionFromLivingRoomAction(nickname, positions));
 
-        if (view.isError()) view.sendAcceptedAction(false, "SELECT_LIVINGROOM");
+        if (view.isError()) view.sendAcceptedAction(false, AcceptedActionTypes.SELECT_LIVINGROOM);
     }
 
     public synchronized void putInBookshelf(String nickname, int column, List<Integer> permutation) {
@@ -137,13 +140,13 @@ public class Lobby {
 
         Controller controller = view.getController();
         if (controller == null) {
-            view.sendAcceptedAction(false, "INSERT_BOOKSHELF");
+            view.sendAcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF);
             return;
         }
 
         controller.update(new SelectionColumnAndOrderAction(nickname, column, permutation));
 
-        view.sendAcceptedAction(!view.isError(), "INSERT_BOOKSHELF");
+        view.sendAcceptedAction(!view.isError(), AcceptedActionTypes.INSERT_BOOKSHELF);
     }
 
     public synchronized void addMessage(String nickname, String text) {
@@ -152,12 +155,12 @@ public class Lobby {
 
         Controller controller = view.getController();
         if (controller == null) {
-            view.sendAcceptedAction(false, "WRITE_CHAT");
+            view.sendAcceptedAction(false, AcceptedActionTypes.WRITE_CHAT);
             return;
         }
 
         controller.update(new ChatMessageAction(nickname, text));
 
-        view.sendAcceptedAction(!view.isError(), "WRITE_CHAT");
+        view.sendAcceptedAction(!view.isError(), AcceptedActionTypes.WRITE_CHAT);
     }
 }
