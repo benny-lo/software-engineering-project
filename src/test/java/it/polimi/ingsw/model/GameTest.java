@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.player.Player;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +16,7 @@ public class GameTest {
      */
     @Test
     public void testGameConstructor(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
 
         assertNotNull(game);
         assertEquals(0, game.getNumberPlayers());
@@ -28,7 +29,7 @@ public class GameTest {
      */
     @Test
     public void testAddPlayer(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
         String nickname = "nickname";
 
         game.addPlayer(nickname);
@@ -43,7 +44,7 @@ public class GameTest {
      */
     @Test
     public void testSetup(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
 
         game.addPlayer("0");
         game.addPlayer("1");
@@ -59,7 +60,7 @@ public class GameTest {
      */
     @Test
     public void testSetCurrentPlayer(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
 
         game.setCurrentPlayer("nickname");
 
@@ -71,7 +72,7 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesOnWrongTile(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
 
         game.addPlayer("0");
         game.addPlayer("1");
@@ -85,7 +86,7 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesWithoutEnoughSpace(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
 
         game.addPlayer("nickname");
         game.addPlayer("1");

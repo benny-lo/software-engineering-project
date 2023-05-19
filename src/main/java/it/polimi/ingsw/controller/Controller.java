@@ -1,6 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameInterface;
 import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatInterface;
@@ -14,8 +13,9 @@ public class Controller implements ActionListener {
     /**
      * the model.
      */
-    private final GameInterface game;
+    private GameInterface game;
     private final ChatInterface chat;
+    private final GameBuilder gameBuilder;
 
     /**
      * The number of players that can join the game.
@@ -54,8 +54,9 @@ public class Controller implements ActionListener {
     private TurnPhase turnPhase;
 
     public Controller(int numberPlayers, int numberCommonGoalCards) {
+        this.game = null;
         this.numberCommonGoalCards = numberCommonGoalCards;
-        this.game = new Game(numberCommonGoalCards);
+        this.gameBuilder = new GameBuilder(numberCommonGoalCards);
         this.chat = new Chat();
         this.numberPlayers = numberPlayers;
         this.firstPlayer = null;
@@ -138,14 +139,15 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(JoinAction action) {
-        if (game.getCurrentPlayer() != null || ended) {
+        if (game != null || ended) {
             action.getView().sendAcceptedAction(false, AcceptedActionTypes.SELECT_GAME);
             action.getView().setError();
             return;
         }
 
         playerQueue.add(action.getSenderNickname());
-        game.addPlayer(action.getSenderNickname());
+        //game.addPlayer(action.getSenderNickname());
+        gameBuilder.addPlayer(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
 
         for(String nick : views.keySet()) {
@@ -155,7 +157,8 @@ public class Controller implements ActionListener {
             );
         }
 
-        if (game.getNumberPlayers() == this.numberPlayers) {
+        if (gameBuilder.getNumberPlayers() == this.numberPlayers) {
+            game = gameBuilder.startGame();
             setupGame();
         }
     }

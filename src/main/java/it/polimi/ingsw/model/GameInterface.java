@@ -10,12 +10,6 @@ import java.util.List;
 
 public interface GameInterface {
     /**
-     * It creates a {@code Player}, that is added to {@code Game}.
-     * @param nickname {@code nickname} is the {@code Player}'s name.
-     */
-    void addPlayer(String nickname);
-
-    /**
      * This method starts the game, and it initializes a {@code PersonalGoalCard} for each {@code Player}.
      */
     void setup();
