@@ -13,4 +13,5 @@ public interface InputReceiver {
     void enterChat();
     void message(String text);
     void exitChat();
+    void getStatus();
 }

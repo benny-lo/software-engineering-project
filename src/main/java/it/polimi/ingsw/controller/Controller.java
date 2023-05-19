@@ -18,12 +18,13 @@ public class Controller implements ActionListener {
     /**
      * The model of the game.
      */
-    private final GameInterface game;
+    private GameInterface game;
 
     /**
      * The model of the chat.
      */
     private final ChatInterface chat;
+    private final GameBuilder gameBuilder;
 
     /**
      * The number of players that can join the game.
@@ -60,18 +61,13 @@ public class Controller implements ActionListener {
      * If the game has not started yet, it is null.
      */
     private TurnPhase turnPhase;
-    private final BookshelfListener bookshelvesListener;
-    private final CommonGoalCardsListener commonGoalCardsListener;
-    private final EndingTokenListener endingTokenListener;
-    private final LivingRoomListener livingRoomListener;
-    private final List<PersonalGoalCardListener> personalGoalCardListeners;
 
     public Controller(int numberPlayers, int numberCommonGoalCards) {
         this.numberPlayers = numberPlayers;
+        this.game = null;
         this.numberCommonGoalCards = numberCommonGoalCards;
-        this.game = new Game(numberCommonGoalCards);
         this.chat = new Chat();
-
+        this.gameBuilder = new GameBuilder(numberCommonGoalCards);
         this.firstPlayer = null;
         this.playerQueue = new ArrayDeque<>();
         this.views = new HashMap<>();
@@ -204,13 +200,14 @@ public class Controller implements ActionListener {
 
     @Override
     public void update(JoinAction action) {
-        if (game.getCurrentPlayer() != null || ended) {
+        if (game != null || ended) {
             action.getView().sendAcceptedAction(new AcceptedAction(false, "SELECT_GAME"));
             return;
         }
 
         playerQueue.add(action.getSenderNickname());
-        game.addPlayer(action.getSenderNickname());
+        //game.addPlayer(action.getSenderNickname());
+        gameBuilder.addPlayer(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
         personalGoalCardListeners.add(new PersonalGoalCardListener(action.getSenderNickname()));
 
@@ -221,7 +218,8 @@ public class Controller implements ActionListener {
             ));
         }
 
-        if (game.getNumberPlayers() == this.numberPlayers) {
+        if (gameBuilder.getNumberPlayers() == this.numberPlayers) {
+            game = gameBuilder.startGame();
             setupGame();
         }
     }

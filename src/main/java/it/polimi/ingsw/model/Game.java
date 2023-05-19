@@ -17,7 +17,7 @@ import java.util.*;
  * Class representing the Game.
  */
 public class Game implements GameInterface {
-    private int numberPlayers;
+    private final int numberPlayers;
     private final int numberCommonGoalCards;
     private String currentPlayer;
     private final Map<String, Player> players;
@@ -29,11 +29,11 @@ public class Game implements GameInterface {
      * Game's Constructor: it initializes {@code Game}.
      * @param numberCommonGoalCards It can be initialised to '1' or '2'.
      */
-    public Game(int numberCommonGoalCards) {
-        this.numberPlayers = 0;
+    public Game(int numberCommonGoalCards, int numberPlayers, Map<String, Player> players) {
+        this.numberPlayers = numberPlayers;
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.currentPlayer = null;
-        this.players = new HashMap<>();
+        this.players = players;
         this.boardManager = null;
         this.commonGoalCardManager = null;
         this.endingTokenListeners = new ArrayList<>();
@@ -79,12 +79,6 @@ public class Game implements GameInterface {
 
             players.get(name).setPersonalGoalCard(personalGoalCard);
         }
-    }
-
-    @Override
-    public void addPlayer(String nickname){
-        this.players.put(nickname, new Player(nickname));
-        this.numberPlayers += 1;
     }
 
     @Override

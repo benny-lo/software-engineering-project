@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.player.Player;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,27 +16,12 @@ public class GameTest {
      */
     @Test
     public void testGameConstructor(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
 
         assertNotNull(game);
-        assertEquals(0, game.getNumberPlayers());
+        assertEquals(2, game.getNumberPlayers());
         assertNull(game.getCurrentPlayer());
         assertNotNull(game.getPlayers());
-    }
-
-    /**
-     * Test {@code Game}'s method {@code addPlayer}, adding a player.
-     */
-    @Test
-    public void testAddPlayer(){
-        Game game = new Game(2);
-        String nickname = "nickname";
-
-        game.addPlayer(nickname);
-
-        assertEquals(1, game.getNumberPlayers());
-        assertTrue(game.getPlayers().containsKey("nickname"));
-        assertNotNull(game.getPlayers().get(nickname));
     }
 
     /**
@@ -43,10 +29,8 @@ public class GameTest {
      */
     @Test
     public void testSetup(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
 
-        game.addPlayer("0");
-        game.addPlayer("1");
         game.setup();
 
         assertNotNull(game.getCommonGoalCardManager());
@@ -59,7 +43,7 @@ public class GameTest {
      */
     @Test
     public void testSetCurrentPlayer(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
 
         game.setCurrentPlayer("nickname");
 
@@ -71,10 +55,8 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesOnWrongTile(){
-        Game game = new Game(2);
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
 
-        game.addPlayer("0");
-        game.addPlayer("1");
         game.setup();
 
         assertFalse(game.canTakeItemTiles(List.of(new Position(0, 0))));
@@ -85,14 +67,11 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesWithoutEnoughSpace(){
-        Game game = new Game(2);
-
-        game.addPlayer("nickname");
-        game.addPlayer("1");
+        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
 
         game.setup();
 
-        game.getPlayers().get("nickname").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 0);
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 0);
 
         assertFalse(game.canTakeItemTiles(List.of(new Position(5, 5))));
     }

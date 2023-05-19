@@ -10,14 +10,19 @@ import it.polimi.ingsw.view.ClientView;
 import java.util.List;
 import java.util.Map;
 
+import static it.polimi.ingsw.view.cli.TextInterfacePrinter.*;
+
 public class TextInterface extends ClientView implements InputReceiver {
     private boolean inChat;
+    private ClientStatus status;
 
     public TextInterface() {
         super();
-        System.out.println("Welcome to MyShelfie");
+        status = ClientStatus.LOGIN;
+        printWelcomeMessage();
     }
 
+    @Override
     public void start() {
         InputHandler inputHandler = new InputHandler(this);
         (new Thread(inputHandler)).start();
@@ -29,29 +34,34 @@ public class TextInterface extends ClientView implements InputReceiver {
             List<GameInfo> games = message.getAvailable();
 
             if (games == null) {
-                System.out.println("Action denied. Try again!");
+                printLoginFailed();
                 return;
             }
 
+            onAcceptedAction(new AcceptedAction(true, AcceptedActionTypes.LOGIN));
+
             clearScreen();
 
-            for (GameInfo info : games) {
-                System.out.println("Id " + info.getId() + ":\n" +
-                        "\tNumber of players: " + info.getNumberPlayers() + "\n" +
-                        "\tNumber of common goal cards: " + info.getNumberCommonGoals());
-            }
-
             if (games.size() == 0) {
-                System.out.println("There are no available games. Create a new one (Number of player and number of CommonGoalCard)");
+                printNoAvailableGames();
+            } else {
+                System.out.println("Select a game from the list:");
+                for (GameInfo info : games) {
+                    System.out.println(info);
+                }
             }
         }
     }
 
-    @Override
     public void onAcceptedAction(AcceptedAction message) {
         synchronized (System.out) {
             if (!message.getAccepted()) {
-                System.out.println("Action denied. Try again!");
+                printDeniedAction();
+                return;
+            }
+            switch (message.getType()) {
+                case CREATE_GAME, SELECT_GAME, SELECT_LIVINGROOM, INSERT_BOOKSHELF, WRITE_CHAT -> status = ClientStatus.GAME;
+                case LOGIN -> status = ClientStatus.CREATE_OR_SELECT_GAME;
             }
         }
     }
@@ -60,8 +70,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onItemsSelected(ItemsSelected message) {
         synchronized (System.out) {
             itemsChosen = message.getItems();
-            if (itemsChosen == null) System.out.println("Invalid tile selection! Try again.");
-
+            if (itemsChosen == null) printInvalidSelection();
             if (!inChat && !endGame) {
                 clearScreen();
                 printGameRep();
@@ -169,7 +178,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
             if (inChat && !endGame) {
                 clearScreen();
-                printChat();
+                printChat(chat);
             }
         }
     }
@@ -181,7 +190,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
             if (!inChat && !endGame) {
                 clearScreen();
-                printChat();
+                printChat(chat);
             }
         }
     }
@@ -190,178 +199,118 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onEndGameUpdate(EndGameUpdate update) {
         endGame = true;
         winner = update.getWinner();
+        if(inChat)
+            exitChat();
 
         clearScreen();
-        printEndGame();
+        printEndGame(nickname, winner, scores);
     }
 
     @Override
     public void login(String nickname) {
+        if (status != ClientStatus.LOGIN){
+            printWrongStatus();
+            return;
+        }
+
+        if(!isValidNickname(nickname)){
+            printIncorrectNickname();
+            return;
+        }
+
         this.nickname = nickname;
         sender.login(new Nickname(nickname));
     }
 
     @Override
     public void createGame(int numberPlayers, int numberCommonGoalCards) {
+        if (status != ClientStatus.CREATE_OR_SELECT_GAME){
+            printWrongStatus();
+            return;
+        }
         sender.createGame(new GameInitialization(numberPlayers, numberCommonGoalCards));
     }
 
     @Override
     public void selectGame(int id) {
+        if (status != ClientStatus.CREATE_OR_SELECT_GAME){
+            printWrongStatus();
+            return;
+        }
         sender.selectGame(new GameSelection(id));
     }
 
     @Override
     public void livingRoom(List<Position> positions) {
+        if (status != ClientStatus.GAME){
+            printWrongStatus();
+            return;
+        }
         sender.selectFromLivingRoom(new LivingRoomSelection(positions));
     }
 
     @Override
     public void bookshelf(int column, List<Integer> permutation) {
+        if (status != ClientStatus.GAME){
+            printWrongStatus();
+            return;
+        }
         sender.insertInBookshelf(new BookshelfInsertion(column, permutation));
     }
 
     @Override
     public void message(String text) {
+        if (status != ClientStatus.GAME){
+            printWrongStatus();
+            return;
+        }
         sender.writeChat(new ChatMessage(text));
     }
 
     @Override
     public void enterChat() {
+        if (status != ClientStatus.GAME){
+            printWrongStatus();
+            return;
+        }
+        printInChat();
         inChat = true;
         clearScreen();
-        printChat();
+        printChat(chat);
     }
 
     @Override
     public void exitChat() {
+        if (status != ClientStatus.GAME){
+            printWrongStatus();
+            return;
+        }
+        if (!inChat){
+            printNotInChat();
+            return;
+        }
         inChat = false;
         clearScreen();
-        if (endGame) printEndGame();
+        printExitChat();
+        if (endGame) printEndGame(nickname, winner, scores);
         else printGameRep();
-    }
-
-    private void clearScreen() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
     }
 
     private void printGameRep() {
         System.out.println("the current player is " + currentPlayer);
 
-        printLivingRoom();
-        printBookshelves();
-        printPersonalGoalCard();
-        printCommonGoalCards();
-        printItemsChosen();
-        printEndingToken();
-        printScores();
+        printLivingRoom(livingRoom);
+        printBookshelves(bookshelves);
+        printPersonalGoalCard(personalGoalCard);
+        printCommonGoalCards(commonGoalCards);
+        printItemsChosen(itemsChosen);
+        printEndingToken(endingToken);
+        printScores(scores);
 
         System.out.flush();
     }
 
-    public void printItem(Item item) {
-        if (item == null) {
-            System.out.print("  ");
-            return;
-        }
-
-        switch (item) {
-            case CAT -> System.out.print((char) 27 + "[32mC ");
-            case BOOK -> System.out.print((char) 27 + "[37mB ");
-            case GAME -> System.out.print((char) 27 + "[33mG ");
-            case FRAME -> System.out.print((char) 27 + "[34mF ");
-            case CUP -> System.out.print((char) 27 + "[36mC ");
-            case PLANT -> System.out.print((char) 27 + "[35mP ");
-            case LOCKED -> System.out.print("  ");
-        }
-    }
-
-    private void printLivingRoom() {
-        if (livingRoom == null) return;
-
-        System.out.println("LivingRoom: ");
-        for (Item[] items : livingRoom) {
-            for (Item item : items) {
-                printItem(item);
-            }
-            System.out.println();
-        }
-    }
-
-    private void printBookshelves() {
-        for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
-            System.out.println(entry.getKey() + "'s bookshelf:");
-            printBookshelf(entry.getValue());
-        }
-        System.out.println();
-    }
-
-    private void printBookshelf(Item[][] array) {
-        for (int i = array.length - 1; i >= 0; i--) {
-            for (int j = 0; j < array[i].length; j++) {
-                printItem(array[i][j]);
-            }
-            System.out.println();
-        }
-    }
-
-    private void printPersonalGoalCard() {
-        if (personalGoalCard == 0) return;
-        System.out.println("Your personal goal card is " + personalGoalCard);
-    }
-
-    private void printCommonGoalCards() {
-        System.out.println("your common goal cards are:");
-        for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
-            System.out.println("id: " + card.getKey() + " top: " + card.getValue());
-        }
-    }
-
-    private void printItemsChosen() {
-        if (itemsChosen == null) return;
-        System.out.print("You chose the items: ");
-        for (Item item : itemsChosen) {
-            System.out.print(item + " ");
-        }
-        System.out.println();
-    }
-
-    private void printEndingToken() {
-        if (endingToken == null) {
-            System.out.println("Nobody has the ending token");
-        } else {
-            System.out.println(endingToken + " has the ending token");
-        }
-    }
-
-    private void printScores() {
-        if (scores == null) return;
-        System.out.println("rankings:");
-        for (Map.Entry<String, Integer> e : scores.entrySet()) {
-            System.out.println(e.getKey() + ": " + e.getValue());
-        }
-    }
-
-    private void printChat () {
-        if (chat.size() == 0) {
-            System.out.println("No message in chat yet");
-            return;
-        }
-
-        for (Message message : chat) {
-            System.out.println(message.getText() + "wrote: " + message.getText());
-        }
-        System.out.flush();
-    }
-
-    private void printEndGame () {
-        if (winner.equals(nickname)) {
-            System.out.println("You are the winner");
-        } else {
-            System.out.println("The winner is " + winner);
-        }
-        printScores();
-        System.out.flush();
-    }
+    public void getStatus() {
+        System.out.println(status);
+    } // this method will be deleted probably
 }

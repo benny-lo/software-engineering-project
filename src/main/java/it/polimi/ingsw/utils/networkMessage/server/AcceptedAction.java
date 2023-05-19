@@ -4,15 +4,20 @@ import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 
 public class AcceptedAction extends NetworkMessage {
     private final boolean accepted;
-    private final String description;
 
-    public AcceptedAction(boolean accepted, String description) {
+    private final AcceptedActionTypes type;
+
+    public AcceptedAction(boolean accepted, AcceptedActionTypes type) {
         super();
         this.accepted = accepted;
-        this.description = description;
+        this.type = type;
     }
 
     public boolean getAccepted() {
         return accepted;
+    }
+
+    public AcceptedActionTypes getType() {
+        return type;
     }
 }

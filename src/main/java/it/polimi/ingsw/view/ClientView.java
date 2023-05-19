@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class ClientView implements ClientReceiver {
     protected String nickname;
@@ -112,4 +114,17 @@ public abstract class ClientView implements ClientReceiver {
     }
 
     public abstract void start();
+
+    public static boolean isValidNickname(String nickname){
+        String regex = "^[A-Za-z]\\w{0,29}$";
+        Pattern pattern = Pattern.compile(regex);
+
+        if (nickname == null) {
+            return false;
+        }
+
+        Matcher matcher = pattern.matcher(nickname);
+
+        return matcher.matches();
+    }
 }
