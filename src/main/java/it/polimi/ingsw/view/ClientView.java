@@ -3,10 +3,11 @@ package it.polimi.ingsw.view;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.network.ServerSettings;
-import it.polimi.ingsw.network.client.RequestSender;
-import it.polimi.ingsw.network.client.UpdateReceiver;
+import it.polimi.ingsw.network.client.ClientSender;
+import it.polimi.ingsw.network.client.ClientReceiver;
 import it.polimi.ingsw.network.client.rmi.RequestSenderRMI;
 import it.polimi.ingsw.network.client.socket.RequestSenderTCP;
+import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 
 import java.io.IOException;
@@ -21,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class ClientView implements UpdateReceiver {
+public abstract class ClientView implements ClientReceiver {
     protected String nickname;
     protected String currentPlayer;
     protected String winner;
@@ -36,7 +37,7 @@ public abstract class ClientView implements UpdateReceiver {
     protected boolean endGame;
     protected List<Message> chat;
     protected List<Item> itemsChosen;
-    protected RequestSender sender;
+    protected ClientSender sender;
 
     public ClientView() {
         livingRoom = new Item[9][9];
@@ -56,9 +57,9 @@ public abstract class ClientView implements UpdateReceiver {
             throw new RuntimeException(e);
         }
 
-        ServerConnectionRMIInterface stub;
+        ConnectionEstablishmentRMIInterface stub;
         try {
-            stub = (ServerConnectionRMIInterface) registry.lookup("ServerConnectionRMIInterface");
+            stub = (ConnectionEstablishmentRMIInterface) registry.lookup("ConnectionEstablishmentRMIInterface");
         } catch (AccessException e) {
             System.err.println("wrong access privileges for RMI");
             throw new RuntimeException(e);
@@ -70,12 +71,24 @@ public abstract class ClientView implements UpdateReceiver {
             throw new RuntimeException(e);
         }
 
+        RequestSenderRMI requestSenderRMI;
         try {
-            sender = new RequestSenderRMI(stub, this);
-        } catch(RemoteException e) {
-            System.err.println("rmi client-side failed");
+            requestSenderRMI = new RequestSenderRMI(this);
+        } catch (RemoteException e) {
+            System.err.println("ClientView, line 78: failed to instantiate RequestSender");
             throw new RuntimeException(e);
         }
+
+        ServerConnectionRMIInterface serverConnection;
+        try {
+            serverConnection = stub.init(requestSenderRMI);
+        } catch (RemoteException e) {
+            System.err.println("ClientView, line 86: failed to start rmi connection");
+            throw new RuntimeException(e);
+        }
+
+        requestSenderRMI.setServerConnectionRMIInterface(serverConnection);
+        this.sender = requestSenderRMI;
     }
 
     public void startTCP() {

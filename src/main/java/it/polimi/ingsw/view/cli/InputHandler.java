@@ -50,7 +50,7 @@ public class InputHandler implements Runnable {
                 case "/select_game":
                     if (tokenizer.countTokens() == 1) {
                         int id = Integer.parseInt(tokenizer.nextToken());
-                        inputReceiver.joinGame(id);
+                        inputReceiver.selectGame(id);
                     }
                     break;
                 case "/living_room":

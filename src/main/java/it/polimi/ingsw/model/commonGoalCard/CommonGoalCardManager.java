@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.*;
 import it.polimi.ingsw.model.player.Bookshelf;
-import it.polimi.ingsw.view.modelListener.CommonGoalCardsListener;
+import it.polimi.ingsw.controller.modelListener.CommonGoalCardsListener;
 
 import java.util.*;
 

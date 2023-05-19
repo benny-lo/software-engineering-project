@@ -1,13 +1,13 @@
 package it.polimi.ingsw.utils.forTesting;
 
-import it.polimi.ingsw.network.server.Sender;
+import it.polimi.ingsw.network.server.ServerSender;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
 /**
  * This class is exclusively for testing, and it mimics an UpdateSender class.
  */
 
-public class SenderClientTesting implements Sender {
+public class SenderClientTesting implements ServerSender {
     private final ClientInterfaceTesting client;
 
     public SenderClientTesting(ClientInterfaceTesting client) {

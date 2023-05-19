@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.action;
 
-import it.polimi.ingsw.view.VirtualView;
+import it.polimi.ingsw.network.VirtualView;
 
 /**
  * A player joins the game.

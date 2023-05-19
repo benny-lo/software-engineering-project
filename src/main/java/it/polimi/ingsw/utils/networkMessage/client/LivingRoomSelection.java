@@ -1,15 +1,15 @@
 package it.polimi.ingsw.utils.networkMessage.client;
 
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.utils.networkMessage.NetworkMessageWithSender;
+import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 
 import java.util.List;
 
-public class LivingRoomSelection extends NetworkMessageWithSender {
+public class LivingRoomSelection extends NetworkMessage {
     private final List<Position> positions;
 
-    public LivingRoomSelection(String nickname, List<Position> positions) {
-        super(nickname);
+    public LivingRoomSelection(List<Position> positions) {
+        super();
         this.positions = positions;
     }
 

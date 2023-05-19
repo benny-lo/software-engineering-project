@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.modelListener;
+package it.polimi.ingsw.controller.modelListener;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;

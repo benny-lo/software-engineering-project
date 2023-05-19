@@ -1,11 +1,12 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
+import it.polimi.ingsw.network.VirtualView;
 import it.polimi.ingsw.network.server.Lobby;
-import it.polimi.ingsw.network.server.rmi.ServerConnectionRMI;
-import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
-import it.polimi.ingsw.network.server.socket.ClientHandler;
+import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMI;
+import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.socket.ServerConnectionTCP;
+import it.polimi.ingsw.network.server.socket.VirtualViewTCP;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -29,11 +30,11 @@ public class Server {
     }
 
     private void startConnectionRMI(Lobby lobby) {
-        ServerConnectionRMIInterface stub = null;
-        ServerConnectionRMI serverConnectionRMI = new ServerConnectionRMI(lobby);
+        ConnectionEstablishmentRMIInterface stub = null;
+        ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI(lobby);
         try {
-            stub = (ServerConnectionRMIInterface)
-                    UnicastRemoteObject.exportObject(serverConnectionRMI, ServerSettings.getRmiPort());
+            stub = (ConnectionEstablishmentRMIInterface)
+                    UnicastRemoteObject.exportObject(connection, ServerSettings.getRmiPort());
         } catch (RemoteException e) {
             System.err.println("failed to export serverRMI");
             e.printStackTrace();
@@ -48,7 +49,7 @@ public class Server {
         }
 
         try {
-            registry.bind("ServerConnectionRMIInterface", stub);
+            registry.bind("ConnectionEstablishmentRMIInterface", stub);
         } catch (AccessException e) {
             System.err.println("no permission to perform action");
             e.printStackTrace();
@@ -62,7 +63,6 @@ public class Server {
     }
 
     private void startConnectionTCP(Lobby lobby) {
-        ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(lobby);
         (new Thread(() -> {
             ServerSocket server = null;
 
@@ -76,7 +76,11 @@ public class Server {
             while(true) {
                 try {
                     Socket socket = server.accept();
-                    (new Thread(new ClientHandler(socket, serverConnectionTCP))).start();
+                    ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
+                    VirtualView view = new VirtualViewTCP(lobby, serverConnectionTCP);
+                    serverConnectionTCP.setReceiver(view);
+
+                    (new Thread(serverConnectionTCP)).start();
                 } catch (IOException e) {
                     System.err.println("server closed");
                     e.printStackTrace();

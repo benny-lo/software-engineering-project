@@ -1,19 +1,28 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameInterface;
+import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatInterface;
+import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.utils.action.*;
-import it.polimi.ingsw.view.VirtualView;
+import it.polimi.ingsw.network.VirtualView;
+import it.polimi.ingsw.utils.networkMessage.server.*;
 
 import java.util.*;
 
 public class Controller implements ActionListener {
     /**
-     * the model.
+     * The model of the game.
      */
     private final GameInterface game;
+
+    /**
+     * The model of the chat.
+     */
     private final ChatInterface chat;
 
     /**
@@ -51,17 +60,80 @@ public class Controller implements ActionListener {
      * If the game has not started yet, it is null.
      */
     private TurnPhase turnPhase;
+    private final BookshelfListener bookshelvesListener;
+    private final CommonGoalCardsListener commonGoalCardsListener;
+    private final EndingTokenListener endingTokenListener;
+    private final LivingRoomListener livingRoomListener;
+    private final List<PersonalGoalCardListener> personalGoalCardListeners;
 
     public Controller(int numberPlayers, int numberCommonGoalCards) {
+        this.numberPlayers = numberPlayers;
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.game = new Game(numberCommonGoalCards);
         this.chat = new Chat();
-        this.numberPlayers = numberPlayers;
+
         this.firstPlayer = null;
         this.playerQueue = new ArrayDeque<>();
         this.views = new HashMap<>();
         this.turnPhase = null;
         this.ended = false;
+
+        this.bookshelvesListener = new BookshelfListener();
+        this.commonGoalCardsListener = new CommonGoalCardsListener();
+        this.endingTokenListener = new EndingTokenListener();
+        this.livingRoomListener = new LivingRoomListener();
+        this.personalGoalCardListeners = new ArrayList<>();
+    }
+
+    private void sendBookshelvesToEverybody() {
+        if (!bookshelvesListener.hasChanged()) return;
+        Map<String, Map<Position, Item>> map = bookshelvesListener.getBookshelves();
+        for(String nick : map.keySet()) {
+            BookshelfUpdate update = new BookshelfUpdate(nick, map.get(nick));
+            for(VirtualView view : views.values()) {
+                view.sendBookshelfUpdate(update);
+            }
+        }
+    }
+
+    private void sendLastChatMessageToEverybody() {
+        Message message = chat.getLastMessage();
+        for(VirtualView view : views.values()) {
+            view.sendChatUpdate(new ChatUpdate(
+                    message.getNickname(),
+                    message.getText())
+            );
+        }
+    }
+
+    private void sendCommonGoalCardsToEverybody() {
+        Map<Integer, Integer> map = commonGoalCardsListener.getCards();
+        for(VirtualView view : views.values()) {
+            view.sendCommonGoalCardUpdate(new CommonGoalCardsUpdate(map));
+        }
+    }
+
+    private void sendEndingTokenToEverybody() {
+        if (!endingTokenListener.hasChanged()) return;
+        EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
+        for(VirtualView view : views.values()) {
+            view.sendEndingTokenUpdate(update);
+        }
+    }
+
+    private void sendLivingRoomToEverybody() {
+        if (!livingRoomListener.hasChanged()) return;
+       LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoom());
+        for(VirtualView view : views.values()) {
+            view.sendLivingRoomUpdate(update);
+        }
+    }
+
+    private void sendPersonalGoalCardsToEverybody() {
+        for(PersonalGoalCardListener listener : personalGoalCardListeners) {
+            PersonalGoalCardUpdate update = new PersonalGoalCardUpdate(listener.getPersonalGoalCard());
+            views.get(listener.getOwner()).sendPersonalGoalCardUpdate(update);
+        }
     }
 
     private void setupGame() {
@@ -82,28 +154,23 @@ public class Controller implements ActionListener {
         // Initializing the managers and distributing the personal cards.
         game.setup();
 
-        // for each view, setting its listeners to the model.
-        for(VirtualView view : views.values()) {
-            game.setEndingTokenListener(view.getEndingTokenListener());
-            game.setBookshelfListener(view.getBookshelfListener());
-            game.setCommonGoalCardsListener(view.getCommonGoalCardsListener());
-            game.setLivingRoomListener(view.getLivingRoomListener());
-            game.setPersonalGoalCardListener(view.getPersonalGoalCardListener());
-            game.setItemsChosenListener(view.getItemsChosenListener());
-            game.setScoreListener(view.getScoreListener());
-            chat.setChatListener(view.getChatListener());
+        // Set the model listeners in the model.
+        game.setBookshelfListener(bookshelvesListener);
+        game.setCommonGoalCardsListener(commonGoalCardsListener);
+        game.setEndingTokenListener(endingTokenListener);
+        game.setLivingRoomListener(livingRoomListener);
+        for(PersonalGoalCardListener personalGoalCardListener : personalGoalCardListeners) {
+            game.setPersonalGoalCardListener(personalGoalCardListener);
         }
 
         // Sending initial updates about the reps.
-        for(VirtualView view : views.values()) {
-            view.sendLivingRoom();
-            view.sendBookshelves();
-            view.sendPersonalGoalCard();
-            view.sendCommonGoalCard();
-            view.sendEndingToken();
-            view.sendScores();
-            view.sendStartTurn(game.getCurrentPlayer());
-        }
+        sendBookshelvesToEverybody();
+        sendCommonGoalCardsToEverybody();
+        sendEndingTokenToEverybody();
+        sendLivingRoomToEverybody();
+        sendPersonalGoalCardsToEverybody();
+
+        // to send scores and maybe items chosen null
     }
 
     private void nextTurn() {
@@ -126,32 +193,32 @@ public class Controller implements ActionListener {
                 }
             }
 
-            for(String nick : views.keySet()) {
-                views.get(nick).sendEndGame(winner);
+            for(VirtualView view : views.values()) {
+                view.sendEndGameUpdate(new EndGameUpdate(winner));
             }
         } else {
             VirtualView current = views.get(game.getCurrentPlayer());
-            current.sendStartTurn(game.getCurrentPlayer());
+            current.sendStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
         }
     }
 
     @Override
     public void update(JoinAction action) {
         if (game.getCurrentPlayer() != null || ended) {
-            action.getView().sendAcceptedAction(false, "SELECT_GAME");
-            action.getView().setError();
+            action.getView().sendAcceptedAction(new AcceptedAction(false, "SELECT_GAME"));
             return;
         }
 
         playerQueue.add(action.getSenderNickname());
         game.addPlayer(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
+        personalGoalCardListeners.add(new PersonalGoalCardListener(action.getSenderNickname()));
 
         for(String nick : views.keySet()) {
-            views.get(nick).sendWaiting(
+            views.get(nick).sendWaitingUpdate(new WaitingUpdate(
                     action.getSenderNickname(),
                     numberPlayers - playerQueue.size()
-            );
+            ));
         }
 
         if (game.getNumberPlayers() == this.numberPlayers) {
@@ -160,29 +227,22 @@ public class Controller implements ActionListener {
     }
 
     @Override
-    public void update(ReconnectionAction action) {
-        //TODO
-    }
-
-    @Override
     public void update(SelectionFromLivingRoomAction action) {
         if (ended ||
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
-            views.get(action.getSenderNickname()).sendItemsSelected();
-            views.get(action.getSenderNickname()).setError();
+            views.get(action.getSenderNickname()).sendItemsSelected(new ItemsSelected(null));
             return;
         }
 
-        game.selectItemTiles(action.getSelectedPositions());
+        List<Item> items = game.selectItemTiles(action.getSelectedPositions());
 
-        views.get(action.getSenderNickname()).sendItemsSelected();
-
-        for(String nickname : views.keySet()) {
-            views.get(nickname).sendLivingRoom();
+        for(VirtualView view : views.values()) {
+            view.sendItemsSelected(new ItemsSelected(items));
         }
 
+        sendLivingRoomToEverybody();
         turnPhase = TurnPhase.BOOKSHELF;
     }
 
@@ -192,21 +252,19 @@ public class Controller implements ActionListener {
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(false, "SELECT_BOOKSHELF");
-            views.get(action.getSenderNickname()).setError();
+            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, "SELECT_BOOKSHELF"));
             return;
         }
 
         game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
 
-        for(String nickname : views.keySet()) {
-            views.get(nickname).sendLivingRoom();
-            views.get(nickname).sendBookshelves();
-            views.get(nickname).sendPersonalGoalCard();
-            views.get(nickname).sendCommonGoalCard();
-            views.get(nickname).sendEndingToken();
-            views.get(nickname).sendScores();
-        }
+        sendLivingRoomToEverybody();
+        sendBookshelvesToEverybody();
+        sendPersonalGoalCardsToEverybody();
+        sendCommonGoalCardsToEverybody();
+        sendEndingTokenToEverybody();
+
+        // remember to send scores and maybe items selected as null.
 
         nextTurn();
     }
@@ -214,16 +272,13 @@ public class Controller implements ActionListener {
     @Override
     public void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(false, "WRITE_CHAT");
-            views.get(action.getSenderNickname()).setError();
+            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, "WRITE_CHAT"));
             return;
         }
 
         chat.addMessage(action.getSenderNickname(), action.getText());
 
-        for(String nick : views.keySet()) {
-            views.get(nick).sendMessage();
-        }
+        sendLastChatMessageToEverybody();
     }
 
     public int getNumberPlayers() {

@@ -3,12 +3,12 @@ package it.polimi.ingsw.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.board.BoardManager;
 import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
-import it.polimi.ingsw.view.modelListener.*;
 
 import java.io.*;
 import java.util.*;
@@ -24,7 +24,6 @@ public class Game implements GameInterface {
     private BoardManager boardManager;
     private CommonGoalCardManager commonGoalCardManager;
     private final List<EndingTokenListener> endingTokenListeners;
-    private final List<ScoreListener> scoreListeners;
 
     /**
      * Game's Constructor: it initializes {@code Game}.
@@ -38,7 +37,6 @@ public class Game implements GameInterface {
         this.boardManager = null;
         this.commonGoalCardManager = null;
         this.endingTokenListeners = new ArrayList<>();
-        this.scoreListeners = new ArrayList<>();
     }
 
     /**
@@ -114,9 +112,10 @@ public class Game implements GameInterface {
     }
 
     @Override
-    public void selectItemTiles(List<Position> positions){
+    public List<Item> selectItemTiles(List<Position> positions){
         List<Item> selectedItems = boardManager.selectItemTiles(positions);
         players.get(currentPlayer).takeItems(selectedItems);
+        return new ArrayList<>(selectedItems);
     }
 
     @Override
@@ -149,12 +148,6 @@ public class Game implements GameInterface {
         List<ScoringToken> tokens = commonGoalCardManager.check(players.get(currentPlayer).getBookshelf(),
                 players.get(currentPlayer).cannotTake());
         tokens.forEach((t) -> players.get(currentPlayer).addScoringToken(t));
-
-        for(ScoreListener rep : scoreListeners) {
-            for(String nickname : players.keySet()) {
-                rep.updateState(nickname, players.get(nickname).getTotalScore());
-            }
-        }
     }
 
     @Override
@@ -168,14 +161,6 @@ public class Game implements GameInterface {
     @Override
     public void setEndingTokenListener(EndingTokenListener listener) {
         endingTokenListeners.add(listener);
-    }
-
-    @Override
-    public void setScoreListener(ScoreListener listener) {
-        scoreListeners.add(listener);
-        for(String nickname : players.keySet()) {
-            listener.updateState(nickname, players.get(nickname).getTotalScore());
-        }
     }
 
     @Override
@@ -200,11 +185,6 @@ public class Game implements GameInterface {
     @Override
     public void setPersonalGoalCardListener(PersonalGoalCardListener listener) {
         players.get(listener.getOwner()).setPersonalGoalCardListener(listener);
-    }
-
-    @Override
-    public void setItemsChosenListener(ItemsChosenListener listener) {
-        players.get(listener.getOwner()).setItemsChosenListener(listener);
     }
 
     @Override

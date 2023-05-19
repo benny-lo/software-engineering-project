@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
-public interface Sender {
+public interface ServerSender {
     void sendLivingRoomUpdate(LivingRoomUpdate update);
     void sendBookshelfUpdate(BookshelfUpdate update);
     void sendWaitingUpdate(WaitingUpdate update);

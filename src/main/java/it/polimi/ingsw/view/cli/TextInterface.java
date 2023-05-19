@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.cli;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.utils.networkMessage.client.*;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.ClientView;
 
@@ -197,27 +198,32 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void login(String nickname) {
         this.nickname = nickname;
-        sender.login(nickname);
+        sender.login(new Nickname(nickname));
     }
 
     @Override
     public void createGame(int numberPlayers, int numberCommonGoalCards) {
-        sender.createGame(nickname, numberPlayers, numberCommonGoalCards);
+        sender.createGame(new GameInitialization(numberPlayers, numberCommonGoalCards));
     }
 
     @Override
-    public void joinGame(int id) {
-        sender.selectGame(nickname, id);
+    public void selectGame(int id) {
+        sender.selectGame(new GameSelection(id));
     }
 
     @Override
     public void livingRoom(List<Position> positions) {
-        sender.selectFromLivingRoom(nickname, positions);
+        sender.selectFromLivingRoom(new LivingRoomSelection(positions));
     }
 
     @Override
     public void bookshelf(int column, List<Integer> permutation) {
-        sender.putInBookshelf(nickname, column, permutation);
+        sender.insertInBookshelf(new BookshelfInsertion(column, permutation));
+    }
+
+    @Override
+    public void message(String text) {
+        sender.writeChat(new ChatMessage(text));
     }
 
     @Override
@@ -225,11 +231,6 @@ public class TextInterface extends ClientView implements InputReceiver {
         inChat = true;
         clearScreen();
         printChat();
-    }
-
-    @Override
-    public void message(String text) {
-        sender.addMessage(nickname, text);
     }
 
     @Override

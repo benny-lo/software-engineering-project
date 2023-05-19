@@ -1,33 +1,22 @@
 package it.polimi.ingsw.model.chat;
 
-import it.polimi.ingsw.view.modelListener.ChatListener;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 public class Chat implements ChatInterface {
-    private final List<Message> messages;
-    private final List<ChatListener> chatReps;
+    private final Stack<Message> messages;
 
     public Chat() {
-        messages = new ArrayList<>();
-        chatReps = new ArrayList<>();
+        messages = new Stack<>();
     }
 
     @Override
     public void addMessage(String nickname, String text) {
         Message message = new Message(nickname, text);
         messages.add(message);
-        for(ChatListener rep : chatReps) {
-            rep.updateState(message);
-        }
     }
 
     @Override
-    public void setChatListener(ChatListener rep) {
-        chatReps.add(rep);
-        for(Message message : messages) {
-            rep.updateState(message);
-        }
+    public Message getLastMessage() {
+        return messages.peek();
     }
 }

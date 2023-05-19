@@ -1,12 +1,12 @@
 package it.polimi.ingsw.utils.networkMessage.client;
 
-import it.polimi.ingsw.utils.networkMessage.NetworkMessageWithSender;
+import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 
-public class GameSelection extends NetworkMessageWithSender {
+public class GameSelection extends NetworkMessage {
     private final int id;
 
-    public GameSelection(String nickname, int id) {
-        super(nickname);
+    public GameSelection(int id) {
+        super();
         this.id = id;
     }
 

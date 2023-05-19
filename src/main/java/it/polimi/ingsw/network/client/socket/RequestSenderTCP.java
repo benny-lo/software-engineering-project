@@ -1,9 +1,9 @@
 package it.polimi.ingsw.network.client.socket;
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.network.client.RequestSender;
-import it.polimi.ingsw.network.client.UpdateReceiver;
-import it.polimi.ingsw.utils.networkMessage.NetworkMessageWithSender;
+import it.polimi.ingsw.network.client.ClientReceiver;
+import it.polimi.ingsw.network.client.ClientSender;
+import it.polimi.ingsw.network.server.ServerSender;
+import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 import it.polimi.ingsw.utils.networkMessage.client.*;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
@@ -11,79 +11,80 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.util.List;
 
-public class RequestSenderTCP implements RequestSender, Runnable {
+public class RequestSenderTCP implements ServerSender, ClientSender, Runnable {
     private final Socket socket;
-    private final UpdateReceiver updateReceiver;
+    private final ClientReceiver clientReceiver;
     private ObjectInputStream in;
     private final ObjectOutputStream out;
 
-    public RequestSenderTCP(Socket socket, UpdateReceiver updateReceiver) throws IOException {
+    public RequestSenderTCP(Socket socket, ClientReceiver clientReceiver) throws IOException {
         this.socket = socket;
-        this.updateReceiver = updateReceiver;
+        this.clientReceiver = clientReceiver;
         this.out = new ObjectOutputStream(socket.getOutputStream());
     }
 
     @Override
-    public void login(String nickname) {
-        send(new Nickname(nickname));
+    public void login(Nickname message) {
+        sendAsync(message);
     }
 
     @Override
-    public void selectGame(String nickname, int id) {
-        send(new GameSelection(nickname, id));
+    public void createGame(GameInitialization message) {
+        sendAsync(message);
     }
 
     @Override
-    public void createGame(String nickname, int numberPlayers, int numberCommonGoals) {
-        send(new GameInitialization(nickname, numberPlayers, numberCommonGoals));
+    public void selectGame(GameSelection message) {
+        sendAsync(message);
     }
 
     @Override
-    public void selectFromLivingRoom(String nickname, List<Position> position) {
-        send(new LivingRoomSelection(nickname, position));
+    public void selectFromLivingRoom(LivingRoomSelection message) {
+        sendAsync(message);
     }
 
     @Override
-    public void putInBookshelf(String nickname, int column, List<Integer> permutation) {
-        send(new BookshelfInsertion(nickname, column, permutation));
+    public void insertInBookshelf(BookshelfInsertion message) {
+        sendAsync(message);
     }
 
     @Override
-    public void addMessage(String nickname, String text) {
-        send(new ChatMessage(nickname, text));
+    public void writeChat(ChatMessage message) {
+        sendAsync(message);
     }
 
     private void receive(Object object) {
         if (object instanceof GamesList) {
-            updateReceiver.onGamesList((GamesList) object);
+            clientReceiver.onGamesList((GamesList) object);
         } else if (object instanceof ItemsSelected) {
-            updateReceiver.onItemsSelected((ItemsSelected) object);
+            clientReceiver.onItemsSelected((ItemsSelected) object);
         } else if (object instanceof LivingRoomUpdate) {
-            updateReceiver.onLivingRoomUpdate((LivingRoomUpdate) object);
+            clientReceiver.onLivingRoomUpdate((LivingRoomUpdate) object);
         } else if (object instanceof BookshelfUpdate) {
-            updateReceiver.onBookshelfUpdate((BookshelfUpdate) object);
+            clientReceiver.onBookshelfUpdate((BookshelfUpdate) object);
         } else if (object instanceof EndingTokenUpdate) {
-            updateReceiver.onEndingTokenUpdate((EndingTokenUpdate) object);
+            clientReceiver.onEndingTokenUpdate((EndingTokenUpdate) object);
         } else if (object instanceof WaitingUpdate) {
-            updateReceiver.onWaitingUpdate((WaitingUpdate) object);
+            clientReceiver.onWaitingUpdate((WaitingUpdate) object);
         } else if (object instanceof ScoresUpdate) {
-            updateReceiver.onScoresUpdate((ScoresUpdate) object);
+            clientReceiver.onScoresUpdate((ScoresUpdate) object);
         } else if (object instanceof CommonGoalCardsUpdate) {
-            updateReceiver.onCommonGoalCardUpdate((CommonGoalCardsUpdate) object);
+            clientReceiver.onCommonGoalCardUpdate((CommonGoalCardsUpdate) object);
         } else if (object instanceof PersonalGoalCardUpdate) {
-            updateReceiver.onPersonalGoalCardUpdate((PersonalGoalCardUpdate) object);
+            clientReceiver.onPersonalGoalCardUpdate((PersonalGoalCardUpdate) object);
         } else if (object instanceof ChatUpdate) {
-            updateReceiver.onChatUpdate((ChatUpdate) object);
+            clientReceiver.onChatUpdate((ChatUpdate) object);
         } else if (object instanceof StartTurnUpdate) {
-            updateReceiver.onStartTurnUpdate((StartTurnUpdate) object);
+            clientReceiver.onStartTurnUpdate((StartTurnUpdate) object);
         } else if (object instanceof EndGameUpdate) {
-            updateReceiver.onEndGameUpdate((EndGameUpdate) object);
+            clientReceiver.onEndGameUpdate((EndGameUpdate) object);
         } else if (object instanceof AcceptedAction) {
-            updateReceiver.onAcceptedAction((AcceptedAction) object);
+            clientReceiver.onAcceptedAction((AcceptedAction) object);
         }
     }
+
+
 
     @Override
     public void run() {
@@ -103,7 +104,7 @@ public class RequestSenderTCP implements RequestSender, Runnable {
         }
     }
 
-    private void send(NetworkMessageWithSender message) {
+    private void send(NetworkMessage message) {
         synchronized (out) {
             try {
                 out.writeObject(message);
@@ -113,5 +114,74 @@ public class RequestSenderTCP implements RequestSender, Runnable {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void sendAsync(NetworkMessage message) {
+        (new Thread(() -> send(message))).start();
+    }
+
+    @Override
+    public void sendLivingRoomUpdate(LivingRoomUpdate update) {
+
+    }
+
+    @Override
+    public void sendBookshelfUpdate(BookshelfUpdate update) {
+
+    }
+
+    @Override
+    public void sendWaitingUpdate(WaitingUpdate update) {
+
+    }
+
+    @Override
+    public void sendScoresUpdate(ScoresUpdate update) {
+
+    }
+
+    @Override
+    public void sendEndingTokenUpdate(EndingTokenUpdate update) {
+
+    }
+
+    @Override
+    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) {
+
+    }
+
+    @Override
+    public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
+
+    }
+
+    @Override
+    public void sendChatUpdate(ChatUpdate update) {
+
+    }
+
+    @Override
+    public void sendStartTurnUpdate(StartTurnUpdate update) {
+
+    }
+
+    @Override
+    public void sendEndGameUpdate(EndGameUpdate update) {
+
+    }
+
+    @Override
+    public void sendListOfGames(GamesList gamesList) {
+
+    }
+
+    @Override
+    public void sendItemsSelected(ItemsSelected itemsSelected) {
+
+    }
+
+    @Override
+    public void sendAcceptedAction(AcceptedAction acceptedAction) {
+
     }
 }

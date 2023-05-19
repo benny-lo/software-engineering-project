@@ -1,82 +1,83 @@
 package it.polimi.ingsw.network.client.rmi;
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.network.client.RequestSender;
+import it.polimi.ingsw.network.client.ClientSender;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
+import it.polimi.ingsw.utils.networkMessage.client.*;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 import it.polimi.ingsw.view.ClientView;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
-public class RequestSenderRMI extends UnicastRemoteObject implements RequestSender, ClientConnectionRMIInterface {
-    private final ServerConnectionRMIInterface serverConnectionRMIInterface;
+public class RequestSenderRMI extends UnicastRemoteObject implements ClientSender, ClientConnectionRMIInterface {
+    private ServerConnectionRMIInterface serverConnectionRMIInterface;
     private final ClientView updateReceiver;
 
-    public RequestSenderRMI(ServerConnectionRMIInterface serverConnectionRMIInterface, ClientView updateReceiver) throws RemoteException {
+    public RequestSenderRMI(ClientView updateReceiver) throws RemoteException {
         super();
-        this.serverConnectionRMIInterface = serverConnectionRMIInterface;
         this.updateReceiver = updateReceiver;
     }
 
+    public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {
+        this.serverConnectionRMIInterface = serverConnectionRMIInterface;
+    }
+
     @Override
-    public void login(String nickname) {
+    public void login(Nickname message) {
         try {
-            serverConnectionRMIInterface.login(nickname, this);
+            serverConnectionRMIInterface.login(message);
         } catch (RemoteException e) {
-            System.err.println("error in RequestSenderRMI#login");
-            e.printStackTrace();
+            System.err.println("RequestSenderRMI, line 29: failed login");
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void selectGame(String nickname, int id) {
+    public void createGame(GameInitialization message) {
         try {
-            serverConnectionRMIInterface.selectGame(nickname, id);
+            serverConnectionRMIInterface.createGame(message);
         } catch (RemoteException e) {
-            System.err.println("error in RequestSenderRMI#selectGame");
-            e.printStackTrace();
+            System.err.println("RequestSenderRMI, line 39: failed createGame");
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void createGame(String nickname, int numberPlayers, int numberCommonGoals) {
+    public void selectGame(GameSelection message) {
         try {
-            serverConnectionRMIInterface.createGame(nickname, numberPlayers, numberCommonGoals);
+            serverConnectionRMIInterface.selectGame(message);
         } catch (RemoteException e) {
-            System.err.println("error in RequestSenderRMI#createGame");
-            e.printStackTrace();
+            System.err.println("RequestSenderRMI, line 49: failed selectGame");
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void selectFromLivingRoom(String nickname, List<Position> position) {
+    public void selectFromLivingRoom(LivingRoomSelection message) {
         try {
-            serverConnectionRMIInterface.selectFromLivingRoom(nickname, position);
+            serverConnectionRMIInterface.selectFromLivingRoom(message);
         } catch (RemoteException e) {
-            System.err.println("error in RequestSenderRMI#selectFromLivingRoom");
-            e.printStackTrace();
+            System.err.println("RequestSenderRMI, line 59: failed selectFromLivingRoom");
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void putInBookshelf(String nickname, int column, List<Integer> permutation) {
+    public void insertInBookshelf(BookshelfInsertion message) {
         try {
-            serverConnectionRMIInterface.putInBookshelf(nickname, column, permutation);
+            serverConnectionRMIInterface.insertInBookshelf(message);
         } catch (RemoteException e) {
-            System.err.println("error in RequestSenderRMI#putInBookshelf");
-            e.printStackTrace();
+            System.err.println("RequestSenderRMI, line 69: failed insertInBookshelf");
+            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void addMessage(String nickname, String text) {
+    public void writeChat(ChatMessage message) {
         try {
-            serverConnectionRMIInterface.addMessage(nickname, text);
+            serverConnectionRMIInterface.writeChat(message);
         } catch (RemoteException e) {
-            System.err.println("error in RequestSenderRMI#addMessage");
-            e.printStackTrace();
+            System.err.println("RequestSenderRMI, line 79: failed writeChat");
         }
     }
 

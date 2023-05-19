@@ -1,13 +1,13 @@
 package it.polimi.ingsw.utils.networkMessage.client;
 
-import it.polimi.ingsw.utils.networkMessage.NetworkMessageWithSender;
+import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 
-public class GameInitialization extends NetworkMessageWithSender {
+public class GameInitialization extends NetworkMessage {
     private final int numberPlayers;
     private final int numberCommonGoalCards;
 
-    public GameInitialization(String nickname, int numberPlayers, int numberCommonGoalCards) {
-        super(nickname);
+    public GameInitialization(int numberPlayers, int numberCommonGoalCards) {
+        super();
         this.numberPlayers = numberPlayers;
         this.numberCommonGoalCards = numberCommonGoalCards;
     }

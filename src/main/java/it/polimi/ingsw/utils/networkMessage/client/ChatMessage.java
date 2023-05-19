@@ -1,12 +1,12 @@
 package it.polimi.ingsw.utils.networkMessage.client;
 
-import it.polimi.ingsw.utils.networkMessage.NetworkMessageWithSender;
+import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
 
-public class ChatMessage extends NetworkMessageWithSender {
+public class ChatMessage extends NetworkMessage {
     private final String text;
 
-    public ChatMessage(String nickname, String text) {
-        super(nickname);
+    public ChatMessage(String text) {
+        super();
         this.text = text;
     }
 

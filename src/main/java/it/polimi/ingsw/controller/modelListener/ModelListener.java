@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.modelListener;
+package it.polimi.ingsw.controller.modelListener;
 
 public abstract class ModelListener {
     protected boolean changed;

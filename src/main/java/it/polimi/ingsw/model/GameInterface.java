@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.view.modelListener.*;
+import it.polimi.ingsw.controller.modelListener.*;
 
 import java.util.List;
 
@@ -42,8 +42,9 @@ public interface GameInterface {
     /**
      * This method extracts a list of {@code Item}, chosen by a player, from the {@code LivingRoom}.
      * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
+     * @return the items selected from the LivingRoom.
      */
-    void selectItemTiles(List<Position> positions);
+    List<Item> selectItemTiles(List<Position> positions);
 
     /**
      * Check if we can insert the chosen elements in {@code column} and in the given {@code order}.
@@ -88,8 +89,6 @@ public interface GameInterface {
 
     void setEndingTokenListener(EndingTokenListener listener);
 
-    void setScoreListener(ScoreListener listener);
-
     void setBookshelfListener(BookshelfListener listener);
 
     void setCommonGoalCardsListener(CommonGoalCardsListener listener);
@@ -97,6 +96,4 @@ public interface GameInterface {
     void setLivingRoomListener(LivingRoomListener listener);
 
     void setPersonalGoalCardListener(PersonalGoalCardListener listener);
-
-    void setItemsChosenListener(ItemsChosenListener listener);
 }

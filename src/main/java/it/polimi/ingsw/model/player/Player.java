@@ -4,9 +4,8 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
-import it.polimi.ingsw.view.modelListener.BookshelfListener;
-import it.polimi.ingsw.view.modelListener.ItemsChosenListener;
-import it.polimi.ingsw.view.modelListener.PersonalGoalCardListener;
+import it.polimi.ingsw.controller.modelListener.BookshelfListener;
+import it.polimi.ingsw.controller.modelListener.PersonalGoalCardListener;
 
 import java.util.*;
 
@@ -23,7 +22,6 @@ public class Player {
     private boolean endingToken;
     private final List<PersonalGoalCardListener> personalGoalCardListeners;
     private final List<BookshelfListener> bookshelfReps;
-    private ItemsChosenListener itemsChosenRep;
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
@@ -46,8 +44,6 @@ public class Player {
      */
     public void takeItems(List<Item> items) {
         itemsTakenFromLivingRoom = items;
-        List<Item> copy = new ArrayList<>(items);
-        if (itemsChosenRep != null) itemsChosenRep.updateState(copy);
     }
 
     /**
@@ -189,9 +185,5 @@ public class Player {
                 listener.updateState(nickname, new Position(i, j), bookshelf.tileAt(i, j));
             }
         }
-    }
-
-    public void setItemsChosenListener(ItemsChosenListener listener) {
-        this.itemsChosenRep = listener;
     }
 }

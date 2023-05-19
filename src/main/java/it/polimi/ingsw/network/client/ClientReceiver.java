@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
-public interface UpdateReceiver {
+public interface ClientReceiver {
     void onGamesList(GamesList message);
     void onAcceptedAction(AcceptedAction message);
     void onItemsSelected(ItemsSelected message);
