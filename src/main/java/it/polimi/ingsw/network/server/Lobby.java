@@ -8,10 +8,7 @@ import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
 import it.polimi.ingsw.utils.networkMessage.server.GamesList;
 import it.polimi.ingsw.network.VirtualView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Lobby {
     /**
@@ -20,9 +17,9 @@ public class Lobby {
     private final Map<Integer, Controller> controllers;
 
     /**
-     * List of virtual views, representing all players connected either waiting for a game or in game.
+     * Set of virtual views, representing all players connected either waiting for a game or in game.
      */
-    private final List<VirtualView> views;
+    private final Set<VirtualView> views;
 
     /**
      * Smallest available id for the next game to be created.
@@ -31,7 +28,7 @@ public class Lobby {
 
     public Lobby() {
         controllers = new HashMap<>();
-        views = new ArrayList<>();
+        views = new HashSet<>();
         availableId = 0;
     }
 
@@ -49,28 +46,25 @@ public class Lobby {
         availableId++;
     }
 
-    private VirtualView getView(String nickname) {
-        for(VirtualView view : views) {
-            if (view.getNickname().equals(nickname)) return view;
-        }
-        return null;
+    public synchronized void addVirtualView(VirtualView view) {
+        views.add(view);
     }
 
     public synchronized void login(String nickname, VirtualView view) {
-        if(getView(nickname) != null) {
+        if(view.isLoggedIn() || view.isInGame()) {
             // the nickname is already chosen.
             view.sendListOfGames(new GamesList(null));
             return;
         }
 
         views.add(view);
-
+        view.setNickname(nickname);
         view.sendListOfGames(new GamesList(getGameInfo()));
     }
 
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
-        if (getView(view.getNickname()) == null) {
+        if (!view.isLoggedIn() || view.isInGame()) {
             view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
             return;
         }
@@ -91,7 +85,7 @@ public class Lobby {
 
 
     public synchronized void selectGame(int id, VirtualView view) {
-        if (getView(view.getNickname()) == null) {
+        if (!view.isLoggedIn() || view.isInGame()) {
             view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
         }
 

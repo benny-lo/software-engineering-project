@@ -13,7 +13,7 @@ public class CommonGoalCardManager {
      * List with all the cards.
      */
     private final List<CommonGoalCard> cards;
-    private final List<CommonGoalCardsListener> commonGoalCardsReps;
+    private CommonGoalCardsListener commonGoalCardsListener;
 
     /**
      * Class constructor: it initializes the common goal cards of the game.
@@ -23,7 +23,6 @@ public class CommonGoalCardManager {
     public CommonGoalCardManager(int numCommonGoalCards, int numPlayers) {
         List<CommonGoalPatternInterface> commonGoals = commonGoals();
         cards = new ArrayList<>();
-        commonGoalCardsReps = new ArrayList<>();
         List<Integer> ids = new ArrayList<>();
         for(int i = 0; i < 12; i++) ids.add(i);
         Collections.shuffle(ids);
@@ -41,7 +40,6 @@ public class CommonGoalCardManager {
      */
     public CommonGoalCardManager(int numPlayers, String test) {
         cards = new ArrayList<>();
-        commonGoalCardsReps = new ArrayList<>();
         cards.add(new CommonGoalCard(0, numPlayers, new CommonGoalPattern8()));
         cards.add(new CommonGoalCard(1, numPlayers, new CommonGoalPattern9()));
     }
@@ -103,18 +101,18 @@ public class CommonGoalCardManager {
             if (cannotTake.contains(i)) continue;
             if (cards.get(i).checkPattern(bookshelf)) {
                 tokens.add(cards.get(i).popToken());
-                for(CommonGoalCardsListener rep : commonGoalCardsReps) {
-                    rep.updateState(cards.get(i).getId(), cards.get(i).getTopStack());
+                if (commonGoalCardsListener != null) {
+                    commonGoalCardsListener.updateState(cards.get(i).getId(), cards.get(i).getTopStack());
                 }
             }
         }
         return tokens;
     }
 
-    public void setCommonGoalCardsRep(CommonGoalCardsListener rep) {
-        commonGoalCardsReps.add(rep);
+    public void setCommonGoalCardsRep(CommonGoalCardsListener commonGoalCardsListener) {
+        this.commonGoalCardsListener = commonGoalCardsListener;
         for(CommonGoalCard card : cards) {
-            rep.updateState(card.getId(), card.getTopStack());
+            commonGoalCardsListener.updateState(card.getId(), card.getTopStack());
         }
     }
 }

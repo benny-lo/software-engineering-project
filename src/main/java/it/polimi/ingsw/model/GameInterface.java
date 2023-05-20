@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.controller.modelListener.*;
-
 import java.util.List;
 
 /**
@@ -9,11 +7,6 @@ import java.util.List;
  */
 
 public interface GameInterface {
-    /**
-     * This method starts the game, and it initializes a {@code PersonalGoalCard} for each {@code Player}.
-     */
-    void setup();
-
     /**
      * Getter for the number of players.
      * @return the number of players of {@code this}.
@@ -80,14 +73,4 @@ public interface GameInterface {
      * @return It returns the nickname of {@code currentPlayer}.
      */
     String getCurrentPlayer();
-
-    void setEndingTokenListener(EndingTokenListener listener);
-
-    void setBookshelfListener(BookshelfListener listener);
-
-    void setCommonGoalCardsListener(CommonGoalCardsListener listener);
-
-    void setLivingRoomListener(LivingRoomListener listener);
-
-    void setPersonalGoalCardListener(PersonalGoalCardListener listener);
 }

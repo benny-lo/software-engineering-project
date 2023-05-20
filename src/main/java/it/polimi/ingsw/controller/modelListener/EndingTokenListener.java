@@ -5,8 +5,6 @@ public class EndingTokenListener extends ModelListener {
 
     public EndingTokenListener() {
         super();
-        this.owner = null;
-        this.changed = true;
     }
 
     public String getEndingToken() {

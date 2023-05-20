@@ -7,7 +7,6 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +17,7 @@ public class BoardManager {
     private boolean endingToken;
     private final LivingRoom livingRoom;
     private final Bag bag;
-    private final List<LivingRoomListener> livingRoomReps;
+    private LivingRoomListener livingRoomListener;
 
     /**
      * BoardManager's Constructor: it initializes the {@code Bag} and the {@code LivingRoom}.
@@ -27,7 +26,6 @@ public class BoardManager {
     public BoardManager(int numberPlayers) {
         this.endingToken = true;
         this.bag = new Bag(22);
-        this.livingRoomReps = new ArrayList<>();
 
         Gson gson = new GsonBuilder().serializeNulls()
                 .disableJdkUnsafe()
@@ -60,8 +58,8 @@ public class BoardManager {
                     if(livingRoom.tileAt(i, j) == null){
                         Position p = new Position(i, j);
                         livingRoom.setTile(bag.extract(), p);
-                        for(LivingRoomListener rep : livingRoomReps) {
-                            rep.updateState(p, livingRoom.tileAt(p.getRow(), p.getColumn()));
+                        if (livingRoomListener != null) {
+                            livingRoomListener.updateState(p, livingRoom.tileAt(p.getRow(), p.getColumn()));
                         }
                     }
                 }
@@ -138,11 +136,11 @@ public class BoardManager {
         return livingRoom;
     }
 
-    public void setLivingRoomListener(LivingRoomListener listener) {
-        livingRoomReps.add(listener);
+    public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
+        this.livingRoomListener = livingRoomListener;
         for(int i = 0; i < livingRoom.getRows(); i++) {
             for(int j = 0; j < livingRoom.getColumns(); j++) {
-                listener.updateState(new Position(i, j), livingRoom.tileAt(i, j));
+                livingRoomListener.updateState(new Position(i, j), livingRoom.tileAt(i, j));
             }
         }
     }

@@ -23,6 +23,10 @@ public class Controller implements ActionListener {
      * The model of the chat.
      */
     private final ChatInterface chat;
+
+    /**
+     * Builder of the game model.
+     */
     private final GameBuilder gameBuilder;
 
     /**
@@ -61,10 +65,29 @@ public class Controller implements ActionListener {
      */
     private TurnPhase turnPhase;
 
-    private final BookshelfListener bookshelvesListener;
+    /**
+     * Listener for the bookshelves.
+     */
+    private final BookshelvesListener bookshelvesListener;
+
+    /**
+     * Listener for the common goal cards.
+     */
     private final CommonGoalCardsListener commonGoalCardsListener;
+
+    /**
+     * Listener for the ending token.
+     */
     private final EndingTokenListener endingTokenListener;
+
+    /**
+     * Listener for the LivingRoom.
+     */
     private final LivingRoomListener livingRoomListener;
+
+    /**
+     * List of listeners for the personal goal cards.
+     */
     private final List<PersonalGoalCardListener> personalGoalCardListeners;
 
     public Controller(int numberPlayers, int numberCommonGoalCards) {
@@ -79,11 +102,16 @@ public class Controller implements ActionListener {
         this.turnPhase = null;
         this.ended = false;
 
-        this.bookshelvesListener = new BookshelfListener();
+        this.bookshelvesListener = new BookshelvesListener();
         this.commonGoalCardsListener = new CommonGoalCardsListener();
         this.endingTokenListener = new EndingTokenListener();
         this.livingRoomListener = new LivingRoomListener();
         this.personalGoalCardListeners = new ArrayList<>();
+
+        gameBuilder.setBookshelvesListener(bookshelvesListener);
+        gameBuilder.setCommonGoalCardsListener(commonGoalCardsListener);
+        gameBuilder.setEndingTokenListener(endingTokenListener);
+        gameBuilder.setLivingRoomListener(livingRoomListener);
     }
 
     private void sendBookshelvesToEverybody() {
@@ -137,7 +165,7 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void setupGame() {
+    private void setup() {
         // Choosing a random order for the players.
         List<String> players = new ArrayList<>(playerQueue);
         Collections.shuffle(players);
@@ -147,22 +175,12 @@ public class Controller implements ActionListener {
         playerQueue = new ArrayDeque<>(players);
         firstPlayer = playerQueue.peek();
 
+        game = gameBuilder.startGame();
+
         // Setting the first player in game and
         // setting the current turn phase.
         game.setCurrentPlayer(firstPlayer);
         turnPhase = TurnPhase.LIVING_ROOM;
-
-        // Initializing the managers and distributing the personal cards.
-        game.setup();
-
-        // Set the model listeners in the model.
-        game.setBookshelfListener(bookshelvesListener);
-        game.setCommonGoalCardsListener(commonGoalCardsListener);
-        game.setEndingTokenListener(endingTokenListener);
-        game.setLivingRoomListener(livingRoomListener);
-        for(PersonalGoalCardListener personalGoalCardListener : personalGoalCardListeners) {
-            game.setPersonalGoalCardListener(personalGoalCardListener);
-        }
 
         // Sending initial updates about the reps.
         sendBookshelvesToEverybody();
@@ -204,17 +222,18 @@ public class Controller implements ActionListener {
     }
 
     @Override
-    public void update(JoinAction action) {
+    public synchronized void update(JoinAction action) {
         if (game != null || ended) {
             action.getView().sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.LOGIN));
             return;
         }
 
         playerQueue.add(action.getSenderNickname());
-        //game.addPlayer(action.getSenderNickname());
-        gameBuilder.addPlayer(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
         personalGoalCardListeners.add(new PersonalGoalCardListener(action.getSenderNickname()));
+
+        gameBuilder.addPlayer(action.getSenderNickname());
+        gameBuilder.setPersonalGoalCardListener(personalGoalCardListeners.get(personalGoalCardListeners.size() - 1));
 
         for(String nick : views.keySet()) {
             views.get(nick).sendWaitingUpdate(new WaitingUpdate(
@@ -223,14 +242,13 @@ public class Controller implements ActionListener {
             ));
         }
 
-        if (gameBuilder.getNumberPlayers() == this.numberPlayers) {
-            game = gameBuilder.startGame();
-            setupGame();
+        if (gameBuilder.getCurrentPlayers() == this.numberPlayers) {
+            setup();
         }
     }
 
     @Override
-    public void update(SelectionFromLivingRoomAction action) {
+    public synchronized void update(SelectionFromLivingRoomAction action) {
         if (ended ||
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
@@ -250,7 +268,7 @@ public class Controller implements ActionListener {
     }
 
     @Override
-    public void update(SelectionColumnAndOrderAction action) {
+    public synchronized void update(SelectionColumnAndOrderAction action) {
         if (ended ||
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
@@ -273,7 +291,7 @@ public class Controller implements ActionListener {
     }
 
     @Override
-    public void update(ChatMessageAction action) {
+    public synchronized void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
             views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
             return;

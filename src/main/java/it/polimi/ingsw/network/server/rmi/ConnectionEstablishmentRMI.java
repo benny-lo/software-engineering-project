@@ -15,6 +15,7 @@ public class ConnectionEstablishmentRMI implements ConnectionEstablishmentRMIInt
     @Override
     public ServerConnectionRMIInterface init(ClientConnectionRMIInterface clientConnectionRMIInterface) throws RemoteException {
         VirtualView view = new VirtualViewRMI(lobby, clientConnectionRMIInterface);
+        lobby.addVirtualView(view);
         return new ServerConnectionRMI(view);
     }
 }

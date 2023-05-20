@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
-import it.polimi.ingsw.controller.modelListener.BookshelfListener;
+import it.polimi.ingsw.controller.modelListener.BookshelvesListener;
 import it.polimi.ingsw.controller.modelListener.PersonalGoalCardListener;
 
 import java.util.*;
@@ -20,8 +20,8 @@ public class Player {
     private PersonalGoalCard personalGoalCard;
     private final List<ScoringToken> scoringTokens;
     private boolean endingToken;
-    private final List<PersonalGoalCardListener> personalGoalCardListeners;
-    private final List<BookshelfListener> bookshelfReps;
+    private BookshelvesListener bookshelvesListener;
+    private PersonalGoalCardListener personalGoalCardListener;
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
@@ -33,13 +33,10 @@ public class Player {
         this.personalGoalCard = null;
         this.scoringTokens = new ArrayList<>();
         this.endingToken = false;
-        this.personalGoalCardListeners = new ArrayList<>();
-        this.bookshelfReps = new ArrayList<>();
     }
 
     /**
      * Add to {@code this} the items taken from the living room.
-     *
      * @param items list of the items taken from the living room.
      */
     public void takeItems(List<Item> items) {
@@ -48,7 +45,6 @@ public class Player {
 
     /**
      * Setter for the personal goal card.
-     *
      * @param card the card to set.
      */
     public void setPersonalGoalCard(PersonalGoalCard card) {
@@ -57,7 +53,6 @@ public class Player {
 
     /**
      * Add a {@code ScoringToken} to {@code this} checking token's type.
-     *
      * @param token {@code ScoringToken} obtained completing a {@code CommonGoalCard}.
      */
     public void addScoringToken(ScoringToken token) {
@@ -73,7 +68,6 @@ public class Player {
 
     /**
      * Get the types of the scoring tokens already taken.
-     *
      * @return list containing types of scoring tokens taken by {@code this}.
      */
     public List<Integer> cannotTake() {
@@ -118,8 +112,8 @@ public class Player {
         for(int i = bookshelf.getRows() - 1; count < permutedItems.size(); i--) {
             if (bookshelf.tileAt(i, column) == null) continue;
             count++;
-            for(BookshelfListener rep : bookshelfReps) {
-                rep.updateState(nickname, new Position(i, column), bookshelf.tileAt(i, column));
+            if (bookshelvesListener != null) {
+                bookshelvesListener.updateState(nickname, new Position(i, column), bookshelf.tileAt(i, column));
             }
         }
         itemsTakenFromLivingRoom = null;
@@ -138,7 +132,6 @@ public class Player {
 
     /**
      * Get the total score of {@code this}.
-     *
      * @return sum of {@code ScoringToken}s, {@code personalScore} and {@code bookshelfScore}.
      */
     public int getTotalScore() {
@@ -147,7 +140,6 @@ public class Player {
 
     /**
      * Get the {@code Bookshelf} of {@code this}.
-     *
      * @return {@code Bookshelf} of {@code this}.
      */
     public Bookshelf getBookshelf() {
@@ -156,7 +148,6 @@ public class Player {
 
     /**
      * Get the {@code personalScore} of {@code this}.
-     *
      * @return {@code personalScore} of {@code this}.
      */
     public int getPersonalScore() {
@@ -166,24 +157,25 @@ public class Player {
 
     /**
      * This method tells if the {@code this} is the first to fill their {@code Bookshelf}.
-     *
      * @return It returns a boolean, true iff {@code Player} has the {@code endingToken}, else false.
      */
     public boolean firstToFinish() {
         return this.endingToken;
     }
 
-    public void setPersonalGoalCardListener(PersonalGoalCardListener listener) {
-        personalGoalCardListeners.add(listener);
-        if (personalGoalCard != null) listener.updateState(personalGoalCard.getId());
-    }
-
-    public void setBookshelfListener(BookshelfListener listener) {
-        bookshelfReps.add(listener);
+    public void setBookshelvesListener(BookshelvesListener bookshelvesListener) {
+        this.bookshelvesListener = bookshelvesListener;
         for(int i = 0; i < bookshelf.getRows(); i++) {
             for(int j = 0; j < bookshelf.getColumns(); j++) {
-                listener.updateState(nickname, new Position(i, j), bookshelf.tileAt(i, j));
+                bookshelvesListener.updateState(nickname, new Position(i, j), bookshelf.tileAt(i, j));
             }
+        }
+    }
+
+    public void setPersonalGoalCardListener(PersonalGoalCardListener personalGoalCardListener) {
+        this.personalGoalCardListener = personalGoalCardListener;
+        if (personalGoalCard != null) {
+            personalGoalCardListener.updateState(personalGoalCard.getId());
         }
     }
 }

@@ -79,6 +79,7 @@ public class Server {
                     ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
                     VirtualView view = new VirtualViewTCP(lobby, serverConnectionTCP);
                     serverConnectionTCP.setReceiver(view);
+                    lobby.addVirtualView(view);
 
                     (new Thread(serverConnectionTCP)).start();
                 } catch (IOException e) {

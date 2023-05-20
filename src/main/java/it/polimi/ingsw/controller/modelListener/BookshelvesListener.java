@@ -6,10 +6,10 @@ import it.polimi.ingsw.model.Position;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookshelfListener extends ModelListener {
+public class BookshelvesListener extends ModelListener {
     private final Map<String, Map<Position, Item>> bookshelves;
 
-    public BookshelfListener() {
+    public BookshelvesListener() {
         super();
         bookshelves = new HashMap<>();
     }

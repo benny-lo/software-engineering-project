@@ -23,20 +23,22 @@ public class Game implements GameInterface {
     private final Map<String, Player> players;
     private BoardManager boardManager;
     private CommonGoalCardManager commonGoalCardManager;
-    private final List<EndingTokenListener> endingTokenListeners;
+    private EndingTokenListener endingTokenListener;
 
     /**
      * Game's Constructor: it initializes {@code Game}.
+     * @param nicknames list containing the nicknames of the players.
      * @param numberCommonGoalCards It can be initialised to '1' or '2'.
      */
-    public Game(int numberCommonGoalCards, int numberPlayers, Map<String, Player> players) {
-        this.numberPlayers = numberPlayers;
+    public Game(List<String> nicknames, int numberCommonGoalCards) {
+        this.numberPlayers = nicknames.size();
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.currentPlayer = null;
-        this.players = players;
-        this.boardManager = null;
-        this.commonGoalCardManager = null;
-        this.endingTokenListeners = new ArrayList<>();
+        this.players = new HashMap<>();
+        for (String nickname : nicknames) {
+            players.put(nickname, new Player(nickname));
+        }
+        setup();
     }
 
     /**
@@ -81,8 +83,11 @@ public class Game implements GameInterface {
         }
     }
 
-    @Override
-    public void setup(){
+    /**
+     * This method  initializes a {@code PersonalGoalCard} for each {@code Player}, the {@code BoardManager}, the
+     * {@code CommonGoalCardManager}, and fills the {@code LivingRoom}.
+     */
+    private void setup(){
         this.commonGoalCardManager = new CommonGoalCardManager(numberCommonGoalCards, numberPlayers);
         this.boardManager = new BoardManager(numberPlayers);
         this.distributePersonalCards();
@@ -132,8 +137,8 @@ public class Game implements GameInterface {
         if (players.get(currentPlayer).getBookshelf().isFull() && boardManager.isEndingToken()) {
             boardManager.takeEndingToken();
             players.get(currentPlayer).addEndingToken();
-            for(EndingTokenListener rep : endingTokenListeners) {
-                rep.updateState(currentPlayer);
+            if (endingTokenListener != null) {
+                endingTokenListener.updateState(currentPlayer);
             }
         }
 
@@ -152,33 +157,36 @@ public class Game implements GameInterface {
         return false;
     }
 
-    @Override
-    public void setEndingTokenListener(EndingTokenListener listener) {
-        endingTokenListeners.add(listener);
-    }
-
-    @Override
-    public void setBookshelfListener(BookshelfListener listener) {
+    public void setBookshelvesListener(BookshelvesListener bookshelvesListener) {
         for(String nickname : players.keySet()) {
-            players.get(nickname).setBookshelfListener(listener);
+            players.get(nickname).setBookshelvesListener(bookshelvesListener);
         }
     }
 
-    @Override
-    public void setCommonGoalCardsListener(CommonGoalCardsListener listener) {
+    public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         if (commonGoalCardManager == null) return;
-        commonGoalCardManager.setCommonGoalCardsRep(listener);
+        commonGoalCardManager.setCommonGoalCardsRep(commonGoalCardsListener);
     }
 
-    @Override
-    public void setLivingRoomListener(LivingRoomListener listener) {
+    public void setEndingTokenListener(EndingTokenListener endingTokenListener) {
+        this.endingTokenListener = endingTokenListener;
+        for (String nickname : players.keySet()) {
+            if (players.get(nickname).firstToFinish()) {
+                endingTokenListener.updateState(nickname);
+                return;
+            }
+        }
+
+        endingTokenListener.updateState(null);
+    }
+
+    public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         if (boardManager == null) return;
-        boardManager.setLivingRoomListener(listener);
+        boardManager.setLivingRoomListener(livingRoomListener);
     }
 
-    @Override
-    public void setPersonalGoalCardListener(PersonalGoalCardListener listener) {
-        players.get(listener.getOwner()).setPersonalGoalCardListener(listener);
+    public void setPersonalGoalCardListener(PersonalGoalCardListener personalGoalCardListener) {
+        players.get(personalGoalCardListener.getOwner()).setPersonalGoalCardListener(personalGoalCardListener);
     }
 
     @Override

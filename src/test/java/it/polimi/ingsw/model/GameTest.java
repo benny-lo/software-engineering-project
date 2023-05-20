@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.player.Player;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,8 +14,8 @@ public class GameTest {
      * Test {@code Game}'s constructor, game and the current player aren't null.
      */
     @Test
-    public void testGameConstructor(){
-        Game game = new Game(2, 2, Map.of("nick", new Player("nick")));
+    public void testGameConstructor() {
+        Game game = new Game(List.of("nick", "rick"), 2);
 
         assertNotNull(game);
         assertEquals(2, game.getNumberPlayers());
@@ -29,9 +28,7 @@ public class GameTest {
      */
     @Test
     public void testSetup(){
-        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
-
-        game.setup();
+        Game game = new Game(List.of("nick", "rick"), 2);
 
         assertNotNull(game.getCommonGoalCardManager());
         assertNotNull(game.getBoardManager());
@@ -43,7 +40,7 @@ public class GameTest {
      */
     @Test
     public void testSetCurrentPlayer(){
-        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
+        Game game = new Game(List.of("nick", "rick"), 2);
 
         game.setCurrentPlayer("nickname");
 
@@ -55,9 +52,7 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesOnWrongTile(){
-        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
-
-        game.setup();
+        Game game = new Game(List.of("nick", "rick"), 2);
 
         assertFalse(game.canTakeItemTiles(List.of(new Position(0, 0))));
     }
@@ -67,9 +62,7 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesWithoutEnoughSpace(){
-        Game game = new Game(2, 2, Map.of("nick", new Player("nick"), "tick", new Player("tick")));
-
-        game.setup();
+        Game game = new Game(List.of("nick", "rick"), 2);
 
         game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 0);
 
