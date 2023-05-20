@@ -1,12 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
-import it.polimi.ingsw.network.VirtualView;
+import it.polimi.ingsw.view.server.VirtualView;
 import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMI;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.socket.ServerConnectionTCP;
-import it.polimi.ingsw.network.server.socket.VirtualViewTCP;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -77,8 +76,8 @@ public class Server {
                 try {
                     Socket socket = server.accept();
                     ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
-                    VirtualView view = new VirtualViewTCP(lobby, serverConnectionTCP);
-                    serverConnectionTCP.setReceiver(view);
+                    VirtualView view = new VirtualView(lobby, serverConnectionTCP);
+                    serverConnectionTCP.setInputViewInterface(view);
                     lobby.addVirtualView(view);
 
                     (new Thread(serverConnectionTCP)).start();

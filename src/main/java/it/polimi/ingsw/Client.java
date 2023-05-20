@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.view.ClientView;
-import it.polimi.ingsw.view.cli.TextInterface;
+import it.polimi.ingsw.view.client.ClientView;
+import it.polimi.ingsw.view.client.cli.TextInterface;
 
 import java.util.List;
 

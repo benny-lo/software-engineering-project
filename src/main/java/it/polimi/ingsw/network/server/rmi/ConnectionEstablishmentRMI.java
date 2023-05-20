@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.server.rmi;
 
-import it.polimi.ingsw.network.VirtualView;
+import it.polimi.ingsw.view.server.VirtualView;
 import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMIInterface;
 
@@ -15,8 +15,8 @@ public class ConnectionEstablishmentRMI implements ConnectionEstablishmentRMIInt
     @Override
     public ServerConnectionRMIInterface init(ClientConnectionRMIInterface clientConnectionRMIInterface) throws RemoteException {
         ServerConnectionRMI serverConnection = new ServerConnectionRMI(clientConnectionRMIInterface);
-        VirtualView view = new VirtualViewRMI(lobby, serverConnection);
-        serverConnection.setReceiver(view);
+        VirtualView view = new VirtualView(lobby, serverConnection);
+        serverConnection.setInputViewInterface(view);
         lobby.addVirtualView(view);
         return serverConnection;
     }

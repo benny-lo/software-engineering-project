@@ -1,15 +1,17 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.utils.action.JoinAction;
-import it.polimi.ingsw.utils.networkMessage.server.AcceptedAction;
-import it.polimi.ingsw.utils.networkMessage.server.AcceptedActionTypes;
-import it.polimi.ingsw.utils.networkMessage.server.GameInfo;
-import it.polimi.ingsw.utils.networkMessage.server.GamesList;
-import it.polimi.ingsw.network.VirtualView;
+import it.polimi.ingsw.utils.message.server.AcceptedAction;
+import it.polimi.ingsw.utils.message.server.AcceptedActionTypes;
+import it.polimi.ingsw.utils.message.server.GameInfo;
+import it.polimi.ingsw.utils.message.server.GamesList;
+import it.polimi.ingsw.view.server.VirtualView;
 
 import java.util.*;
 
 // TODO: lobby singleton, send scores in controller and manage disconnection and exceptions correctly.
+// TODO: remove VirtualViews correctly so that the garbage collector can work its magic.
+// TODO: add new messages.
 
 public class Lobby {
     /**
@@ -54,25 +56,25 @@ public class Lobby {
     public synchronized void login(String nickname, VirtualView view) {
         if(view.isLoggedIn() || view.isInGame()) {
             // the nickname is already chosen.
-            view.sendListOfGames(new GamesList(null));
+            view.onGamesList(new GamesList(null));
             return;
         }
 
         views.add(view);
         view.setNickname(nickname);
-        view.sendListOfGames(new GamesList(getGameInfo()));
+        view.onGamesList(new GamesList(getGameInfo()));
     }
 
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
         if (!view.isLoggedIn() || view.isInGame()) {
-            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
+            view.onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
             return;
         }
 
         // incorrect parameters.
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
-            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
+            view.onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
             return;
         }
 
@@ -87,11 +89,11 @@ public class Lobby {
 
     public synchronized void selectGame(int id, VirtualView view) {
         if (!view.isLoggedIn() || view.isInGame()) {
-            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
+            view.onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
         }
 
         if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
-            view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
+            view.onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
             return;
         }
 

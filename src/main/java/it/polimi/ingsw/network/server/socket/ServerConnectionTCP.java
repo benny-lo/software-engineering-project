@@ -1,17 +1,19 @@
 package it.polimi.ingsw.network.server.socket;
 
-import it.polimi.ingsw.network.server.ServerReceiver;
-import it.polimi.ingsw.utils.networkMessage.NetworkMessage;
-import it.polimi.ingsw.utils.networkMessage.client.*;
+import it.polimi.ingsw.network.server.ServerConnection;
+import it.polimi.ingsw.utils.message.Message;
+import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.server.*;
+import it.polimi.ingsw.view.InputViewInterface;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class ServerConnectionTCP implements Runnable {
+public class ServerConnectionTCP implements ServerConnection, Runnable {
     private final Socket socket;
-    private ServerReceiver receiver;
+    private InputViewInterface receiver;
     private final ObjectOutputStream out;
 
     public ServerConnectionTCP(Socket socket) {
@@ -27,10 +29,6 @@ public class ServerConnectionTCP implements Runnable {
         }
 
         this.out = out;
-    }
-
-    public void setReceiver(ServerReceiver receiver) {
-        this.receiver = receiver;
     }
 
     @Override
@@ -52,6 +50,11 @@ public class ServerConnectionTCP implements Runnable {
         }
     }
 
+    @Override
+    public void setInputViewInterface(InputViewInterface receiver) {
+        this.receiver = receiver;
+    }
+
     private void receive(Object input) {
         if (input instanceof Nickname) {
             receiver.login((Nickname) input);
@@ -68,11 +71,11 @@ public class ServerConnectionTCP implements Runnable {
         }
     }
 
-    public void sendAsync(NetworkMessage message) {
+    private void sendAsync(Message message) {
         (new Thread(() -> send(message))).start();
     }
 
-    private void send(NetworkMessage message) {
+    private void send(Message message) {
         synchronized (out) {
             try {
                 out.writeObject(message);
@@ -82,5 +85,70 @@ public class ServerConnectionTCP implements Runnable {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @Override
+    public void sendLivingRoomUpdate(LivingRoomUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendBookshelfUpdate(BookshelfUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendWaitingUpdate(WaitingUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendScoresUpdate(ScoresUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendEndingTokenUpdate(EndingTokenUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendChatUpdate(ChatUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendStartTurnUpdate(StartTurnUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendEndGameUpdate(EndGameUpdate update) {
+        sendAsync(update);
+    }
+
+    @Override
+    public void sendGamesList(GamesList gamesList) {
+        sendAsync(gamesList);
+    }
+
+    @Override
+    public void sendItemsSelected(ItemsSelected itemsSelected) {
+        sendAsync(itemsSelected);
+    }
+
+    @Override
+    public void sendAcceptedAction(AcceptedAction acceptedAction) {
+        sendAsync(acceptedAction);
     }
 }

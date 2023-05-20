@@ -1,15 +1,16 @@
 package it.polimi.ingsw.network.server.rmi;
 
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMIInterface;
-import it.polimi.ingsw.network.server.ServerReceiver;
-import it.polimi.ingsw.utils.networkMessage.client.*;
-import it.polimi.ingsw.utils.networkMessage.server.*;
+import it.polimi.ingsw.network.server.ServerConnection;
+import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.server.*;
+import it.polimi.ingsw.view.InputViewInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnectionRMIInterface {
-    private ServerReceiver receiver;
+public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
+    private InputViewInterface receiver;
     private final ClientConnectionRMIInterface client;
 
     public ServerConnectionRMI(ClientConnectionRMIInterface client) throws RemoteException {
@@ -17,7 +18,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         this.client = client;
     }
 
-    public void setReceiver(ServerReceiver receiver) {
+    public void setInputViewInterface(InputViewInterface receiver) {
         this.receiver = receiver;
     }
 
@@ -92,7 +93,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) {
+    public void sendCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
         try {
             client.sendCommonGoalCardUpdate(update);
         } catch (RemoteException e) {
@@ -132,7 +133,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendListOfGames(GamesList gamesList) {
+    public void sendGamesList(GamesList gamesList) {
         try {
             client.sendListOfGames(gamesList);
         } catch (RemoteException e) {

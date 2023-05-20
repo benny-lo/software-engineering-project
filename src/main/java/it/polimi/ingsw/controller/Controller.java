@@ -8,8 +8,8 @@ import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatInterface;
 import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.utils.action.*;
-import it.polimi.ingsw.network.VirtualView;
-import it.polimi.ingsw.utils.networkMessage.server.*;
+import it.polimi.ingsw.view.server.VirtualView;
+import it.polimi.ingsw.utils.message.server.*;
 
 import java.util.*;
 
@@ -120,7 +120,7 @@ public class Controller implements ActionListener {
         for(String nick : map.keySet()) {
             BookshelfUpdate update = new BookshelfUpdate(nick, map.get(nick));
             for(VirtualView view : views.values()) {
-                view.sendBookshelfUpdate(update);
+                view.onBookshelfUpdate(update);
             }
         }
     }
@@ -128,7 +128,7 @@ public class Controller implements ActionListener {
     private void sendLastChatMessageToEverybody() {
         Message message = chat.getLastMessage();
         for(VirtualView view : views.values()) {
-            view.sendChatUpdate(new ChatUpdate(
+            view.onChatUpdate(new ChatUpdate(
                     message.getNickname(),
                     message.getText())
             );
@@ -138,7 +138,7 @@ public class Controller implements ActionListener {
     private void sendCommonGoalCardsToEverybody() {
         Map<Integer, Integer> map = commonGoalCardsListener.getCards();
         for(VirtualView view : views.values()) {
-            view.sendCommonGoalCardUpdate(new CommonGoalCardsUpdate(map));
+            view.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(map));
         }
     }
 
@@ -146,7 +146,7 @@ public class Controller implements ActionListener {
         if (!endingTokenListener.hasChanged()) return;
         EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
         for(VirtualView view : views.values()) {
-            view.sendEndingTokenUpdate(update);
+            view.onEndingTokenUpdate(update);
         }
     }
 
@@ -154,14 +154,14 @@ public class Controller implements ActionListener {
         if (!livingRoomListener.hasChanged()) return;
        LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoom());
         for(VirtualView view : views.values()) {
-            view.sendLivingRoomUpdate(update);
+            view.onLivingRoomUpdate(update);
         }
     }
 
     private void sendPersonalGoalCardsToEverybody() {
         for(PersonalGoalCardListener listener : personalGoalCardListeners) {
             PersonalGoalCardUpdate update = new PersonalGoalCardUpdate(listener.getPersonalGoalCard());
-            views.get(listener.getOwner()).sendPersonalGoalCardUpdate(update);
+            views.get(listener.getOwner()).onPersonalGoalCardUpdate(update);
         }
     }
 
@@ -213,18 +213,18 @@ public class Controller implements ActionListener {
             }
 
             for(VirtualView view : views.values()) {
-                view.sendEndGameUpdate(new EndGameUpdate(winner));
+                view.onEndGameUpdate(new EndGameUpdate(winner));
             }
         } else {
             VirtualView current = views.get(game.getCurrentPlayer());
-            current.sendStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            current.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
         }
     }
 
     @Override
     public synchronized void update(JoinAction action) {
         if (game != null || ended) {
-            action.getView().sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.LOGIN));
+            action.getView().onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.LOGIN));
             return;
         }
 
@@ -236,7 +236,7 @@ public class Controller implements ActionListener {
         gameBuilder.setPersonalGoalCardListener(personalGoalCardListeners.get(personalGoalCardListeners.size() - 1));
 
         for(String nick : views.keySet()) {
-            views.get(nick).sendWaitingUpdate(new WaitingUpdate(
+            views.get(nick).onWaitingUpdate(new WaitingUpdate(
                     action.getSenderNickname(),
                     numberPlayers - playerQueue.size()
             ));
@@ -253,14 +253,14 @@ public class Controller implements ActionListener {
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
-            views.get(action.getSenderNickname()).sendItemsSelected(new ItemsSelected(null));
+            views.get(action.getSenderNickname()).onItemsSelected(new ItemsSelected(null));
             return;
         }
 
         List<Item> items = game.selectItemTiles(action.getSelectedPositions());
 
         for(VirtualView view : views.values()) {
-            view.sendItemsSelected(new ItemsSelected(items));
+            view.onItemsSelected(new ItemsSelected(items));
         }
 
         sendLivingRoomToEverybody();
@@ -273,7 +273,7 @@ public class Controller implements ActionListener {
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
+            views.get(action.getSenderNickname()).onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
             return;
         }
 
@@ -293,7 +293,7 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
-            views.get(action.getSenderNickname()).sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
+            views.get(action.getSenderNickname()).onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
             return;
         }
 
