@@ -9,9 +9,9 @@ import it.polimi.ingsw.view.server.VirtualView;
 
 import java.util.*;
 
-// TODO: lobby singleton, send scores in controller and manage disconnection and exceptions correctly.
+// TODO: send scores in controller and manage disconnection and exceptions correctly.
 // TODO: remove VirtualViews correctly so that the garbage collector can work its magic.
-// TODO: add new messages.
+// TODO: add new messages + send client updates about games.
 
 public class Lobby {
     /**
@@ -29,10 +29,20 @@ public class Lobby {
      */
     private int availableId;
 
-    public Lobby() {
+    private static Lobby instance;
+    private final static Object lock = new Object();
+
+    private Lobby() {
         controllers = new HashMap<>();
         views = new HashSet<>();
         availableId = 0;
+    }
+
+    public static Lobby getInstance() {
+        synchronized (lock) {
+            if (instance == null) instance = new Lobby();
+        }
+        return instance;
     }
 
     private List<GameInfo> getGameInfo() {

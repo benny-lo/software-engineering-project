@@ -23,11 +23,6 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     private String nickname;
 
     /**
-     * Reference to the lobby. To use for login, game initialization and selection.
-     */
-    private final Lobby lobby;
-
-    /**
      * Reference to the Controller, this VirtualView is logged in. Initially, it set to {@code null}.
      */
     private Controller controller;
@@ -35,11 +30,10 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     private final ServerConnection serverConnection;
 
     /**
-     * The constructor of VirtualView. It only sets the lobby and leaves nickname and controller to {@code null}.
-     * @param lobby the lobby to set.
+     * The constructor of VirtualView. It only sets the {@code ServerConnection} and
+     * leaves {@code nickname} and {@code controller} to {@code null}.
      */
-    public VirtualView(Lobby lobby, ServerConnection serverConnection) {
-        this.lobby = lobby;
+    public VirtualView(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
     }
 
@@ -90,7 +84,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
             onGamesList(new GamesList(null));
             return;
         }
-        lobby.login(message.getNickname(), this);
+        Lobby.getInstance().login(message.getNickname(), this);
     }
 
     @Override
@@ -99,7 +93,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
             onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
             return;
         }
-        lobby.createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
+        Lobby.getInstance().createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
     }
 
     @Override
@@ -108,18 +102,15 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
             onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
             return;
         }
-        lobby.selectGame(message.getId(), this);
+        Lobby.getInstance().selectGame(message.getId(), this);
     }
 
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
-        synchronized (lobby) {
-            if (controller == null) {
-                onItemsSelected(new ItemsSelected(null));
-                return;
-            }
+        if (controller == null) {
+            onItemsSelected(new ItemsSelected(null));
+            return;
         }
-
 
         controller.update(new SelectionFromLivingRoomAction(nickname, message.getPositions()));
     }

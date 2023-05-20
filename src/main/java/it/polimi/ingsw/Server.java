@@ -20,17 +20,15 @@ import java.util.List;
 
 public class Server {
     public static void launch(List<String> args) {
-        Lobby lobby = new Lobby();
-
-        startConnectionRMI(lobby);
-        startConnectionTCP(lobby);
+        startConnectionRMI();
+        startConnectionTCP();
 
         System.out.println("server is ready ...");
     }
 
-    private static void startConnectionRMI(Lobby lobby) {
+    private static void startConnectionRMI() {
         ConnectionEstablishmentRMIInterface stub = null;
-        ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI(lobby);
+        ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI();
         try {
             stub = (ConnectionEstablishmentRMIInterface)
                     UnicastRemoteObject.exportObject(connection, ServerSettings.getRmiPort());
@@ -61,7 +59,7 @@ public class Server {
         }
     }
 
-    private static void startConnectionTCP(Lobby lobby) {
+    private static void startConnectionTCP() {
         (new Thread(() -> {
             ServerSocket server = null;
 
@@ -76,9 +74,9 @@ public class Server {
                 try {
                     Socket socket = server.accept();
                     ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
-                    VirtualView view = new VirtualView(lobby, serverConnectionTCP);
+                    VirtualView view = new VirtualView(serverConnectionTCP);
                     serverConnectionTCP.setInputViewInterface(view);
-                    lobby.addVirtualView(view);
+                    Lobby.getInstance().addVirtualView(view);
 
                     (new Thread(serverConnectionTCP)).start();
                 } catch (IOException e) {

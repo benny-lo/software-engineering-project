@@ -7,17 +7,12 @@ import it.polimi.ingsw.network.client.rmi.ClientConnectionRMIInterface;
 import java.rmi.RemoteException;
 
 public class ConnectionEstablishmentRMI implements ConnectionEstablishmentRMIInterface {
-    private final Lobby lobby;
-    public ConnectionEstablishmentRMI(Lobby lobby) {
-        this.lobby = lobby;
-    }
-
     @Override
     public ServerConnectionRMIInterface init(ClientConnectionRMIInterface clientConnectionRMIInterface) throws RemoteException {
         ServerConnectionRMI serverConnection = new ServerConnectionRMI(clientConnectionRMIInterface);
-        VirtualView view = new VirtualView(lobby, serverConnection);
+        VirtualView view = new VirtualView(serverConnection);
         serverConnection.setInputViewInterface(view);
-        lobby.addVirtualView(view);
+        Lobby.getInstance().addVirtualView(view);
         return serverConnection;
     }
 }
