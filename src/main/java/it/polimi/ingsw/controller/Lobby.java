@@ -1,6 +1,5 @@
-package it.polimi.ingsw.network.server;
+package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.networkMessage.server.AcceptedAction;
 import it.polimi.ingsw.utils.networkMessage.server.AcceptedActionTypes;
@@ -9,6 +8,8 @@ import it.polimi.ingsw.utils.networkMessage.server.GamesList;
 import it.polimi.ingsw.network.VirtualView;
 
 import java.util.*;
+
+// TODO: lobby singleton, send scores in controller and manage disconnection and exceptions correctly.
 
 public class Lobby {
     /**
@@ -46,11 +47,11 @@ public class Lobby {
         availableId++;
     }
 
-    public void addVirtualView(VirtualView view) {
+    public synchronized void addVirtualView(VirtualView view) {
         views.add(view);
     }
 
-    public void login(String nickname, VirtualView view) {
+    public synchronized void login(String nickname, VirtualView view) {
         if(view.isLoggedIn() || view.isInGame()) {
             // the nickname is already chosen.
             view.sendListOfGames(new GamesList(null));
@@ -62,7 +63,7 @@ public class Lobby {
         view.sendListOfGames(new GamesList(getGameInfo()));
     }
 
-    public void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
+    public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
         if (!view.isLoggedIn() || view.isInGame()) {
             view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
@@ -84,7 +85,7 @@ public class Lobby {
     }
 
 
-    public void selectGame(int id, VirtualView view) {
+    public synchronized void selectGame(int id, VirtualView view) {
         if (!view.isLoggedIn() || view.isInGame()) {
             view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
         }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.network.server.Lobby;
+import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.ServerReceiver;
 import it.polimi.ingsw.network.server.ServerSender;
 import it.polimi.ingsw.utils.action.ChatMessageAction;
@@ -85,35 +85,29 @@ public abstract class VirtualView implements ServerSender, ServerReceiver {
 
     @Override
     public void login(Nickname message) {
-        synchronized (lobby) {
-            if (controller != null) {
-                sendListOfGames(new GamesList(null));
-                return;
-            }
-            lobby.login(message.getNickname(), this);
+        if (controller != null) {
+            sendListOfGames(new GamesList(null));
+            return;
         }
+        lobby.login(message.getNickname(), this);
     }
 
     @Override
     public void createGame(GameInitialization message) {
-        synchronized (lobby) {
-            if (controller != null) {
-                sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
-                return;
-            }
-            lobby.createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
+        if (controller != null) {
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
+            return;
         }
+        lobby.createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
     }
 
     @Override
     public void selectGame(GameSelection message) {
-        synchronized (lobby) {
-            if (controller != null) {
-                sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
-                return;
-            }
-            lobby.selectGame(message.getId(), this);
+        if (controller != null) {
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
+            return;
         }
+        lobby.selectGame(message.getId(), this);
     }
 
     @Override
@@ -131,11 +125,9 @@ public abstract class VirtualView implements ServerSender, ServerReceiver {
 
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
-        synchronized (lobby) {
-            if (controller == null) {
-                sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
-                return;
-            }
+        if (controller == null) {
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
+            return;
         }
 
         controller.update(new SelectionColumnAndOrderAction(nickname, message.getColumn(), message.getPermutation()));
@@ -143,11 +135,9 @@ public abstract class VirtualView implements ServerSender, ServerReceiver {
 
     @Override
     public void writeChat(ChatMessage message) {
-        synchronized (lobby) {
-            if (controller == null) {
-                sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
-                return;
-            }
+        if (controller == null) {
+            sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
+            return;
         }
 
         controller.update(new ChatMessageAction(nickname, message.getText()));

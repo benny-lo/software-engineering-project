@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.network.server.Lobby;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;

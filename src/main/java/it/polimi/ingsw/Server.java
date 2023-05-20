@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.VirtualView;
-import it.polimi.ingsw.network.server.Lobby;
+import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMI;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.socket.ServerConnectionTCP;

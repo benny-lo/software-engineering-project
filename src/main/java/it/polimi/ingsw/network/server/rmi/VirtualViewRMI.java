@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.server.rmi;
 
 import it.polimi.ingsw.network.VirtualView;
-import it.polimi.ingsw.network.server.Lobby;
+import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.utils.networkMessage.server.*;
 
 public class VirtualViewRMI extends VirtualView {
