@@ -46,11 +46,11 @@ public class Lobby {
         availableId++;
     }
 
-    public synchronized void addVirtualView(VirtualView view) {
+    public void addVirtualView(VirtualView view) {
         views.add(view);
     }
 
-    public synchronized void login(String nickname, VirtualView view) {
+    public void login(String nickname, VirtualView view) {
         if(view.isLoggedIn() || view.isInGame()) {
             // the nickname is already chosen.
             view.sendListOfGames(new GamesList(null));
@@ -62,7 +62,7 @@ public class Lobby {
         view.sendListOfGames(new GamesList(getGameInfo()));
     }
 
-    public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
+    public void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
         if (!view.isLoggedIn() || view.isInGame()) {
             view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
@@ -84,7 +84,7 @@ public class Lobby {
     }
 
 
-    public synchronized void selectGame(int id, VirtualView view) {
+    public void selectGame(int id, VirtualView view) {
         if (!view.isLoggedIn() || view.isInGame()) {
             view.sendAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
         }
