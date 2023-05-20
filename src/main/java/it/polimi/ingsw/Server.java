@@ -20,7 +20,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public class Server {
-    public void launch(List<String> args) {
+    public static void launch(List<String> args) {
         Lobby lobby = new Lobby();
 
         startConnectionRMI(lobby);
@@ -29,7 +29,7 @@ public class Server {
         System.out.println("server is ready ...");
     }
 
-    private void startConnectionRMI(Lobby lobby) {
+    private static void startConnectionRMI(Lobby lobby) {
         ConnectionEstablishmentRMIInterface stub = null;
         ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI(lobby);
         try {
@@ -62,7 +62,7 @@ public class Server {
         }
     }
 
-    private void startConnectionTCP(Lobby lobby) {
+    private static void startConnectionTCP(Lobby lobby) {
         (new Thread(() -> {
             ServerSocket server = null;
 

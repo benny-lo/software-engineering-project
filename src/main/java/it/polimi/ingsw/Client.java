@@ -6,7 +6,7 @@ import it.polimi.ingsw.view.cli.TextInterface;
 import java.util.List;
 
 public class Client {
-    public void launch(List<String> args) {
+    public static void launch(List<String> args) {
         ClientView view = new TextInterface();
         if (args.get(0).equalsIgnoreCase("rmi")) {
             view.startRMI();
