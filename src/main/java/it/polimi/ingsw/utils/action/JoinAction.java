@@ -6,14 +6,7 @@ import it.polimi.ingsw.view.server.VirtualView;
  * A player joins the game.
  */
 public class JoinAction extends Action {
-    private final VirtualView view;
-
-    public JoinAction(String nickname, VirtualView view) {
-        super(nickname);
-        this.view = view;
-    }
-
-    public VirtualView getView() {
-        return view;
+    public JoinAction(VirtualView view) {
+        super(view);
     }
 }

@@ -116,7 +116,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
             return;
         }
 
-        controller.update(new SelectionFromLivingRoomAction(nickname, message.getPositions()));
+        controller.update(new SelectionFromLivingRoomAction(this, message.getPositions()));
     }
 
     @Override
@@ -126,7 +126,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
             return;
         }
 
-        controller.update(new SelectionColumnAndOrderAction(nickname, message.getColumn(), message.getPermutation()));
+        controller.update(new SelectionColumnAndOrderAction(this, message.getColumn(), message.getPermutation()));
     }
 
     @Override
@@ -136,7 +136,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
             return;
         }
 
-        controller.update(new ChatMessageAction(nickname, message.getText()));
+        controller.update(new ChatMessageAction(this, message.getText()));
     }
 
     @Override

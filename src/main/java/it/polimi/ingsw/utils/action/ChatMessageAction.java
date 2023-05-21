@@ -1,10 +1,12 @@
 package it.polimi.ingsw.utils.action;
 
+import it.polimi.ingsw.view.server.VirtualView;
+
 public class ChatMessageAction extends Action {
     private final String text;
 
-    public ChatMessageAction(String nickname, String text) {
-        super(nickname);
+    public ChatMessageAction(VirtualView view, String text) {
+        super(view);
         this.text = text;
     }
 

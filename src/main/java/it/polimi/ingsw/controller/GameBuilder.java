@@ -16,12 +16,10 @@ public class GameBuilder {
     private CommonGoalCardsListener commonGoalCardsListener;
     private EndingTokenListener endingTokenListener;
     private LivingRoomListener livingRoomListener;
-    private final List<PersonalGoalCardListener> personalGoalCardListeners;
 
     public GameBuilder(int numberCommonGoalCards) {
         this.numberCommonGoalCards = numberCommonGoalCards;
         players = new ArrayList<>();
-        personalGoalCardListeners = new ArrayList<>();
     }
 
     public void addPlayer(String nickname){
@@ -44,10 +42,6 @@ public class GameBuilder {
         this.livingRoomListener = livingRoomListener;
     }
 
-    public void setPersonalGoalCardListener(PersonalGoalCardListener personalGoalCardListener) {
-        personalGoalCardListeners.add(personalGoalCardListener);
-    }
-
     public int getCurrentPlayers() {
         return players.size();
     }
@@ -66,9 +60,6 @@ public class GameBuilder {
         game.setEndingTokenListener(endingTokenListener);
         game.setLivingRoomListener(livingRoomListener);
 
-        for(PersonalGoalCardListener personalGoalCardListener : personalGoalCardListeners) {
-            game.setPersonalGoalCardListener(personalGoalCardListener);
-        }
         return game;
     }
 }

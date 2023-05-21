@@ -144,4 +144,12 @@ public class BoardManager {
             }
         }
     }
+
+    public int getLivingRoomRows() {
+        return livingRoom.getRows();
+    }
+
+    public int getLivingRoomColumns() {
+        return livingRoom.getColumns();
+    }
 }

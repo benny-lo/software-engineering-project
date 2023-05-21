@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.utils.message.server.GameDimensions;
+
 import java.util.List;
 
 /**
@@ -73,4 +75,17 @@ public interface GameInterface {
      * @return It returns the nickname of {@code currentPlayer}.
      */
     String getCurrentPlayer();
+
+    /**
+     * This method returns the id of the {@code PersonalGoalCard} assigned to a {@code Player}.
+     * @param nickname the nickname of the player.
+     * @return the id of the {@code PersonalGoalCard} of the player with nickname {@code nickname}.
+     */
+    int getPersonalID(String nickname);
+
+    /**
+     * This method can be used to get the dimensions of the {@code LivingRoom} and of the {@code Bookshelf}.
+     * @return a {@code GameDimensions} object containing the required data.
+     */
+     GameDimensions getDimensions();
 }

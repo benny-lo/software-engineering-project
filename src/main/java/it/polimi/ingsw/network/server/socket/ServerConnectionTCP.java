@@ -71,11 +71,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         }
     }
 
-    private void sendAsync(Message message) {
-        (new Thread(() -> sendSync(message))).start();
-    }
-
-    private void sendSync(Message message) {
+    private void sendPrivate(Message message) {
         synchronized (out) {
             try {
                 out.writeObject(message);
@@ -89,76 +85,76 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
 
     @Override
     public void send(LivingRoomUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(BookshelfUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(WaitingUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(ScoresUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(EndingTokenUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(CommonGoalCardsUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(PersonalGoalCardUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(ChatUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(StartTurnUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(EndGameUpdate update) {
-        sendAsync(update);
+        sendPrivate(update);
     }
 
     @Override
     public void send(GamesList gamesList) {
-        sendAsync(gamesList);
+        sendPrivate(gamesList);
     }
 
     @Override
     public void send(ItemsSelected itemsSelected) {
-        sendAsync(itemsSelected);
+        sendPrivate(itemsSelected);
     }
 
     @Override
     public void send(ChatAccepted chatAccepted) {
-        sendAsync(chatAccepted);
+        sendPrivate(chatAccepted);
     }
 
     @Override
     public void send(GameDimensions gameDimensions) {
-        sendAsync(gameDimensions);
+        sendPrivate(gameDimensions);
     }
 
     @Override
     public void send(AcceptedInsertion acceptedInsertion) {
-        sendAsync(acceptedInsertion);
+        sendPrivate(acceptedInsertion);
     }
 }
