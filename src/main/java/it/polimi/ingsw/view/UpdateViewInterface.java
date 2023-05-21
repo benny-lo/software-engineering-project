@@ -4,8 +4,10 @@ import it.polimi.ingsw.utils.message.server.*;
 
 public interface UpdateViewInterface {
     void onGamesList(GamesList message);
-    void onAcceptedAction(AcceptedAction message);
+    void onGameDimensions(GameDimensions message);
     void onItemsSelected(ItemsSelected message);
+    void onAcceptedInsertion(AcceptedInsertion message);
+    void onChatAccepted(ChatAccepted message);
     void onLivingRoomUpdate(LivingRoomUpdate update);
     void onBookshelfUpdate(BookshelfUpdate update);
     void onWaitingUpdate(WaitingUpdate update);
@@ -16,5 +18,4 @@ public interface UpdateViewInterface {
     void onChatUpdate(ChatUpdate update);
     void onStartTurnUpdate(StartTurnUpdate update);
     void onEndGameUpdate(EndGameUpdate update);
-    void onCreateOrSelectGame(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions);
 }

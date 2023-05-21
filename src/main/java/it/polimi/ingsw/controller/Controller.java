@@ -114,7 +114,7 @@ public class Controller implements ActionListener {
         gameBuilder.setLivingRoomListener(livingRoomListener);
     }
 
-    private void sendBookshelvesToEverybody() {
+    private void notifyBookshelvesToEverybody() {
         if (!bookshelvesListener.hasChanged()) return;
         Map<String, Map<Position, Item>> map = bookshelvesListener.getBookshelves();
         for(String nick : map.keySet()) {
@@ -125,7 +125,7 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void sendLastChatMessageToEverybody() {
+    private void notifyLastChatMessageToEverybody() {
         Message message = chat.getLastMessage();
         for(VirtualView view : views.values()) {
             view.onChatUpdate(new ChatUpdate(
@@ -135,14 +135,14 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void sendCommonGoalCardsToEverybody() {
+    private void notifyCommonGoalCardsToEverybody() {
         Map<Integer, Integer> map = commonGoalCardsListener.getCards();
         for(VirtualView view : views.values()) {
             view.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(map));
         }
     }
 
-    private void sendEndingTokenToEverybody() {
+    private void notifyEndingTokenToEverybody() {
         if (!endingTokenListener.hasChanged()) return;
         EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
         for(VirtualView view : views.values()) {
@@ -150,7 +150,7 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void sendLivingRoomToEverybody() {
+    private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
        LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoom());
         for(VirtualView view : views.values()) {
@@ -158,7 +158,7 @@ public class Controller implements ActionListener {
         }
     }
 
-    private void sendPersonalGoalCardsToEverybody() {
+    private void notifyPersonalGoalCardsToEverybody() {
         for(PersonalGoalCardListener listener : personalGoalCardListeners) {
             PersonalGoalCardUpdate update = new PersonalGoalCardUpdate(listener.getPersonalGoalCard());
             views.get(listener.getOwner()).onPersonalGoalCardUpdate(update);
@@ -183,11 +183,11 @@ public class Controller implements ActionListener {
         turnPhase = TurnPhase.LIVING_ROOM;
 
         // Sending initial updates about the reps.
-        sendBookshelvesToEverybody();
-        sendCommonGoalCardsToEverybody();
-        sendEndingTokenToEverybody();
-        sendLivingRoomToEverybody();
-        sendPersonalGoalCardsToEverybody();
+        notifyBookshelvesToEverybody();
+        notifyCommonGoalCardsToEverybody();
+        notifyEndingTokenToEverybody();
+        notifyLivingRoomToEverybody();
+        notifyPersonalGoalCardsToEverybody();
 
         // to send scores and maybe items chosen null
     }
@@ -223,9 +223,11 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void update(JoinAction action) {
         if (game != null || ended) {
-            action.getView().onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.LOGIN));
+            action.getView().onGameDimensions(new GameDimensions(-1, -1, -1, -1));
             return;
         }
+
+        // TODO: send dimensions.
 
         playerQueue.add(action.getSenderNickname());
         views.put(action.getSenderNickname(), action.getView());
@@ -262,7 +264,7 @@ public class Controller implements ActionListener {
             view.onItemsSelected(new ItemsSelected(items));
         }
 
-        sendLivingRoomToEverybody();
+        notifyLivingRoomToEverybody();
         turnPhase = TurnPhase.BOOKSHELF;
     }
 
@@ -272,18 +274,20 @@ public class Controller implements ActionListener {
                 !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            views.get(action.getSenderNickname()).onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
+            views.get(action.getSenderNickname()).onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
 
         game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
 
-        sendLivingRoomToEverybody();
-        sendBookshelvesToEverybody();
-        sendPersonalGoalCardsToEverybody();
-        sendCommonGoalCardsToEverybody();
-        sendEndingTokenToEverybody();
+        notifyLivingRoomToEverybody();
+        notifyBookshelvesToEverybody();
+        notifyPersonalGoalCardsToEverybody();
+        notifyCommonGoalCardsToEverybody();
+        notifyEndingTokenToEverybody();
         turnPhase = TurnPhase.LIVING_ROOM;
+
+        views.get(action.getSenderNickname()).onAcceptedInsertion(new AcceptedInsertion(true));
 
         // remember to send scores and maybe items selected as null.
 
@@ -293,13 +297,15 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
-            views.get(action.getSenderNickname()).onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
+            views.get(action.getSenderNickname()).onChatAccepted(new ChatAccepted(false));
             return;
         }
 
         chat.addMessage(action.getSenderNickname(), action.getText());
 
-        sendLastChatMessageToEverybody();
+        views.get(action.getSenderNickname()).onChatAccepted(new ChatAccepted(true));
+
+        notifyLastChatMessageToEverybody();
     }
 
     public int getNumberPlayers() {

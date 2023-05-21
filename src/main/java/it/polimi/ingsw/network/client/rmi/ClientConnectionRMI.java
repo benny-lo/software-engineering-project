@@ -23,7 +23,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void login(Nickname message) {
+    public void send(Nickname message) {
         try {
             serverConnectionRMIInterface.login(message);
         } catch (RemoteException e) {
@@ -33,7 +33,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void createGame(GameInitialization message) {
+    public void send(GameInitialization message) {
         try {
             serverConnectionRMIInterface.createGame(message);
         } catch (RemoteException e) {
@@ -43,7 +43,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void selectGame(GameSelection message) {
+    public void send(GameSelection message) {
         try {
             serverConnectionRMIInterface.selectGame(message);
         } catch (RemoteException e) {
@@ -53,7 +53,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void selectFromLivingRoom(LivingRoomSelection message) {
+    public void send(LivingRoomSelection message) {
         try {
             serverConnectionRMIInterface.selectFromLivingRoom(message);
         } catch (RemoteException e) {
@@ -63,7 +63,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void insertInBookshelf(BookshelfInsertion message) {
+    public void send(BookshelfInsertion message) {
         try {
             serverConnectionRMIInterface.insertInBookshelf(message);
         } catch (RemoteException e) {
@@ -73,7 +73,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void writeChat(ChatMessage message) {
+    public void send(ChatMessage message) {
         try {
             serverConnectionRMIInterface.writeChat(message);
         } catch (RemoteException e) {
@@ -142,13 +142,17 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void sendAcceptedAction(AcceptedAction accepted) throws RemoteException {
-        updateReceiver.onAcceptedAction(accepted);
+    public void sendGameDimensions(GameDimensions gameDimensions) throws RemoteException {
+        updateReceiver.onGameDimensions(gameDimensions);
     }
 
     @Override
-    public void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) throws RemoteException {
-        updateReceiver.onCreateOrSelectGame(livingRoomAndBookshelvesDimensions);
+    public void sendAcceptedInsertion(AcceptedInsertion acceptedInsertion) throws RemoteException {
+        updateReceiver.onAcceptedInsertion(acceptedInsertion);
     }
 
+    @Override
+    public void sendChatAccepted(ChatAccepted chatAccepted) throws RemoteException {
+        updateReceiver.onChatAccepted(chatAccepted);
+    }
 }

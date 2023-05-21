@@ -111,8 +111,4 @@ public class MockVirtualView extends VirtualView {
     @Override
     public void onItemsSelected(ItemsSelected itemsSelected) {
     }
-
-    @Override
-    public void onAcceptedAction(AcceptedAction acceptedAction) {
-    }
 }

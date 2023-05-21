@@ -52,7 +52,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         receiver.writeChat(message);
     }
 
-    public void sendLivingRoomUpdate(LivingRoomUpdate update) {
+    @Override
+    public void send(LivingRoomUpdate update) {
         try {
             client.sendLivingRoomUpdate(update);
         } catch (RemoteException e) {
@@ -60,8 +61,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-
-    public void sendBookshelfUpdate(BookshelfUpdate update) {
+    @Override
+    public void send(BookshelfUpdate update) {
         try {
             client.sendBookshelfUpdate(update);
         } catch (RemoteException e) {
@@ -69,7 +70,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendWaitingUpdate(WaitingUpdate update) {
+    @Override
+    public void send(WaitingUpdate update) {
         try {
             client.sendWaitingUpdate(update);
         } catch (RemoteException e) {
@@ -77,7 +79,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendScoresUpdate(ScoresUpdate update) {
+    @Override
+    public void send(ScoresUpdate update) {
         try {
             client.sendScoresUpdate(update);
         } catch (RemoteException e) {
@@ -85,7 +88,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendEndingTokenUpdate(EndingTokenUpdate update) {
+    @Override
+    public void send(EndingTokenUpdate update) {
         try {
             client.sendEndingTokenUpdate(update);
         } catch (RemoteException e) {
@@ -93,7 +97,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
+    @Override
+    public void send(CommonGoalCardsUpdate update) {
         try {
             client.sendCommonGoalCardUpdate(update);
         } catch (RemoteException e) {
@@ -101,7 +106,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
+    @Override
+    public void send(PersonalGoalCardUpdate update) {
         try {
             client.sendPersonalGoalCardUpdate(update);
         } catch (RemoteException e) {
@@ -109,7 +115,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendChatUpdate(ChatUpdate update) {
+    @Override
+    public void send(ChatUpdate update) {
         try {
             client.sendChatUpdate(update);
         } catch (RemoteException e) {
@@ -117,7 +124,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendStartTurnUpdate(StartTurnUpdate update) {
+    @Override
+    public void send(StartTurnUpdate update) {
         try {
             client.sendStartTurnUpdate(update);
         } catch (RemoteException e) {
@@ -125,7 +133,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendEndGameUpdate(EndGameUpdate update) {
+    @Override
+    public void send(EndGameUpdate update) {
         try {
             client.sendEndGameUpdate(update);
         } catch (RemoteException e) {
@@ -133,7 +142,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendGamesList(GamesList gamesList) {
+    @Override
+    public void send(GamesList gamesList) {
         try {
             client.sendListOfGames(gamesList);
         } catch (RemoteException e) {
@@ -141,7 +151,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendItemsSelected(ItemsSelected itemsSelected) {
+    @Override
+    public void send(ItemsSelected itemsSelected) {
         try {
             client.sendItemsSelected(itemsSelected);
         } catch (RemoteException e) {
@@ -149,20 +160,30 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         }
     }
 
-    public void sendAcceptedAction(AcceptedAction acceptedAction) {
+    @Override
+    public void send(GameDimensions gameDimensions) {
         try {
-            client.sendAcceptedAction(acceptedAction);
+            client.sendGameDimensions(gameDimensions);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) {
+    public void send(AcceptedInsertion acceptedInsertion) {
         try {
-            client.sendLivingRoomAndBookshelvesDimensions(livingRoomAndBookshelvesDimensions);
+            client.sendAcceptedInsertion(acceptedInsertion);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void send(ChatAccepted chatAccepted) {
+        try {
+            client.sendChatAccepted(chatAccepted);
+        } catch (RemoteException e) {
+            throw  new RuntimeException(e);
         }
     }
 }

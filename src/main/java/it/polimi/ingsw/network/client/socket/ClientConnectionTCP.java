@@ -24,32 +24,32 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
     }
 
     @Override
-    public void login(Nickname message) {
+    public void send(Nickname message) {
         sendAsync(message);
     }
 
     @Override
-    public void createGame(GameInitialization message) {
+    public void send(GameInitialization message) {
         sendAsync(message);
     }
 
     @Override
-    public void selectGame(GameSelection message) {
+    public void send(GameSelection message) {
         sendAsync(message);
     }
 
     @Override
-    public void selectFromLivingRoom(LivingRoomSelection message) {
+    public void send(LivingRoomSelection message) {
         sendAsync(message);
     }
 
     @Override
-    public void insertInBookshelf(BookshelfInsertion message) {
+    public void send(BookshelfInsertion message) {
         sendAsync(message);
     }
 
     @Override
-    public void writeChat(ChatMessage message) {
+    public void send(ChatMessage message) {
         sendAsync(message);
     }
 
@@ -78,8 +78,12 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             receiver.onStartTurnUpdate((StartTurnUpdate) object);
         } else if (object instanceof EndGameUpdate) {
             receiver.onEndGameUpdate((EndGameUpdate) object);
-        } else if (object instanceof AcceptedAction) {
-            receiver.onAcceptedAction((AcceptedAction) object);
+        } else if (object instanceof GameDimensions) {
+            receiver.onGameDimensions((GameDimensions) object);
+        } else if (object instanceof AcceptedInsertion) {
+            receiver.onAcceptedInsertion((AcceptedInsertion) object);
+        } else if (object instanceof ChatAccepted) {
+            receiver.onChatAccepted((ChatAccepted) object);
         }
     }
 

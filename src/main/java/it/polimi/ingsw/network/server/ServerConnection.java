@@ -5,18 +5,19 @@ import it.polimi.ingsw.view.InputViewInterface;
 
 public interface ServerConnection {
     void setInputViewInterface(InputViewInterface inputViewInterface);
-    void sendLivingRoomUpdate(LivingRoomUpdate update);
-    void sendBookshelfUpdate(BookshelfUpdate update);
-    void sendWaitingUpdate(WaitingUpdate update);
-    void sendScoresUpdate(ScoresUpdate update);
-    void sendEndingTokenUpdate(EndingTokenUpdate update);
-    void sendCommonGoalCardsUpdate(CommonGoalCardsUpdate update);
-    void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update);
-    void sendChatUpdate(ChatUpdate update);
-    void sendStartTurnUpdate(StartTurnUpdate update);
-    void sendEndGameUpdate(EndGameUpdate update);
-    void sendGamesList(GamesList gamesList);
-    void sendItemsSelected(ItemsSelected itemsSelected);
-    void sendAcceptedAction(AcceptedAction acceptedAction);
-    void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions);
+    void send(LivingRoomUpdate update);
+    void send(BookshelfUpdate update);
+    void send(WaitingUpdate update);
+    void send(ScoresUpdate update);
+    void send(EndingTokenUpdate update);
+    void send(CommonGoalCardsUpdate update);
+    void send(PersonalGoalCardUpdate update);
+    void send(ChatUpdate update);
+    void send(StartTurnUpdate update);
+    void send(EndGameUpdate update);
+    void send(GamesList gamesList);
+    void send(ItemsSelected itemsSelected);
+    void send(GameDimensions gameDimensions);
+    void send(AcceptedInsertion acceptedInsertion);
+    void send(ChatAccepted chatAccepted);
 }

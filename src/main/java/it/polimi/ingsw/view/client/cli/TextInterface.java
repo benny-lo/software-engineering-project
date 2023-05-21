@@ -40,7 +40,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 return;
             }
 
-            onAcceptedAction(new AcceptedAction(true, AcceptedActionTypes.LOGIN));
+            // onAcceptedAction(new AcceptedAction(true, AcceptedActionTypes.LOGIN));
 
             clearScreen();
 
@@ -55,17 +55,14 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
-    public void onAcceptedAction(AcceptedAction message) {
-        synchronized (System.out) {
-            if (!message.getAccepted()) {
-                printDeniedAction();
-                return;
-            }
-            switch (message.getType()) {
-                case CREATE_GAME, SELECT_GAME, SELECT_LIVINGROOM, INSERT_BOOKSHELF, WRITE_CHAT -> status = ClientStatus.GAME;
-                case LOGIN -> status = ClientStatus.CREATE_OR_SELECT_GAME;
-            }
-        }
+    @Override
+    public void onAcceptedInsertion(AcceptedInsertion message) {
+
+    }
+
+    @Override
+    public void onChatAccepted(ChatAccepted message) {
+
     }
 
     @Override
@@ -209,7 +206,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     @Override
-    public void onCreateOrSelectGame(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) {
+    public void onGameDimensions(GameDimensions livingRoomAndBookshelvesDimensions) {
         livingRoom = new Item[livingRoomAndBookshelvesDimensions.getLivingRoomRows()][livingRoomAndBookshelvesDimensions.getLivingRoomColumns()];
     }
 
@@ -227,7 +224,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
 
         this.nickname = nickname;
-        clientConnection.login(new Nickname(nickname));
+        clientConnection.send(new Nickname(nickname));
     }
 
     @Override
@@ -237,7 +234,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             printWrongStatus();
             return;
         }
-        clientConnection.createGame(message);
+        clientConnection.send(message);
     }
 
     @Override
@@ -246,7 +243,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             printWrongStatus();
             return;
         }
-        clientConnection.selectGame(message);
+        clientConnection.send(message);
     }
 
     @Override
@@ -255,7 +252,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             printWrongStatus();
             return;
         }
-        clientConnection.selectFromLivingRoom(message);
+        clientConnection.send(message);
     }
 
     @Override
@@ -264,7 +261,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             printWrongStatus();
             return;
         }
-        clientConnection.insertInBookshelf(message);
+        clientConnection.send(message);
     }
 
     @Override
@@ -273,7 +270,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             printWrongStatus();
             return;
         }
-        clientConnection.writeChat(message);
+        clientConnection.send(message);
     }
 
     @Override

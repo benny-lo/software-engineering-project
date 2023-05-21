@@ -72,10 +72,10 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     private void sendAsync(Message message) {
-        (new Thread(() -> send(message))).start();
+        (new Thread(() -> sendSync(message))).start();
     }
 
-    private void send(Message message) {
+    private void sendSync(Message message) {
         synchronized (out) {
             try {
                 out.writeObject(message);
@@ -88,72 +88,77 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     @Override
-    public void sendLivingRoomUpdate(LivingRoomUpdate update) {
+    public void send(LivingRoomUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendBookshelfUpdate(BookshelfUpdate update) {
+    public void send(BookshelfUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendWaitingUpdate(WaitingUpdate update) {
+    public void send(WaitingUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendScoresUpdate(ScoresUpdate update) {
+    public void send(ScoresUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendEndingTokenUpdate(EndingTokenUpdate update) {
+    public void send(EndingTokenUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
+    public void send(CommonGoalCardsUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
+    public void send(PersonalGoalCardUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendChatUpdate(ChatUpdate update) {
+    public void send(ChatUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendStartTurnUpdate(StartTurnUpdate update) {
+    public void send(StartTurnUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendEndGameUpdate(EndGameUpdate update) {
+    public void send(EndGameUpdate update) {
         sendAsync(update);
     }
 
     @Override
-    public void sendGamesList(GamesList gamesList) {
+    public void send(GamesList gamesList) {
         sendAsync(gamesList);
     }
 
     @Override
-    public void sendItemsSelected(ItemsSelected itemsSelected) {
+    public void send(ItemsSelected itemsSelected) {
         sendAsync(itemsSelected);
     }
 
     @Override
-    public void sendAcceptedAction(AcceptedAction acceptedAction) {
-        sendAsync(acceptedAction);
+    public void send(ChatAccepted chatAccepted) {
+        sendAsync(chatAccepted);
     }
 
     @Override
-    public void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) {
-        sendAsync(livingRoomAndBookshelvesDimensions);
+    public void send(GameDimensions gameDimensions) {
+        sendAsync(gameDimensions);
+    }
+
+    @Override
+    public void send(AcceptedInsertion acceptedInsertion) {
+        sendAsync(acceptedInsertion);
     }
 }

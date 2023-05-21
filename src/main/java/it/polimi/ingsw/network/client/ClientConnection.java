@@ -3,10 +3,10 @@ package it.polimi.ingsw.network.client;
 import it.polimi.ingsw.utils.message.client.*;
 
 public interface ClientConnection {
-    void login(Nickname message);
-    void createGame(GameInitialization message);
-    void selectGame(GameSelection message);
-    void selectFromLivingRoom(LivingRoomSelection message);
-    void insertInBookshelf(BookshelfInsertion message);
-    void writeChat(ChatMessage message);
+    void send(Nickname message);
+    void send(GameInitialization message);
+    void send(GameSelection message);
+    void send(LivingRoomSelection message);
+    void send(BookshelfInsertion message);
+    void send(ChatMessage message);
 }

@@ -94,7 +94,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     @Override
     public void createGame(GameInitialization message) {
         if (controller != null) {
-            onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.CREATE_GAME));
+            onGamesList(new GamesList(null));
             return;
         }
         Lobby.getInstance().createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
@@ -103,7 +103,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     @Override
     public void selectGame(GameSelection message) {
         if (controller != null) {
-            onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.SELECT_GAME));
+            onGameDimensions(new GameDimensions(-1, -1, -1, -1));
             return;
         }
         Lobby.getInstance().selectGame(message.getId(), this);
@@ -122,7 +122,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
         if (controller == null) {
-            onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.INSERT_BOOKSHELF));
+            onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
 
@@ -132,7 +132,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     @Override
     public void writeChat(ChatMessage message) {
         if (controller == null) {
-            onAcceptedAction(new AcceptedAction(false, AcceptedActionTypes.WRITE_CHAT));
+            onChatAccepted(new ChatAccepted(false));
             return;
         }
 
@@ -141,71 +141,76 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
 
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
-        serverConnection.sendLivingRoomUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onBookshelfUpdate(BookshelfUpdate update) {
-        serverConnection.sendBookshelfUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onWaitingUpdate(WaitingUpdate update) {
-        serverConnection.sendWaitingUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
-        serverConnection.sendScoresUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
-        serverConnection.sendEndingTokenUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
-        serverConnection.sendCommonGoalCardsUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
-        serverConnection.sendPersonalGoalCardUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-        serverConnection.sendChatUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onStartTurnUpdate(StartTurnUpdate update) {
-        serverConnection.sendStartTurnUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
-        serverConnection.sendEndGameUpdate(update);
+        serverConnection.send(update);
     }
 
     @Override
     public void onGamesList(GamesList gamesList) {
-        serverConnection.sendGamesList(gamesList);
+        serverConnection.send(gamesList);
     }
 
     @Override
     public void onItemsSelected(ItemsSelected itemsSelected) {
-        serverConnection.sendItemsSelected(itemsSelected);
+        serverConnection.send(itemsSelected);
     }
 
     @Override
-    public void onAcceptedAction(AcceptedAction acceptedAction) {
-        serverConnection.sendAcceptedAction(acceptedAction);
+    public void onAcceptedInsertion(AcceptedInsertion message) {
+        serverConnection.send(message);
     }
 
     @Override
-    public void onCreateOrSelectGame(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions){
-        serverConnection.sendLivingRoomAndBookshelvesDimensions(livingRoomAndBookshelvesDimensions);
+    public void onGameDimensions(GameDimensions message){
+        serverConnection.send(message);
+    }
+
+    @Override
+    public void onChatAccepted(ChatAccepted message) {
+        serverConnection.send(message);
     }
 }
