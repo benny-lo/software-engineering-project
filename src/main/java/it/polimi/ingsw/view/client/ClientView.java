@@ -32,6 +32,8 @@ public abstract class ClientView implements UpdateViewInterface {
     protected int numberCommonGoalCards;
     protected Item[][] livingRoom;
     protected Map<String, Item[][]> bookshelves;
+    protected int bookshelvesRows;
+    protected int bookshelvesColumns;
     protected String endingToken;
     protected int personalGoalCard;
     protected Map<Integer, Integer> commonGoalCards;
