@@ -22,7 +22,7 @@ public class CommonGoalCardPattern3Test {
     @Test
     public void testOnEmptyBookshelf() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
-        Bookshelf bookshelf = new Bookshelf(6, 6);
+        Bookshelf bookshelf = new Bookshelf();
 
         assertFalse(pattern.check(bookshelf));
     }
@@ -33,7 +33,7 @@ public class CommonGoalCardPattern3Test {
     @Test
     public void testOnFullBookshelfAllSame() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
-        Bookshelf bookshelf = new Bookshelf(4, 4);
+        Bookshelf bookshelf = new Bookshelf();
 
         List<Item> items = new ArrayList<>();
         for(int i = 0; i < 4; i++) {
@@ -52,7 +52,7 @@ public class CommonGoalCardPattern3Test {
     @Test
     public void testOnFullBookshelfDistinctColumns() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
-        Bookshelf bookshelf = new Bookshelf(4, 4);
+        Bookshelf bookshelf = new Bookshelf();
 
         List<Item> items = new ArrayList<>();
         for(Item item : Stream.of(Item.values()).limit(4).toList()) {
@@ -72,7 +72,7 @@ public class CommonGoalCardPattern3Test {
     @Test
     public void testOnFullBookshelfButOnePlace() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
-        Bookshelf bookshelf = new Bookshelf(4, 4);
+        Bookshelf bookshelf = new Bookshelf();
 
         for(int i = 0; i < 3; i++) bookshelf.insert(Stream.of(Item.values()).limit(4).toList(), i);
         bookshelf.insert(Stream.of(Item.values()).limit(3).toList(), 3);
@@ -86,7 +86,7 @@ public class CommonGoalCardPattern3Test {
     @Test
     public void testOnBookshelfTwoGroupsColumns() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
-        Bookshelf  bookshelf = new Bookshelf(4, 4);
+        Bookshelf  bookshelf = new Bookshelf();
         List<Item> items1 = new ArrayList<>();
         List<Item> items2 = new ArrayList<>();
 
@@ -107,7 +107,7 @@ public class CommonGoalCardPattern3Test {
     @Test
     public void testOnBookshelfTShapedCatsAndTwoGroupsBooks() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,4, (s) -> s.size() == 4);
-        Bookshelf bookshelf = new Bookshelf(5, 4);
+        Bookshelf bookshelf = new Bookshelf();
 
         List<Item> items1 = new ArrayList<>();
         List<Item> items2 = new ArrayList<>();

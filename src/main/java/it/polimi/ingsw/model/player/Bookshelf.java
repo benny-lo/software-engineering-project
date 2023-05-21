@@ -1,10 +1,17 @@
 package it.polimi.ingsw.model.player;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.Item;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayDeque;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 
 /**
@@ -29,7 +36,42 @@ public class Bookshelf{
     /**
      * Construct of the class. It initializes {@code this} with all positions free ({@code null}).
      */
-    public Bookshelf(int rows, int columns) {
+    public Bookshelf() {
+        String filename;
+        MockBookshelf b;
+        Gson gson = new GsonBuilder().serializeNulls()
+                .setPrettyPrinting()
+                .disableJdkUnsafe()
+                .create();
+
+        filename = "/configuration/bookshelf/dimensions.json";
+
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
+            b = gson.fromJson(reader,new TypeToken<MockBookshelf>(){}.getType());
+        } catch(IOException e){
+            b = null;
+            System.err.println("""
+                    Configuration file for bookshelf not found.
+                    The configuration file should be in configuration/bookshelf""");
+        }
+
+        this.rows = b.rows;
+        this.columns = b.columns;
+
+        this.bookshelf = new Item[rows][columns];
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                bookshelf[i][j] = null;
+            }
+        }
+    }
+
+    /**
+     * Constructor of this class, exclusively for testing.
+     * @param rows number of rows.
+     * @param columns number of columns.
+     */
+    public Bookshelf(int rows, int columns){
         this.rows = rows;
         this.columns = columns;
 
@@ -208,5 +250,11 @@ public class Bookshelf{
      */
     public int getColumns() {
         return columns;
+    }
+
+    private static class MockBookshelf {
+        private int rows;
+        private int columns;
+        public MockBookshelf(){}
     }
 }

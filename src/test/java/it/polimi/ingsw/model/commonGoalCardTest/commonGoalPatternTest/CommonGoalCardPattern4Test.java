@@ -18,8 +18,8 @@ public class CommonGoalCardPattern4Test {
     public void exactlySix()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
-        Bookshelf bookshelf = new Bookshelf(6,6);
-        for(int j=0;j<2;j++)
+        Bookshelf bookshelf = new Bookshelf(2,6);
+        for(int j=0;j<bookshelf.getRows();j++)
         {
             for (int i = 0; i < bookshelf.getColumns(); i++) {
                 bookshelf.insert(Item.CAT, i);
@@ -35,7 +35,7 @@ public class CommonGoalCardPattern4Test {
     public void emptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
-        Bookshelf bookshelf = new Bookshelf(6,6);
+        Bookshelf bookshelf = new Bookshelf();
 
         assertFalse(pattern.check(bookshelf));
     }
@@ -47,7 +47,7 @@ public class CommonGoalCardPattern4Test {
     public void lessThanSix()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
-        Bookshelf bookshelf = new Bookshelf(6,6);
+        Bookshelf bookshelf = new Bookshelf();
         bookshelf.insert(Item.CAT,0);
         bookshelf.insert(Item.CAT,1);
 
@@ -61,7 +61,7 @@ public class CommonGoalCardPattern4Test {
     public void commonItems()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
-        Bookshelf bookshelf = new Bookshelf(6,6);
+        Bookshelf bookshelf = new Bookshelf();
         for (int i = 0; i < bookshelf.getColumns(); i++)
         {
             bookshelf.insert(Item.CAT, i);
@@ -80,7 +80,7 @@ public class CommonGoalCardPattern4Test {
     public void twelveNotAdjacent()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
-        Bookshelf bookshelf = new Bookshelf(6,6);
+        Bookshelf bookshelf = new Bookshelf();
         for(int j=0;j<2;j++)
         {
             for(int i=0;i<bookshelf.getColumns()/2;i++)

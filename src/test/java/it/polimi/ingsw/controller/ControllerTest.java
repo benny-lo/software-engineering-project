@@ -36,16 +36,12 @@ public class ControllerTest {
     public void testSuccessfulJoinAction(){
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         assertTrue(controller.getAllPlayers().contains(view0.getNickname()));
@@ -59,22 +55,16 @@ public class ControllerTest {
     public void testUnsuccessfulJoinAction1() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
-        // ClientTesting client2 = new ClientTesting();
-        // ServerSender Sender2 = new SenderClientTesting(client2);
         VirtualView view2 = new MockVirtualView(lobby);
-        // view2.setToClient(Sender2);
+        view2.setNickname("tick");
         controller.update(new JoinAction(view2.getNickname(), view2));
 
         assertTrue(controller.isStarted());
@@ -82,8 +72,6 @@ public class ControllerTest {
         for(String player : controller.getAllPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
-
-        // assertTrue(view2.isError());
     }
 
     /**
@@ -93,32 +81,24 @@ public class ControllerTest {
     public void testUnsuccessfulJoinAction2() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setEnded();
 
-        // ClientTesting client2 = new ClientTesting();
-        // ServerSender Sender2 = new SenderClientTesting(client2);
         VirtualView view2 = new MockVirtualView(lobby);
-        // view2.setToClient(Sender2);
+        view2.setNickname("tick");
         controller.update(new JoinAction(view2.getNickname(), view2));
 
 
         for(String player : controller.getAllPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
-
-        // assertTrue(view2.isError());
     }
 
     /**
@@ -128,16 +108,12 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction1() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -145,7 +121,7 @@ public class ControllerTest {
         controller.setEnded();
         controller.update(new SelectionFromLivingRoomAction(view0.getNickname(), new LinkedList<>()));
 
-        // assertTrue(view0.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
 
     /**
@@ -155,23 +131,19 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction2() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.update(new SelectionFromLivingRoomAction(view1.getNickname(), new LinkedList<>()));
 
-        // assertTrue(view1.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
 
     /**
@@ -181,23 +153,19 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction3() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.update(new SelectionFromLivingRoomAction(view0.getNickname(), new LinkedList<>()));
 
-        // assertTrue(view0.isError());
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
 
     /**
@@ -207,23 +175,19 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionFromLivingRoomAction4() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.update(new SelectionFromLivingRoomAction(view0.getNickname(), new LinkedList<>(List.of(new Position(0,0)))));
 
-        // assertTrue(view0.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
 
     /**
@@ -233,23 +197,19 @@ public class ControllerTest {
     public void testSuccessfulSelectionFromLivingRoomAction() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.update(new SelectionFromLivingRoomAction(view0.getNickname(), new LinkedList<>(List.of(new Position(1,3)))));
 
-        // assertFalse(view0.isError());
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
 
     /**
@@ -259,16 +219,12 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder1() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -276,7 +232,7 @@ public class ControllerTest {
         controller.setEnded();
         controller.update(new SelectionColumnAndOrderAction(view0.getNickname(), 0, new ArrayList<>()));
 
-        // assertTrue(view0.isError());
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
 
     /**
@@ -286,23 +242,19 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder2() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.update(new SelectionColumnAndOrderAction(view1.getNickname(),0, new LinkedList<>()));
 
-        // assertTrue(view1.isError());
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
 
     /**
@@ -312,23 +264,19 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder3() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("rick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.update(new SelectionColumnAndOrderAction(view0.getNickname(),0, new LinkedList<>()));
 
-        // assertTrue(view0.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
 
     /**
@@ -338,16 +286,12 @@ public class ControllerTest {
     public void testUnsuccessfulSelectionColumnAndOrder4() {
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        // view0.setToClient(Sender0);
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -357,7 +301,7 @@ public class ControllerTest {
         controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.update(new SelectionColumnAndOrderAction(view0.getNickname(), 0, new ArrayList<>(List.of(0, 1))));
 
-        // assertFalse(view0.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.LIVING_ROOM);
@@ -366,7 +310,7 @@ public class ControllerTest {
         controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.update(new SelectionColumnAndOrderAction(view0.getNickname(), 0, new ArrayList<>(List.of(1, 0))));
 
-        // assertFalse(view0.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.LIVING_ROOM);
@@ -375,7 +319,7 @@ public class ControllerTest {
         controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.update(new SelectionColumnAndOrderAction(view0.getNickname(), 0, new ArrayList<>(List.of(1, 0))));
 
-        // assertFalse(view0.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setTurnPhase(TurnPhase.LIVING_ROOM);
@@ -384,7 +328,7 @@ public class ControllerTest {
         controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.update(new SelectionColumnAndOrderAction(view0.getNickname(), 0, new ArrayList<>(List.of(0))));
 
-        // assertTrue(view0.isError());
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
 
     /**
@@ -394,16 +338,12 @@ public class ControllerTest {
     public void testSuccessfulSelectionColumnAndOrder(){
         Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        // ClientTesting client0 = new ClientTesting();
-        // ServerSender Sender0 = new SenderClientTesting(client0);
         VirtualView view0 = new MockVirtualView(lobby);
-        //view0.setToClient(Sender0);
+        view0.setNickname("rick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        // ClientTesting client1 = new ClientTesting();
-        // ServerSender Sender1 = new SenderClientTesting(client1);
         VirtualView view1 = new MockVirtualView(lobby);
-        // view1.setToClient(Sender1);
+        view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setCurrentPlayer(view0.getNickname());
@@ -413,7 +353,7 @@ public class ControllerTest {
         controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.update(new SelectionColumnAndOrderAction(view0.getNickname(), 0, new ArrayList<>(List.of(0, 1))));
 
-        // assertFalse(view0.isError());
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
 }
 

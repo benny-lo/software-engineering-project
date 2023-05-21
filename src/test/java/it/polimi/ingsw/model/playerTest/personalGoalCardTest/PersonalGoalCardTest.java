@@ -42,7 +42,7 @@ public class PersonalGoalCardTest {
     public void testGetPersonalScoreWithoutMatches(){
         Item item = Item.CAT;
         Item item1 = Item.BOOK;
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
         Map<Position, Item> mask = new HashMap<>();
 
         bookshelf.insert(item, 0);
@@ -64,7 +64,7 @@ public class PersonalGoalCardTest {
     public void testGetPersonalScore2Matches(){
         Item item = Item.CAT;
         Item item1 = Item.BOOK;
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
         Map<Position, Item> mask = new HashMap<>();
 
         bookshelf.insert(item, 0);
@@ -86,7 +86,7 @@ public class PersonalGoalCardTest {
     public void testGetPersonalScore7Matches(){
         Item item = Item.CAT;
         Item item1 = Item.BOOK;
-        Bookshelf bookshelf = new Bookshelf(3,3);
+        Bookshelf bookshelf = new Bookshelf();
         Map<Position, Item> mask = new HashMap<>();
 
         bookshelf.insert(List.of(item, item1, item1), 0);

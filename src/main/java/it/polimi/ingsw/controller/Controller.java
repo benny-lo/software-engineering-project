@@ -196,7 +196,6 @@ public class Controller implements ActionListener {
         String justPlayed = playerQueue.poll();
         playerQueue.add(justPlayed);
         game.setCurrentPlayer(playerQueue.peek());
-        turnPhase = TurnPhase.LIVING_ROOM;
 
         assert firstPlayer != null;
         if (firstPlayer.equals(game.getCurrentPlayer()) && game.IsEndingTokenAssigned()) {
@@ -284,6 +283,7 @@ public class Controller implements ActionListener {
         sendPersonalGoalCardsToEverybody();
         sendCommonGoalCardsToEverybody();
         sendEndingTokenToEverybody();
+        turnPhase = TurnPhase.LIVING_ROOM;
 
         // remember to send scores and maybe items selected as null.
 
@@ -345,5 +345,9 @@ public class Controller implements ActionListener {
 
     public GameInterface getGame(){
         return game;
+    }
+
+    public TurnPhase getTurnPhase(){
+        return turnPhase;
     }
 }

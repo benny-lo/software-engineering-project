@@ -31,7 +31,7 @@ public class CommonGoalCardPattern10Test {
     @Test
     public void correct6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 bookshelf.insert(Item.CAT,i);
@@ -45,7 +45,7 @@ public class CommonGoalCardPattern10Test {
     @Test
     public void incorrect2x2(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf=new Bookshelf(2,2);
+        Bookshelf bookshelf = new Bookshelf(2, 2);
         for(int i=0; i< bookshelf.getColumns(); i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 bookshelf.insert(Item.CAT,i);
@@ -76,7 +76,7 @@ public class CommonGoalCardPattern10Test {
     @Test
     public void incorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 if(i%2==0) bookshelf.insert(Item.CAT,i);
@@ -89,9 +89,9 @@ public class CommonGoalCardPattern10Test {
      * test if given a 6x5 Bookshelf with even columns full of CATs and odd columns full of BOOKs, but an X in the upper corner
      */
     @Test
-    public void uppercornercorrect6x5(){
+    public void upperCornerCorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 if(i%2==0) bookshelf.insert(Item.CAT,i);
@@ -108,7 +108,7 @@ public class CommonGoalCardPattern10Test {
     public void emptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
 
         assertFalse(pattern.check(bookshelf));
     }

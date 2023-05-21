@@ -21,7 +21,7 @@ public class CommonGoalCardPatternCountGroupsTest {
     @Test
     public void testHorizontalZBookshelf() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,2, (s) -> s.size() == 2);
-        Bookshelf bookshelf = new Bookshelf(2, 3);
+        Bookshelf bookshelf = new Bookshelf();
 
         bookshelf.insert(Item.CAT, 0); bookshelf.insert(Item.BOOK, 0);
         bookshelf.insert(Item.CAT, 1); bookshelf.insert(Item.CAT, 1);
@@ -36,7 +36,7 @@ public class CommonGoalCardPatternCountGroupsTest {
     @Test
     public void testVerticalZBookshelf() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,2, (s) -> s.size() == 2);
-        Bookshelf bookshelf = new Bookshelf(3, 2);
+        Bookshelf bookshelf = new Bookshelf();
 
         bookshelf.insert(Item.BOOK, 0); bookshelf.insert(Item.CAT, 0); bookshelf.insert(Item.CAT, 0);
         bookshelf.insert(Item.CAT, 1); bookshelf.insert(Item.CAT, 1); bookshelf.insert(Item.BOOK, 1);
@@ -49,7 +49,7 @@ public class CommonGoalCardPatternCountGroupsTest {
      */
     @Test
     public void testStarLikePattern() {
-        Bookshelf bookshelf = new Bookshelf(4, 4);
+        Bookshelf bookshelf = new Bookshelf();
 
         List<Item> cats = new ArrayList<>();
         for(int i = 0; i < 3; i++) cats.add(Item.CAT);
@@ -68,7 +68,7 @@ public class CommonGoalCardPatternCountGroupsTest {
      */
     @Test
     public void testCombPattern() {
-        Bookshelf bookshelf = new Bookshelf(8, 2);
+        Bookshelf bookshelf = new Bookshelf(8,2);
         List<Item> cats = new ArrayList<>(), alternate = new ArrayList<>();
         for(int i = 0; i < 8; i++) cats.add(Item.CAT);
         for(int i = 0; i < 4; i++) {
@@ -88,7 +88,7 @@ public class CommonGoalCardPatternCountGroupsTest {
      */
     @Test
     public void testAnotherStar() {
-        Bookshelf bookshelf = new Bookshelf(3, 3);
+        Bookshelf bookshelf = new Bookshelf();
         bookshelf.insert(Item.BOOK, 0); bookshelf.insert(Item.CAT, 0);
         bookshelf.insert(Item.CAT, 1); bookshelf.insert(Item.CAT, 1); bookshelf.insert(Item.CAT, 1);
         bookshelf.insert(Item.BOOK, 2); bookshelf.insert(Item.CAT, 2);

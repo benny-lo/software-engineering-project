@@ -32,7 +32,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnEmptyBookshelf() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(6, 5);
+        Bookshelf bookshelf = new Bookshelf();
 
         assertFalse(pattern.check(bookshelf));
     }
@@ -43,7 +43,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnOneFilledRowBookshelf() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(2, 3);
+        Bookshelf bookshelf = new Bookshelf();
 
         for(int i = 0; i < bookshelf.getColumns(); i++) {
             bookshelf.insert(Item.CAT, i);
@@ -58,7 +58,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnBookshelfOne2x2Square() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(3, 3);
+        Bookshelf bookshelf = new Bookshelf();
 
         bookshelf.insert(Item.CAT, 0);
         bookshelf.insert(Item.CAT, 0);
@@ -75,7 +75,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnBookshelfTwoHorizontallyOverlappingGroups() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(3, 3);
+        Bookshelf bookshelf = new Bookshelf(2, 2);
 
         for(int j = 0; j < bookshelf.getColumns(); j++) {
             bookshelf.insert(Item.CAT, j);
@@ -91,7 +91,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnBookshelfTwoVerticallyOverlappingGroups() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(3, 5);
+        Bookshelf bookshelf = new Bookshelf();
 
         for(int i = 0; i < 2; i++) {
             for(int j = 0; j < 3; j++) {
@@ -108,7 +108,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnBookshelfTwoDiagonallyOverlappingGroups() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(5, 3);
+        Bookshelf bookshelf = new Bookshelf();
         bookshelf.insert(Item.BOOK, 0);
 
         for(int i = 0; i < 3; i++) {
@@ -126,7 +126,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnBookshelfTwoDisjointGroupsNotSameKind() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(3, 4);
+        Bookshelf bookshelf = new Bookshelf();
 
         for(int i = 0; i < 2; i++) {
             for(int j = 0; j < 2; j++) {
@@ -149,7 +149,7 @@ public class CommonGoalCardPattern1Test {
     @Test
     public void testOnBookshelfTwoDisjointGroups() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(4,2, p);
-        Bookshelf bookshelf = new Bookshelf(3, 4);
+        Bookshelf bookshelf = new Bookshelf();
 
         for(int j = 0; j < bookshelf.getColumns(); j++) {
             bookshelf.insert(Item.CAT, j);

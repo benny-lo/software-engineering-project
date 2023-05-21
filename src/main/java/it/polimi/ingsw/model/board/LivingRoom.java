@@ -1,10 +1,17 @@
 package it.polimi.ingsw.model.board;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Class representing the LivingRoom of the game. The top row and leftmost column have index 0.
@@ -20,9 +27,28 @@ public class LivingRoom {
      * @param numberPlayers number of players in the game.
      */
     public LivingRoom(int numberPlayers) {
-        this.rows = 9;
-        this.columns = 9;
-        this.grid = new Item[9][9];
+        String filename;
+        LivingRoom l;
+        Gson gson = new GsonBuilder().serializeNulls()
+                .setPrettyPrinting()
+                .disableJdkUnsafe()
+                .create();
+
+        filename = "/configuration/livingRoom/dimensions.json";
+
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
+            l = gson.fromJson(reader,new TypeToken<LivingRoom>(){}.getType());
+        } catch(IOException e){
+            l = null;
+            System.err.println("""
+                    Configuration file for livingRoom not found.
+                    The configuration file should be in configuration/livingRoom""");
+        }
+
+        this.rows = l.rows;
+        this.columns = l.columns;
+
+        this.grid = new Item[rows][columns];
 
         for(int i = 0; i < 9; i++) {
             for(int j = 0; j < 9; j++) {

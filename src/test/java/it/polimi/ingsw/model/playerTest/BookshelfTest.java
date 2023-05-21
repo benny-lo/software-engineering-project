@@ -18,7 +18,7 @@ public class BookshelfTest {
      */
     @Test
     public void testConstructionEmptyBookshelf() {
-        Bookshelf b = new Bookshelf(2,3);
+        Bookshelf b = new Bookshelf(2, 3);
         assertEquals(b.getRows(), 2);
         assertEquals(b.getColumns(), 3);
 
@@ -35,7 +35,7 @@ public class BookshelfTest {
     @Test
     public void testInsertOneItem() {
         Item item = Item.CAT;
-        Bookshelf b = new Bookshelf(3, 3);
+        Bookshelf b = new Bookshelf();
 
         assertTrue(b.canInsert(1, 0));
 
@@ -57,7 +57,7 @@ public class BookshelfTest {
      */
     @Test
     public void testInsertTwoEqualItems() {
-        Bookshelf b = new Bookshelf(3, 3);
+        Bookshelf b = new Bookshelf();
         List<Item> items = new ArrayList<>();
         items.add(Item.CAT);
         items.add(Item.BOOK);
@@ -86,7 +86,7 @@ public class BookshelfTest {
      */
     @Test
     public void testStackedInserts() {
-        Bookshelf b = new Bookshelf(4, 3);
+        Bookshelf b = new Bookshelf();
         Item item1 = Item.CAT;
         Item item2 = Item.BOOK;
 
@@ -141,7 +141,7 @@ public class BookshelfTest {
      */
     @Test
     public void testScoreEmpty() {
-        Bookshelf b = new Bookshelf(2, 3);
+        Bookshelf b = new Bookshelf();
         assertEquals(0, b.getBookshelfScore());
     }
 
@@ -150,7 +150,7 @@ public class BookshelfTest {
      */
     @Test
     public void testScoreOneItem() {
-        Bookshelf b = new Bookshelf(3, 3);
+        Bookshelf b = new Bookshelf();
 
         assertTrue(b.canInsert(1, 2));
 
@@ -164,7 +164,7 @@ public class BookshelfTest {
      */
     @Test
     public void testScoreFullAllEqual() {
-        Bookshelf b = new Bookshelf(3, 3);
+        Bookshelf b = new Bookshelf();
         for(int j = 0; j < b.getColumns(); j++) {
             for(int i = 0; i < b.getRows(); i++) {
                 assertTrue(b.canInsert(1, j));

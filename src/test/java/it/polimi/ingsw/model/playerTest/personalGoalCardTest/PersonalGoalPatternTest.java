@@ -33,7 +33,7 @@ public class PersonalGoalPatternTest {
      */
     @Test
     public void testCheckOneItem(){
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
         Item item = Item.CAT;
         Map<Position, Item> mask = new HashMap<>();
         mask.put(new Position(0, 0), item);
@@ -49,7 +49,7 @@ public class PersonalGoalPatternTest {
      */
     @Test
     public void testCheckTwoItems(){
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
         Item item = Item.CAT;
         Item item1 = Item.BOOK;
         Map<Position, Item> mask = new HashMap<>();
@@ -70,7 +70,7 @@ public class PersonalGoalPatternTest {
      */
     @Test
     public void testEmptyPattern(){
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
         Item item = Item.CAT;
         Map<Position, Item> mask = new HashMap<>();
         PersonalGoalPattern pattern = new PersonalGoalPattern(mask);

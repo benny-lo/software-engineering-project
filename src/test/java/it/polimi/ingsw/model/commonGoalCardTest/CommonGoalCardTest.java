@@ -61,7 +61,7 @@ public class CommonGoalCardTest {
     public void testCheckPatternMatch(){
         CommonGoalPatternInterface commonGoalPatternInterface = new CommonGoalPattern8();
         CommonGoalCard commonGoalCard = new CommonGoalCard(1, 4, commonGoalPatternInterface);
-        Bookshelf bookshelf = new Bookshelf(3, 3);
+        Bookshelf bookshelf = new Bookshelf(3,3);
         bookshelf.insert(new LinkedList<>(List.of(Item.CAT, Item.BOOK, Item.CAT)),0);
         bookshelf.insert(new LinkedList<>(List.of(Item.CAT, Item.PLANT, Item.CAT)),2);
 
@@ -75,7 +75,7 @@ public class CommonGoalCardTest {
     public void testCheckPatternNotAMatch(){
         CommonGoalPatternInterface commonGoalPatternInterface = new CommonGoalPattern8();
         CommonGoalCard commonGoalCard = new CommonGoalCard(1, 3, commonGoalPatternInterface);
-        Bookshelf bookshelf = new Bookshelf(3, 3);
+        Bookshelf bookshelf = new Bookshelf();
         bookshelf.insert(new LinkedList<>(List.of(Item.CAT, Item.BOOK, Item.CAT)),0);
         bookshelf.insert(new LinkedList<>(List.of(Item.CAT, Item.PLANT, Item.FRAME)),2);
 

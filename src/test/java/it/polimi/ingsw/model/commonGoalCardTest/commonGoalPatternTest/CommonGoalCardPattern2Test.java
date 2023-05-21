@@ -22,7 +22,7 @@ public class CommonGoalCardPattern2Test {
     @Test
     public void testOnEmptyBookshelf() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
-        Bookshelf bookshelf = new Bookshelf(7, 3);
+        Bookshelf bookshelf = new Bookshelf();
         assertFalse(pattern.check(bookshelf));
     }
 
@@ -32,7 +32,7 @@ public class CommonGoalCardPattern2Test {
     @Test
     public void testOnFilledBookshelfAllKinds() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
-        Bookshelf bookshelf = new Bookshelf(7, 3);
+        Bookshelf bookshelf = new Bookshelf();
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
         items.remove(items.size() - 1);
@@ -47,7 +47,7 @@ public class CommonGoalCardPattern2Test {
     @Test
     public void testOnBookshelfFullTypeAndAllButOne() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
-        Bookshelf bookshelf = new Bookshelf(7, 3);
+        Bookshelf bookshelf = new Bookshelf();
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
         items.remove(items.size() - 1);
@@ -66,7 +66,7 @@ public class CommonGoalCardPattern2Test {
     @Test
     public void testOnBookshelfFullTypeTwoColumns() {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, false, 6, 6);
-        Bookshelf bookshelf = new Bookshelf(6, 3);
+        Bookshelf bookshelf = new Bookshelf();
         List<Item> items = new ArrayList<>(List.of(Item.values()));
 
         items.remove(items.size() - 1);

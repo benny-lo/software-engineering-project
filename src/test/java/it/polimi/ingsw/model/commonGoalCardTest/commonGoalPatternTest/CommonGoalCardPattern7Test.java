@@ -18,7 +18,7 @@ public class CommonGoalCardPattern7Test {
     public void emptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(4, true, 1, 3);
-        Bookshelf bookshelf = new Bookshelf(6,6);
+        Bookshelf bookshelf = new Bookshelf();
         assertFalse(pattern.check(bookshelf));
     }
 
@@ -29,7 +29,7 @@ public class CommonGoalCardPattern7Test {
     public void fourKinds()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(4, true, 1, 3);
-        Bookshelf bookshelf = new Bookshelf(5,6);
+        Bookshelf bookshelf = new Bookshelf();
         for(int i=0;i<4;i++)
         {
             bookshelf.insert(Item.CUP,0);
@@ -47,7 +47,7 @@ public class CommonGoalCardPattern7Test {
     public void threeKinds()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(4, true, 1, 3);
-        Bookshelf bookshelf = new Bookshelf(5,4);
+        Bookshelf bookshelf = new Bookshelf(4,4);
         for(int i=0;i<4;i++)
         {
             bookshelf.insert(Item.CUP,0);
@@ -64,7 +64,7 @@ public class CommonGoalCardPattern7Test {
     public void threeRows()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(4, true, 1, 3);
-        Bookshelf bookshelf = new Bookshelf(5,4);
+        Bookshelf bookshelf = new Bookshelf();
         for(int i=0;i<3;i++)
         {
             bookshelf.insert(Item.CUP,0);
@@ -81,7 +81,7 @@ public class CommonGoalCardPattern7Test {
     public void notFull()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(4, true, 1, 3);
-        Bookshelf bookshelf = new Bookshelf(5,4);
+        Bookshelf bookshelf = new Bookshelf();
         for(int i=0;i<4;i++)
         {
             bookshelf.insert(Item.CUP,0);

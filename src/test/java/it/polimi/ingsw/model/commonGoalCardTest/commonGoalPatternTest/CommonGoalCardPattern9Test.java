@@ -17,7 +17,7 @@ public class CommonGoalCardPattern9Test {
     @Test
     public void correct3x3(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
-        Bookshelf bookshelf=new Bookshelf(3,3);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 bookshelf.insert(Item.CAT,i);
@@ -31,7 +31,7 @@ public class CommonGoalCardPattern9Test {
     @Test
     public void doublecorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i<2; i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 bookshelf.insert(Item.CAT,i);
@@ -50,7 +50,7 @@ public class CommonGoalCardPattern9Test {
     @Test
     public void nonecorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int j=0; j< bookshelf.getColumns(); j++){
             bookshelf.insert(Item.CAT,j);
         }
@@ -75,7 +75,7 @@ public class CommonGoalCardPattern9Test {
     public void emptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
 
         assertFalse(pattern.check(bookshelf));
     }

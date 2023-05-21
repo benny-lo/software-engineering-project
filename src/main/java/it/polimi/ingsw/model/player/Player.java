@@ -29,7 +29,7 @@ public class Player {
     public Player(String nickname) {
         this.nickname = nickname;
         this.itemsTakenFromLivingRoom = null;
-        this.bookshelf = new Bookshelf(6, 5);
+        this.bookshelf = new Bookshelf();
         this.personalGoalCard = null;
         this.scoringTokens = new ArrayList<>();
         this.endingToken = false;

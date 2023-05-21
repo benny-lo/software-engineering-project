@@ -16,7 +16,7 @@ public class CommonGoalCardPattern11Test {
     @Test
     public void correct6x5rightToLeft(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=bookshelf.getColumns()-1; i>=0; i--){
             for(int j=0; j<bookshelf.getColumns()-i; j++){
                 bookshelf.insert(Item.CAT, i);
@@ -33,7 +33,7 @@ public class CommonGoalCardPattern11Test {
     @Test
     public void correct6x5leftToRight(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i<bookshelf.getColumns(); i++){
             for(int j=0; j<i+1; j++){
                 bookshelf.insert(Item.CAT, i);
@@ -50,7 +50,7 @@ public class CommonGoalCardPattern11Test {
     @Test
     public void incorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
-        Bookshelf bookshelf=new Bookshelf(6,5);
+        Bookshelf bookshelf=new Bookshelf();
         for(int i=1; i<bookshelf.getColumns()-1; i++){
             for(int j=0; j<i; j++){
                 bookshelf.insert(Item.CAT, i);
@@ -68,7 +68,7 @@ public class CommonGoalCardPattern11Test {
     public void emptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
-        Bookshelf bookshelf = new Bookshelf(6,5);
+        Bookshelf bookshelf = new Bookshelf();
 
         assertFalse(pattern.check(bookshelf));
     }
