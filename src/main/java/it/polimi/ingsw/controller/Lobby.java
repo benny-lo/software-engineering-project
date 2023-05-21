@@ -61,7 +61,7 @@ public class Lobby {
         availableId++;
     }
 
-    private GameDimensions getLivingRoomAndBookshelvesDimensions(int numberPlayers){
+    private GameDimensions getGameDimensions(int numberPlayers){
         Bookshelf bookshelf = new Bookshelf();
         LivingRoom livingRoom = new LivingRoom(numberPlayers);
         return new GameDimensions(livingRoom.getRows(), livingRoom.getColumns(), bookshelf.getRows(), bookshelf.getColumns());
@@ -101,7 +101,7 @@ public class Lobby {
         controller.update(new JoinAction(view.getNickname(), view));
         addController(controller);
 
-        view.onGameDimensions(getLivingRoomAndBookshelvesDimensions(numberPlayers));
+        view.onGameDimensions(getGameDimensions(numberPlayers));
         view.setController(controller);
     }
 
@@ -117,5 +117,6 @@ public class Lobby {
         }
 
         controllers.get(id).update(new JoinAction(view.getNickname(), view));
+        view.onGameDimensions(getGameDimensions(controllers.get(id).getNumberPlayers()));
     }
 }

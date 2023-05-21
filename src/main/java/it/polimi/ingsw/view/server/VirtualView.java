@@ -125,7 +125,6 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
             onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
-
         controller.update(new SelectionColumnAndOrderAction(nickname, message.getColumn(), message.getPermutation()));
     }
 

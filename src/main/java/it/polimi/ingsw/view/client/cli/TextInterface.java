@@ -57,12 +57,21 @@ public class TextInterface extends ClientView implements InputReceiver {
 
     @Override
     public void onAcceptedInsertion(AcceptedInsertion message) {
-
+        synchronized (System.out){
+            if (!message.isAccepted()){
+                printDeniedAction();
+            }
+            printGameRep();
+        }
     }
 
     @Override
     public void onChatAccepted(ChatAccepted message) {
-
+        synchronized (System.out){
+            if (!message.isAccepted()){
+                printDeniedAction();
+            }
+        }
     }
 
     @Override
@@ -200,7 +209,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         winner = update.getWinner();
         if(inChat)
             exitChat();
-
+        status = ClientStatus.ENDED_GAME;
         clearScreen();
         printEndGame(nickname, winner, scores);
     }
@@ -215,6 +224,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 printDeniedAction();
                 return;
             }
+
             status = ClientStatus.GAME;
 
             livingRoom = new Item[gameDimensions.getLivingRoomRows()][gameDimensions.getLivingRoomColumns()];
