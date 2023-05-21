@@ -27,7 +27,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
      */
     private Controller controller;
 
-    private final ServerConnection serverConnection;
+    private ServerConnection serverConnection;
 
     /**
      * The constructor of VirtualView. It only sets the {@code ServerConnection} and
@@ -37,6 +37,10 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
         this.serverConnection = serverConnection;
     }
 
+    /**
+     * The constructor of VirtualView, exclusively used for testing.
+     */
+    public VirtualView(){}
     /**
      * Setter for the private attribute {@code nickname}.
      * @param nickname the nickname to set.

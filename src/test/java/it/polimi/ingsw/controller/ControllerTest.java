@@ -1,12 +1,12 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.network.server.Lobby;
+import it.polimi.ingsw.utils.classesOnlyForTesting.MockVirtualView;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
-import it.polimi.ingsw.utils.forTesting.MockVirtualView;
-import it.polimi.ingsw.network.VirtualView;
+
+import it.polimi.ingsw.view.server.VirtualView;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -34,13 +34,12 @@ public class ControllerTest {
      */
     @Test
     public void testSuccessfulJoinAction(){
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -53,17 +52,16 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulJoinAction1() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
-        VirtualView view2 = new MockVirtualView(lobby);
+        VirtualView view2 = new MockVirtualView();
         view2.setNickname("tick");
         controller.update(new JoinAction(view2.getNickname(), view2));
 
@@ -79,19 +77,18 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulJoinAction2() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
         controller.setEnded();
 
-        VirtualView view2 = new MockVirtualView(lobby);
+        VirtualView view2 = new MockVirtualView();
         view2.setNickname("tick");
         controller.update(new JoinAction(view2.getNickname(), view2));
 
@@ -106,13 +103,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction1() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -129,13 +125,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction2() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -151,13 +146,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction3() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -173,13 +167,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction4() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -195,13 +188,12 @@ public class ControllerTest {
      */
     @Test
     public void testSuccessfulSelectionFromLivingRoomAction() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -217,13 +209,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder1() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -240,13 +231,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder2() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -262,13 +252,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder3() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
-        view0.setNickname("rick");
+        VirtualView view0 = new MockVirtualView();
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -284,13 +273,12 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder4() {
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
+        VirtualView view0 = new MockVirtualView();
         view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
@@ -336,13 +324,12 @@ public class ControllerTest {
      */
     @Test
     public void testSuccessfulSelectionColumnAndOrder(){
-        Lobby lobby = new Lobby();
         Controller controller = new Controller(2, 2);
-        VirtualView view0 = new MockVirtualView(lobby);
-        view0.setNickname("rick");
+        VirtualView view0 = new MockVirtualView();
+        view0.setNickname("nick");
         controller.update(new JoinAction(view0.getNickname(), view0));
 
-        VirtualView view1 = new MockVirtualView(lobby);
+        VirtualView view1 = new MockVirtualView();
         view1.setNickname("rick");
         controller.update(new JoinAction(view1.getNickname(), view1));
 
