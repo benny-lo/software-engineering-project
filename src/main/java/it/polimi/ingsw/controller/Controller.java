@@ -50,9 +50,9 @@ public class Controller implements ActionListener {
     private Queue<String> playerQueue;
 
     /**
-     * Map associating nickname of the players with the virtual views.
+     * Set of the virtual views connected to the {@code Game} controlled by {@code this}.
      */
-    private final Map<String, VirtualView> views;
+    private final Set<VirtualView> views;
 
     /**
      * Flag representing whether the game has ended.
@@ -85,10 +85,6 @@ public class Controller implements ActionListener {
      */
     private final LivingRoomListener livingRoomListener;
 
-    /**
-     * List of listeners for the personal goal cards.
-     */
-    private final List<PersonalGoalCardListener> personalGoalCardListeners;
 
     public Controller(int numberPlayers, int numberCommonGoalCards) {
         this.numberPlayers = numberPlayers;
@@ -98,7 +94,7 @@ public class Controller implements ActionListener {
         this.gameBuilder = new GameBuilder(numberCommonGoalCards);
         this.firstPlayer = null;
         this.playerQueue = new ArrayDeque<>();
-        this.views = new HashMap<>();
+        this.views = new HashSet<>();
         this.turnPhase = null;
         this.ended = false;
 
@@ -106,7 +102,6 @@ public class Controller implements ActionListener {
         this.commonGoalCardsListener = new CommonGoalCardsListener();
         this.endingTokenListener = new EndingTokenListener();
         this.livingRoomListener = new LivingRoomListener();
-        this.personalGoalCardListeners = new ArrayList<>();
 
         gameBuilder.setBookshelvesListener(bookshelvesListener);
         gameBuilder.setCommonGoalCardsListener(commonGoalCardsListener);
@@ -114,12 +109,19 @@ public class Controller implements ActionListener {
         gameBuilder.setLivingRoomListener(livingRoomListener);
     }
 
+    private VirtualView findViewByNickname(String nickname) {
+        for (VirtualView v : views) {
+            if (nickname.equals(v.getNickname())) return v;
+        }
+        return null;
+    }
+
     private void notifyBookshelvesToEverybody() {
         if (!bookshelvesListener.hasChanged()) return;
         Map<String, Map<Position, Item>> map = bookshelvesListener.getBookshelves();
         for(String nick : map.keySet()) {
             BookshelfUpdate update = new BookshelfUpdate(nick, map.get(nick));
-            for(VirtualView view : views.values()) {
+            for(VirtualView view : views) {
                 view.onBookshelfUpdate(update);
             }
         }
@@ -127,7 +129,7 @@ public class Controller implements ActionListener {
 
     private void notifyLastChatMessageToEverybody() {
         Message message = chat.getLastMessage();
-        for(VirtualView view : views.values()) {
+        for(VirtualView view : views) {
             view.onChatUpdate(new ChatUpdate(
                     message.getNickname(),
                     message.getText())
@@ -137,7 +139,7 @@ public class Controller implements ActionListener {
 
     private void notifyCommonGoalCardsToEverybody() {
         Map<Integer, Integer> map = commonGoalCardsListener.getCards();
-        for(VirtualView view : views.values()) {
+        for(VirtualView view : views) {
             view.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(map));
         }
     }
@@ -145,7 +147,7 @@ public class Controller implements ActionListener {
     private void notifyEndingTokenToEverybody() {
         if (!endingTokenListener.hasChanged()) return;
         EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
-        for(VirtualView view : views.values()) {
+        for(VirtualView view : views) {
             view.onEndingTokenUpdate(update);
         }
     }
@@ -153,15 +155,29 @@ public class Controller implements ActionListener {
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
        LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoom());
-        for(VirtualView view : views.values()) {
+        for(VirtualView view : views) {
             view.onLivingRoomUpdate(update);
         }
     }
 
+    private void notifyScoresToEverybody() {
+        Map<String, Integer> scores = new HashMap<>();
+        for (VirtualView v : views) {
+            for (VirtualView u : views) {
+                int personalScore = game.getPersonalScore(u.getNickname());
+                int publicScore = game.getPublicScore(u.getNickname());
+
+                if (ended || v.getNickname().equals(u.getNickname())) scores.put(u.getNickname(), personalScore + publicScore);
+                else scores.put(u.getNickname(), publicScore);
+            }
+            v.onScoresUpdate(new ScoresUpdate(scores));
+            scores = new HashMap<>();
+        }
+    }
+
     private void notifyPersonalGoalCardsToEverybody() {
-        for(PersonalGoalCardListener listener : personalGoalCardListeners) {
-            PersonalGoalCardUpdate update = new PersonalGoalCardUpdate(listener.getPersonalGoalCard());
-            views.get(listener.getOwner()).onPersonalGoalCardUpdate(update);
+        for (VirtualView v : views) {
+            v.onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(v.getNickname())));
         }
     }
 
@@ -188,8 +204,11 @@ public class Controller implements ActionListener {
         notifyEndingTokenToEverybody();
         notifyLivingRoomToEverybody();
         notifyPersonalGoalCardsToEverybody();
+        notifyScoresToEverybody();
 
-        // to send scores and maybe items chosen null
+        for (VirtualView v : views) {
+            v.onItemsSelected(new ItemsSelected(null));
+        }
     }
 
     private void nextTurn() {
@@ -197,7 +216,6 @@ public class Controller implements ActionListener {
         playerQueue.add(justPlayed);
         game.setCurrentPlayer(playerQueue.peek());
 
-        assert firstPlayer != null;
         if (firstPlayer.equals(game.getCurrentPlayer()) && game.IsEndingTokenAssigned()) {
             ended = true;
 
@@ -211,11 +229,13 @@ public class Controller implements ActionListener {
                 }
             }
 
-            for(VirtualView view : views.values()) {
+            for(VirtualView view : views) {
                 view.onEndGameUpdate(new EndGameUpdate(winner));
             }
         } else {
-            VirtualView current = views.get(game.getCurrentPlayer());
+            VirtualView current = findViewByNickname(game.getCurrentPlayer());
+            // current cannot be null because the lobby makes sure this does not happen.
+
             current.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
         }
     }
@@ -227,18 +247,17 @@ public class Controller implements ActionListener {
             return;
         }
 
-        // TODO: send dimensions.
+        // TODO: fix
+        action.getView().onGameDimensions(new GameDimensions(9, 9, 6, 5));
 
-        playerQueue.add(action.getSenderNickname());
-        views.put(action.getSenderNickname(), action.getView());
-        personalGoalCardListeners.add(new PersonalGoalCardListener(action.getSenderNickname()));
+        playerQueue.add(action.getView().getNickname());
+        views.add(action.getView());
 
-        gameBuilder.addPlayer(action.getSenderNickname());
-        gameBuilder.setPersonalGoalCardListener(personalGoalCardListeners.get(personalGoalCardListeners.size() - 1));
+        gameBuilder.addPlayer(action.getView().getNickname());
 
-        for(String nick : views.keySet()) {
-            views.get(nick).onWaitingUpdate(new WaitingUpdate(
-                    action.getSenderNickname(),
+        for(VirtualView v : views) {
+            v.onWaitingUpdate(new WaitingUpdate(
+                    action.getView().getNickname(),
                     numberPlayers - playerQueue.size()
             ));
         }
@@ -251,30 +270,31 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void update(SelectionFromLivingRoomAction action) {
         if (ended ||
-                !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
+                !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
-            views.get(action.getSenderNickname()).onItemsSelected(new ItemsSelected(null));
+            action.getView().onItemsSelected(new ItemsSelected(null));
             return;
         }
 
         List<Item> items = game.selectItemTiles(action.getSelectedPositions());
 
-        for(VirtualView view : views.values()) {
-            view.onItemsSelected(new ItemsSelected(items));
+        notifyLivingRoomToEverybody();
+
+        for(VirtualView v : views) {
+            v.onItemsSelected(new ItemsSelected(items));
         }
 
-        notifyLivingRoomToEverybody();
         turnPhase = TurnPhase.BOOKSHELF;
     }
 
     @Override
     public synchronized void update(SelectionColumnAndOrderAction action) {
         if (ended ||
-                !action.getSenderNickname().equals(game.getCurrentPlayer()) ||
+                !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            views.get(action.getSenderNickname()).onAcceptedInsertion(new AcceptedInsertion(false));
+            action.getView().onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
 
@@ -287,7 +307,7 @@ public class Controller implements ActionListener {
         notifyEndingTokenToEverybody();
         turnPhase = TurnPhase.LIVING_ROOM;
 
-        views.get(action.getSenderNickname()).onAcceptedInsertion(new AcceptedInsertion(true));
+        action.getView().onAcceptedInsertion(new AcceptedInsertion(true));
 
         // remember to send scores and maybe items selected as null.
 
@@ -297,13 +317,13 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void update(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
-            views.get(action.getSenderNickname()).onChatAccepted(new ChatAccepted(false));
+            action.getView().onChatAccepted(new ChatAccepted(false));
             return;
         }
 
-        chat.addMessage(action.getSenderNickname(), action.getText());
+        chat.addMessage(action.getView().getNickname(), action.getText());
 
-        views.get(action.getSenderNickname()).onChatAccepted(new ChatAccepted(true));
+        action.getView().onChatAccepted(new ChatAccepted(true));
 
         notifyLastChatMessageToEverybody();
     }

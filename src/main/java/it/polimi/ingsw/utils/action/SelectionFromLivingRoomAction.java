@@ -1,6 +1,7 @@
 package it.polimi.ingsw.utils.action;
 
 import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.view.server.VirtualView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +9,8 @@ import java.util.List;
 public class SelectionFromLivingRoomAction extends Action {
     private final List<Position> positions;
 
-    public SelectionFromLivingRoomAction(String nickname, List<Position> positions) {
-        super(nickname);
+    public SelectionFromLivingRoomAction(VirtualView view, List<Position> positions) {
+        super(view);
         this.positions = positions;
     }
 

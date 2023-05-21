@@ -1,7 +1,5 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.model.board.LivingRoom;
-import it.polimi.ingsw.model.player.Bookshelf;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.VirtualView;
@@ -10,10 +8,14 @@ import java.util.*;
 
 // TODO: send scores in controller and manage disconnection and exceptions correctly.
 // TODO: remove VirtualViews correctly so that the garbage collector can work its magic.
-// TODO: send client updates about games.
+
+// TODO: propagate exceptions in Model and (add methods get dimensions --> where?).
+
 // TODO: remove VirtualViews from lobby and controller with UpdateView (what about nickname?)
-// TODO: maybe add to ClientConnection setter for listener.
-// TODO: propagate exceptions in Model and add methods to get personalgoalcard id and get dimensions.
+// TODO: idea = make both lobby and game action listeners.
+// TODO: think carefully about where to put nicknames.
+
+// TODO: can we leave asserts in code (not test)?
 
 public class Lobby {
     /**
@@ -61,12 +63,6 @@ public class Lobby {
         availableId++;
     }
 
-    private GameDimensions getGameDimensions(int numberPlayers){
-        Bookshelf bookshelf = new Bookshelf();
-        LivingRoom livingRoom = new LivingRoom(numberPlayers);
-        return new GameDimensions(livingRoom.getRows(), livingRoom.getColumns(), bookshelf.getRows(), bookshelf.getColumns());
-    }
-
     public synchronized void addVirtualView(VirtualView view) {
         views.add(view);
     }
@@ -86,23 +82,34 @@ public class Lobby {
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
         if (!view.isLoggedIn() || view.isInGame()) {
-            view.onGamesList(new GamesList(null));
+            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
             return;
         }
 
         // incorrect parameters.
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
-            view.onGamesList(new GamesList(null));
+            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
             return;
         }
 
         // create controller + join operation in controller + set controller in view.
         Controller controller = new Controller(numberPlayers, numberCommonGoals);
-        controller.update(new JoinAction(view.getNickname(), view));
+        controller.update(new JoinAction(view));
         addController(controller);
+        // the controller is sending the player the game dimensions.
 
-        view.onGameDimensions(getGameDimensions(numberPlayers));
         view.setController(controller);
+
+        // TODO: maybe create an ad hoc thread.
+        // send to client without game
+        for (VirtualView v : views) {
+            List<GameInfo> list = new ArrayList<>();
+            list.add(new GameInfo(availableId - 1, numberPlayers, numberCommonGoals));
+            GamesList gamesList = new GamesList(list);
+            if (v.isLoggedIn() && !v.isInGame()) {
+                v.onGamesList(gamesList);
+            }
+        }
     }
 
 
@@ -116,7 +123,7 @@ public class Lobby {
             return;
         }
 
-        controllers.get(id).update(new JoinAction(view.getNickname(), view));
-        view.onGameDimensions(getGameDimensions(controllers.get(id).getNumberPlayers()));
+        controllers.get(id).update(new JoinAction(view));
+        // the controller is sending the player the game dimensions.
     }
 }

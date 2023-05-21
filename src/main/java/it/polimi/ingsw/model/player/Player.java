@@ -8,7 +8,6 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.controller.modelListener.BookshelvesListener;
-import it.polimi.ingsw.controller.modelListener.PersonalGoalCardListener;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -27,7 +26,6 @@ public class Player {
     private final List<ScoringToken> scoringTokens;
     private boolean endingToken;
     private BookshelvesListener bookshelvesListener;
-    private PersonalGoalCardListener personalGoalCardListener;
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
@@ -196,10 +194,15 @@ public class Player {
         }
     }
 
-    public void setPersonalGoalCardListener(PersonalGoalCardListener personalGoalCardListener) {
-        this.personalGoalCardListener = personalGoalCardListener;
-        if (personalGoalCard != null) {
-            personalGoalCardListener.updateState(personalGoalCard.getId());
-        }
+    public int getPersonalID() {
+        return personalGoalCard.getId();
+    }
+
+    public int getBookshelfRows() {
+        return bookshelf.getRows();
+    }
+
+    public int getBookshelfColumns() {
+        return bookshelf.getColumns();
     }
 }

@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
+import it.polimi.ingsw.utils.message.server.GameDimensions;
 
 import java.io.*;
 import java.util.*;
@@ -185,10 +186,6 @@ public class Game implements GameInterface {
         boardManager.setLivingRoomListener(livingRoomListener);
     }
 
-    public void setPersonalGoalCardListener(PersonalGoalCardListener personalGoalCardListener) {
-        players.get(personalGoalCardListener.getOwner()).setPersonalGoalCardListener(personalGoalCardListener);
-    }
-
     @Override
     public int getPublicScore(String nickname) {
         return this.players.get(nickname).getPublicScore();
@@ -205,8 +202,23 @@ public class Game implements GameInterface {
     }
 
     @Override
+    public int getPersonalID(String nickname) {
+        return players.get(nickname).getPersonalID();
+    }
+
+    @Override
     public int getNumberPlayers() {
         return numberPlayers;
+    }
+
+    @Override
+    public GameDimensions getDimensions() {
+        String nickname = players.keySet().stream().toList().get(0);
+        return new GameDimensions(boardManager.getLivingRoomRows(),
+                boardManager.getLivingRoomColumns(),
+                players.get(nickname).getBookshelfRows(),
+                players.get(nickname).getBookshelfColumns()
+        );
     }
 
     public Map<String, Player> getPlayers() {
