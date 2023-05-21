@@ -40,7 +40,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 return;
             }
 
-            // onAcceptedAction(new AcceptedAction(true, AcceptedActionTypes.LOGIN));
+            status = ClientStatus.CREATE_OR_SELECT_GAME;
 
             clearScreen();
 
@@ -97,7 +97,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         synchronized (System.out) {
             Map<Position, Item> ups = update.getBookshelf();
             for (Position p : ups.keySet()) {
-                if (!bookshelves.containsKey(update.getOwner())) bookshelves.put(update.getOwner(), new Item[6][5]);
+                if (!bookshelves.containsKey(update.getOwner())) bookshelves.put(update.getOwner(), new Item[bookshelvesRows][bookshelvesColumns]);
                 bookshelves.get(update.getOwner())[p.getRow()][p.getColumn()] = ups.get(p);
             }
 
@@ -206,8 +206,21 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     @Override
-    public void onGameDimensions(GameDimensions livingRoomAndBookshelvesDimensions) {
-        livingRoom = new Item[livingRoomAndBookshelvesDimensions.getLivingRoomRows()][livingRoomAndBookshelvesDimensions.getLivingRoomColumns()];
+    public void onGameDimensions(GameDimensions gameDimensions) {
+        synchronized (System.out) {
+            if (gameDimensions.getBookshelvesColumns() == -1 ||
+            gameDimensions.getBookshelvesRows() == -1 ||
+            gameDimensions.getLivingRoomColumns() == -1 ||
+            gameDimensions.getLivingRoomRows() == -1) {
+                printDeniedAction();
+                return;
+            }
+            status = ClientStatus.GAME;
+
+            livingRoom = new Item[gameDimensions.getLivingRoomRows()][gameDimensions.getLivingRoomColumns()];
+            bookshelvesRows = gameDimensions.getBookshelvesRows();
+            bookshelvesColumns = gameDimensions.getBookshelvesColumns();
+        }
     }
 
     @Override
