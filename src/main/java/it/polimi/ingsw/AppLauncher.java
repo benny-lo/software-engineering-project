@@ -9,11 +9,9 @@ public class AppLauncher {
         }
 
         if (args[0].equalsIgnoreCase("server")) {
-            Server server = new Server();
-            server.launch(Arrays.stream(args).skip(1).toList());
+            Server.launch(Arrays.stream(args).skip(1).toList());
         } else if (args[0].equalsIgnoreCase("client")) {
-            Client client = new Client();
-            client.launch(Arrays.stream(args).skip(1).toList());
+            Client.launch(Arrays.stream(args).skip(1).toList());
         }
     }
 }

@@ -1,12 +1,11 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
-import it.polimi.ingsw.network.VirtualView;
-import it.polimi.ingsw.network.server.Lobby;
+import it.polimi.ingsw.view.server.VirtualView;
+import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMI;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.socket.ServerConnectionTCP;
-import it.polimi.ingsw.network.server.socket.VirtualViewTCP;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,18 +19,16 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public class Server {
-    public void launch(List<String> args) {
-        Lobby lobby = new Lobby();
-
-        startConnectionRMI(lobby);
-        startConnectionTCP(lobby);
+    public static void launch(List<String> args) {
+        startConnectionRMI();
+        startConnectionTCP();
 
         System.out.println("server is ready ...");
     }
 
-    private void startConnectionRMI(Lobby lobby) {
+    private static void startConnectionRMI() {
         ConnectionEstablishmentRMIInterface stub = null;
-        ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI(lobby);
+        ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI();
         try {
             stub = (ConnectionEstablishmentRMIInterface)
                     UnicastRemoteObject.exportObject(connection, ServerSettings.getRmiPort());
@@ -62,7 +59,7 @@ public class Server {
         }
     }
 
-    private void startConnectionTCP(Lobby lobby) {
+    private static void startConnectionTCP() {
         (new Thread(() -> {
             ServerSocket server = null;
 
@@ -77,9 +74,9 @@ public class Server {
                 try {
                     Socket socket = server.accept();
                     ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
-                    VirtualView view = new VirtualViewTCP(lobby, serverConnectionTCP);
-                    serverConnectionTCP.setReceiver(view);
-                    lobby.addVirtualView(view);
+                    VirtualView view = new VirtualView(serverConnectionTCP);
+                    serverConnectionTCP.setInputViewInterface(view);
+                    Lobby.getInstance().addVirtualView(view);
 
                     (new Thread(serverConnectionTCP)).start();
                 } catch (IOException e) {
