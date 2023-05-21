@@ -13,7 +13,7 @@ import java.util.*;
 // TODO: send client updates about games.
 // TODO: remove VirtualViews from lobby and controller with UpdateView (what about nickname?)
 // TODO: maybe add to ClientConnection setter for listener.
-// TODO: propagate exceptions in Model and add methods to get personalgoalcard id.
+// TODO: propagate exceptions in Model and add methods to get personalgoalcard id and get dimensions.
 
 public class Lobby {
     /**
