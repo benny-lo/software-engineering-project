@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model.player;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
@@ -7,6 +10,9 @@ import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.controller.modelListener.BookshelvesListener;
 import it.polimi.ingsw.controller.modelListener.PersonalGoalCardListener;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.*;
 
 /**
@@ -27,9 +33,27 @@ public class Player {
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
      */
     public Player(String nickname) {
+        String filename;
+        Bookshelf b;
+        Gson gson = new GsonBuilder().serializeNulls()
+                .setPrettyPrinting()
+                .disableJdkUnsafe()
+                .create();
+
+        filename = "/configuration/bookshelf/dimensions.json";
+
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
+            b = gson.fromJson(reader,new TypeToken<Bookshelf>(){}.getType());
+        } catch(IOException e){
+            b = null;
+            System.err.println("""
+                    Configuration file for bookshelf not found.
+                    The configuration file should be in configuration/bookshelf""");
+        }
+
         this.nickname = nickname;
         this.itemsTakenFromLivingRoom = null;
-        this.bookshelf = new Bookshelf();
+        this.bookshelf = b;
         this.personalGoalCard = null;
         this.scoringTokens = new ArrayList<>();
         this.endingToken = false;
