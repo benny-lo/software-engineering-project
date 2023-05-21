@@ -19,4 +19,5 @@ public interface ClientConnectionRMIInterface extends Remote {
     void sendListOfGames(GamesList list) throws RemoteException;
     void sendItemsSelected(ItemsSelected selected) throws RemoteException;
     void sendAcceptedAction(AcceptedAction accepted) throws RemoteException;
+    void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) throws RemoteException;
 }

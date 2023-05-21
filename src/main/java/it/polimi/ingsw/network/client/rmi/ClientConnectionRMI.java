@@ -145,4 +145,10 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     public void sendAcceptedAction(AcceptedAction accepted) throws RemoteException {
         updateReceiver.onAcceptedAction(accepted);
     }
+
+    @Override
+    public void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) throws RemoteException {
+        updateReceiver.onCreateOrSelectGame(livingRoomAndBookshelvesDimensions);
+    }
+
 }

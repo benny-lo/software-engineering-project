@@ -18,4 +18,5 @@ public interface ServerConnection {
     void sendGamesList(GamesList gamesList);
     void sendItemsSelected(ItemsSelected itemsSelected);
     void sendAcceptedAction(AcceptedAction acceptedAction);
+    void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions);
 }

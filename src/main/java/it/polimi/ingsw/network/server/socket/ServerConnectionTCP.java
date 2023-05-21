@@ -151,4 +151,9 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     public void sendAcceptedAction(AcceptedAction acceptedAction) {
         sendAsync(acceptedAction);
     }
+
+    @Override
+    public void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) {
+        sendAsync(livingRoomAndBookshelvesDimensions);
+    }
 }

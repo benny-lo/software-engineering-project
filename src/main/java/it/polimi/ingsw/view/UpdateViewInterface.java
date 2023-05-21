@@ -16,4 +16,5 @@ public interface UpdateViewInterface {
     void onChatUpdate(ChatUpdate update);
     void onStartTurnUpdate(StartTurnUpdate update);
     void onEndGameUpdate(EndGameUpdate update);
+    void onCreateOrSelectGame(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions);
 }

@@ -1,10 +1,9 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.model.board.LivingRoom;
+import it.polimi.ingsw.model.player.Bookshelf;
 import it.polimi.ingsw.utils.action.JoinAction;
-import it.polimi.ingsw.utils.message.server.AcceptedAction;
-import it.polimi.ingsw.utils.message.server.AcceptedActionTypes;
-import it.polimi.ingsw.utils.message.server.GameInfo;
-import it.polimi.ingsw.utils.message.server.GamesList;
+import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.VirtualView;
 
 import java.util.*;
@@ -59,6 +58,12 @@ public class Lobby {
         availableId++;
     }
 
+    private LivingRoomAndBookshelvesDimensions getLivingRoomAndBookshelvesDimensions(int numberPlayers){
+        Bookshelf bookshelf = new Bookshelf();
+        LivingRoom livingRoom = new LivingRoom(numberPlayers);
+        return new LivingRoomAndBookshelvesDimensions(livingRoom.getRows(), livingRoom.getColumns(), bookshelf.getRows(), bookshelf.getColumns());
+    }
+
     public synchronized void addVirtualView(VirtualView view) {
         views.add(view);
     }
@@ -93,6 +98,7 @@ public class Lobby {
         controller.update(new JoinAction(view.getNickname(), view));
         addController(controller);
 
+        view.onCreateOrSelectGame(getLivingRoomAndBookshelvesDimensions(numberPlayers));
         view.setController(controller);
     }
 

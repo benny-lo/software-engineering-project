@@ -203,4 +203,9 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     public void onAcceptedAction(AcceptedAction acceptedAction) {
         serverConnection.sendAcceptedAction(acceptedAction);
     }
+
+    @Override
+    public void onCreateOrSelectGame(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions){
+        serverConnection.sendLivingRoomAndBookshelvesDimensions(livingRoomAndBookshelvesDimensions);
+    }
 }

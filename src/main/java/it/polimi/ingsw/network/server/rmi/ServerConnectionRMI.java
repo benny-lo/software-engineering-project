@@ -156,4 +156,13 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public void sendLivingRoomAndBookshelvesDimensions(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) {
+        try {
+            client.sendLivingRoomAndBookshelvesDimensions(livingRoomAndBookshelvesDimensions);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

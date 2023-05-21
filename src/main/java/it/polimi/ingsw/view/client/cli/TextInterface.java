@@ -209,6 +209,11 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     @Override
+    public void onCreateOrSelectGame(LivingRoomAndBookshelvesDimensions livingRoomAndBookshelvesDimensions) {
+        livingRoom = new Item[livingRoomAndBookshelvesDimensions.getLivingRoomRows()][livingRoomAndBookshelvesDimensions.getLivingRoomColumns()];
+    }
+
+    @Override
     public void login(Nickname message) {
         String nickname = message.getNickname();
         if (status != ClientStatus.LOGIN){

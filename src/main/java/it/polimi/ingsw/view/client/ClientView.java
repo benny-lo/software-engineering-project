@@ -42,7 +42,6 @@ public abstract class ClientView implements UpdateViewInterface {
     protected ClientConnection clientConnection;
 
     public ClientView() {
-        livingRoom = new Item[9][9];
         bookshelves = new HashMap<>();
         commonGoalCards = new HashMap<>();
         scores = new HashMap<>();
