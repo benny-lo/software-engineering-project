@@ -139,6 +139,8 @@ public class Lobby {
             return;
         }
 
+        view.setController(controllers.get(id));
+
         controllers.get(id).perform(new JoinAction(view));
         // the controller is sending the player the game dimensions.
     }

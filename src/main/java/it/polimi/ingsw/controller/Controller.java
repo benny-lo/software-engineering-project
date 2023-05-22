@@ -204,9 +204,9 @@ public class Controller implements ActionListener {
         notifyPersonalGoalCardsToEverybody();
         notifyScoresToEverybody();
 
-        for (VirtualView v : views) {
+        /* for (VirtualView v : views) {
             v.onItemsSelected(new ItemsSelected(null));
-        }
+        } */
     }
 
     private void nextTurn() {
@@ -306,9 +306,9 @@ public class Controller implements ActionListener {
         notifyCommonGoalCardsToEverybody();
         notifyEndingTokenToEverybody();
         notifyScoresToEverybody();
-        for(VirtualView v : views) {
+        /* for(VirtualView v : views) {
             v.onItemsSelected(new ItemsSelected(null));
-        }
+        } */
 
         turnPhase = TurnPhase.LIVING_ROOM;
 
