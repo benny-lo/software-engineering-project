@@ -226,6 +226,15 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     @Override
+    public void onDisconnection() {
+        if (status == ClientStatus.ERROR) return;
+        status = ClientStatus.ERROR;
+        clearScreen();
+        System.out.println("Lost connection to server. Shutting down ...");
+        System.exit(0);
+    }
+
+    @Override
     public void login(Nickname message) {
         String nickname = message.getNickname();
         if (status != ClientStatus.LOGIN){

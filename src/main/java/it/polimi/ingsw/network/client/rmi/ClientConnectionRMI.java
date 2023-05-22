@@ -2,20 +2,52 @@ package it.polimi.ingsw.network.client.rmi;
 
 import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
+import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.UpdateViewInterface;
+import it.polimi.ingsw.view.client.ClientUpdateViewInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
     private ServerConnectionRMIInterface serverConnectionRMIInterface;
-    private final UpdateViewInterface updateReceiver;
+    private final ClientUpdateViewInterface updateReceiver;
+    private final Timer serverTimer;
+    private final Timer clientTimer;
+    private Beep serverBeep;
 
-    public ClientConnectionRMI(UpdateViewInterface updateReceiver) throws RemoteException {
+    public ClientConnectionRMI(ClientUpdateViewInterface updateReceiver) throws RemoteException {
         super();
         this.updateReceiver = updateReceiver;
+        this.serverTimer = new Timer();
+        this.clientTimer = new Timer();
+    }
+
+    public void startTimers() {
+        clientTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    serverConnectionRMIInterface.beep(new Beep());
+                } catch (RemoteException e) {
+                    updateReceiver.onDisconnection();
+                }
+            }
+        }, 1000, 1000);
+
+        clientTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (serverBeep != null) {
+                    serverBeep = null;
+                    return;
+                }
+                updateReceiver.onDisconnection();
+            }
+        }, 1000, 1000);
     }
 
     public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {
@@ -27,8 +59,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         try {
             serverConnectionRMIInterface.login(message);
         } catch (RemoteException e) {
-            System.err.println("ClientConnectionTCP, line 29: failed login");
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            updateReceiver.onDisconnection();
         }
     }
 
@@ -37,8 +70,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         try {
             serverConnectionRMIInterface.createGame(message);
         } catch (RemoteException e) {
-            System.err.println("ClientConnectionTCP, line 39: failed createGame");
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            updateReceiver.onDisconnection();
         }
     }
 
@@ -47,8 +81,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         try {
             serverConnectionRMIInterface.selectGame(message);
         } catch (RemoteException e) {
-            System.err.println("ClientConnectionTCP, line 49: failed selectGame");
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            updateReceiver.onDisconnection();
         }
     }
 
@@ -57,8 +92,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         try {
             serverConnectionRMIInterface.selectFromLivingRoom(message);
         } catch (RemoteException e) {
-            System.err.println("ClientConnectionTCP, line 59: failed selectFromLivingRoom");
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            updateReceiver.onDisconnection();
         }
     }
 
@@ -67,8 +103,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         try {
             serverConnectionRMIInterface.insertInBookshelf(message);
         } catch (RemoteException e) {
-            System.err.println("ClientConnectionTCP, line 69: failed insertInBookshelf");
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            updateReceiver.onDisconnection();
         }
     }
 
@@ -77,7 +114,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         try {
             serverConnectionRMIInterface.writeChat(message);
         } catch (RemoteException e) {
-            System.err.println("ClientConnectionTCP, line 79: failed writeChat");
+            serverTimer.cancel();
+            clientTimer.cancel();
+            updateReceiver.onDisconnection();
         }
     }
 
@@ -154,5 +193,10 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     @Override
     public void sendChatAccepted(ChatAccepted chatAccepted) throws RemoteException {
         updateReceiver.onChatAccepted(chatAccepted);
+    }
+
+    @Override
+    public void beep(Beep beep) throws RemoteException {
+        serverBeep = beep;
     }
 }

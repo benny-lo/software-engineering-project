@@ -4,8 +4,9 @@ package it.polimi.ingsw.utils.action;
  * The listener for players' actions.
  */
 public interface ActionListener {
-    void update(JoinAction action);
-    void update(SelectionFromLivingRoomAction action);
-    void update(SelectionColumnAndOrderAction action);
-    void update(ChatMessageAction action);
+    void perform(JoinAction action);
+    void perform(SelectionFromLivingRoomAction action);
+    void perform(SelectionColumnAndOrderAction action);
+    void perform(ChatMessageAction action);
+    void perform(DisconnectionAction action);
 }

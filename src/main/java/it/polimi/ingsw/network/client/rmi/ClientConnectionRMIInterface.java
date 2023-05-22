@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.rmi;
 
+import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.server.*;
 
 import java.rmi.Remote;
@@ -21,4 +22,5 @@ public interface ClientConnectionRMIInterface extends Remote {
     void sendGameDimensions(GameData gameData) throws RemoteException;
     void sendAcceptedInsertion(AcceptedInsertion acceptedInsertion) throws RemoteException;
     void sendChatAccepted(ChatAccepted chatAccepted) throws RemoteException;
+    void beep(Beep beep) throws RemoteException;
 }

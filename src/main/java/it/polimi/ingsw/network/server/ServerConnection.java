@@ -1,10 +1,10 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.InputViewInterface;
+import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 public interface ServerConnection {
-    void setInputViewInterface(InputViewInterface inputViewInterface);
+    void setServerInputViewInterface(ServerInputViewInterface serverInputViewInterface);
     void send(LivingRoomUpdate update);
     void send(BookshelfUpdate update);
     void send(WaitingUpdate update);

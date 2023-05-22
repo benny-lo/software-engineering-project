@@ -1,56 +1,63 @@
 package it.polimi.ingsw.network.client.socket;
 
 import it.polimi.ingsw.network.client.ClientConnection;
+import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.UpdateViewInterface;
+import it.polimi.ingsw.view.client.ClientUpdateViewInterface;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ClientConnectionTCP implements ClientConnection, Runnable {
     private final Socket socket;
-    private final UpdateViewInterface receiver;
-    private ObjectInputStream in;
+    private final ClientUpdateViewInterface receiver;
     private final ObjectOutputStream out;
+    private final Timer serverTimer;
+    private final Timer clientTimer;
+    private Beep serverBeep;
 
-    public ClientConnectionTCP(Socket socket, UpdateViewInterface receiver) throws IOException {
+    public ClientConnectionTCP(Socket socket, ClientUpdateViewInterface receiver) throws IOException {
         this.socket = socket;
         this.receiver = receiver;
+        this.serverTimer = new Timer();
+        this.clientTimer = new Timer();
         this.out = new ObjectOutputStream(socket.getOutputStream());
     }
 
     @Override
     public void send(Nickname message) {
-        sendAsync(message);
+        sendPrivate(message);
     }
 
     @Override
     public void send(GameInitialization message) {
-        sendAsync(message);
+        sendPrivate(message);
     }
 
     @Override
     public void send(GameSelection message) {
-        sendAsync(message);
+        sendPrivate(message);
     }
 
     @Override
     public void send(LivingRoomSelection message) {
-        sendAsync(message);
+        sendPrivate(message);
     }
 
     @Override
     public void send(BookshelfInsertion message) {
-        sendAsync(message);
+        sendPrivate(message);
     }
 
     @Override
     public void send(ChatMessage message) {
-        sendAsync(message);
+        sendPrivate(message);
     }
 
     private void receive(Object object) {
@@ -84,6 +91,8 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             receiver.onAcceptedInsertion((AcceptedInsertion) object);
         } else if (object instanceof ChatAccepted) {
             receiver.onChatAccepted((ChatAccepted) object);
+        } else if (object instanceof Beep) {
+            serverBeep = (Beep) object;
         }
     }
 
@@ -93,33 +102,53 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
     public void run() {
         try {
             Object input;
-            in = new ObjectInputStream(socket.getInputStream());
+            ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            while (true) {
+            clientTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    sendPrivate(new Beep());
+                }
+            }, 1000, 1000);
+
+            serverTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (serverBeep != null) {
+                        serverBeep = null;
+                        return;
+                    }
+                    try {
+                        socket.close();
+                    } catch (IOException ignored) {}
+                    receiver.onDisconnection();
+                }
+            }, 1000, 1000);
+
+            while (socket.isClosed()) {
                 input = in.readObject();
                 receive(input);
             }
-        } catch (IOException e) {
-            System.err.println("ClientConnectionTCP: line 28 = I/O failed");
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            System.err.println("ClientConnectionTCP: line 31 = unknown class");
+        } catch (IOException | ClassNotFoundException e) {
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.onDisconnection();
         }
+
+        serverTimer.cancel();
+        clientTimer.cancel();
     }
 
-    private void send(Message message) {
+    private void sendPrivate(Message message) {
         synchronized (out) {
             try {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                System.err.println("ClientConnectionTCP: line 41 = I/O failed");
-                e.printStackTrace();
+                serverTimer.cancel();
+                clientTimer.cancel();
+                receiver.onDisconnection();
             }
         }
-    }
-
-    private void sendAsync(Message message) {
-        (new Thread(() -> send(message))).start();
     }
 }

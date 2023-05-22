@@ -234,12 +234,12 @@ public class Controller implements ActionListener {
             VirtualView current = findViewByNickname(game.getCurrentPlayer());
             // current cannot be null because the lobby makes sure this does not happen.
 
-            current.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            if (current != null) current.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
         }
     }
 
     @Override
-    public synchronized void update(JoinAction action) {
+    public synchronized void perform(JoinAction action) {
         if (game != null || ended) {
             action.getView().onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
@@ -266,7 +266,7 @@ public class Controller implements ActionListener {
     }
 
     @Override
-    public synchronized void update(SelectionFromLivingRoomAction action) {
+    public synchronized void perform(SelectionFromLivingRoomAction action) {
         if (ended ||
                 !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
@@ -287,7 +287,7 @@ public class Controller implements ActionListener {
     }
 
     @Override
-    public synchronized void update(SelectionColumnAndOrderAction action) {
+    public synchronized void perform(SelectionColumnAndOrderAction action) {
         if (ended ||
                 !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
@@ -316,7 +316,7 @@ public class Controller implements ActionListener {
     }
 
     @Override
-    public synchronized void update(ChatMessageAction action) {
+    public synchronized void perform(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
             action.getView().onChatAccepted(new ChatAccepted(false));
             return;
@@ -329,20 +329,25 @@ public class Controller implements ActionListener {
         notifyLastChatMessageToEverybody();
     }
 
-    public int getNumberPlayers() {
+    @Override
+    public synchronized void perform(DisconnectionAction action) {
+        ended = true;
+        views.remove(action.getView());
+        for (VirtualView v : views) {
+            v.onEndGameUpdate(new EndGameUpdate(null));
+        }
+    }
+
+    public synchronized boolean isStarted() {
+        return turnPhase != null;
+    }
+
+    public synchronized int getNumberPlayers() {
         return numberPlayers;
     }
 
-    public int getNumberCommonGoalCards() {
+    public synchronized int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
-    }
-
-    public String getCurrentPlayer(){
-        return playerQueue.peek();
-    }
-
-    public boolean isStarted() {
-        return turnPhase != null;
     }
 
     // EXCLUSIVELY FOR TESTING
