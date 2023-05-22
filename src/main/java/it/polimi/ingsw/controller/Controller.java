@@ -68,7 +68,7 @@ public class Controller implements ActionListener {
     /**
      * Listener for the bookshelves.
      */
-    private final BookshelvesListener bookshelvesListener;
+    private final List<BookshelfListener> bookshelfListeners;
 
     /**
      * Listener for the common goal cards.
@@ -98,30 +98,24 @@ public class Controller implements ActionListener {
         this.turnPhase = null;
         this.ended = false;
 
-        this.bookshelvesListener = new BookshelvesListener();
+        this.bookshelfListeners = new ArrayList<>();
         this.commonGoalCardsListener = new CommonGoalCardsListener();
         this.endingTokenListener = new EndingTokenListener();
         this.livingRoomListener = new LivingRoomListener();
 
-        gameBuilder.setBookshelvesListener(bookshelvesListener);
         gameBuilder.setCommonGoalCardsListener(commonGoalCardsListener);
         gameBuilder.setEndingTokenListener(endingTokenListener);
         gameBuilder.setLivingRoomListener(livingRoomListener);
     }
 
-    private VirtualView findViewByNickname(String nickname) {
-        for (VirtualView v : views) {
-            if (nickname.equals(v.getNickname())) return v;
-        }
-        return null;
-    }
-
     private void notifyBookshelvesToEverybody() {
-        if (!bookshelvesListener.hasChanged()) return;
-        Map<Position, Item> map = bookshelvesListener.getBookshelf();
-        BookshelfUpdate update = new BookshelfUpdate(game.getCurrentPlayer(), map);
-        for (VirtualView v : views) {
-            v.onBookshelfUpdate(update);
+        for (BookshelfListener bookshelfListener : bookshelfListeners) {
+            if (!bookshelfListener.hasChanged()) return;
+            Map<Position, Item> map = bookshelfListener.getBookshelf();
+            BookshelfUpdate update = new BookshelfUpdate(bookshelfListener.getOwner(), map);
+            for (VirtualView v : views) {
+                v.onBookshelfUpdate(update);
+            }
         }
     }
 
@@ -204,6 +198,10 @@ public class Controller implements ActionListener {
         notifyPersonalGoalCardsToEverybody();
         notifyScoresToEverybody();
 
+        for(VirtualView v : views) {
+            v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+        }
+
         /* for (VirtualView v : views) {
             v.onItemsSelected(new ItemsSelected(null));
         } */
@@ -231,10 +229,9 @@ public class Controller implements ActionListener {
                 view.onEndGameUpdate(new EndGameUpdate(winner));
             }
         } else {
-            VirtualView current = findViewByNickname(game.getCurrentPlayer());
-            // current cannot be null because the lobby makes sure this does not happen.
-
-            if (current != null) current.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            for(VirtualView v : views) {
+                v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            }
         }
     }
 
@@ -252,6 +249,10 @@ public class Controller implements ActionListener {
         views.add(action.getView());
 
         gameBuilder.addPlayer(action.getView().getNickname());
+
+        BookshelfListener bookshelfListener = new BookshelfListener(action.getView().getNickname());
+        bookshelfListeners.add(bookshelfListener);
+        gameBuilder.setBookshelfListener(bookshelfListener);
 
         for(VirtualView v : views) {
             v.onWaitingUpdate(new WaitingUpdate(
