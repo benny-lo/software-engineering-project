@@ -14,14 +14,14 @@ import java.util.TimerTask;
 
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
     private ServerConnectionRMIInterface serverConnectionRMIInterface;
-    private final ClientUpdateViewInterface updateReceiver;
+    private final ClientUpdateViewInterface receiver;
     private final Timer serverTimer;
     private final Timer clientTimer;
     private Beep serverBeep;
 
-    public ClientConnectionRMI(ClientUpdateViewInterface updateReceiver) throws RemoteException {
+    public ClientConnectionRMI(ClientUpdateViewInterface receiver) throws RemoteException {
         super();
-        this.updateReceiver = updateReceiver;
+        this.receiver = receiver;
         this.serverTimer = new Timer();
         this.clientTimer = new Timer();
     }
@@ -33,7 +33,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                 try {
                     serverConnectionRMIInterface.beep(new Beep());
                 } catch (RemoteException e) {
-                    updateReceiver.onDisconnection();
+                    receiver.onDisconnection();
                 }
             }
         }, 1000, 1000);
@@ -45,9 +45,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                     serverBeep = null;
                     return;
                 }
-                updateReceiver.onDisconnection();
+                receiver.onDisconnection();
             }
-        }, 1000, 1000);
+        }, 2000, 2000);
     }
 
     public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {
@@ -61,7 +61,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            updateReceiver.onDisconnection();
+            receiver.onDisconnection();
         }
     }
 
@@ -72,7 +72,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            updateReceiver.onDisconnection();
+            receiver.onDisconnection();
         }
     }
 
@@ -83,7 +83,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            updateReceiver.onDisconnection();
+            receiver.onDisconnection();
         }
     }
 
@@ -94,7 +94,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            updateReceiver.onDisconnection();
+            receiver.onDisconnection();
         }
     }
 
@@ -105,7 +105,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            updateReceiver.onDisconnection();
+            receiver.onDisconnection();
         }
     }
 
@@ -116,83 +116,83 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            updateReceiver.onDisconnection();
+            receiver.onDisconnection();
         }
     }
 
     @Override
     public void sendLivingRoomUpdate(LivingRoomUpdate update) throws RemoteException {
-        updateReceiver.onLivingRoomUpdate(update);
+        receiver.onLivingRoomUpdate(update);
     }
 
     @Override
     public void sendBookshelfUpdate(BookshelfUpdate update) throws RemoteException {
-        updateReceiver.onBookshelfUpdate(update);
+        receiver.onBookshelfUpdate(update);
     }
 
     @Override
     public void sendWaitingUpdate(WaitingUpdate update) throws RemoteException {
-        updateReceiver.onWaitingUpdate(update);
+        receiver.onWaitingUpdate(update);
     }
 
     @Override
     public void sendScoresUpdate(ScoresUpdate update) throws RemoteException {
-        updateReceiver.onScoresUpdate(update);
+        receiver.onScoresUpdate(update);
     }
 
     @Override
     public void sendEndingTokenUpdate(EndingTokenUpdate update) throws RemoteException {
-        updateReceiver.onEndingTokenUpdate(update);
+        receiver.onEndingTokenUpdate(update);
     }
 
     @Override
     public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) throws RemoteException {
-        updateReceiver.onCommonGoalCardsUpdate(update);
+        receiver.onCommonGoalCardsUpdate(update);
     }
 
     @Override
     public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) throws RemoteException {
-        updateReceiver.onPersonalGoalCardUpdate(update);
+        receiver.onPersonalGoalCardUpdate(update);
     }
 
     @Override
     public void sendChatUpdate(ChatUpdate update) throws RemoteException {
-        updateReceiver.onChatUpdate(update);
+        receiver.onChatUpdate(update);
     }
 
     @Override
     public void sendStartTurnUpdate(StartTurnUpdate update) throws RemoteException {
-        updateReceiver.onStartTurnUpdate(update);
+        receiver.onStartTurnUpdate(update);
     }
 
     @Override
     public void sendEndGameUpdate(EndGameUpdate update) throws RemoteException {
-        updateReceiver.onEndGameUpdate(update);
+        receiver.onEndGameUpdate(update);
     }
 
     @Override
     public void sendListOfGames(GamesList list) throws RemoteException {
-        updateReceiver.onGamesList(list);
+        receiver.onGamesList(list);
     }
 
     @Override
     public void sendItemsSelected(ItemsSelected selected) throws RemoteException {
-        updateReceiver.onItemsSelected(selected);
+        receiver.onItemsSelected(selected);
     }
 
     @Override
     public void sendGameDimensions(GameData gameData) throws RemoteException {
-        updateReceiver.onGameData(gameData);
+        receiver.onGameData(gameData);
     }
 
     @Override
     public void sendAcceptedInsertion(AcceptedInsertion acceptedInsertion) throws RemoteException {
-        updateReceiver.onAcceptedInsertion(acceptedInsertion);
+        receiver.onAcceptedInsertion(acceptedInsertion);
     }
 
     @Override
     public void sendChatAccepted(ChatAccepted chatAccepted) throws RemoteException {
-        updateReceiver.onChatAccepted(chatAccepted);
+        receiver.onChatAccepted(chatAccepted);
     }
 
     @Override

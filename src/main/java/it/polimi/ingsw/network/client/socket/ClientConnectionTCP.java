@@ -123,9 +123,9 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                     } catch (IOException ignored) {}
                     receiver.onDisconnection();
                 }
-            }, 1000, 1000);
+            }, 2000, 2000);
 
-            while (socket.isClosed()) {
+            while (socket.isConnected()) {
                 input = in.readObject();
                 receive(input);
             }

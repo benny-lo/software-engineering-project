@@ -64,7 +64,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                     } catch (IOException ignored) {}
                     receiver.disconnect();
                 }
-            }, 1000, 1000);
+            }, 2000, 2000);
 
             while (socket.isConnected()) {
                 input = in.readObject();
@@ -81,7 +81,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
 
         serverTimer.cancel();
         clientTimer.cancel();
-
     }
 
     @Override
