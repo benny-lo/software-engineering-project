@@ -2,7 +2,7 @@ package it.polimi.ingsw.utils.classesOnlyForTesting;
 
 import it.polimi.ingsw.network.server.ServerConnection;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.InputViewInterface;
+import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 public class MockServerConnection implements ServerConnection {
     public MockServerConnection() {
@@ -10,7 +10,7 @@ public class MockServerConnection implements ServerConnection {
     }
 
     @Override
-    public void setInputViewInterface(InputViewInterface inputViewInterface) {
+    public void setServerInputViewInterface(ServerInputViewInterface serverInputViewInterface) {
 
     }
 
@@ -75,7 +75,7 @@ public class MockServerConnection implements ServerConnection {
     }
 
     @Override
-    public void send(GameDimensions gameDimensions) {
+    public void send(GameData gameData) {
 
     }
 

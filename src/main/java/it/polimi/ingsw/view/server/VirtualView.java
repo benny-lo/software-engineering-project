@@ -4,11 +4,11 @@ import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.ServerConnection;
 import it.polimi.ingsw.utils.action.ChatMessageAction;
+import it.polimi.ingsw.utils.action.DisconnectionAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.InputViewInterface;
 import it.polimi.ingsw.view.UpdateViewInterface;
 
 /**
@@ -16,7 +16,7 @@ import it.polimi.ingsw.view.UpdateViewInterface;
  * It listens for message from the client and notifies the lobby/controller.
  * It is used by the lobby and the controller to send messages to client.
  */
-public class VirtualView implements UpdateViewInterface, InputViewInterface {
+public class VirtualView implements UpdateViewInterface, ServerInputViewInterface {
     /**
      * The nickname chosen by the client represented by {@code this}.
      */
@@ -28,6 +28,8 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     private Controller controller;
 
     private ServerConnection serverConnection;
+
+    private boolean disconnected;
 
     /**
      * The constructor of VirtualView. It only sets the {@code ServerConnection} and
@@ -41,6 +43,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
      * The constructor of VirtualView, exclusively used for testing.
      */
     public VirtualView(){}
+
     /**
      * Setter for the private attribute {@code nickname}.
      * @param nickname the nickname to set.
@@ -83,7 +86,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
 
 
     @Override
-    public void login(Nickname message) {
+    public synchronized void login(Nickname message) {
         if (controller != null) {
             onGamesList(new GamesList(null));
             return;
@@ -92,7 +95,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     }
 
     @Override
-    public void createGame(GameInitialization message) {
+    public synchronized void createGame(GameInitialization message) {
         if (controller != null) {
             onGamesList(new GamesList(null));
             return;
@@ -101,116 +104,145 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     }
 
     @Override
-    public void selectGame(GameSelection message) {
+    public synchronized void selectGame(GameSelection message) {
         if (controller != null) {
-            onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            onGameData(new GameData(-1, -1,-1, -1, -1, -1));
             return;
         }
         Lobby.getInstance().selectGame(message.getId(), this);
     }
 
     @Override
-    public void selectFromLivingRoom(LivingRoomSelection message) {
+    public synchronized void selectFromLivingRoom(LivingRoomSelection message) {
         if (controller == null) {
             onItemsSelected(new ItemsSelected(null));
             return;
         }
 
-        controller.update(new SelectionFromLivingRoomAction(this, message.getPositions()));
+        controller.perform(new SelectionFromLivingRoomAction(this, message.getPositions()));
     }
 
     @Override
-    public void insertInBookshelf(BookshelfInsertion message) {
+    public synchronized void insertInBookshelf(BookshelfInsertion message) {
         if (controller == null) {
             onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
 
-        controller.update(new SelectionColumnAndOrderAction(this, message.getColumn(), message.getPermutation()));
+        controller.perform(new SelectionColumnAndOrderAction(this, message.getColumn(), message.getPermutation()));
     }
 
     @Override
-    public void writeChat(ChatMessage message) {
+    public synchronized void writeChat(ChatMessage message) {
         if (controller == null) {
             onChatAccepted(new ChatAccepted(false));
             return;
         }
 
-        controller.update(new ChatMessageAction(this, message.getText()));
+        controller.perform(new ChatMessageAction(this, message.getText()));
+    }
+
+    @Override
+    public synchronized void disconnect() {
+        if (disconnected) return;
+
+        disconnected = true;
+
+        Lobby.getInstance().removeVirtualView(this);
+        if (controller != null) {
+            Lobby.getInstance().removeController(controller);
+            controller.perform(new DisconnectionAction(this));
+            controller = null;
+        }
     }
 
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onBookshelfUpdate(BookshelfUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onWaitingUpdate(WaitingUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onStartTurnUpdate(StartTurnUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
+        if (disconnected) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onGamesList(GamesList gamesList) {
+        if (disconnected) return;
         serverConnection.send(gamesList);
     }
 
     @Override
     public void onItemsSelected(ItemsSelected itemsSelected) {
+        if (disconnected) return;
         serverConnection.send(itemsSelected);
     }
 
     @Override
     public void onAcceptedInsertion(AcceptedInsertion message) {
+        if (disconnected) return;
         serverConnection.send(message);
     }
 
     @Override
-    public void onGameDimensions(GameDimensions message){
+    public void onGameData(GameData message){
+        if (disconnected) return;
         serverConnection.send(message);
     }
 
     @Override
     public void onChatAccepted(ChatAccepted message) {
+        if (disconnected) return;
         serverConnection.send(message);
     }
 }

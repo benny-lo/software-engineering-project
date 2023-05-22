@@ -11,8 +11,9 @@ public class ConnectionEstablishmentRMI implements ConnectionEstablishmentRMIInt
     public ServerConnectionRMIInterface init(ClientConnectionRMIInterface clientConnectionRMIInterface) throws RemoteException {
         ServerConnectionRMI serverConnection = new ServerConnectionRMI(clientConnectionRMIInterface);
         VirtualView view = new VirtualView(serverConnection);
-        serverConnection.setInputViewInterface(view);
+        serverConnection.setServerInputViewInterface(view);
         Lobby.getInstance().addVirtualView(view);
+        serverConnection.startTimers();
         return serverConnection;
     }
 }

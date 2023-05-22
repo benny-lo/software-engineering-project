@@ -1,10 +1,10 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.InputViewInterface;
+import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 public interface ServerConnection {
-    void setInputViewInterface(InputViewInterface inputViewInterface);
+    void setServerInputViewInterface(ServerInputViewInterface serverInputViewInterface);
     void send(LivingRoomUpdate update);
     void send(BookshelfUpdate update);
     void send(WaitingUpdate update);
@@ -17,7 +17,7 @@ public interface ServerConnection {
     void send(EndGameUpdate update);
     void send(GamesList gamesList);
     void send(ItemsSelected itemsSelected);
-    void send(GameDimensions gameDimensions);
+    void send(GameData gameData);
     void send(AcceptedInsertion acceptedInsertion);
     void send(ChatAccepted chatAccepted);
 }

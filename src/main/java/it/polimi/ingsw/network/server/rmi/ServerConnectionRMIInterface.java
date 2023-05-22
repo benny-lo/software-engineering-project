@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server.rmi;
 
+import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.client.*;
 
 import java.rmi.Remote;
@@ -12,4 +13,5 @@ public interface ServerConnectionRMIInterface extends Remote {
     void selectFromLivingRoom(LivingRoomSelection message) throws RemoteException;
     void insertInBookshelf(BookshelfInsertion message) throws RemoteException;
     void writeChat(ChatMessage message) throws RemoteException;
+    void beep(Beep beep) throws RemoteException;
 }

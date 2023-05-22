@@ -4,7 +4,7 @@ import it.polimi.ingsw.utils.message.server.*;
 
 public interface UpdateViewInterface {
     void onGamesList(GamesList message);
-    void onGameDimensions(GameDimensions message);
+    void onGameData(GameData message);
     void onItemsSelected(ItemsSelected message);
     void onAcceptedInsertion(AcceptedInsertion message);
     void onChatAccepted(ChatAccepted message);

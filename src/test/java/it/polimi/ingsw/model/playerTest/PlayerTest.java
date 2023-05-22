@@ -23,7 +23,7 @@ public class PlayerTest {
      */
     @Test
     public void testPlayerConstructor(){
-        Player player = new Player("benny");
+        Player player = new Player();
 
         assertNotNull(player);
         assertNotNull(player.getBookshelf());
@@ -36,7 +36,7 @@ public class PlayerTest {
     public void testUpdatePersonalScoreWithoutMatches(){
         Item item = Item.CAT;
 
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.takeItems(List.of(item, item));
 
@@ -62,7 +62,7 @@ public class PlayerTest {
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(new HashMap<>(Map.of(position_1, item_c, position_2, item_b, position_3, item_f, position_4, item_p)));
         PersonalGoalCard card = new PersonalGoalCard(0, pattern);
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.setPersonalGoalCard(card);
 
@@ -87,7 +87,7 @@ public class PlayerTest {
      */
     @Test
     public void testInsertTilesWithoutItems(){
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.takeItems(List.of());
         player.insertTiles(0, List.of());
@@ -104,7 +104,7 @@ public class PlayerTest {
         Item item_b = Item.BOOK;
         Item item_f = Item.FRAME;
 
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.takeItems(List.of(item_b, item_c, item_f));
         player.insertTiles(0, List.of(0, 1, 2));
@@ -123,7 +123,7 @@ public class PlayerTest {
         ScoringToken token_0 = new ScoringToken(8, 0);
         ScoringToken token_1 = new ScoringToken(4, 1);
 
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.addEndingToken();
         player.addScoringToken(token_0);
@@ -142,7 +142,7 @@ public class PlayerTest {
         Item item_f = Item.FRAME;
         Item item_p = Item.PLANT;
 
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.takeItems(List.of(item_b, item_c,item_c));
         player.insertTiles(0, List.of(0, 1, 2));
@@ -172,7 +172,7 @@ public class PlayerTest {
         Item item_f = Item.FRAME;
         Item item_p = Item.PLANT;
 
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.addEndingToken();
         player.addScoringToken(token_0);
@@ -213,7 +213,7 @@ public class PlayerTest {
 
         PersonalGoalPattern pattern = new PersonalGoalPattern(new HashMap<>(Map.of(position_1, item_c, position_2, item_b, position_3, item_f, position_4, item_p)));
         PersonalGoalCard card = new PersonalGoalCard(0, pattern);
-        Player player = new Player("benny");
+        Player player = new Player();
 
         player.setPersonalGoalCard(card);
 
@@ -242,7 +242,7 @@ public class PlayerTest {
      */
     @Test
     public void testCannotTakeWithoutTokens(){
-        Player player = new Player("benny");
+        Player player = new Player();
 
         assertNotNull(player.cannotTake());
         assertEquals(0, player.cannotTake().size());
@@ -253,7 +253,7 @@ public class PlayerTest {
      */
     @Test
     public void testCannotTakeWith2Tokens(){
-        Player player = new Player("benny");
+        Player player = new Player();
         ScoringToken token_0 = new ScoringToken(8, 0);
         ScoringToken token_1 = new ScoringToken(4, 1);
 
@@ -268,7 +268,7 @@ public class PlayerTest {
      */
     @Test
     public void testFirstToFinishWithoutEndingToken(){
-        Player player = new Player("benny");
+        Player player = new Player();
 
         assertFalse(player.firstToFinish());
     }

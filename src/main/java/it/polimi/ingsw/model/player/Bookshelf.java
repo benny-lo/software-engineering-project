@@ -17,28 +17,10 @@ public class Bookshelf{
     private final Item[][] bookshelf;
 
     /**
-     * number of rows of {@code this}.
-     */
-    private final int rows;
-
-    /**
-     * number of columns of {@code this}.
-     */
-    private final int columns;
-
-    /**
      * Construct of the class. It initializes {@code this} with all positions free ({@code null}).
      */
     public Bookshelf() {
-        this.rows = 6;
-        this.columns = 5;
-
-        this.bookshelf = new Item[rows][columns];
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
-                bookshelf[i][j] = null;
-            }
-        }
+        this.bookshelf = new Item[6][5];
     }
 
     /**
@@ -47,9 +29,6 @@ public class Bookshelf{
      * @param columns number of columns.
      */
     public Bookshelf(int rows, int columns){
-        this.rows = rows;
-        this.columns = columns;
-
         this.bookshelf = new Item[rows][columns];
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
@@ -65,10 +44,10 @@ public class Bookshelf{
      * @return {@code true} iff {@code itemsSize} items can be inserted in {@code column}.
      */
     public boolean canInsert(int itemsSize, int column) {
-        if (itemsSize < 0 || itemsSize > rows) return false;
-        if (column < 0 || column >= columns) return false;
+        if (itemsSize < 0 || itemsSize > getRows()) return false;
+        if (column < 0 || column >= getColumns()) return false;
 
-        for(int i = rows - 1; i >= rows - itemsSize; i--) {
+        for(int i = getRows() - 1; i >= getRows() - itemsSize; i--) {
             if (bookshelf[i][column] != null) return false;
         }
 
@@ -81,7 +60,7 @@ public class Bookshelf{
      * @param column column where to insert {@code item}.
      */
     public void insert(Item item, int column) {
-        for(int i = 0; i < rows; i++) {
+        for(int i = 0; i < getRows(); i++) {
             if (bookshelf[i][column] == null) {
                 bookshelf[i][column] = item;
                 return;
@@ -126,8 +105,8 @@ public class Bookshelf{
      * @return {@code true} iff {@code this} has no available positions.
      */
     public boolean isFull() {
-        for(int i = 0; i < columns; i++) {
-            if (bookshelf[rows - 1][i] == null) return false;
+        for(int i = 0; i < getColumns(); i++) {
+            if (bookshelf[getRows() - 1][i] == null) return false;
         }
         return true;
     }
@@ -162,8 +141,8 @@ public class Bookshelf{
 
         int currentIslandSize;
         int result = 0;
-        for(int i = 0; i < rows; i++) {
-            for(int j = 0; j < columns; j++) {
+        for(int i = 0; i < getRows(); i++) {
+            for(int j = 0; j < getColumns(); j++) {
                 if (visited[i][j] || bookshelf[i][j] == null) continue;
 
                 currentIslandSize = 0;
@@ -178,13 +157,13 @@ public class Bookshelf{
                     visited[row][column] = true;
                     currentIslandSize++;
 
-                    if (row+1 < rows && bookshelf[row+1][column] == bookshelf[row][column] && !visited[row+1][column]) {
+                    if (row+1 < getRows() && bookshelf[row+1][column] == bookshelf[row][column] && !visited[row+1][column]) {
                         q.add(new Position(row+1, column));
                     }
                     if (row-1 > 0 && bookshelf[row-1][column] == bookshelf[row][column] && !visited[row-1][column]) {
                         q.add(new Position(row-1, column));
                     }
-                    if (column+1 < columns && bookshelf[row][column+1] == bookshelf[row][column] && !visited[row][column+1]) {
+                    if (column+1 < getColumns() && bookshelf[row][column+1] == bookshelf[row][column] && !visited[row][column+1]) {
                         q.add(new Position(row, column+1));
                     }
                     if (column-1 > 0 && bookshelf[row][column-1] == bookshelf[row][column] && !visited[row][column-1]) {
@@ -216,7 +195,7 @@ public class Bookshelf{
      * @return number of rows of {@code this}.
      */
     public int getRows() {
-        return rows;
+        return bookshelf.length;
     }
 
     /**
@@ -224,7 +203,8 @@ public class Bookshelf{
      * @return number of columns of {@code this}.
      */
     public int getColumns() {
-        return columns;
+        if (bookshelf.length == 0) return 0;
+        return bookshelf[0].length;
     }
 
 }

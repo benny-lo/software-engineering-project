@@ -2,23 +2,60 @@ package it.polimi.ingsw.network.server.rmi;
 
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMIInterface;
 import it.polimi.ingsw.network.server.ServerConnection;
+import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.InputViewInterface;
+import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
-    private InputViewInterface receiver;
+    private ServerInputViewInterface receiver;
     private final ClientConnectionRMIInterface client;
+    private final Timer serverTimer;
+    private final Timer clientTimer;
+    private final Object beepLock;
+    private Beep clientBeep;
 
     public ServerConnectionRMI(ClientConnectionRMIInterface client) throws RemoteException {
         super();
         this.client = client;
+        this.serverTimer = new Timer();
+        this.clientTimer = new Timer();
+        this.beepLock = new Object();
     }
 
-    public void setInputViewInterface(InputViewInterface receiver) {
+    public void startTimers() {
+        serverTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    client.beep(new Beep());
+                } catch (RemoteException e) {
+                    receiver.disconnect();
+                }
+            }
+        }, 1000, 1000);
+
+        clientTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                synchronized (beepLock) {
+                    if (clientBeep != null) {
+                        clientBeep = null;
+                        return;
+                    }
+                }
+                receiver.disconnect();
+            }
+        }, 2000, 2000);
+    }
+
+    @Override
+    public void setServerInputViewInterface(ServerInputViewInterface receiver) {
         this.receiver = receiver;
     }
 
@@ -53,11 +90,20 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
+    public void beep(Beep beep) throws RemoteException {
+        synchronized (beepLock) {
+            this.clientBeep = beep;
+        }
+    }
+
+    @Override
     public void send(LivingRoomUpdate update) {
         try {
             client.sendLivingRoomUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -66,7 +112,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendBookshelfUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -75,7 +123,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendWaitingUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -84,7 +134,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendScoresUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -93,7 +145,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendEndingTokenUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -102,7 +156,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendCommonGoalCardUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -111,7 +167,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendPersonalGoalCardUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -120,7 +178,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendChatUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -129,7 +189,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendStartTurnUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -138,7 +200,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendEndGameUpdate(update);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -147,7 +211,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendListOfGames(gamesList);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -156,16 +222,20 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendItemsSelected(itemsSelected);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
     @Override
-    public void send(GameDimensions gameDimensions) {
+    public void send(GameData gameData) {
         try {
-            client.sendGameDimensions(gameDimensions);
+            client.sendGameDimensions(gameData);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -174,7 +244,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendAcceptedInsertion(acceptedInsertion);
         } catch (RemoteException e) {
-            throw new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -183,7 +255,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         try {
             client.sendChatAccepted(chatAccepted);
         } catch (RemoteException e) {
-            throw  new RuntimeException(e);
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 }

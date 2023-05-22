@@ -19,7 +19,6 @@ import java.util.*;
  */
 
 public class Player {
-    private final String nickname;
     private List<Item> itemsTakenFromLivingRoom;
     private final Bookshelf bookshelf;
     private PersonalGoalCard personalGoalCard;
@@ -30,7 +29,7 @@ public class Player {
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
      */
-    public Player(String nickname) {
+    public Player() {
         String filename;
         Bookshelf b;
         Gson gson = new GsonBuilder().serializeNulls()
@@ -38,7 +37,7 @@ public class Player {
                 .disableJdkUnsafe()
                 .create();
 
-        filename = "/configuration/bookshelf/dimensions.json";
+        filename = "/configuration/bookshelf/bookshelf.json";
 
         try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
             b = gson.fromJson(reader,new TypeToken<Bookshelf>(){}.getType());
@@ -49,7 +48,6 @@ public class Player {
                     The configuration file should be in configuration/bookshelf""");
         }
 
-        this.nickname = nickname;
         this.itemsTakenFromLivingRoom = null;
         this.bookshelf = b;
         this.personalGoalCard = null;
@@ -135,7 +133,7 @@ public class Player {
             if (bookshelf.tileAt(i, column) == null) continue;
             count++;
             if (bookshelvesListener != null) {
-                bookshelvesListener.updateState(nickname, new Position(i, column), bookshelf.tileAt(i, column));
+                bookshelvesListener.updateState(new Position(i, column), bookshelf.tileAt(i, column));
             }
         }
         itemsTakenFromLivingRoom = null;
@@ -189,20 +187,12 @@ public class Player {
         this.bookshelvesListener = bookshelvesListener;
         for(int i = 0; i < bookshelf.getRows(); i++) {
             for(int j = 0; j < bookshelf.getColumns(); j++) {
-                bookshelvesListener.updateState(nickname, new Position(i, j), bookshelf.tileAt(i, j));
+                bookshelvesListener.updateState(new Position(i, j), bookshelf.tileAt(i, j));
             }
         }
     }
 
     public int getPersonalID() {
         return personalGoalCard.getId();
-    }
-
-    public int getBookshelfRows() {
-        return bookshelf.getRows();
-    }
-
-    public int getBookshelfColumns() {
-        return bookshelf.getColumns();
     }
 }

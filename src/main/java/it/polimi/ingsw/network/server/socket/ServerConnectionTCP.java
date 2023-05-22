@@ -1,22 +1,32 @@
 package it.polimi.ingsw.network.server.socket;
 
 import it.polimi.ingsw.network.server.ServerConnection;
+import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.InputViewInterface;
+import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ServerConnectionTCP implements ServerConnection, Runnable {
+    private final Timer serverTimer;
+    private final Timer clientTimer;
+    private final Object beepLock;
+    private Beep clientBeep;
     private final Socket socket;
-    private InputViewInterface receiver;
-    private final ObjectOutputStream out;
+    private ServerInputViewInterface receiver;
+    private ObjectOutputStream out;
 
     public ServerConnectionTCP(Socket socket) {
+        serverTimer = new Timer();
+        clientTimer = new Timer();
+        beepLock = new Object();
         this.socket = socket;
 
         ObjectOutputStream out;
@@ -24,8 +34,8 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             out = new ObjectOutputStream(socket.getOutputStream());
             out.flush();
         } catch (IOException e) {
-            System.err.println("ServerConnectionTCP, line 22: failed to get output stream");
-            throw new RuntimeException(e);
+            receiver.disconnect();
+            return;
         }
 
         this.out = out;
@@ -37,21 +47,48 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            while (true) {
+            serverTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    sendPrivate(new Beep());
+                }
+            }, 1000, 1000);
+
+            clientTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    synchronized (beepLock) {
+                        if (clientBeep != null) {
+                            clientBeep = null;
+                            return;
+                        }
+                    }
+                    try {
+                        socket.close();
+                    } catch (IOException ignored) {}
+                    receiver.disconnect();
+                }
+            }, 2000, 2000);
+
+            while (socket.isConnected()) {
                 input = in.readObject();
                 receive(input);
             }
-        } catch (IOException e) {
-            System.err.println("ServerConnectionTCP, line 38: IOException while reading from socket");
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            System.err.println("ServerConnectionTCP, line 41: ClassNotFoundException while reading from socket");
-            throw new RuntimeException(e);
+        } catch (IOException | ClassNotFoundException e) {
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
+            try {
+                socket.close();
+            } catch (IOException ignored) {}
         }
+
+        serverTimer.cancel();
+        clientTimer.cancel();
     }
 
     @Override
-    public void setInputViewInterface(InputViewInterface receiver) {
+    public void setServerInputViewInterface(ServerInputViewInterface receiver) {
         this.receiver = receiver;
     }
 
@@ -68,18 +105,21 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             receiver.insertInBookshelf((BookshelfInsertion) input);
         } else if (input instanceof ChatMessage) {
             receiver.writeChat((ChatMessage) input);
+        } else if (input instanceof Beep) {
+            synchronized (beepLock) {
+                clientBeep = (Beep) input;
+            }
         }
     }
 
-    private void sendPrivate(Message message) {
-        synchronized (out) {
-            try {
-                out.writeObject(message);
-                out.flush();
-            } catch (IOException e) {
-                System.err.println("ServerConnectionTCP, line 76: failed to send to client");
-                throw new RuntimeException(e);
-            }
+    private synchronized void sendPrivate(Message message) {
+        try {
+            out.writeObject(message);
+            out.flush();
+        } catch (IOException e) {
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 
@@ -149,8 +189,8 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     @Override
-    public void send(GameDimensions gameDimensions) {
-        sendPrivate(gameDimensions);
+    public void send(GameData gameData) {
+        sendPrivate(gameData);
     }
 
     @Override

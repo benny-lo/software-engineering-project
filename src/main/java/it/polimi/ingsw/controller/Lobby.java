@@ -6,16 +6,12 @@ import it.polimi.ingsw.view.server.VirtualView;
 
 import java.util.*;
 
-// TODO: send scores in controller and manage disconnection and exceptions correctly.
-// TODO: remove VirtualViews correctly so that the garbage collector can work its magic.
-
 // TODO: propagate exceptions in Model and (add methods get dimensions --> where?).
 
-// TODO: remove VirtualViews from lobby and controller with UpdateView (what about nickname?)
+// TODO: remove VirtualViews from lobby and controller with ServerUpdateView ?
 // TODO: idea = make both lobby and game action listeners.
-// TODO: think carefully about where to put nicknames.
 
-// TODO: can we leave asserts in code (not test)?
+// TODO: better GameData creation.
 
 public class Lobby {
     /**
@@ -63,8 +59,27 @@ public class Lobby {
         availableId++;
     }
 
+    public synchronized void removeController(Controller controller) {
+        Integer id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
+
+        if (id != -1) controllers.remove(id);
+
+        // notify not playing views that id is no longer available.
+        (new Thread(() -> {
+            List<GameInfo> list = new ArrayList<>();
+            list.add(new GameInfo(id, -1, -1));
+            for (VirtualView v : views) {
+                if (v.isLoggedIn() && !v.isInGame()) v.onGamesList(new GamesList(list));
+            }
+        })).start();
+    }
+
     public synchronized void addVirtualView(VirtualView view) {
         views.add(view);
+    }
+
+    public synchronized void removeVirtualView(VirtualView view) {
+        views.remove(view);
     }
 
     public synchronized void login(String nickname, VirtualView view) {
@@ -82,48 +97,49 @@ public class Lobby {
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
         if (!view.isLoggedIn() || view.isInGame()) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
         }
 
         // incorrect parameters.
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
         }
 
         // create controller + join operation in controller + set controller in view.
         Controller controller = new Controller(numberPlayers, numberCommonGoals);
-        controller.update(new JoinAction(view));
+        controller.perform(new JoinAction(view));
         addController(controller);
         // the controller is sending the player the game dimensions.
 
         view.setController(controller);
 
-        // TODO: maybe create an ad hoc thread.
         // send to client without game
-        for (VirtualView v : views) {
-            List<GameInfo> list = new ArrayList<>();
-            list.add(new GameInfo(availableId - 1, numberPlayers, numberCommonGoals));
-            GamesList gamesList = new GamesList(list);
-            if (v.isLoggedIn() && !v.isInGame()) {
-                v.onGamesList(gamesList);
+        (new Thread(() -> {
+            for (VirtualView v : views) {
+                List<GameInfo> list = new ArrayList<>();
+                list.add(new GameInfo(availableId - 1, numberPlayers, numberCommonGoals));
+                GamesList gamesList = new GamesList(list);
+                if (v.isLoggedIn() && !v.isInGame()) {
+                    v.onGamesList(gamesList);
+                }
             }
-        }
+        })).start();
     }
 
 
     public synchronized void selectGame(int id, VirtualView view) {
         if (!view.isLoggedIn() || view.isInGame()) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
         }
 
         if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
         }
 
-        controllers.get(id).update(new JoinAction(view));
+        controllers.get(id).perform(new JoinAction(view));
         // the controller is sending the player the game dimensions.
     }
 }

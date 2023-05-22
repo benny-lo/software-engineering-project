@@ -33,56 +33,52 @@ public class Server {
             stub = (ConnectionEstablishmentRMIInterface)
                     UnicastRemoteObject.exportObject(connection, ServerSettings.getRmiPort());
         } catch (RemoteException e) {
-            System.err.println("failed to export serverRMI");
-            e.printStackTrace();
+            System.out.println("Failed to export serverRMI.");
+            System.exit(0);
         }
 
         Registry registry = null;
         try {
             registry = LocateRegistry.createRegistry(ServerSettings.getRmiPort());
         } catch (RemoteException e) {
-            System.err.println("failed to create registry");
-            e.printStackTrace();
+            System.out.println("Failed to create registry.");
+            System.exit(0);
         }
 
         try {
             registry.bind("ConnectionEstablishmentRMIInterface", stub);
         } catch (AccessException e) {
-            System.err.println("no permission to perform action");
-            e.printStackTrace();
+            System.out.println("No permission to bind.");
+            System.exit(0);
         } catch (AlreadyBoundException e) {
-            System.err.println("already bound to registry object with name ServerRMIInterface");
-            e.printStackTrace();
+            System.err.println("Name ConnectionEstablishmentRMIInterface already bound to registry.");
+            System.exit(0);
         } catch (RemoteException e) {
-            System.err.println("binding failed");
-            e.printStackTrace();
+            System.err.println("Binding failed.");
+            System.exit(0);
         }
     }
 
     private static void startConnectionTCP() {
         (new Thread(() -> {
-            ServerSocket server = null;
+            try (ServerSocket server = new ServerSocket(ServerSettings.getSocketPort())) {
+                while(true) {
+                    try {
+                        Socket socket = server.accept();
+                        ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
+                        VirtualView view = new VirtualView(serverConnectionTCP);
+                        serverConnectionTCP.setServerInputViewInterface(view);
+                        Lobby.getInstance().addVirtualView(view);
 
-            try {
-                server = new ServerSocket(ServerSettings.getSocketPort());
-            } catch (IOException e) {
-                System.err.println("failed to start server socket");
-                e.printStackTrace();
-            }
-
-            while(true) {
-                try {
-                    Socket socket = server.accept();
-                    ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
-                    VirtualView view = new VirtualView(serverConnectionTCP);
-                    serverConnectionTCP.setInputViewInterface(view);
-                    Lobby.getInstance().addVirtualView(view);
-
-                    (new Thread(serverConnectionTCP)).start();
-                } catch (IOException e) {
-                    System.err.println("server closed");
-                    e.printStackTrace();
+                        (new Thread(serverConnectionTCP)).start();
+                    } catch (IOException e) {
+                        System.out.println("Server closed.");
+                        System.exit(0);
+                    }
                 }
+            } catch (IOException e) {
+                System.out.println("Failed to start server socket");
+                System.exit(0);
             }
         })).start();
     }

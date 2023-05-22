@@ -8,7 +8,7 @@ import it.polimi.ingsw.network.client.rmi.ClientConnectionRMI;
 import it.polimi.ingsw.network.client.socket.ClientConnectionTCP;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
-import it.polimi.ingsw.view.UpdateViewInterface;
+import it.polimi.ingsw.view.InputViewInterface;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class ClientView implements UpdateViewInterface {
+public abstract class ClientView implements ClientUpdateViewInterface, InputViewInterface {
     protected String nickname;
     protected String currentPlayer;
     protected String winner;
@@ -51,64 +51,64 @@ public abstract class ClientView implements UpdateViewInterface {
     }
 
     public void startRMI() {
-        // TODO: exceptions
-        Registry registry;
+        Registry registry = null;
         try {
             registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
         } catch (RemoteException e) {
-            System.err.println("RMI registry error");
-            throw new RuntimeException(e);
+            System.out.println("Registry not found.");
+            System.exit(0);
         }
 
-        ConnectionEstablishmentRMIInterface stub;
+        ConnectionEstablishmentRMIInterface stub = null;
         try {
             stub = (ConnectionEstablishmentRMIInterface) registry.lookup("ConnectionEstablishmentRMIInterface");
         } catch (AccessException e) {
-            System.err.println("wrong access privileges for RMI");
-            throw new RuntimeException(e);
+            System.out.println("Wrong access privileges for RMI.");
+            System.exit(0);
         } catch (NotBoundException e) {
-            System.err.println("name not found for RMI");
-            throw new RuntimeException(e);
+            System.out.println("Name not found for RMI.");
+            System.exit(0);
         } catch (RemoteException e) {
-            System.err.println("something went wrong for RMI");
-            throw new RuntimeException(e);
+            System.out.println("Something went wrong with RMI.");
+            System.exit(0);
         }
 
-        ClientConnectionRMI clientConnectionRMI;
+        ClientConnectionRMI clientConnectionRMI = null;
         try {
             clientConnectionRMI = new ClientConnectionRMI(this);
         } catch (RemoteException e) {
-            System.err.println("ClientView, line 78: failed to instantiate RequestSender");
-            throw new RuntimeException(e);
+            System.out.println("Failed to instantiate RMI client.");
+            System.exit(0);
         }
 
-        ServerConnectionRMIInterface serverConnection;
+        ServerConnectionRMIInterface serverConnection = null;
         try {
             serverConnection = stub.init(clientConnectionRMI);
         } catch (RemoteException e) {
-            System.err.println("ClientView, line 86: failed to start rmi connection");
-            throw new RuntimeException(e);
+            System.out.println("Failed to get RMI server.");
+            System.exit(0);
         }
 
         clientConnectionRMI.setServerConnectionRMIInterface(serverConnection);
         this.clientConnection = clientConnectionRMI;
+        clientConnectionRMI.startTimers();
     }
 
     public void startTCP() {
-        // TODO: exceptions
-        Socket socket;
+        Socket socket = null;
         try {
             socket = new Socket(ServerSettings.getHostName(), ServerSettings.getSocketPort());
         } catch (IOException e) {
-            System.err.println("not able to open TCP connection to Server");
-            throw new RuntimeException(e);
+            System.out.println("Server has not been started yet.");
+            System.exit(0);
         }
 
         ClientConnectionTCP sender = null;
         try {
             sender = new ClientConnectionTCP(socket, this);
         } catch (IOException e) {
-            System.out.println("failed to get streams from Socket");
+            System.out.println("Failed to get socket streams from server.");
+            System.exit(0);
         }
         this.clientConnection = sender;
         (new Thread(sender)).start();
