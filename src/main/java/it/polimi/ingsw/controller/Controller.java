@@ -118,12 +118,10 @@ public class Controller implements ActionListener {
 
     private void notifyBookshelvesToEverybody() {
         if (!bookshelvesListener.hasChanged()) return;
-        Map<String, Map<Position, Item>> map = bookshelvesListener.getBookshelves();
-        for(String nick : map.keySet()) {
-            BookshelfUpdate update = new BookshelfUpdate(nick, map.get(nick));
-            for(VirtualView view : views) {
-                view.onBookshelfUpdate(update);
-            }
+        Map<Position, Item> map = bookshelvesListener.getBookshelf();
+        BookshelfUpdate update = new BookshelfUpdate(game.getCurrentPlayer(), map);
+        for (VirtualView v : views) {
+            v.onBookshelfUpdate(update);
         }
     }
 
@@ -243,12 +241,12 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void update(JoinAction action) {
         if (game != null || ended) {
-            action.getView().onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            action.getView().onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
         }
 
         // TODO: fix
-        action.getView().onGameDimensions(new GameDimensions(9, 9, 6, 5));
+        // action.getView().onGameDimensions(new GameData(9, 9, 6, 5));
 
         playerQueue.add(action.getView().getNickname());
         views.add(action.getView());
@@ -300,16 +298,19 @@ public class Controller implements ActionListener {
 
         game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
 
+        action.getView().onAcceptedInsertion(new AcceptedInsertion(true));
+
         notifyLivingRoomToEverybody();
         notifyBookshelvesToEverybody();
         notifyPersonalGoalCardsToEverybody();
         notifyCommonGoalCardsToEverybody();
         notifyEndingTokenToEverybody();
+        notifyScoresToEverybody();
+        for(VirtualView v : views) {
+            v.onItemsSelected(new ItemsSelected(null));
+        }
+
         turnPhase = TurnPhase.LIVING_ROOM;
-
-        action.getView().onAcceptedInsertion(new AcceptedInsertion(true));
-
-        // remember to send scores and maybe items selected as null.
 
         nextTurn();
     }

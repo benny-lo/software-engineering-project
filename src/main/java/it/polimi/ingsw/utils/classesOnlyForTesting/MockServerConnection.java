@@ -75,7 +75,7 @@ public class MockServerConnection implements ServerConnection {
     }
 
     @Override
-    public void send(GameDimensions gameDimensions) {
+    public void send(GameData gameData) {
 
     }
 

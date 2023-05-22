@@ -161,9 +161,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
-    public void send(GameDimensions gameDimensions) {
+    public void send(GameData gameData) {
         try {
-            client.sendGameDimensions(gameDimensions);
+            client.sendGameDimensions(gameData);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }

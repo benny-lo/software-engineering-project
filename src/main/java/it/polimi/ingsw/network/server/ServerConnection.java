@@ -17,7 +17,7 @@ public interface ServerConnection {
     void send(EndGameUpdate update);
     void send(GamesList gamesList);
     void send(ItemsSelected itemsSelected);
-    void send(GameDimensions gameDimensions);
+    void send(GameData gameData);
     void send(AcceptedInsertion acceptedInsertion);
     void send(ChatAccepted chatAccepted);
 }

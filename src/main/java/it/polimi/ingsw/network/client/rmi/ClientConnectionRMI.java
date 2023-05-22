@@ -142,8 +142,8 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void sendGameDimensions(GameDimensions gameDimensions) throws RemoteException {
-        updateReceiver.onGameDimensions(gameDimensions);
+    public void sendGameDimensions(GameData gameData) throws RemoteException {
+        updateReceiver.onGameData(gameData);
     }
 
     @Override

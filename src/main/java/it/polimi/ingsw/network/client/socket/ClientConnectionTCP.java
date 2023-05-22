@@ -78,8 +78,8 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             receiver.onStartTurnUpdate((StartTurnUpdate) object);
         } else if (object instanceof EndGameUpdate) {
             receiver.onEndGameUpdate((EndGameUpdate) object);
-        } else if (object instanceof GameDimensions) {
-            receiver.onGameDimensions((GameDimensions) object);
+        } else if (object instanceof GameData) {
+            receiver.onGameData((GameData) object);
         } else if (object instanceof AcceptedInsertion) {
             receiver.onAcceptedInsertion((AcceptedInsertion) object);
         } else if (object instanceof ChatAccepted) {

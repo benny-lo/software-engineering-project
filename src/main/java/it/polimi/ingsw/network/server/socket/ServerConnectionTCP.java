@@ -149,8 +149,8 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     @Override
-    public void send(GameDimensions gameDimensions) {
-        sendPrivate(gameDimensions);
+    public void send(GameData gameData) {
+        sendPrivate(gameData);
     }
 
     @Override

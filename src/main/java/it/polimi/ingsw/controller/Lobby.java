@@ -82,13 +82,13 @@ public class Lobby {
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
         // not yet registered.
         if (!view.isLoggedIn() || view.isInGame()) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
         }
 
         // incorrect parameters.
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
         }
 
@@ -115,11 +115,11 @@ public class Lobby {
 
     public synchronized void selectGame(int id, VirtualView view) {
         if (!view.isLoggedIn() || view.isInGame()) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
         }
 
         if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
-            view.onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
             return;
         }
 

@@ -206,20 +206,22 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     @Override
-    public void onGameDimensions(GameDimensions gameDimensions) {
+    public void onGameData(GameData gameData) {
         synchronized (System.out) {
-            if (gameDimensions.getBookshelvesColumns() == -1 ||
-            gameDimensions.getBookshelvesRows() == -1 ||
-            gameDimensions.getLivingRoomColumns() == -1 ||
-            gameDimensions.getLivingRoomRows() == -1) {
+            if (gameData.getNumberPlayers() == -1 ||
+                    gameData.getNumberCommonGoalCards() == -1 ||
+                    gameData.getBookshelvesColumns() == -1 ||
+                    gameData.getBookshelvesRows() == -1 ||
+                    gameData.getLivingRoomColumns() == -1 ||
+                    gameData.getLivingRoomRows() == -1) {
                 printDeniedAction();
                 return;
             }
             status = ClientStatus.GAME;
 
-            livingRoom = new Item[gameDimensions.getLivingRoomRows()][gameDimensions.getLivingRoomColumns()];
-            bookshelvesRows = gameDimensions.getBookshelvesRows();
-            bookshelvesColumns = gameDimensions.getBookshelvesColumns();
+            livingRoom = new Item[gameData.getLivingRoomRows()][gameData.getLivingRoomColumns()];
+            bookshelvesRows = gameData.getBookshelvesRows();
+            bookshelvesColumns = gameData.getBookshelvesColumns();
         }
     }
 

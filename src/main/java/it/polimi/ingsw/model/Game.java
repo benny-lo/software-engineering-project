@@ -9,7 +9,7 @@ import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
-import it.polimi.ingsw.utils.message.server.GameDimensions;
+import it.polimi.ingsw.utils.message.server.GameData;
 
 import java.io.*;
 import java.util.*;
@@ -37,7 +37,7 @@ public class Game implements GameInterface {
         this.currentPlayer = null;
         this.players = new HashMap<>();
         for (String nickname : nicknames) {
-            players.put(nickname, new Player(nickname));
+            players.put(nickname, new Player());
         }
         setup();
     }
@@ -209,16 +209,6 @@ public class Game implements GameInterface {
     @Override
     public int getNumberPlayers() {
         return numberPlayers;
-    }
-
-    @Override
-    public GameDimensions getDimensions() {
-        String nickname = players.keySet().stream().toList().get(0);
-        return new GameDimensions(boardManager.getLivingRoomRows(),
-                boardManager.getLivingRoomColumns(),
-                players.get(nickname).getBookshelfRows(),
-                players.get(nickname).getBookshelfColumns()
-        );
     }
 
     public Map<String, Player> getPlayers() {

@@ -103,7 +103,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     @Override
     public void selectGame(GameSelection message) {
         if (controller != null) {
-            onGameDimensions(new GameDimensions(-1, -1, -1, -1));
+            onGameData(new GameData(-1, -1,-1, -1, -1, -1));
             return;
         }
         Lobby.getInstance().selectGame(message.getId(), this);
@@ -205,7 +205,7 @@ public class VirtualView implements UpdateViewInterface, InputViewInterface {
     }
 
     @Override
-    public void onGameDimensions(GameDimensions message){
+    public void onGameData(GameData message){
         serverConnection.send(message);
     }
 
