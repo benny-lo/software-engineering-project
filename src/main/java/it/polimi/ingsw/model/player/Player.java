@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
-import it.polimi.ingsw.controller.modelListener.BookshelvesListener;
+import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,7 +24,7 @@ public class Player {
     private PersonalGoalCard personalGoalCard;
     private final List<ScoringToken> scoringTokens;
     private boolean endingToken;
-    private BookshelvesListener bookshelvesListener;
+    private BookshelfListener bookshelfListener;
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
@@ -132,8 +132,8 @@ public class Player {
         for(int i = bookshelf.getRows() - 1; count < permutedItems.size(); i--) {
             if (bookshelf.tileAt(i, column) == null) continue;
             count++;
-            if (bookshelvesListener != null) {
-                bookshelvesListener.updateState(new Position(i, column), bookshelf.tileAt(i, column));
+            if (bookshelfListener != null) {
+                bookshelfListener.updateState(new Position(i, column), bookshelf.tileAt(i, column));
             }
         }
         itemsTakenFromLivingRoom = null;
@@ -183,11 +183,11 @@ public class Player {
         return this.endingToken;
     }
 
-    public void setBookshelvesListener(BookshelvesListener bookshelvesListener) {
-        this.bookshelvesListener = bookshelvesListener;
+    public void setBookshelvesListener(BookshelfListener bookshelfListener) {
+        this.bookshelfListener = bookshelfListener;
         for(int i = 0; i < bookshelf.getRows(); i++) {
             for(int j = 0; j < bookshelf.getColumns(); j++) {
-                bookshelvesListener.updateState(new Position(i, j), bookshelf.tileAt(i, j));
+                bookshelfListener.updateState(new Position(i, j), bookshelf.tileAt(i, j));
             }
         }
     }

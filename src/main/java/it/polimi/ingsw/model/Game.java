@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
-import it.polimi.ingsw.utils.message.server.GameData;
 
 import java.io.*;
 import java.util.*;
@@ -158,10 +157,11 @@ public class Game implements GameInterface {
         return false;
     }
 
-    public void setBookshelvesListener(BookshelvesListener bookshelvesListener) {
-        for(String nickname : players.keySet()) {
-            players.get(nickname).setBookshelvesListener(bookshelvesListener);
-        }
+    public void setBookshelfListener(BookshelfListener bookshelfListener) {
+        Player player = players.get(bookshelfListener.getOwner());
+        if (player == null) return;
+
+        player.setBookshelvesListener(bookshelfListener);
     }
 
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {

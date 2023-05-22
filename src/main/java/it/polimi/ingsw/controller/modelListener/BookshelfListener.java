@@ -6,11 +6,13 @@ import it.polimi.ingsw.model.Position;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BookshelvesListener extends ModelListener {
+public class BookshelfListener extends ModelListener {
+    private final String owner;
     private final Map<Position, Item> bookshelf;
 
-    public BookshelvesListener() {
+    public BookshelfListener(String owner) {
         super();
+        this.owner = owner;
         bookshelf = new HashMap<>();
     }
 
@@ -20,6 +22,10 @@ public class BookshelvesListener extends ModelListener {
 
         bookshelf.clear();
         return ret;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 
     public void updateState(Position position, Item item) {

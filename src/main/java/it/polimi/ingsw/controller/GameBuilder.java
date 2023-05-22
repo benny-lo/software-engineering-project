@@ -12,7 +12,7 @@ public class GameBuilder {
     private final static int MIN_PLAYERS = 2;
     private final int numberCommonGoalCards;
     private final List<String> players;
-    private BookshelvesListener bookshelvesListener;
+    private final List<BookshelfListener> bookshelfListeners;
     private CommonGoalCardsListener commonGoalCardsListener;
     private EndingTokenListener endingTokenListener;
     private LivingRoomListener livingRoomListener;
@@ -20,14 +20,15 @@ public class GameBuilder {
     public GameBuilder(int numberCommonGoalCards) {
         this.numberCommonGoalCards = numberCommonGoalCards;
         players = new ArrayList<>();
+        bookshelfListeners = new ArrayList<>();
     }
 
     public void addPlayer(String nickname){
         players.add(nickname);
     }
 
-    public void setBookshelvesListener(BookshelvesListener bookshelvesListener) {
-        this.bookshelvesListener = bookshelvesListener;
+    public void setBookshelfListener(BookshelfListener bookshelfListener) {
+        bookshelfListeners.add(bookshelfListener);
     }
 
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
@@ -47,7 +48,7 @@ public class GameBuilder {
     }
 
     public GameInterface startGame() {
-        if (bookshelvesListener == null ||
+        if (bookshelfListeners.contains(null) ||
         commonGoalCardsListener == null ||
         endingTokenListener == null ||
         livingRoomListener == null) return null;
@@ -55,7 +56,9 @@ public class GameBuilder {
         if (players.size() < MIN_PLAYERS || players.size() > MAX_PLAYERS) return null;
 
         Game game = new Game(players, numberCommonGoalCards);
-        game.setBookshelvesListener(bookshelvesListener);
+        for(BookshelfListener bookshelfListener : bookshelfListeners) {
+            game.setBookshelfListener(bookshelfListener);
+        }
         game.setCommonGoalCardsListener(commonGoalCardsListener);
         game.setEndingTokenListener(endingTokenListener);
         game.setLivingRoomListener(livingRoomListener);
