@@ -108,13 +108,6 @@ public class Controller implements ActionListener {
         gameBuilder.setLivingRoomListener(livingRoomListener);
     }
 
-    private VirtualView findViewByNickname(String nickname) {
-        for (VirtualView v : views) {
-            if (nickname.equals(v.getNickname())) return v;
-        }
-        return null;
-    }
-
     private void notifyBookshelvesToEverybody() {
         for (BookshelfListener bookshelfListener : bookshelfListeners) {
             if (!bookshelfListener.hasChanged()) return;
@@ -205,6 +198,10 @@ public class Controller implements ActionListener {
         notifyPersonalGoalCardsToEverybody();
         notifyScoresToEverybody();
 
+        for(VirtualView v : views) {
+            v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+        }
+
         /* for (VirtualView v : views) {
             v.onItemsSelected(new ItemsSelected(null));
         } */
@@ -232,10 +229,9 @@ public class Controller implements ActionListener {
                 view.onEndGameUpdate(new EndGameUpdate(winner));
             }
         } else {
-            VirtualView current = findViewByNickname(game.getCurrentPlayer());
-            // current cannot be null because the lobby makes sure this does not happen.
-
-            if (current != null) current.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            for(VirtualView v : views) {
+                v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            }
         }
     }
 
