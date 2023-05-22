@@ -106,7 +106,7 @@ class TextInterfacePrinter {
             case BOOK -> System.out.print(ANSI_WHITE + "B " + ANSI_RESET);
             case GAME -> System.out.print(ANSI_YELLOW + "G " + ANSI_RESET);
             case FRAME -> System.out.print(ANSI_BLUE + "F " + ANSI_RESET);
-            case CUP -> System.out.print(ANSI_CYAN + "C " + ANSI_RESET);
+            case CUP -> System.out.print(ANSI_CYAN + "T " + ANSI_RESET);
             case PLANT -> System.out.print(ANSI_PURPLE + "P " + ANSI_RESET);
             case LOCKED -> System.out.print(ANSI_RED + "\u2717 " + ANSI_RESET);
         }
@@ -123,11 +123,13 @@ class TextInterfacePrinter {
 
     static void printBookshelf(Item[][] array) {
         for (int i = array.length - 1; i >= 0; i--) {
+            System.out.print(i + " ");
             for (int j = 0; j < array[i].length; j++) {
                 printItem(array[i][j]);
             }
             System.out.println();
         }
+        System.out.println("  0 1 2 3 4");
     }
 
     static void printPersonalGoalCard(int personalGoalCard) {
