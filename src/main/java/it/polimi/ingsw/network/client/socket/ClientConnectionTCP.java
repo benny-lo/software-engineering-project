@@ -20,6 +20,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
     private final ObjectOutputStream out;
     private final Timer serverTimer;
     private final Timer clientTimer;
+    private final Object beepLock;
     private Beep serverBeep;
 
     public ClientConnectionTCP(Socket socket, ClientUpdateViewInterface receiver) throws IOException {
@@ -27,6 +28,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
         this.receiver = receiver;
         this.serverTimer = new Timer();
         this.clientTimer = new Timer();
+        this.beepLock = new Object();
         this.out = new ObjectOutputStream(socket.getOutputStream());
     }
 
@@ -92,7 +94,9 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
         } else if (object instanceof ChatAccepted) {
             receiver.onChatAccepted((ChatAccepted) object);
         } else if (object instanceof Beep) {
-            serverBeep = (Beep) object;
+            synchronized (beepLock) {
+                serverBeep = (Beep) object;
+            }
         }
     }
 
@@ -114,9 +118,11 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             serverTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (serverBeep != null) {
-                        serverBeep = null;
-                        return;
+                    synchronized (beepLock) {
+                        if (serverBeep != null) {
+                            serverBeep = null;
+                            return;
+                        }
                     }
                     try {
                         socket.close();

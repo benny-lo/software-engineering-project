@@ -17,6 +17,7 @@ import java.util.TimerTask;
 public class ServerConnectionTCP implements ServerConnection, Runnable {
     private final Timer serverTimer;
     private final Timer clientTimer;
+    private final Object beepLock;
     private Beep clientBeep;
     private final Socket socket;
     private ServerInputViewInterface receiver;
@@ -25,6 +26,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     public ServerConnectionTCP(Socket socket) {
         serverTimer = new Timer();
         clientTimer = new Timer();
+        beepLock = new Object();
         this.socket = socket;
 
         ObjectOutputStream out;
@@ -55,9 +57,11 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             clientTimer.schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    if (clientBeep != null) {
-                        clientBeep = null;
-                        return;
+                    synchronized (beepLock) {
+                        if (clientBeep != null) {
+                            clientBeep = null;
+                            return;
+                        }
                     }
                     try {
                         socket.close();
@@ -102,7 +106,9 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         } else if (input instanceof ChatMessage) {
             receiver.writeChat((ChatMessage) input);
         } else if (input instanceof Beep) {
-            clientBeep = (Beep) input;
+            synchronized (beepLock) {
+                clientBeep = (Beep) input;
+            }
         }
     }
 

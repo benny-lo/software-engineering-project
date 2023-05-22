@@ -17,6 +17,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     private final ClientConnectionRMIInterface client;
     private final Timer serverTimer;
     private final Timer clientTimer;
+    private final Object beepLock;
     private Beep clientBeep;
 
     public ServerConnectionRMI(ClientConnectionRMIInterface client) throws RemoteException {
@@ -24,6 +25,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         this.client = client;
         this.serverTimer = new Timer();
         this.clientTimer = new Timer();
+        this.beepLock = new Object();
     }
 
     public void startTimers() {
@@ -41,9 +43,11 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         clientTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if (clientBeep != null) {
-                    clientBeep = null;
-                    return;
+                synchronized (beepLock) {
+                    if (clientBeep != null) {
+                        clientBeep = null;
+                        return;
+                    }
                 }
                 receiver.disconnect();
             }
@@ -87,7 +91,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
 
     @Override
     public void beep(Beep beep) throws RemoteException {
-        this.clientBeep = beep;
+        synchronized (beepLock) {
+            this.clientBeep = beep;
+        }
     }
 
     @Override
