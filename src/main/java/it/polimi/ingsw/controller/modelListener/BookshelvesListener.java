@@ -7,27 +7,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BookshelvesListener extends ModelListener {
-    private final Map<String, Map<Position, Item>> bookshelves;
+    private final Map<Position, Item> bookshelf;
 
     public BookshelvesListener() {
         super();
-        bookshelves = new HashMap<>();
+        bookshelf = new HashMap<>();
     }
 
-    public Map<String, Map<Position, Item>> getBookshelves() {
+    public Map<Position, Item> getBookshelf() {
         changed = false;
-        Map<String, Map<Position, Item>> ret = new HashMap<>();
-        for(String nick : bookshelves.keySet()) {
-            ret.put(nick, new HashMap<>(bookshelves.get(nick)));
-        }
+        Map<Position, Item> ret = new HashMap<>(bookshelf);
 
-        bookshelves.clear();
+        bookshelf.clear();
         return ret;
     }
 
-    public void updateState(String owner, Position position, Item item) {
+    public void updateState(Position position, Item item) {
         changed = true;
-        if (!bookshelves.containsKey(owner)) bookshelves.put(owner, new HashMap<>());
-        bookshelves.get(owner).put(position, item);
+        bookshelf.put(position, item);
     }
 }
