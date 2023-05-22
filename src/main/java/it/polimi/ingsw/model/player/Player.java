@@ -37,7 +37,7 @@ public class Player {
                 .disableJdkUnsafe()
                 .create();
 
-        filename = "/configuration/bookshelf/dimensions.json";
+        filename = "/configuration/bookshelf/bookshelf.json";
 
         try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
             b = gson.fromJson(reader,new TypeToken<Bookshelf>(){}.getType());

@@ -246,7 +246,7 @@ public class Controller implements ActionListener {
         }
 
         // TODO: fix
-        // action.getView().onGameDimensions(new GameData(9, 9, 6, 5));
+        action.getView().onGameData(new GameData(numberPlayers, numberCommonGoalCards, 9, 9, 6, 5));
 
         playerQueue.add(action.getView().getNickname());
         views.add(action.getView());
