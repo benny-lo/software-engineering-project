@@ -174,7 +174,7 @@ class TextInterfacePrinter {
         }
 
         for (Message message : chat) {
-            System.out.println(message.getText() + " wrote: " + message.getText());
+            System.out.println(message.getNickname() + " wrote: " + message.getText());
         }
         System.out.flush();
     }
