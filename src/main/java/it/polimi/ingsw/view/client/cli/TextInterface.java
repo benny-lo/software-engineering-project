@@ -198,7 +198,6 @@ public class TextInterface extends ClientView implements InputReceiver {
 
             if (!inChat && !endGame) {
                 clearScreen();
-                printChat(chat);
             }
         }
     }
