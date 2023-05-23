@@ -36,9 +36,8 @@ public class CommonGoalCardManager {
     /**
      * Class constructor exclusively used for testing: it initializes the common goal cards of the game.
      * @param numPlayers number of players in the game.
-     * @param test Test.
      */
-    public CommonGoalCardManager(int numPlayers, String test) {
+    public CommonGoalCardManager(int numPlayers) {
         cards = new ArrayList<>();
         cards.add(new CommonGoalCard(0, numPlayers, new CommonGoalPattern8()));
         cards.add(new CommonGoalCard(1, numPlayers, new CommonGoalPattern9()));

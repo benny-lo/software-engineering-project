@@ -29,7 +29,7 @@ public class CommonGoalCardManagerTest {
      */
     @Test
     public void testCheck2Matches(){
-        CommonGoalCardManager commonGoalCardManager = new CommonGoalCardManager(2, "test");
+        CommonGoalCardManager commonGoalCardManager = new CommonGoalCardManager(2);
         Bookshelf bookshelf = new Bookshelf(3,3);
         List<Integer> cannotTake = new ArrayList<>();
         bookshelf.insert(new LinkedList<>(List.of(Item.CAT, Item.CAT, Item.CAT)),0);
@@ -52,7 +52,7 @@ public class CommonGoalCardManagerTest {
      */
     @Test
     public void testCheckWithoutMatches(){
-        CommonGoalCardManager commonGoalCardManager = new CommonGoalCardManager(2, "test");
+        CommonGoalCardManager commonGoalCardManager = new CommonGoalCardManager(2);
         Bookshelf bookshelf = new Bookshelf();
         List<Integer> cannotTake = new ArrayList<>();
         bookshelf.insert(new LinkedList<>(List.of(Item.PLANT, Item.CAT, Item.CAT)),0);
