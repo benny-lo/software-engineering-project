@@ -132,9 +132,109 @@ class TextInterfacePrinter {
         System.out.println("  0 1 2 3 4");
     }
 
-    static void printPersonalGoalCard(int personalGoalCard) {
-        if (personalGoalCard == 0) return;
-        System.out.println("Your personal goal card is " + personalGoalCard);
+    static void printPersonalGoalCard(int id) {
+        if (id == 0) return;
+        Item[][] personalGoalCard= new Item[6][5];
+        switch (id){
+            case 1 -> {
+                personalGoalCard[4][4]=Item.CAT;
+                personalGoalCard[0][2]=Item.CUP;
+                personalGoalCard[3][3]=Item.BOOK;
+                personalGoalCard[5][0]=Item.PLANT;
+                personalGoalCard[5][2]=Item.FRAME;
+                personalGoalCard[2][1]=Item.GAME;
+            }
+            case 2 -> {
+                personalGoalCard[3][0]=Item.CAT;
+                personalGoalCard[1][3]=Item.CUP;
+                personalGoalCard[2][4]=Item.BOOK;
+                personalGoalCard[4][1]=Item.PLANT;
+                personalGoalCard[0][4]=Item.FRAME;
+                personalGoalCard[3][2]=Item.GAME;
+            }
+            case 3 -> {
+                personalGoalCard[2][1]=Item.CAT;
+                personalGoalCard[2][4]=Item.CUP;
+                personalGoalCard[0][0]=Item.BOOK;
+                personalGoalCard[3][2]=Item.PLANT;
+                personalGoalCard[0][4]=Item.FRAME;
+                personalGoalCard[4][3]=Item.GAME;
+            }
+            case 4 -> {
+                personalGoalCard[1][2]=Item.CAT;
+                personalGoalCard[3][0]=Item.CUP;
+                personalGoalCard[1][1]=Item.BOOK;
+                personalGoalCard[2][3]=Item.PLANT;
+                personalGoalCard[3][2]=Item.FRAME;
+                personalGoalCard[5][4]=Item.GAME;
+            }
+            case 5 -> {
+                personalGoalCard[0][3]=Item.CAT;
+                personalGoalCard[4][1]=Item.CUP;
+                personalGoalCard[2][2]=Item.BOOK;
+                personalGoalCard[1][4]=Item.PLANT;
+                personalGoalCard[2][1]=Item.FRAME;
+                personalGoalCard[0][0]=Item.GAME;
+            }
+            case 6 -> {
+                personalGoalCard[5][4]=Item.CAT;
+                personalGoalCard[5][2]=Item.CUP;
+                personalGoalCard[3][3]=Item.BOOK;
+                personalGoalCard[0][0]=Item.PLANT;
+                personalGoalCard[1][3]=Item.FRAME;
+                personalGoalCard[1][1]=Item.GAME;
+            }
+            case 7 -> {
+                personalGoalCard[5][0]=Item.CAT;
+                personalGoalCard[2][0]=Item.CUP;
+                personalGoalCard[0][2]=Item.BOOK;
+                personalGoalCard[1][3]=Item.PLANT;
+                personalGoalCard[4][3]=Item.FRAME;
+                personalGoalCard[1][4]=Item.GAME;
+            }
+            case 8 -> {
+                personalGoalCard[4][1]=Item.CAT;
+                personalGoalCard[3][2]=Item.CUP;
+                personalGoalCard[1][3]=Item.BOOK;
+                personalGoalCard[2][0]=Item.PLANT;
+                personalGoalCard[5][4]=Item.FRAME;
+                personalGoalCard[0][3]=Item.GAME;
+            }
+            case 9 -> {
+                personalGoalCard[3][2]=Item.CAT;
+                personalGoalCard[1][1]=Item.CUP;
+                personalGoalCard[2][4]=Item.BOOK;
+                personalGoalCard[1][4]=Item.PLANT;
+                personalGoalCard[0][0]=Item.FRAME;
+                personalGoalCard[5][2]=Item.GAME;
+            }
+            case 10 -> {
+                personalGoalCard[2][3]=Item.CAT;
+                personalGoalCard[5][4]=Item.CUP;
+                personalGoalCard[3][0]=Item.BOOK;
+                personalGoalCard[0][3]=Item.PLANT;
+                personalGoalCard[1][1]=Item.FRAME;
+                personalGoalCard[4][1]=Item.GAME;
+            }
+            case 11 -> {
+                personalGoalCard[1][4]=Item.CAT;
+                personalGoalCard[0][3]=Item.CUP;
+                personalGoalCard[4][1]=Item.BOOK;
+                personalGoalCard[5][2]=Item.PLANT;
+                personalGoalCard[2][2]=Item.FRAME;
+                personalGoalCard[3][0]=Item.GAME;
+            }
+            case 12 -> {
+                personalGoalCard[0][0]=Item.CAT;
+                personalGoalCard[2][3]=Item.CUP;
+                personalGoalCard[5][2]=Item.BOOK;
+                personalGoalCard[4][1]=Item.PLANT;
+                personalGoalCard[3][2]=Item.FRAME;
+                personalGoalCard[1][4]=Item.GAME;
+            }
+        }
+        System.out.println("Your personal goal card is: ");
+        printBookshelf(personalGoalCard);
     }
 
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
