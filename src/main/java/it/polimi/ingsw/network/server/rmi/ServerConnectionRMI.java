@@ -99,6 +99,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                         serverTimer.cancel();
                         clientTimer.cancel();
                         receiver.disconnect();
+                        return;
                     }
                 }
             }
