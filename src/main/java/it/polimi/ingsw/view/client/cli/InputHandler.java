@@ -24,7 +24,7 @@ public class InputHandler implements Runnable {
             String line = in.nextLine();
 
             if (line.charAt(0) != '/') {
-                inputReceiver.writeChat(new ChatMessage(line.replace("\n", "").replace("\r", "")));
+                inputReceiver.writeChat(new ChatMessage(line.replace("\n", "").replace("\r", ""), "all"));
                 continue;
             }
 
@@ -106,6 +106,12 @@ public class InputHandler implements Runnable {
                     } else {
                         TextInterfacePrinter.printIncorrectCommand();
                     }
+                }
+                case "/dm" -> {
+                    if (tokenizer.countTokens() != 2) return;
+                    String receiver = tokenizer.nextToken();
+                    String text = tokenizer.nextToken();
+                    inputReceiver.writeChat(new ChatMessage(text, receiver));
                 }
                 default -> TextInterfacePrinter.printWrongCommand();
             }

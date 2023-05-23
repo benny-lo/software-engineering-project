@@ -4,9 +4,6 @@ import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.GameInterface;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.chat.Chat;
-import it.polimi.ingsw.model.chat.ChatInterface;
-import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.server.VirtualView;
 import it.polimi.ingsw.utils.message.server.*;
@@ -18,11 +15,6 @@ public class Controller implements ActionListener {
      * The model of the game.
      */
     private GameInterface game;
-
-    /**
-     * The model of the chat.
-     */
-    private final ChatInterface chat;
 
     /**
      * Builder of the game model.
@@ -90,7 +82,6 @@ public class Controller implements ActionListener {
         this.numberPlayers = numberPlayers;
         this.game = null;
         this.numberCommonGoalCards = numberCommonGoalCards;
-        this.chat = new Chat();
         this.gameBuilder = new GameBuilder(numberCommonGoalCards);
         this.firstPlayer = null;
         this.playerQueue = new ArrayDeque<>();
@@ -116,16 +107,6 @@ public class Controller implements ActionListener {
             for (VirtualView v : views) {
                 v.onBookshelfUpdate(update);
             }
-        }
-    }
-
-    private void notifyLastChatMessageToEverybody() {
-        Message message = chat.getLastMessage();
-        for(VirtualView view : views) {
-            view.onChatUpdate(new ChatUpdate(
-                    message.getNickname(),
-                    message.getText())
-            );
         }
     }
 
@@ -324,11 +305,33 @@ public class Controller implements ActionListener {
             return;
         }
 
-        chat.addMessage(action.getView().getNickname(), action.getText());
+        ChatUpdate update = new ChatUpdate(action.getView().getNickname(),
+                action.getText(),
+                action.getText());
 
-        action.getView().onChatAccepted(new ChatAccepted(true));
+        if (action.getReceiver().equals("all")) {
+            action.getView().onChatAccepted(new ChatAccepted(true));
 
-        notifyLastChatMessageToEverybody();
+            for (VirtualView v : views) {
+                v.onChatUpdate(update);
+            }
+        } else {
+            VirtualView view = null;
+            for(VirtualView v : views) {
+                if (v.getNickname().equals(action.getReceiver())) {
+                    view = v;
+                    break;
+                }
+            }
+
+            if (view == null) {
+                action.getView().onChatAccepted(new ChatAccepted(false));
+                return;
+            }
+
+            action.getView().onChatUpdate(update);
+            view.onChatUpdate(update);
+        }
     }
 
     @Override

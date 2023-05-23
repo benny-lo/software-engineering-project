@@ -5,9 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.chat.Message;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientStatus;
 import it.polimi.ingsw.view.client.ClientView;
@@ -179,7 +178,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
         synchronized (System.out) {
             int id = update.getId();
-            PersonalGoalPattern personalGoalPattern;
+            Map<Position, Item> personalGoalPattern;
 
             String filename = "/configuration/personalGoalCards/personal_goal_pattern_" + id + ".json";
             Gson gson = new GsonBuilder().serializeNulls()
@@ -188,14 +187,14 @@ public class TextInterface extends ClientView implements InputReceiver {
                     .enableComplexMapKeySerialization()
                     .create();
             try(Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
-                personalGoalPattern = gson.fromJson(reader,new TypeToken<PersonalGoalPattern>(){}.getType());
+                personalGoalPattern = gson.fromJson(reader,new TypeToken<Map<Position, Item>>(){}.getType());
             } catch(IOException e) {
-                personalGoalPattern = null;
                 printPersonalGoalCardConfigurationFailed();
+                return;
             }
 
-            for (Position position : personalGoalPattern.getMaskPositions().keySet()){
-                personalGoalCard[position.getRow()][position.getColumn()] = personalGoalPattern.getMaskPositions().get(position);
+            for (Position position : personalGoalPattern.keySet()){
+                personalGoalCard[position.getRow()][position.getColumn()] = personalGoalPattern.get(position);
             }
 
             if (!inChat && !endGame) {
@@ -206,9 +205,9 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     @Override
-    public void onChatUpdate(ChatUpdate update) {
+    public void onChatUpdate(ChatUpdate message) {
         synchronized (System.out) {
-            chat.add(new Message(update.getNickname(), update.getText()));
+            chat.add(message);
 
             if (inChat && !endGame) {
                 clearScreen();

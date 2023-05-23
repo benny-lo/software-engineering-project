@@ -1,13 +1,13 @@
 package it.polimi.ingsw.view.client;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMI;
 import it.polimi.ingsw.network.client.socket.ClientConnectionTCP;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
+import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import it.polimi.ingsw.view.InputViewInterface;
 
 import java.io.IOException;
@@ -39,7 +39,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
     protected Map<Integer, Integer> commonGoalCards;
     protected Map<String, Integer> scores;
     protected boolean endGame;
-    protected List<Message> chat;
+    protected List<ChatUpdate> chat;
     protected List<Item> itemsChosen;
     protected ClientConnection clientConnection;
 

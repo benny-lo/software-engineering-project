@@ -8,6 +8,7 @@ import it.polimi.ingsw.utils.action.DisconnectionAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.UpdateViewInterface;
 
@@ -139,7 +140,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
             return;
         }
 
-        controller.perform(new ChatMessageAction(this, message.getText()));
+        controller.perform(new ChatMessageAction(this, message.getText(), message.getReceiver()));
     }
 
     @Override

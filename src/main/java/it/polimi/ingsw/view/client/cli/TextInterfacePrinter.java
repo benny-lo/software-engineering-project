@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.client.cli;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.utils.message.server.ChatUpdate;
 
 import java.util.List;
 import java.util.Map;
@@ -203,14 +203,14 @@ class TextInterfacePrinter {
         }
     }
 
-    static void printChat(List<Message> chat) {
+    static void printChat(List<ChatUpdate> chat) {
         if (chat.size() == 0) {
             System.out.println("No message in chat yet");
             return;
         }
 
-        for (Message message : chat) {
-            System.out.println(message.getNickname() + " wrote: " + message.getText());
+        for (ChatUpdate update : chat) {
+            System.out.println(update.getSender() + " wrote to " + update.getReceiver() + " : " + update.getText());
         }
         System.out.flush();
     }
