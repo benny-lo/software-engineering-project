@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
@@ -178,7 +179,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
         synchronized (System.out) {
             int id = update.getId();
-            Map<Position, Item> personalGoalPattern;
+            PersonalGoalPattern personalGoalPattern;
 
             String filename = "/configuration/personalGoalCards/personal_goal_pattern_" + id + ".json";
             Gson gson = new GsonBuilder().serializeNulls()
@@ -187,14 +188,15 @@ public class TextInterface extends ClientView implements InputReceiver {
                     .enableComplexMapKeySerialization()
                     .create();
             try(Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
-                personalGoalPattern = gson.fromJson(reader,new TypeToken<Map<Position, Item>>(){}.getType());
+                personalGoalPattern = gson.fromJson(reader, new TypeToken<PersonalGoalPattern>(){}.getType());
             } catch(IOException e) {
                 printPersonalGoalCardConfigurationFailed();
                 return;
             }
 
-            for (Position position : personalGoalPattern.keySet()){
-                personalGoalCard[position.getRow()][position.getColumn()] = personalGoalPattern.get(position);
+            Map<Position, Item> map = personalGoalPattern.getMaskPositions();
+            for (Position position : map.keySet()){
+                personalGoalCard[position.getRow()][position.getColumn()] = map.get(position);
             }
 
             if (!inChat && !endGame) {

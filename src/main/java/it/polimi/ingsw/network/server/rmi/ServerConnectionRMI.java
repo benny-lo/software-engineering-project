@@ -85,6 +85,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                             client.receive((StartTurnUpdate) message);
                         } else if (message instanceof EndGameUpdate) {
                             client.receive((EndGameUpdate) message);
+                            receiver.disconnect();
                         } else if (message instanceof GamesList) {
                             client.receive((GamesList) message);
                         } else if (message instanceof ItemsSelected) {
