@@ -38,7 +38,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                     receiver.onDisconnection();
                 }
             }
-        }, 1000, 1000);
+        }, 1000, 2000);
 
         clientTimer.schedule(new TimerTask() {
             @Override

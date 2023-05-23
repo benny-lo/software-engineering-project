@@ -52,7 +52,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 public void run() {
                     sendPrivate(new Beep());
                 }
-            }, 1000, 1000);
+            }, 1000, 2000);
 
             clientTimer.schedule(new TimerTask() {
                 @Override
