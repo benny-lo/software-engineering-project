@@ -32,6 +32,11 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
         this.goodTile = goodTile;
     }
 
+    /**
+     * Check pattern on {@code Bookshelf} object.
+     * @param bookshelf {@code Bookshelf} object to check the pattern on.
+     * @return - true if the pattern is found, false if it isn't
+     */
     @Override
     public boolean check(Bookshelf bookshelf) {
         List<Set<Position>> allGroups = generateGroups(bookshelf);

@@ -8,6 +8,12 @@ import it.polimi.ingsw.model.player.Bookshelf;
  */
 public class CommonGoalPattern8 implements CommonGoalPatternInterface {
     private static final int START = 0;
+
+    /**
+     * Check pattern on {@code Bookshelf} object.
+     * @param bookshelf {@code Bookshelf} object to check the pattern on.
+     * @return - true if the pattern is found, false if it isn't
+     */
     @Override
     public boolean check(Bookshelf bookshelf) {
         if(bookshelf.tileAt(START,START)==bookshelf.tileAt(START, bookshelf.getColumns()-1) &&

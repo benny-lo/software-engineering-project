@@ -58,6 +58,10 @@ public class CommonGoalCard {
         return pattern.check(bookshelf);
     }
 
+    /**
+     *
+     * @return the score of the first token without removing it. Throw exception if the stack is Empty.
+     */
     public int getTopStack() {
         try {
             return tokens.peek().getScore();
@@ -66,6 +70,9 @@ public class CommonGoalCard {
         }
     }
 
+    /**
+     * @return id of the CommonGoalCard
+     */
     public int getId() {
         return id;
     }
