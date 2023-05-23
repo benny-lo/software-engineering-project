@@ -44,13 +44,4 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
         }
         return matches;
     }
-
-    /**
-     * Getter of maskPositions of {@code this}
-     * @return - returns the maskPositions of the PersonalGoalPattern
-     */
-    @Override
-    public Map<Position, Item> getMaskPositions() {
-        return maskPositions;
-    }
 }
