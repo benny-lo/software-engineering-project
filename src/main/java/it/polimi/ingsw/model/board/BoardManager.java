@@ -141,6 +141,10 @@ public class BoardManager {
         return livingRoom;
     }
 
+    /**
+     * This method sets the given LivingRoomListener, by updating the state of every tile.
+     * @param livingRoomListener - livingRoomListener that needs to be set
+     */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         this.livingRoomListener = livingRoomListener;
         for(int i = 0; i < livingRoom.getRows(); i++) {
