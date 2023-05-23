@@ -65,7 +65,7 @@ public class Game implements GameInterface {
 
             alreadyTaken.add(selected);
 
-            filename = "/configuration/personalGoalCards/personal_goal_card_" + selected + ".json";
+            filename = "/configuration/personalGoalCards/personal_goal_pattern_" + selected + ".json";
 
             try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
                  personalGoalPattern = gson.fromJson(reader,new TypeToken<PersonalGoalPattern>(){}.getType());
@@ -74,7 +74,7 @@ public class Game implements GameInterface {
                 System.err.println("""
                     Configuration file for personalGoalCard not found.
                     The configuration file should be in configuration/personalGoalCard
-                    with name personal_goal_card_{selected}""");
+                    with name personal_goal_pattern_{selected}""");
             }
 
             personalGoalCard = new PersonalGoalCard(selected, personalGoalPattern);

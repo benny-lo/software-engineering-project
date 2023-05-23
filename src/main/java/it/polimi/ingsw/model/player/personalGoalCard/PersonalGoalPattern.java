@@ -38,6 +38,6 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
 
     @Override
     public Map<Position, Item> getMaskPositions() {
-        return null;
+        return maskPositions;
     }
 }

@@ -35,7 +35,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
     protected int bookshelvesRows;
     protected int bookshelvesColumns;
     protected String endingToken;
-    protected int personalGoalCard;
+    protected Item[][] personalGoalCard;
     protected Map<Integer, Integer> commonGoalCards;
     protected Map<String, Integer> scores;
     protected boolean endGame;

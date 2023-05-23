@@ -92,12 +92,13 @@ class TextInterfacePrinter {
             }
             System.out.println();
         }
+        System.out.println();
     }
 
 
     static void printItem(Item item) {
         if (item == null) {
-            System.out.print(ANSI_RED + "\u2717 " + ANSI_RESET);
+            System.out.print(ANSI_RED + "X " + ANSI_RESET);
             return;
         }
 
@@ -108,7 +109,7 @@ class TextInterfacePrinter {
             case FRAME -> System.out.print(ANSI_BLUE + "F " + ANSI_RESET);
             case CUP -> System.out.print(ANSI_CYAN + "T " + ANSI_RESET);
             case PLANT -> System.out.print(ANSI_PURPLE + "P " + ANSI_RESET);
-            case LOCKED -> System.out.print(ANSI_RED + "\u2717 " + ANSI_RESET);
+            case LOCKED -> System.out.print(ANSI_RED + "X " + ANSI_RESET);
         }
     }
 
@@ -116,12 +117,11 @@ class TextInterfacePrinter {
     static void printBookshelves(Map<String, Item[][]> bookshelves) {
         for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
             System.out.println(entry.getKey() + "'s bookshelf:");
-            printBookshelf(entry.getValue());
+            printBookshelfOrPersonalGoalCard(entry.getValue());
         }
-        System.out.println();
     }
 
-    static void printBookshelf(Item[][] array) {
+    static void printBookshelfOrPersonalGoalCard(Item[][] array) {
         for (int i = array.length - 1; i >= 0; i--) {
             System.out.print(i + " ");
             for (int j = 0; j < array[i].length; j++) {
@@ -130,111 +130,111 @@ class TextInterfacePrinter {
             System.out.println();
         }
         System.out.println("  0 1 2 3 4");
+        System.out.println();
     }
 
-    static void printPersonalGoalCard(int id) {
-        if (id == 0) return;
-        Item[][] personalGoalCard= new Item[6][5];
-        switch (id){
-            case 1 -> {
-                personalGoalCard[4][4]=Item.CAT;
-                personalGoalCard[0][2]=Item.CUP;
-                personalGoalCard[3][3]=Item.BOOK;
-                personalGoalCard[5][0]=Item.PLANT;
-                personalGoalCard[5][2]=Item.FRAME;
-                personalGoalCard[2][1]=Item.GAME;
-            }
-            case 2 -> {
-                personalGoalCard[3][0]=Item.CAT;
-                personalGoalCard[1][3]=Item.CUP;
-                personalGoalCard[2][4]=Item.BOOK;
-                personalGoalCard[4][1]=Item.PLANT;
-                personalGoalCard[0][4]=Item.FRAME;
-                personalGoalCard[3][2]=Item.GAME;
-            }
-            case 3 -> {
-                personalGoalCard[2][1]=Item.CAT;
-                personalGoalCard[2][4]=Item.CUP;
-                personalGoalCard[0][0]=Item.BOOK;
-                personalGoalCard[3][2]=Item.PLANT;
-                personalGoalCard[0][4]=Item.FRAME;
-                personalGoalCard[4][3]=Item.GAME;
-            }
-            case 4 -> {
-                personalGoalCard[1][2]=Item.CAT;
-                personalGoalCard[3][0]=Item.CUP;
-                personalGoalCard[1][1]=Item.BOOK;
-                personalGoalCard[2][3]=Item.PLANT;
-                personalGoalCard[3][2]=Item.FRAME;
-                personalGoalCard[5][4]=Item.GAME;
-            }
-            case 5 -> {
-                personalGoalCard[0][3]=Item.CAT;
-                personalGoalCard[4][1]=Item.CUP;
-                personalGoalCard[2][2]=Item.BOOK;
-                personalGoalCard[1][4]=Item.PLANT;
-                personalGoalCard[2][1]=Item.FRAME;
-                personalGoalCard[0][0]=Item.GAME;
-            }
-            case 6 -> {
-                personalGoalCard[5][4]=Item.CAT;
-                personalGoalCard[5][2]=Item.CUP;
-                personalGoalCard[3][3]=Item.BOOK;
-                personalGoalCard[0][0]=Item.PLANT;
-                personalGoalCard[1][3]=Item.FRAME;
-                personalGoalCard[1][1]=Item.GAME;
-            }
-            case 7 -> {
-                personalGoalCard[5][0]=Item.CAT;
-                personalGoalCard[2][0]=Item.CUP;
-                personalGoalCard[0][2]=Item.BOOK;
-                personalGoalCard[1][3]=Item.PLANT;
-                personalGoalCard[4][3]=Item.FRAME;
-                personalGoalCard[1][4]=Item.GAME;
-            }
-            case 8 -> {
-                personalGoalCard[4][1]=Item.CAT;
-                personalGoalCard[3][2]=Item.CUP;
-                personalGoalCard[1][3]=Item.BOOK;
-                personalGoalCard[2][0]=Item.PLANT;
-                personalGoalCard[5][4]=Item.FRAME;
-                personalGoalCard[0][3]=Item.GAME;
-            }
-            case 9 -> {
-                personalGoalCard[3][2]=Item.CAT;
-                personalGoalCard[1][1]=Item.CUP;
-                personalGoalCard[2][4]=Item.BOOK;
-                personalGoalCard[1][4]=Item.PLANT;
-                personalGoalCard[0][0]=Item.FRAME;
-                personalGoalCard[5][2]=Item.GAME;
-            }
-            case 10 -> {
-                personalGoalCard[2][3]=Item.CAT;
-                personalGoalCard[5][4]=Item.CUP;
-                personalGoalCard[3][0]=Item.BOOK;
-                personalGoalCard[0][3]=Item.PLANT;
-                personalGoalCard[1][1]=Item.FRAME;
-                personalGoalCard[4][1]=Item.GAME;
-            }
-            case 11 -> {
-                personalGoalCard[1][4]=Item.CAT;
-                personalGoalCard[0][3]=Item.CUP;
-                personalGoalCard[4][1]=Item.BOOK;
-                personalGoalCard[5][2]=Item.PLANT;
-                personalGoalCard[2][2]=Item.FRAME;
-                personalGoalCard[3][0]=Item.GAME;
-            }
-            case 12 -> {
-                personalGoalCard[0][0]=Item.CAT;
-                personalGoalCard[2][3]=Item.CUP;
-                personalGoalCard[5][2]=Item.BOOK;
-                personalGoalCard[4][1]=Item.PLANT;
-                personalGoalCard[3][2]=Item.FRAME;
-                personalGoalCard[1][4]=Item.GAME;
-            }
-        }
+    static void printPersonalGoalCard(Item[][] personalGoalCard) {
+
+//        switch (id){
+//            case 0 -> {
+//                personalGoalCard[4][4]=Item.CAT;
+//                personalGoalCard[0][2]=Item.CUP;
+//                personalGoalCard[3][3]=Item.BOOK;
+//                personalGoalCard[5][0]=Item.PLANT;
+//                personalGoalCard[5][2]=Item.FRAME;
+//                personalGoalCard[2][1]=Item.GAME;
+//            }
+//            case 1 -> {
+//                personalGoalCard[3][0]=Item.CAT;
+//                personalGoalCard[1][3]=Item.CUP;
+//                personalGoalCard[2][4]=Item.BOOK;
+//                personalGoalCard[4][1]=Item.PLANT;
+//                personalGoalCard[0][4]=Item.FRAME;
+//                personalGoalCard[3][2]=Item.GAME;
+//            }
+//            case 2 -> {
+//                personalGoalCard[2][1]=Item.CAT;
+//                personalGoalCard[2][4]=Item.CUP;
+//                personalGoalCard[0][0]=Item.BOOK;
+//                personalGoalCard[3][2]=Item.PLANT;
+//                personalGoalCard[0][4]=Item.FRAME;
+//                personalGoalCard[4][3]=Item.GAME;
+//            }
+//            case 3 -> {
+//                personalGoalCard[1][2]=Item.CAT;
+//                personalGoalCard[3][0]=Item.CUP;
+//                personalGoalCard[1][1]=Item.BOOK;
+//                personalGoalCard[2][3]=Item.PLANT;
+//                personalGoalCard[3][2]=Item.FRAME;
+//                personalGoalCard[5][4]=Item.GAME;
+//            }
+//            case 4 -> {
+//                personalGoalCard[0][3]=Item.CAT;
+//                personalGoalCard[4][1]=Item.CUP;
+//                personalGoalCard[2][2]=Item.BOOK;
+//                personalGoalCard[1][4]=Item.PLANT;
+//                personalGoalCard[2][1]=Item.FRAME;
+//                personalGoalCard[0][0]=Item.GAME;
+//            }
+//            case 5 -> {
+//                personalGoalCard[5][4]=Item.CAT;
+//                personalGoalCard[5][2]=Item.CUP;
+//                personalGoalCard[3][3]=Item.BOOK;
+//                personalGoalCard[0][0]=Item.PLANT;
+//                personalGoalCard[1][3]=Item.FRAME;
+//                personalGoalCard[1][1]=Item.GAME;
+//            }
+//            case 6 -> {
+//                personalGoalCard[5][0]=Item.CAT;
+//                personalGoalCard[2][0]=Item.CUP;
+//                personalGoalCard[0][2]=Item.BOOK;
+//                personalGoalCard[1][3]=Item.PLANT;
+//                personalGoalCard[4][3]=Item.FRAME;
+//                personalGoalCard[1][4]=Item.GAME;
+//            }
+//            case 7 -> {
+//                personalGoalCard[4][1]=Item.CAT;
+//                personalGoalCard[3][2]=Item.CUP;
+//                personalGoalCard[1][3]=Item.BOOK;
+//                personalGoalCard[2][0]=Item.PLANT;
+//                personalGoalCard[5][4]=Item.FRAME;
+//                personalGoalCard[0][3]=Item.GAME;
+//            }
+//            case 8 -> {
+//                personalGoalCard[3][2]=Item.CAT;
+//                personalGoalCard[1][1]=Item.CUP;
+//                personalGoalCard[2][4]=Item.BOOK;
+//                personalGoalCard[1][4]=Item.PLANT;
+//                personalGoalCard[0][0]=Item.FRAME;
+//                personalGoalCard[5][2]=Item.GAME;
+//            }
+//            case 9 -> {
+//                personalGoalCard[2][3]=Item.CAT;
+//                personalGoalCard[5][4]=Item.CUP;
+//                personalGoalCard[3][0]=Item.BOOK;
+//                personalGoalCard[0][3]=Item.PLANT;
+//                personalGoalCard[1][1]=Item.FRAME;
+//                personalGoalCard[4][1]=Item.GAME;
+//            }
+//            case 10 -> {
+//                personalGoalCard[1][4]=Item.CAT;
+//                personalGoalCard[0][3]=Item.CUP;
+//                personalGoalCard[4][1]=Item.BOOK;
+//                personalGoalCard[5][2]=Item.PLANT;
+//                personalGoalCard[2][2]=Item.FRAME;
+//                personalGoalCard[3][0]=Item.GAME;
+//            }
+//            case 11 -> {
+//                personalGoalCard[0][0]=Item.CAT;
+//                personalGoalCard[2][3]=Item.CUP;
+//                personalGoalCard[5][2]=Item.BOOK;
+//                personalGoalCard[4][1]=Item.PLANT;
+//                personalGoalCard[3][2]=Item.FRAME;
+//                personalGoalCard[1][4]=Item.GAME;
+//            }
+//        }
         System.out.println("Your personal goal card is: ");
-        printBookshelf(personalGoalCard);
+        printBookshelfOrPersonalGoalCard(personalGoalCard);
     }
 
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
@@ -255,7 +255,7 @@ class TextInterfacePrinter {
                 case 11 -> description="\nFive tiles of the same type forming a diagonal\n";
                 case 12 -> description="\nFive columns of increasing or decreasing height.\nStarting from the first column on the left or on the right,\neach next column must be made of exactly one more tile. Tiles can be of any type.\n";
             }
-            System.out.println("id: " + card.getKey() + description + " top: " + card.getValue());
+            System.out.println("Id: " + card.getKey() + ", Top token value: " + card.getValue() + description);
         }
     }
 
@@ -270,9 +270,9 @@ class TextInterfacePrinter {
 
     static void printEndingToken(String endingToken) {
         if (endingToken == null) {
-            System.out.println("Nobody has the ending token");
+            System.out.println("Nobody has the ending token\n");
         } else {
-            System.out.println(endingToken + " has the ending token");
+            System.out.println(endingToken + " has the ending token\n");
         }
     }
 
@@ -304,5 +304,20 @@ class TextInterfacePrinter {
         }
         printScores(scores);
         System.out.flush();
+    }
+
+    static void printCurrentPlayer(String currentPlayer){
+        System.out.println("The current player is " + currentPlayer + "\n");
+    }
+
+    static void printLostConnection(){
+        System.out.println("Lost connection to server. Shutting down ...");
+    }
+
+    static void printPersonalGoalCardConfigurationFailed(){
+        System.err.println("""
+                    Configuration file for personalGoalCard not found.
+                    The configuration file should be in configuration/personalGoalCard
+                    with name personal_goal_pattern_{id}""");
     }
 }

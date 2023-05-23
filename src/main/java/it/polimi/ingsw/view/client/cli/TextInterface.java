@@ -1,16 +1,24 @@
 package it.polimi.ingsw.view.client.cli;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientStatus;
 import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.InputReceiver;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static it.polimi.ingsw.view.client.cli.TextInterfacePrinter.*;
 
@@ -170,7 +178,25 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
         synchronized (System.out) {
-            personalGoalCard = update.getId();
+            int id = update.getId();
+            PersonalGoalPattern personalGoalPattern;
+
+            String filename = "/configuration/personalGoalCards/personal_goal_pattern_" + id + ".json";
+            Gson gson = new GsonBuilder().serializeNulls()
+                    .setPrettyPrinting()
+                    .disableJdkUnsafe()
+                    .enableComplexMapKeySerialization()
+                    .create();
+            try(Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
+                personalGoalPattern = gson.fromJson(reader,new TypeToken<PersonalGoalPattern>(){}.getType());
+            } catch(IOException e) {
+                personalGoalPattern = null;
+                printPersonalGoalCardConfigurationFailed();
+            }
+
+            for (Position position : personalGoalPattern.getMaskPositions().keySet()){
+                personalGoalCard[position.getRow()][position.getColumn()] = personalGoalPattern.getMaskPositions().get(position);
+            }
 
             if (!inChat && !endGame) {
                 clearScreen();
@@ -231,6 +257,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             livingRoom = new Item[gameData.getLivingRoomRows()][gameData.getLivingRoomColumns()];
             bookshelvesRows = gameData.getBookshelvesRows();
             bookshelvesColumns = gameData.getBookshelvesColumns();
+            personalGoalCard = new Item[bookshelvesRows][bookshelvesColumns];
         }
     }
 
@@ -239,7 +266,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         if (status == ClientStatus.ERROR) return;
         status = ClientStatus.ERROR;
         clearScreen();
-        System.out.println("Lost connection to server. Shutting down ...");
+        printLostConnection();
         System.exit(0);
     }
 
@@ -336,7 +363,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     private void printGameRep() {
-        System.out.println("the current player is " + currentPlayer);
+        printCurrentPlayer(currentPlayer);
 
         printLivingRoom(livingRoom);
         printBookshelves(bookshelves);
