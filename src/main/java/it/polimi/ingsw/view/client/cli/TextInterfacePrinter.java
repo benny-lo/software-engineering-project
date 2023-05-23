@@ -24,8 +24,7 @@ class TextInterfacePrinter {
     }
 
     static void printHelp(){
-        System.out.println("Commands list: \n\t /login [nickname] \n\t /create_game [number_of_players] [number_of_common_goal_cards] \n\t /select_game [id] \n\t /living_room [positions] \n\t /bookshelf [column] [permutation] \n\t /enter_chat \n\t /exit_chat");
-
+        System.out.println("Commands list: \n\t /login [nickname] \n\t /create_game [number_of_players] [number_of_common_goal_cards]\n\t /select_game [id] \n\t /living_room [positions] \n\t /bookshelf [column] [permutation] \n\t /enter_chat \n\t /exit_chat");
     }
 
     static void printWrongCommand() {
@@ -44,7 +43,8 @@ class TextInterfacePrinter {
     }
 
     static void printNoAvailableGames(){
-        System.out.println("There are no available games. Create a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
+        System.out.println("There are no available games. Create a new game with the command " +
+                "'/create_game [number_of_players] [number_of_common_goal_cards]'.");
     }
 
     static void printIncorrectNickname(){
@@ -238,9 +238,24 @@ class TextInterfacePrinter {
     }
 
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
+        String description="";
         System.out.println("Your common goal cards are: ");
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
-            System.out.println("id: " + card.getKey() + " top: " + card.getValue());
+            switch (card.getKey()){
+                case 1 -> description="\nTwo groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different from those of the other square.\n";
+                case 2 -> description="\nTwo columns each formed by 6 different types of tiles.\n";
+                case 3 -> description="\nFour groups each containing at least 4 tiles of the same type.\nThe tiles of one group can be different from those of another group.\n";
+                case 4 -> description="\nSix groups each containing at least 2 tiles of the same type\nThe tiles of one group can be different from those of another group.\n";
+                case 5 -> description="\nThree columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different combination of another column\n";
+                case 6 -> description="\nTwo lines each formed by 5 different types of tiles. One line can\nshow the same or a different combination of the other line.\n";
+                case 7 -> description="\nFour lines each formed by 5 tiles of maximum three different types. One \nline can show the same or a different combination of another line.\n";
+                case 8 -> description="\nFour tiles of the same type in the four corners of the bookshelf.\n";
+                case 9 -> description="\nEight or more tiles of the same type with no restrictions about the position of these tiles.\n";
+                case 10 -> description="\nFive tiles of the same type forming an X.\n";
+                case 11 -> description="\nFive tiles of the same type forming a diagonal\n";
+                case 12 -> description="\nFive columns of increasing or decreasing height.\nStarting from the first column on the left or on the right,\neach next column must be made of exactly one more tile. Tiles can be of any type.\n";
+            }
+            System.out.println("id: " + card.getKey() + description + " top: " + card.getValue());
         }
     }
 
