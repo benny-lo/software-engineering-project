@@ -18,7 +18,9 @@ class TextInterfacePrinter {
     private static final String ANSI_WHITE = "\u001B[37m";
 
     static void printCurrentPlayer(String currentPlayer){
-        System.out.println(ANSI_RED + "The current player is " + currentPlayer + ANSI_RESET);
+        if (currentPlayer == null)
+            return;
+        System.out.println(ANSI_RED + "The current player is " + currentPlayer + ANSI_RESET + "\n");
     }
 
     static void printWelcomeMessage(){
@@ -55,7 +57,7 @@ class TextInterfacePrinter {
     }
 
     static void printNoAvailableGames(){
-        System.out.println("There are no available games.\n Create a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
+        System.out.println("There are no available games.\nCreate a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
     }
 
     static void printIncorrectNickname(){
@@ -126,6 +128,8 @@ class TextInterfacePrinter {
 
 
     static void printBookshelves(Map<String, Item[][]> bookshelves) {
+        if (bookshelves == null)
+            return;
         for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
             System.out.println(entry.getKey() + "'s bookshelf:");
             printBookshelfOrPersonalGoalCard(entry.getValue());
@@ -145,11 +149,15 @@ class TextInterfacePrinter {
     }
 
     static void printPersonalGoalCard(Item[][] personalGoalCard) {
+        if (personalGoalCard == null)
+            return;
         System.out.println("Your personal goal card is: ");
         printBookshelfOrPersonalGoalCard(personalGoalCard);
     }
 
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
+        if (commonGoalCards == null)
+            return;
         String description="";
         System.out.println("Your common goal cards are: ");
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
@@ -172,6 +180,7 @@ class TextInterfacePrinter {
     }
 
     static void printItemsChosen(List<Item> itemsChosen, String currentPlayer) {
+        if (currentPlayer == null) return;
         if (itemsChosen == null) return;
         System.out.print(currentPlayer + " chose the items: ");
         for (Item item : itemsChosen) {
@@ -207,7 +216,11 @@ class TextInterfacePrinter {
     }
 
     static void printEndGame(String nickname, String winner, Map<String, Integer> scores) {
-        if (winner.equals(nickname)) {
+        if (winner == null)
+            return;
+        else if (scores == null)
+            return;
+        else if (winner.equals(nickname)) {
             System.out.println("You are the winner");
         } else {
             System.out.println("The winner is " + winner);
