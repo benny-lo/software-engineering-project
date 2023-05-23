@@ -23,10 +23,19 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
         this.maskPositions = maskPositions;
     }
 
+    /**
+     * Constructor of the class used for json.
+     */
     public PersonalGoalPattern(){
         maskPositions = new HashMap<>();
     }
 
+
+    /**
+     * Check pattern on {@code Bookshelf} object.
+     * @param bookshelf {@code Bookshelf} object to check the pattern on.
+     * @return - true if the pattern is found, false if it isn't
+     */
     @Override
     public int check(Bookshelf bookshelf) {
         int matches = 0;
@@ -36,6 +45,10 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
         return matches;
     }
 
+    /**
+     * Getter of maskPositions of {@code this}
+     * @return - returns the maskPositions of the PersonalGoalPattern
+     */
     @Override
     public Map<Position, Item> getMaskPositions() {
         return maskPositions;

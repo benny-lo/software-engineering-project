@@ -185,6 +185,10 @@ public class Player {
         return this.endingToken;
     }
 
+    /**
+     * This method sets the given bookshelfListener, by updating the state of every tile in the bookshelf.
+     * @param bookshelfListener - bookshelfListener that needs to be set
+     */
     public void setBookshelvesListener(BookshelfListener bookshelfListener) {
         this.bookshelfListener = bookshelfListener;
         for(int i = 0; i < bookshelf.getRows(); i++) {
@@ -194,6 +198,10 @@ public class Player {
         }
     }
 
+    /**
+     * Getter for the id of the PersonalGoalCard of {@code this}
+     * @return - the id of the PersonalGoalCard associated to the player
+     */
     public int getPersonalID() {
         return personalGoalCard.getId();
     }

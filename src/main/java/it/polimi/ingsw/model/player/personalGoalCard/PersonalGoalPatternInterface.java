@@ -16,6 +16,8 @@ public interface PersonalGoalPatternInterface {
      * @return number of matchings between {@code bookshelf} and the pattern.
      */
     int check(Bookshelf bookshelf);
-
+    /**
+     * Returns the maskPositions of the PersonalGoalPattern, overridden in implementation
+     */
     public Map<Position, Item> getMaskPositions();
 }

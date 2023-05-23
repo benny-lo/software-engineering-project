@@ -58,7 +58,7 @@ public class LivingRoom {
     }
 
     /**
-     * Constructor for Living Room, used for Exception Throwing in the BoardManager Constructor
+     * Constructor of the class, used for json.
      */
     public LivingRoom() {
         this.grid = new Item[9][9];

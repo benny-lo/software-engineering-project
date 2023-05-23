@@ -59,7 +59,7 @@ public class CommonGoalCard {
     }
 
     /**
-     *
+     * Getter of score of the tokens' stack
      * @return the score of the first token without removing it. Throw exception if the stack is Empty.
      */
     public int getTopStack() {
@@ -71,6 +71,7 @@ public class CommonGoalCard {
     }
 
     /**
+     * Getter of id of {@code this}
      * @return id of the CommonGoalCard
      */
     public int getId() {

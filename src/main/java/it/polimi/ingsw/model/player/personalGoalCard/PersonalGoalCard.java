@@ -47,6 +47,10 @@ public class PersonalGoalCard {
         else return -1;
     }
 
+    /**
+     * Getter of id for {@code this}
+     * @return - returns id of the PersonalGoalCard
+     */
     public int getId() {
         return id;
     }
