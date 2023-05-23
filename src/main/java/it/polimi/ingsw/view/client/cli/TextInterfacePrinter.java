@@ -24,7 +24,15 @@ class TextInterfacePrinter {
     }
 
     static void printHelp(){
-        System.out.println("Commands list: \n\t /login [nickname] \n\t /create_game [number_of_players] [number_of_common_goal_cards]\n\t /select_game [id] \n\t /living_room [positions] \n\t /bookshelf [column] [permutation] \n\t /enter_chat \n\t /exit_chat");
+        System.out.println("""
+                Commands list:\s
+                \t /login [nickname]\s
+                \t /create_game [number_of_players] [number_of_common_goal_cards]
+                \t /select_game [id]\s
+                \t /living_room [positions]\s
+                \t /bookshelf [column] [permutation]\s
+                \t /enter_chat\s
+                \t /exit_chat""");
     }
 
     static void printWrongCommand() {
@@ -43,8 +51,7 @@ class TextInterfacePrinter {
     }
 
     static void printNoAvailableGames(){
-        System.out.println("There are no available games. Create a new game with the command " +
-                "'/create_game [number_of_players] [number_of_common_goal_cards]'.");
+        System.out.println("There are no available games.\n Create a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
     }
 
     static void printIncorrectNickname(){
@@ -133,10 +140,9 @@ class TextInterfacePrinter {
     }
 
     static void printPersonalGoalCard(int id) {
-        if (id == 0) return;
         Item[][] personalGoalCard= new Item[6][5];
         switch (id){
-            case 1 -> {
+            case 0 -> {
                 personalGoalCard[4][4]=Item.CAT;
                 personalGoalCard[0][2]=Item.CUP;
                 personalGoalCard[3][3]=Item.BOOK;
@@ -144,7 +150,7 @@ class TextInterfacePrinter {
                 personalGoalCard[5][2]=Item.FRAME;
                 personalGoalCard[2][1]=Item.GAME;
             }
-            case 2 -> {
+            case 1 -> {
                 personalGoalCard[3][0]=Item.CAT;
                 personalGoalCard[1][3]=Item.CUP;
                 personalGoalCard[2][4]=Item.BOOK;
@@ -152,7 +158,7 @@ class TextInterfacePrinter {
                 personalGoalCard[0][4]=Item.FRAME;
                 personalGoalCard[3][2]=Item.GAME;
             }
-            case 3 -> {
+            case 2 -> {
                 personalGoalCard[2][1]=Item.CAT;
                 personalGoalCard[2][4]=Item.CUP;
                 personalGoalCard[0][0]=Item.BOOK;
@@ -160,7 +166,7 @@ class TextInterfacePrinter {
                 personalGoalCard[0][4]=Item.FRAME;
                 personalGoalCard[4][3]=Item.GAME;
             }
-            case 4 -> {
+            case 3 -> {
                 personalGoalCard[1][2]=Item.CAT;
                 personalGoalCard[3][0]=Item.CUP;
                 personalGoalCard[1][1]=Item.BOOK;
@@ -168,7 +174,7 @@ class TextInterfacePrinter {
                 personalGoalCard[3][2]=Item.FRAME;
                 personalGoalCard[5][4]=Item.GAME;
             }
-            case 5 -> {
+            case 4 -> {
                 personalGoalCard[0][3]=Item.CAT;
                 personalGoalCard[4][1]=Item.CUP;
                 personalGoalCard[2][2]=Item.BOOK;
@@ -176,7 +182,7 @@ class TextInterfacePrinter {
                 personalGoalCard[2][1]=Item.FRAME;
                 personalGoalCard[0][0]=Item.GAME;
             }
-            case 6 -> {
+            case 5 -> {
                 personalGoalCard[5][4]=Item.CAT;
                 personalGoalCard[5][2]=Item.CUP;
                 personalGoalCard[3][3]=Item.BOOK;
@@ -184,7 +190,7 @@ class TextInterfacePrinter {
                 personalGoalCard[1][3]=Item.FRAME;
                 personalGoalCard[1][1]=Item.GAME;
             }
-            case 7 -> {
+            case 6 -> {
                 personalGoalCard[5][0]=Item.CAT;
                 personalGoalCard[2][0]=Item.CUP;
                 personalGoalCard[0][2]=Item.BOOK;
@@ -192,7 +198,7 @@ class TextInterfacePrinter {
                 personalGoalCard[4][3]=Item.FRAME;
                 personalGoalCard[1][4]=Item.GAME;
             }
-            case 8 -> {
+            case 7 -> {
                 personalGoalCard[4][1]=Item.CAT;
                 personalGoalCard[3][2]=Item.CUP;
                 personalGoalCard[1][3]=Item.BOOK;
@@ -200,7 +206,7 @@ class TextInterfacePrinter {
                 personalGoalCard[5][4]=Item.FRAME;
                 personalGoalCard[0][3]=Item.GAME;
             }
-            case 9 -> {
+            case 8 -> {
                 personalGoalCard[3][2]=Item.CAT;
                 personalGoalCard[1][1]=Item.CUP;
                 personalGoalCard[2][4]=Item.BOOK;
@@ -208,7 +214,7 @@ class TextInterfacePrinter {
                 personalGoalCard[0][0]=Item.FRAME;
                 personalGoalCard[5][2]=Item.GAME;
             }
-            case 10 -> {
+            case 9 -> {
                 personalGoalCard[2][3]=Item.CAT;
                 personalGoalCard[5][4]=Item.CUP;
                 personalGoalCard[3][0]=Item.BOOK;
@@ -216,7 +222,7 @@ class TextInterfacePrinter {
                 personalGoalCard[1][1]=Item.FRAME;
                 personalGoalCard[4][1]=Item.GAME;
             }
-            case 11 -> {
+            case 10 -> {
                 personalGoalCard[1][4]=Item.CAT;
                 personalGoalCard[0][3]=Item.CUP;
                 personalGoalCard[4][1]=Item.BOOK;
@@ -224,7 +230,7 @@ class TextInterfacePrinter {
                 personalGoalCard[2][2]=Item.FRAME;
                 personalGoalCard[3][0]=Item.GAME;
             }
-            case 12 -> {
+            case 11 -> {
                 personalGoalCard[0][0]=Item.CAT;
                 personalGoalCard[2][3]=Item.CUP;
                 personalGoalCard[5][2]=Item.BOOK;
@@ -242,20 +248,20 @@ class TextInterfacePrinter {
         System.out.println("Your common goal cards are: ");
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
             switch (card.getKey()){
-                case 1 -> description="\nTwo groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different from those of the other square.\n";
-                case 2 -> description="\nTwo columns each formed by 6 different types of tiles.\n";
-                case 3 -> description="\nFour groups each containing at least 4 tiles of the same type.\nThe tiles of one group can be different from those of another group.\n";
-                case 4 -> description="\nSix groups each containing at least 2 tiles of the same type\nThe tiles of one group can be different from those of another group.\n";
-                case 5 -> description="\nThree columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different combination of another column\n";
-                case 6 -> description="\nTwo lines each formed by 5 different types of tiles. One line can\nshow the same or a different combination of the other line.\n";
-                case 7 -> description="\nFour lines each formed by 5 tiles of maximum three different types. One \nline can show the same or a different combination of another line.\n";
-                case 8 -> description="\nFour tiles of the same type in the four corners of the bookshelf.\n";
-                case 9 -> description="\nEight or more tiles of the same type with no restrictions about the position of these tiles.\n";
-                case 10 -> description="\nFive tiles of the same type forming an X.\n";
-                case 11 -> description="\nFive tiles of the same type forming a diagonal\n";
-                case 12 -> description="\nFive columns of increasing or decreasing height.\nStarting from the first column on the left or on the right,\neach next column must be made of exactly one more tile. Tiles can be of any type.\n";
+                case 0 -> description="\nTwo groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different from those of the other square.\n";
+                case 1 -> description="\nTwo columns each formed by 6 different types of tiles.\n";
+                case 2 -> description="\nFour groups each containing at least 4 tiles of the same type.\nThe tiles of one group can be different from those of another group.\n";
+                case 3 -> description="\nSix groups each containing at least 2 tiles of the same type\nThe tiles of one group can be different from those of another group.\n";
+                case 4 -> description="\nThree columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different combination of another column\n";
+                case 5 -> description="\nTwo lines each formed by 5 different types of tiles. One line can\nshow the same or a different combination of the other line.\n";
+                case 6 -> description="\nFour lines each formed by 5 tiles of maximum three different types. One \nline can show the same or a different combination of another line.\n";
+                case 7 -> description="\nFour tiles of the same type in the four corners of the bookshelf.\n";
+                case 8 -> description="\nEight or more tiles of the same type with no restrictions about the position of these tiles.\n";
+                case 9 -> description="\nFive tiles of the same type forming an X.\n";
+                case 10 -> description="\nFive tiles of the same type forming a diagonal\n";
+                case 11 -> description="\nFive columns of increasing or decreasing height.\nStarting from the first column on the left or on the right,\neach next column must be made of exactly one more tile. Tiles can be of any type.\n";
             }
-            System.out.println("id: " + card.getKey() + description + " top: " + card.getValue());
+            System.out.println("id: " + card.getKey() + description + "top: " + card.getValue());
         }
     }
 
@@ -269,9 +275,7 @@ class TextInterfacePrinter {
     }
 
     static void printEndingToken(String endingToken) {
-        if (endingToken == null) {
-            System.out.println("Nobody has the ending token");
-        } else {
+        if (endingToken != null) {
             System.out.println(endingToken + " has the ending token");
         }
     }
