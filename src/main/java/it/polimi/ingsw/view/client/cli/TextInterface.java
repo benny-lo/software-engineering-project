@@ -337,13 +337,13 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     private void printGameRep() {
-        System.out.println("the current player is " + currentPlayer);
+        printCurrentPLayer(currentPlayer);
 
         printLivingRoom(livingRoom);
         printBookshelves(bookshelves);
         printPersonalGoalCard(personalGoalCard);
         printCommonGoalCards(commonGoalCards);
-        printItemsChosen(itemsChosen);
+        printItemsChosen(itemsChosen, currentPlayer);
         printEndingToken(endingToken);
         printScores(scores);
 

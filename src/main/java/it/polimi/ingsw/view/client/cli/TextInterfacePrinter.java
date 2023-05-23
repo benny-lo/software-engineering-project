@@ -17,6 +17,10 @@ class TextInterfacePrinter {
     private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_WHITE = "\u001B[37m";
 
+    static void printCurrentPLayer(String currentPlayer){
+        System.out.println(ANSI_RED + "The current player is " + currentPlayer + ANSI_RESET);
+    }
+
     static void printWelcomeMessage(){
         System.out.println("""
                 Welcome to MyShelfie!
@@ -265,9 +269,9 @@ class TextInterfacePrinter {
         }
     }
 
-    static void printItemsChosen(List<Item> itemsChosen) {
+    static void printItemsChosen(List<Item> itemsChosen, String currentPlayer) {
         if (itemsChosen == null) return;
-        System.out.print("You chose the items: ");
+        System.out.print(currentPlayer + " chose the items: ");
         for (Item item : itemsChosen) {
             System.out.print(item + " ");
         }
