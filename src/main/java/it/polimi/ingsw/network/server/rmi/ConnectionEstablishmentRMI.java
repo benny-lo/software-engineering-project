@@ -13,7 +13,7 @@ public class ConnectionEstablishmentRMI implements ConnectionEstablishmentRMIInt
         VirtualView view = new VirtualView(serverConnection);
         serverConnection.setServerInputViewInterface(view);
         Lobby.getInstance().addVirtualView(view);
-        serverConnection.startTimers();
+        serverConnection.start();
         return serverConnection;
     }
 }

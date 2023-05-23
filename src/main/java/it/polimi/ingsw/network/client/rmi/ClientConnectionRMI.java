@@ -38,7 +38,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                     receiver.onDisconnection();
                 }
             }
-        }, 1000, 1000);
+        }, 1000, 2000);
 
         clientTimer.schedule(new TimerTask() {
             @Override
@@ -125,82 +125,82 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void sendLivingRoomUpdate(LivingRoomUpdate update) throws RemoteException {
+    public void receive(LivingRoomUpdate update) throws RemoteException {
         receiver.onLivingRoomUpdate(update);
     }
 
     @Override
-    public void sendBookshelfUpdate(BookshelfUpdate update) throws RemoteException {
+    public void receive(BookshelfUpdate update) throws RemoteException {
         receiver.onBookshelfUpdate(update);
     }
 
     @Override
-    public void sendWaitingUpdate(WaitingUpdate update) throws RemoteException {
+    public void receive(WaitingUpdate update) throws RemoteException {
         receiver.onWaitingUpdate(update);
     }
 
     @Override
-    public void sendScoresUpdate(ScoresUpdate update) throws RemoteException {
+    public void receive(ScoresUpdate update) throws RemoteException {
         receiver.onScoresUpdate(update);
     }
 
     @Override
-    public void sendEndingTokenUpdate(EndingTokenUpdate update) throws RemoteException {
+    public void receive(EndingTokenUpdate update) throws RemoteException {
         receiver.onEndingTokenUpdate(update);
     }
 
     @Override
-    public void sendCommonGoalCardUpdate(CommonGoalCardsUpdate update) throws RemoteException {
+    public void receive(CommonGoalCardsUpdate update) throws RemoteException {
         receiver.onCommonGoalCardsUpdate(update);
     }
 
     @Override
-    public void sendPersonalGoalCardUpdate(PersonalGoalCardUpdate update) throws RemoteException {
+    public void receive(PersonalGoalCardUpdate update) throws RemoteException {
         receiver.onPersonalGoalCardUpdate(update);
     }
 
     @Override
-    public void sendChatUpdate(ChatUpdate update) throws RemoteException {
+    public void receive(ChatUpdate update) throws RemoteException {
         receiver.onChatUpdate(update);
     }
 
     @Override
-    public void sendStartTurnUpdate(StartTurnUpdate update) throws RemoteException {
+    public void receive(StartTurnUpdate update) throws RemoteException {
         receiver.onStartTurnUpdate(update);
     }
 
     @Override
-    public void sendEndGameUpdate(EndGameUpdate update) throws RemoteException {
+    public void receive(EndGameUpdate update) throws RemoteException {
         receiver.onEndGameUpdate(update);
     }
 
     @Override
-    public void sendListOfGames(GamesList list) throws RemoteException {
+    public void receive(GamesList list) throws RemoteException {
         receiver.onGamesList(list);
     }
 
     @Override
-    public void sendItemsSelected(ItemsSelected selected) throws RemoteException {
+    public void receive(ItemsSelected selected) throws RemoteException {
         receiver.onItemsSelected(selected);
     }
 
     @Override
-    public void sendGameDimensions(GameData gameData) throws RemoteException {
+    public void receive(GameData gameData) throws RemoteException {
         receiver.onGameData(gameData);
     }
 
     @Override
-    public void sendAcceptedInsertion(AcceptedInsertion acceptedInsertion) throws RemoteException {
+    public void receive(AcceptedInsertion acceptedInsertion) throws RemoteException {
         receiver.onAcceptedInsertion(acceptedInsertion);
     }
 
     @Override
-    public void sendChatAccepted(ChatAccepted chatAccepted) throws RemoteException {
+    public void receive(ChatAccepted chatAccepted) throws RemoteException {
         receiver.onChatAccepted(chatAccepted);
     }
 
     @Override
-    public void beep(Beep beep) throws RemoteException {
+    public void receive(Beep beep) throws RemoteException {
         synchronized (beepLock) {
             serverBeep = beep;
         }

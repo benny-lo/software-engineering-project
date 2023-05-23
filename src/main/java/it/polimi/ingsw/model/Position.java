@@ -12,6 +12,11 @@ public class Position implements Comparable<Position>, Serializable {
         this.column = column;
     }
 
+    public Position(Position p) {
+        this.row = p.row;
+        this.column = p.column;
+    }
+
     public Position(){
         row = -1;
         column = -1;

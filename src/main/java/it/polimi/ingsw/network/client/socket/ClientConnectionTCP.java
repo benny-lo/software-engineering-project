@@ -113,7 +113,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                 public void run() {
                     sendPrivate(new Beep());
                 }
-            }, 1000, 1000);
+            }, 1000, 2000);
 
             serverTimer.schedule(new TimerTask() {
                 @Override
@@ -145,16 +145,14 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
         clientTimer.cancel();
     }
 
-    private void sendPrivate(Message message) {
-        synchronized (out) {
-            try {
-                out.writeObject(message);
-                out.flush();
-            } catch (IOException e) {
-                serverTimer.cancel();
-                clientTimer.cancel();
-                receiver.onDisconnection();
-            }
+    private synchronized void sendPrivate(Message message) {
+        try {
+            out.writeObject(message);
+            out.flush();
+        } catch (IOException e) {
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.onDisconnection();
         }
     }
 }

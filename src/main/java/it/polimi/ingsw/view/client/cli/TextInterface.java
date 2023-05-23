@@ -6,7 +6,6 @@ import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Message;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientStatus;
@@ -224,6 +223,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
             if (!inChat && !endGame) {
                 clearScreen();
+                printGameRep();
             }
         }
     }
@@ -369,7 +369,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         printBookshelves(bookshelves);
         printPersonalGoalCard(personalGoalCard);
         printCommonGoalCards(commonGoalCards);
-        printItemsChosen(itemsChosen);
+        printItemsChosen(itemsChosen, currentPlayer);
         printEndingToken(endingToken);
         printScores(scores);
 

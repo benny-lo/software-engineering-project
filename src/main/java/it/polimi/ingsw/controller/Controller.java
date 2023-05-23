@@ -311,6 +311,7 @@ public class Controller implements ActionListener {
             v.onItemsSelected(new ItemsSelected(null));
         } */
 
+        // maybe move in nextTurn
         turnPhase = TurnPhase.LIVING_ROOM;
 
         nextTurn();
@@ -332,6 +333,7 @@ public class Controller implements ActionListener {
 
     @Override
     public synchronized void perform(DisconnectionAction action) {
+        if (ended) return;
         ended = true;
         views.remove(action.getView());
         for (VirtualView v : views) {

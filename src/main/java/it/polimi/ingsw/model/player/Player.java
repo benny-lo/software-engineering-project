@@ -128,14 +128,16 @@ public class Player {
         }
 
         bookshelf.insert(permutedItems, column);
-        int count = 0;
-        for(int i = bookshelf.getRows() - 1; count < permutedItems.size(); i--) {
-            if (bookshelf.tileAt(i, column) == null) continue;
-            count++;
-            if (bookshelfListener != null) {
-                bookshelfListener.updateState(new Position(i, column), bookshelf.tileAt(i, column));
-            }
+
+        int top;
+        for(top = bookshelf.getRows() - 1; top >= 0; top--) {
+            if (bookshelf.tileAt(top, column) != null) break;
         }
+
+        for (int i = 0; i < order.size(); i++) {
+            bookshelfListener.updateState(new Position(top - i, column), bookshelf.tileAt(top - i, column));
+        }
+
         itemsTakenFromLivingRoom = null;
     }
 
