@@ -10,6 +10,11 @@ import it.polimi.ingsw.model.player.Bookshelf;
  */
 
 public class CommonGoalPattern12 implements CommonGoalPatternInterface{
+    /**
+     * Check pattern on {@code Bookshelf} object.
+     * @param bookshelf {@code Bookshelf} object to check the pattern on.
+     * @return - true if the pattern is found, false if it isn't
+     */
     @Override
     public boolean check(Bookshelf bookshelf) {
         int[] counter=new int[bookshelf.getColumns()];

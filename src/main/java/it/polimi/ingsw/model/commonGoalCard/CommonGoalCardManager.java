@@ -108,6 +108,10 @@ public class CommonGoalCardManager {
         return tokens;
     }
 
+    /**
+     * This method sets the given CommonGoalCardsListener, by updating the state of every CommonGoalCard.
+     * @param commonGoalCardsListener - commonGoalCardsListener that needs to be set
+     */
     public void setCommonGoalCardsRep(CommonGoalCardsListener commonGoalCardsListener) {
         this.commonGoalCardsListener = commonGoalCardsListener;
         for(CommonGoalCard card : cards) {
