@@ -117,7 +117,6 @@ public class Player {
 
     /**
      * Insert a list of {@code Item}s in the {@code Bookshelf} of {@code this} in the {@code column}.
-     *
      * @param column a {@code column} selected by the Player.
      * @param order  the order to give to the items.
      */
@@ -145,7 +144,6 @@ public class Player {
 
     /**
      * Get the public score of {@code this}.
-     *
      * @return sum of {@code ScoringToken}s.
      */
     public int getPublicScore() {
