@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.client;
 
 import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMI;
 import it.polimi.ingsw.network.client.socket.ClientConnectionTCP;
@@ -50,10 +49,10 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         chat = new ArrayList<>();
     }
 
-    public void startRMI() {
+    public void startRMI(String hostName, int rmiPort) {
         Registry registry = null;
         try {
-            registry = LocateRegistry.getRegistry(ServerSettings.getHostName(), ServerSettings.getRmiPort());
+            registry = LocateRegistry.getRegistry(hostName, rmiPort);
         } catch (RemoteException e) {
             System.out.println("Registry not found.");
             System.exit(0);
@@ -94,10 +93,10 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         clientConnectionRMI.startTimers();
     }
 
-    public void startTCP() {
+    public void startTCP(String hostName, int socketPort) {
         Socket socket = null;
         try {
-            socket = new Socket(ServerSettings.getHostName(), ServerSettings.getSocketPort());
+            socket = new Socket(hostName, socketPort);
         } catch (IOException e) {
             System.out.println("Server has not been started yet.");
             System.exit(0);

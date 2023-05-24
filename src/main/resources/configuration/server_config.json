@@ -1,5 +1,5 @@
 {
-  "hostNameF" : "127.0.0.1",
+  "hostNameF" : "localhost",
   "rmiPortF" : "1099",
   "socketPortF" : "9999"
 }
