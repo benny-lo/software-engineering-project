@@ -4,10 +4,7 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.view.client.InputReceiver;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class InputHandler implements Runnable {
     private final InputReceiver inputReceiver;
@@ -15,7 +12,7 @@ public class InputHandler implements Runnable {
 
     /**
      * Constructor for the class
-     * @param inputReceiver - the inputreceiver of the input handler
+     * @param inputReceiver - the inputReceiver of the input handler
      */
     public InputHandler(InputReceiver inputReceiver) {
         this.inputReceiver = inputReceiver;
@@ -23,13 +20,20 @@ public class InputHandler implements Runnable {
     }
 
     /**
-     * Override of the run method, handling all of the cases : help, login, create game, select game, handle the living room
+     * Override of the run method, handling all the cases : help, login, create game, select game, handle the living room
      * handle the bookshelf, enter the chat, exit the chat, direct message.
      */
     @Override
     public void run() {
         while(true) {
-            String line = in.nextLine();
+            String line;
+            try {
+                line = in.nextLine();
+            } catch (NoSuchElementException e) {
+                continue;
+            } catch (IllegalStateException e) {
+                return;
+            }
 
             if (line.charAt(0) != '/') {
                 inputReceiver.writeChat(new ChatMessage(line.replace("\n", "").replace("\r", ""), "all"));

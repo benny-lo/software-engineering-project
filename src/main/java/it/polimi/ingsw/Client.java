@@ -11,17 +11,22 @@ import static java.lang.Integer.parseInt;
 public class Client {
     public static void launch(List<String> args) {
         ClientView view = new TextInterface();
+        if (args.size() == 0) System.exit(1);
         try {
             if (args.get(0).equalsIgnoreCase("rmi")) {
                 if (args.size() == 1)
                     view.startRMI(ServerSettings.getHostName(), ServerSettings.getRmiPort());
                 else if (args.size() == 3)
                     view.startRMI(args.get(1), parseInt(args.get(2)));
+                else
+                    System.exit(1);
             } else if (args.get(0).equalsIgnoreCase("tcp")) {
                 if (args.size() == 1)
                     view.startTCP(ServerSettings.getHostName(), ServerSettings.getSocketPort());
                 else if (args.size() == 3)
                     view.startTCP(args.get(1), parseInt(args.get(2)));
+                else
+                    System.exit(1);
             } else {
                 System.exit(1);
             }
