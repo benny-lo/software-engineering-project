@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.client;
+package it.polimi.ingsw.view.client.cli;
 
 public enum ClientStatus {
     LOGIN, //you can only log in

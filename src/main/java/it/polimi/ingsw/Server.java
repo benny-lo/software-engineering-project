@@ -21,9 +21,9 @@ import java.util.List;
 public class Server {
     public static void launch(List<String> args) {
         try {
-            if (args.size() == 2) {
-                startConnectionRMI(Integer.parseInt(args.get(0)));
-                startConnectionTCP(Integer.parseInt(args.get(1)));
+            if (args.size() == 3) {
+                startConnectionRMI(args.get(0), Integer.parseInt(args.get(1)));
+                startConnectionTCP(Integer.parseInt(args.get(2)));
             } else if (args.size() == 0) {
                 startConnectionRMI(ServerSettings.getRmiPort());
                 startConnectionTCP(ServerSettings.getSocketPort());
@@ -38,7 +38,13 @@ public class Server {
         System.out.println("server is ready ...");
     }
 
+    private static void startConnectionRMI(String hostname, int port) {
+        System.setProperty("java.rmi.server.hostname", hostname);
+        startConnectionRMI(port);
+    }
+
     private static void startConnectionRMI(int port) {
+
         ConnectionEstablishmentRMIInterface stub = null;
         ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI();
         try {

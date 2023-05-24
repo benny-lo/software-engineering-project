@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.client.ClientStatus;
 import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.InputReceiver;
 
@@ -30,8 +29,6 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     public TextInterface() {
         super();
-        status = ClientStatus.LOGIN;
-        printWelcomeMessage();
     }
 
     /**
@@ -39,6 +36,10 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void start() {
+        synchronized (System.out) {
+            status = ClientStatus.LOGIN;
+            printWelcomeMessage();
+        }
         InputHandler inputHandler = new InputHandler(this);
         (new Thread(inputHandler)).start();
     }
