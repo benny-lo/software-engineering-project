@@ -94,11 +94,20 @@ public class Game implements GameInterface {
         this.boardManager.fill();
     }
 
+    /**
+     * This method sets the currentPlayer, given the nickname.
+     * @param nickname {@code nickname} is the {@code currentPlayer}'s name.
+     */
     @Override
     public void setCurrentPlayer(String nickname){
         currentPlayer = nickname;
     }
 
+    /**
+     * This method checks if the positions in the list are available to be taken by a player.
+     * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
+     * @return - true if the column is available, false if otherwise.
+     */
     @Override
     public boolean canTakeItemTiles(List<Position> positions){
         if (!boardManager.canTakeItemTilesBoard(positions)) return false;
@@ -110,6 +119,11 @@ public class Game implements GameInterface {
         return availableColumn;
     }
 
+    /**
+     * This method selects the Items present at the positions saved in the list.
+     * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
+     * @return - returns the list of selected Items.
+     */
     @Override
     public List<Item> selectItemTiles(List<Position> positions){
         List<Item> selectedItems = boardManager.selectItemTiles(positions);
@@ -117,11 +131,22 @@ public class Game implements GameInterface {
         return new ArrayList<>(selectedItems);
     }
 
+    /**
+     * This method checks if the player can insert certain items , in a certain column
+     * @param column the column of the bookshelf.
+     * @param order a permutation representing the order to insert the elements in.
+     * @return - true if the player can, false if the player can't.
+     */
     @Override
     public boolean canInsertItemTilesInBookshelf(int column, List<Integer> order) {
         return players.get(currentPlayer).canInsertTiles(column, order);
     }
 
+    /**
+     * This method inserts the items in the list in the bookshelf, and ends the player's turn.
+     * @param column the column to insert in.
+     * @param order the list representing a permutation of the items.
+     */
     @Override
     public void insertItemTilesInBookshelf(int column, List<Integer> order) {
         players.get(currentPlayer).insertTiles(column, order);
@@ -149,6 +174,10 @@ public class Game implements GameInterface {
         tokens.forEach((t) -> players.get(currentPlayer).addScoringToken(t));
     }
 
+    /**
+     * This method checks if the EndingToken has been assigned to any player.
+     * @return - true if it has been assigned, false otherwise.
+     */
     @Override
     public boolean IsEndingTokenAssigned() {
         for(String nickname : players.keySet()) {
@@ -157,6 +186,10 @@ public class Game implements GameInterface {
         return false;
     }
 
+    /**
+     * This method sets the Bookshelf listener of the player, in case it is not set.
+     * @param bookshelfListener - the bookshelf listener of the player.
+     */
     public void setBookshelfListener(BookshelfListener bookshelfListener) {
         Player player = players.get(bookshelfListener.getOwner());
         if (player == null) return;
@@ -164,11 +197,19 @@ public class Game implements GameInterface {
         player.setBookshelvesListener(bookshelfListener);
     }
 
+    /**
+     * This method sets the CommonGoalCards listener, in case it is not set.
+     * @param commonGoalCardsListener - the common goal cards listener
+     */
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         if (commonGoalCardManager == null) return;
         commonGoalCardManager.setCommonGoalCardsRep(commonGoalCardsListener);
     }
 
+    /**
+     * This method sets the EndingToken listener, updating the state of it for every player.
+     * @param endingTokenListener - the ending token listener
+     */
     public void setEndingTokenListener(EndingTokenListener endingTokenListener) {
         this.endingTokenListener = endingTokenListener;
         for (String nickname : players.keySet()) {
@@ -181,44 +222,83 @@ public class Game implements GameInterface {
         endingTokenListener.updateState(null);
     }
 
+    /**
+     * This method sets the LivingRoom listener, in case it is not set.
+     * @param livingRoomListener - the living room listener.
+     */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         if (boardManager == null) return;
         boardManager.setLivingRoomListener(livingRoomListener);
     }
 
+    /**
+     * Getter for the PublicScore of a Player
+     * @param nickname It's the {@code Players}'s name.
+     * @return - the public score of a player.
+     */
     @Override
     public int getPublicScore(String nickname) {
         return this.players.get(nickname).getPublicScore();
     }
 
+    /**
+     * Getter for the PersonalScore of a Player.
+     * @param nickname the {@code Player}'s name.
+     * @return - the private score of a player.
+     */
     @Override
     public int getPersonalScore(String nickname) {
         return this.players.get(nickname).getPersonalScore();
     }
 
+    /**
+     * Getter for the CurrentPlayer
+     * @return - the current player.
+     */
     @Override
     public String getCurrentPlayer() {
         return currentPlayer;
     }
 
+    /**
+     * Getter for the PersonalID of a player, using the nickname.
+     * @param nickname the nickname of the player.
+     * @return - the personal ID of a player.
+     */
     @Override
     public int getPersonalID(String nickname) {
         return players.get(nickname).getPersonalID();
     }
 
+    /**
+     * Getter for the number of players.
+     * @return - the number of players.
+     */
     @Override
     public int getNumberPlayers() {
         return numberPlayers;
     }
 
+    /**
+     * Getter for the players
+     * @return - a map of the players.
+     */
     public Map<String, Player> getPlayers() {
         return players;
     }
 
+    /**
+     * Getter for the boardManager
+     * @return - the board manager
+     */
     public BoardManager getBoardManager() {
         return boardManager;
     }
 
+    /**
+     * Getter for the CommonGoalCardManager
+     * @return - the common goal card manager.
+     */
     public CommonGoalCardManager getCommonGoalCardManager() {
         return commonGoalCardManager;
     }
