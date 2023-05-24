@@ -23,7 +23,6 @@ import java.util.Objects;
 import static it.polimi.ingsw.view.client.cli.TextInterfacePrinter.*;
 
 public class TextInterface extends ClientView implements InputReceiver {
-    private boolean inChat;
     private ClientStatus status;
 
     /**
@@ -60,9 +59,9 @@ public class TextInterface extends ClientView implements InputReceiver {
                 return;
             }
 
-            status = ClientStatus.CREATE_OR_SELECT_GAME;
+            if (status == ClientStatus.LOGIN) clearScreen();
 
-            clearScreen();
+            status = ClientStatus.CREATE_OR_SELECT_GAME;
 
             if (games.size() == 0) {
                 printNoAvailableGames();
@@ -111,7 +110,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         synchronized (System.out) {
             itemsChosen = message.getItems();
             if (itemsChosen == null) printInvalidSelection();
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -129,7 +128,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
             }
 
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -148,7 +147,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 bookshelves.get(update.getOwner())[p.getRow()][p.getColumn()] = ups.get(p);
             }
 
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -179,7 +178,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 scores.put(nick, update.getScores().get(nick));
             }
 
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -195,7 +194,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         synchronized (System.out) {
             endingToken = update.getOwner();
 
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -214,7 +213,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 commonGoalCards.put(id, cardsChanged.get(id));
             }
 
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -248,7 +247,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 personalGoalCard[position.getRow()][position.getColumn()] = map.get(position);
             }
 
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -264,7 +263,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         synchronized (System.out) {
             chat.add(message);
 
-            if (inChat && !endGame) {
+            if (status == ClientStatus.CHAT) {
                 clearScreen();
                 printChat(chat);
             }
@@ -280,7 +279,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         synchronized (System.out) {
             currentPlayer = update.getCurrentPlayer();
 
-            if (!inChat && !endGame) {
+            if (status != ClientStatus.CHAT) {
                 clearScreen();
                 printGameRep();
             }
@@ -295,8 +294,9 @@ public class TextInterface extends ClientView implements InputReceiver {
     public void onEndGameUpdate(EndGameUpdate update) {
         endGame = true;
         winner = update.getWinner();
-        if(inChat)
+        if(status == ClientStatus.CHAT) {
             exitChat();
+        }
         status = ClientStatus.ENDED_GAME;
         clearScreen();
         printEndGame(nickname, winner, scores);
@@ -337,7 +337,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void onDisconnection() {
         if (status == ClientStatus.ERROR) return;
-        if (status != ClientStatus.ENDED_GAME) clearScreen();
+        clearScreen();
         status = ClientStatus.ERROR;
         printLostConnection();
         System.exit(0);
@@ -440,7 +440,7 @@ public class TextInterface extends ClientView implements InputReceiver {
             return;
         }
         printInChat();
-        inChat = true;
+        status = ClientStatus.CHAT;
         clearScreen();
         printChat(chat);
     }
@@ -450,15 +450,11 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void exitChat() {
-        if (status != ClientStatus.GAME){
-            printWrongStatus();
-            return;
-        }
-        if (!inChat){
+        if (status != ClientStatus.CHAT){
             printNotInChat();
             return;
         }
-        inChat = false;
+        status = ClientStatus.GAME;
         clearScreen();
         printExitChat();
         if (endGame) printEndGame(nickname, winner, scores);

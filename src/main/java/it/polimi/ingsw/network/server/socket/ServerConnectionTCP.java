@@ -119,7 +119,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         }
     }
 
-    private synchronized void sendPrivate(Message message) {
+    private void sendPrivate(Message message) {
         try {
             out.writeObject(message);
             out.flush();

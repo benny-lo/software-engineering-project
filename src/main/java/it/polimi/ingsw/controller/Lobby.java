@@ -13,6 +13,10 @@ import java.util.*;
 
 // TODO: better GameData creation.
 
+/**
+ * This class contains all {@code Controller}s of all games currently being played. It uses the Singleton
+ * Pattern. All public methods take the lock on {@code this}.
+ */
 public class Lobby {
     /**
      * Map of id -> games (the controller of that game).
