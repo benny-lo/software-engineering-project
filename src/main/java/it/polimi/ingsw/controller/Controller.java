@@ -1,5 +1,8 @@
 package it.polimi.ingsw.controller;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.GameInterface;
 import it.polimi.ingsw.model.Item;
@@ -7,10 +10,14 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.chat.ChatInterface;
 import it.polimi.ingsw.model.chat.Message;
+import it.polimi.ingsw.utils.GameConfig;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.server.VirtualView;
 import it.polimi.ingsw.utils.message.server.*;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.*;
 
 public class Controller implements ActionListener {
@@ -235,6 +242,28 @@ public class Controller implements ActionListener {
         }
     }
 
+    private GameConfig getGameConfig(){
+        Gson gson = new GsonBuilder().serializeNulls()
+                .setPrettyPrinting()
+                .disableJdkUnsafe()
+                .create();
+
+        GameConfig gameConfig;
+
+        String filename = "/configuration/game_config.json";
+
+        try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
+            gameConfig = gson.fromJson(reader,new TypeToken<GameConfig>(){}.getType());
+        } catch(IOException e){
+            gameConfig = null;
+            System.err.println("""
+                    Configuration file for gameConfig not found.
+                    The configuration file should be in configuration
+                    with name game_config.json""");
+        }
+        return gameConfig;
+    }
+
     @Override
     public synchronized void perform(JoinAction action) {
         if (game != null || ended) {
@@ -242,8 +271,8 @@ public class Controller implements ActionListener {
             return;
         }
 
-        // TODO: fix
-        action.getView().onGameData(new GameData(numberPlayers, numberCommonGoalCards, 9, 9, 6, 5));
+        GameConfig gameConfig = getGameConfig();
+        action.getView().onGameData(new GameData(numberPlayers, numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
 
         playerQueue.add(action.getView().getNickname());
         views.add(action.getView());

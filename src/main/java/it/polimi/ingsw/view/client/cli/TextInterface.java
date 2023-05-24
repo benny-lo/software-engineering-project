@@ -255,6 +255,8 @@ public class TextInterface extends ClientView implements InputReceiver {
 
             status = ClientStatus.GAME;
 
+            numberPlayers = gameData.getNumberPlayers();
+            numberCommonGoalCards = gameData.getNumberCommonGoalCards();
             livingRoom = new Item[gameData.getLivingRoomRows()][gameData.getLivingRoomColumns()];
             bookshelvesRows = gameData.getBookshelvesRows();
             bookshelvesColumns = gameData.getBookshelvesColumns();
