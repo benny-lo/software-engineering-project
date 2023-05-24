@@ -17,6 +17,10 @@ class TextInterfacePrinter {
     private static final String ANSI_CYAN = "\u001B[36m";
     private static final String ANSI_WHITE = "\u001B[37m";
 
+    /**
+     * This method prints the current player
+     * @param currentPlayer - the current player that needs to be printed
+     */
     static void printCurrentPlayer(String currentPlayer){
         if (currentPlayer == null)
             return;
@@ -24,6 +28,9 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the welcome message.
+     */
     static void printWelcomeMessage(){
         System.out.println("""
                 Welcome to MyShelfie!
@@ -31,6 +38,9 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the help menu.
+     */
     static void printHelp(){
         System.out.println("""
                 Commands list:\s
@@ -44,29 +54,49 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the wrong command error message.
+     */
     static void printWrongCommand() {
         System.out.println("This command does not exists! Try to digit '/help' for other commands.");
         System.out.flush();
     }
 
+    /**
+     * This method prints the incorrect command error message.
+     */
     static void printIncorrectCommand(){
         System.out.println("This command is misspelled! Try to digit '/help' for other commands.");
         System.out.flush();
     }
+
+    /**
+     * This method prints a warning in case the status of the player doesn't match the requirement of the action that needs
+     * to be completed.
+     */
     static void printWrongStatus(){
         System.out.println("You cannot do this action now!\nTry to digit '/help' for other commands.");
         System.out.flush();
     }
 
+    /**
+     * This method prints the login failed error message.
+     */
     static void printLoginFailed(){
         System.out.println("Login failed. Try again!");
     }
 
+    /**
+     * This method warns the player of absence of available games.
+     */
     static void printNoAvailableGames(){
         System.out.println("There are no available games.\nCreate a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
         System.out.flush();
     }
 
+    /**
+     * This method warns the player of having inserted an incorrect nickname.
+     */
     static void printIncorrectNickname(){
         System.out.println("""
                 This nickname is incorrect! Retry to login.
@@ -75,35 +105,58 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method warns the player of having selected a invalid tile.
+     */
     static void printInvalidSelection(){
         System.out.println("Invalid tile selection! Try again.");
         System.out.flush();
     }
 
+    /**
+     * This method prints the denied action error message.
+     */
     static void printDeniedAction(){
         System.out.println("Action denied. Try again!");
         System.out.flush();
     }
 
+    /**
+     * This method informs the player that they have entered the chat.
+     */
     static void printInChat(){
         System.out.println("You've now entered in the chat!");
         System.out.flush();
     }
+
+    /**
+     * This method informs the player that they have not yet entered the chat.
+     */
     static void printNotInChat(){
         System.out.println("You've not entered in the chat yet!\nTry with the command '/enter_chat'.");
         System.out.flush();
     }
 
+    /**
+     * This method informs the player that they have exited the chat.
+     */
     static void printExitChat(){
         System.out.println("You've now left the chat!");
         System.out.flush();
     }
 
+    /**
+     * This method clears the screen.
+     */
     static void clearScreen() {
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    /**
+     * This method prints out the living room
+     * @param livingRoom - the living room that needs to be printed
+     */
     static void printLivingRoom(Item[][] livingRoom) {
         if (livingRoom == null) return;
 
@@ -122,7 +175,10 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
-
+    /**
+     * This method prints an item of the living room or bookshelves.
+     * @param item - the item that needs to be printed
+     */
     static void printItem(Item item) {
         if (item == null) {
             System.out.print(ANSI_RED + "X " + ANSI_RESET);
@@ -140,7 +196,10 @@ class TextInterfacePrinter {
         }
     }
 
-
+    /**
+     * This method prints the bookshelves of the players
+     * @param bookshelves - the bookshelves that need to be printed.
+     */
     static void printBookshelves(Map<String, Item[][]> bookshelves) {
         if (bookshelves == null)
             return;
@@ -150,6 +209,10 @@ class TextInterfacePrinter {
         }
     }
 
+    /**
+     * This method prints a bookshelf or a singular personal goal card
+     * @param array - the position of the items of the personal goal card or of the bookshelf.
+     */
     static void printBookshelfOrPersonalGoalCard(Item[][] array) {
         for (int i = array.length - 1; i >= 0; i--) {
             System.out.print(i + " ");
@@ -163,6 +226,10 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the personal goal card of the player.
+     * @param personalGoalCard - the personal goal card that needs to be printed
+     */
     static void printPersonalGoalCard(Item[][] personalGoalCard) {
         if (personalGoalCard == null)
             return;
@@ -170,6 +237,10 @@ class TextInterfacePrinter {
         printBookshelfOrPersonalGoalCard(personalGoalCard);
     }
 
+    /**
+     * This method prints the common goal cards of the game
+     * @param commonGoalCards - the common goal cards that need to be printed.
+     */
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
         if (commonGoalCards == null)
             return;
@@ -195,6 +266,11 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the chosen items.
+     * @param itemsChosen - the item chosen by the player
+     * @param currentPlayer - the player choosing the items.
+     */
     static void printItemsChosen(List<Item> itemsChosen, String currentPlayer) {
         if (currentPlayer == null) return;
         if (itemsChosen == null) return;
@@ -206,6 +282,10 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the ending token.
+     * @param endingToken - the endingToken
+     */
     static void printEndingToken(String endingToken) {
         if (endingToken != null) {
             System.out.println(endingToken + " has the ending token");
@@ -213,6 +293,10 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the scores of the players
+     * @param scores - the scores of the players.
+     */
     static void printScores(Map<String, Integer> scores) {
         if (scores == null) return;
         System.out.println("Rankings:");
@@ -221,6 +305,10 @@ class TextInterfacePrinter {
         }
     }
 
+    /**
+     * This method prints the chat messages
+     * @param chat - the chat that needs to be printed.
+     */
     static void printChat(List<ChatUpdate> chat) {
         if (chat.size() == 0) {
             System.out.println("No message in chat yet");
@@ -234,6 +322,12 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This game prints the end game messages
+     * @param nickname - the nickname of the winner.
+     * @param winner - the winner.
+     * @param scores - the scores of the players.
+     */
     static void printEndGame(String nickname, String winner, Map<String, Integer> scores) {
         if (winner == null){
             System.out.println("The game terminated, as somebody disconnected.");
@@ -249,11 +343,17 @@ class TextInterfacePrinter {
         System.out.flush();
     }
 
+    /**
+     * This method prints the lost connection error message.
+     */
     static void printLostConnection(){
         System.out.println("Lost connection to server. Shutting down ...");
         System.out.flush();
     }
 
+    /**
+     * This method prints the personal goal card configuration failed error message.
+     */
     static void printPersonalGoalCardConfigurationFailed(){
         System.err.println("""
                     Configuration file for personalGoalCard not found.

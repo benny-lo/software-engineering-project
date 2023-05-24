@@ -13,11 +13,19 @@ public class InputHandler implements Runnable {
     private final InputReceiver inputReceiver;
     private final Scanner in;
 
+    /**
+     * Constructor for the class
+     * @param inputReceiver - the inputreceiver of the input handler
+     */
     public InputHandler(InputReceiver inputReceiver) {
         this.inputReceiver = inputReceiver;
         this.in = new Scanner(System.in);
     }
 
+    /**
+     * Override of the run method, handling all of the cases : help, login, create game, select game, handle the living room
+     * handle the bookshelf, enter the chat, exit the chat, direct message.
+     */
     @Override
     public void run() {
         while(true) {

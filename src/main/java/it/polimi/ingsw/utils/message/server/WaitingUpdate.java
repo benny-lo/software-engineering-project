@@ -9,7 +9,7 @@ public class WaitingUpdate extends Message {
     /**
      * Constructor for the class
      * @param justConnected - if the player has just connected
-     * @param missing - if the player is missing
+     * @param missing - how many players are missing
      */
     public WaitingUpdate(String justConnected, int missing) {
         this.justConnected = justConnected;
@@ -24,7 +24,7 @@ public class WaitingUpdate extends Message {
     }
     /**
      * Getter for the missing
-     * @return - the missing value
+     * @return - the number of players missing for the game
      */
     public int getMissing() {
         return missing;
