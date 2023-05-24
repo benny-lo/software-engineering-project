@@ -42,6 +42,10 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
     protected List<Item> itemsChosen;
     protected ClientConnection clientConnection;
 
+    /**
+     * Constructor for the class.
+     * Creates a new HashMap for the bookshelves, for the common goal cards, for the scores and for the chat.
+     */
     public ClientView() {
         bookshelves = new HashMap<>();
         commonGoalCards = new HashMap<>();
@@ -49,6 +53,9 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         chat = new ArrayList<>();
     }
 
+    /**
+     * This method starts the RMI type of connection, catching different exceptions.
+     */
     public void startRMI(String hostName, int rmiPort) {
         Registry registry = null;
         try {
@@ -93,6 +100,9 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         clientConnectionRMI.startTimers();
     }
 
+    /**
+     * This method starts the TCP type of connection, catch different kinds of exceptions
+     */
     public void startTCP(String hostName, int socketPort) {
         Socket socket = null;
         try {
@@ -115,6 +125,11 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
 
     public abstract void start();
 
+    /**
+     * This method checks if the nickname given is valid
+     * @param nickname - the nickname that needs to be checked.
+     * @return - true if the nickname is valid, false if not.
+     */
     public static boolean isValidNickname(String nickname){
         String regex = "^[A-Za-z]\\w{0,29}$";
         Pattern pattern = Pattern.compile(regex);

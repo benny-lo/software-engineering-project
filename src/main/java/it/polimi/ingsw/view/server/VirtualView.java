@@ -238,7 +238,6 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
         if (disconnected.get()) return;
-        controller = null;
         serverConnection.send(update);
     }
 

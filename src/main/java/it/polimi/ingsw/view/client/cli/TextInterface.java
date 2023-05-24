@@ -26,18 +26,29 @@ public class TextInterface extends ClientView implements InputReceiver {
     private boolean inChat;
     private ClientStatus status;
 
+    /**
+     * Constructor for the class.
+     */
     public TextInterface() {
         super();
         status = ClientStatus.LOGIN;
         printWelcomeMessage();
     }
 
+    /**
+     * Override of the start method, starts a new thread, using inputHandler
+     */
     @Override
     public void start() {
         InputHandler inputHandler = new InputHandler(this);
         (new Thread(inputHandler)).start();
     }
 
+    /**
+     * Override of the onGamesList method, prints the list of Games that are available, or error messages in cases the nickname
+     * is not set, or there are no games available
+     * @param message - message of the type GameList
+     */
     @Override
     public void onGamesList(GamesList message) {
         synchronized (System.out) {
@@ -65,6 +76,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onAcceptedInsertion method, handles what the text interface should do in case of a AcceptedInsertion message.
+     * @param message - message of acceptedInsertion type, which is true if the insertion is accepted or false otherwise.
+     */
     @Override
     public void onAcceptedInsertion(AcceptedInsertion message) {
         synchronized (System.out){
@@ -75,6 +90,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onChatAccepted method, handles what the text interface should do in case of a chatAccepted message.
+     * @param message - message of chatAccepted type, which is true if the player has connected to the chat or false otherwise.
+     */
     @Override
     public void onChatAccepted(ChatAccepted message) {
         synchronized (System.out){
@@ -83,7 +102,10 @@ public class TextInterface extends ClientView implements InputReceiver {
             }
         }
     }
-
+    /**
+     * Override of the onItemsSelected method, handles what the text interface should do in case of a ItemsSelected message.
+     * @param message - message of onItemsSelected type, which contains the item chosen.
+     */
     @Override
     public void onItemsSelected(ItemsSelected message) {
         synchronized (System.out) {
@@ -95,7 +117,10 @@ public class TextInterface extends ClientView implements InputReceiver {
             }
         }
     }
-
+    /**
+     * Override of the onLivingRoomUpdate method, handles what the text interface should do in case of a LivingRoom update.
+     * @param update - message of LivingRoomUpdate type, which contains the updated Living Room.
+     */
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
         synchronized (System.out) {
@@ -110,7 +135,10 @@ public class TextInterface extends ClientView implements InputReceiver {
             }
         }
     }
-
+    /**
+     * Override of the onBookshelfUpdate method, handles what the text interface should do in case of a Bookshelf update.
+     * @param update - message of BookshelfUpdate type, which contains the updated Bookshelf.
+     */
     @Override
     public void onBookshelfUpdate(BookshelfUpdate update) {
         synchronized (System.out) {
@@ -126,7 +154,11 @@ public class TextInterface extends ClientView implements InputReceiver {
             }
         }
     }
-
+    /**
+     * Override of the onWaitingUpdate method, handles what the text interface should do in case of a waiting update.
+     * @param update- message of WaitingUpdate type, which is true if the player has just connected and the rest of the players are
+     * waiting for the game to start.
+     */
     @Override
     public void onWaitingUpdate(WaitingUpdate update) {
         synchronized (System.out) {
@@ -136,6 +168,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onScoresUpdate method, handles what the text interface should do in case of a Scores update.
+     * @param update - message of ScoresUpdate type, which is contains the updated scores.
+     */
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
         synchronized (System.out) {
@@ -150,6 +186,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onEndingTokenUpdate method, handles what the text interface should do in case of a EndingToken update.
+     * @param update - message of EndingTokenUpdate type, which contains the owner of the endingToken
+     */
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
         synchronized (System.out) {
@@ -162,6 +202,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onCommonGoalCardsUpdate method, handles what the text interface should do in case of a CommonGoalCards update.
+     * @param update - message of CommonGoalCardsUpdate type , which contains the updated common goal cards
+     */
     @Override
     public void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
         synchronized (System.out) {
@@ -176,7 +220,10 @@ public class TextInterface extends ClientView implements InputReceiver {
             }
         }
     }
-
+    /**
+     * Override of the onPersonalGoalCardUpdate method, handles what the text interface should do in case of a PersonalGoalCard update.
+     * @param update - message of PersonalGoalCardUpdate type , which contains the updated personal goal card
+     */
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
         synchronized (System.out) {
@@ -208,6 +255,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onChatUpdate method, handles what the text interface should do in case of a chat update.
+     * @param message - message of ChatUpdate type, which contains an updated chat message
+     */
     @Override
     public void onChatUpdate(ChatUpdate message) {
         synchronized (System.out) {
@@ -220,6 +271,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onStartTurnUpdate, handles what the text interface should do in case of a startTurn update.
+     * @param update - message of StartTurnUpdate type, which contains the updated current player.
+     */
     @Override
     public void onStartTurnUpdate(StartTurnUpdate update) {
         synchronized (System.out) {
@@ -232,6 +287,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onEndGameUpdate, handles what the text interface should do in case of an endgame update.
+     * @param update - message of the EndGameUpdate type, which contains the winner of the game.
+     */
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
         endGame = true;
@@ -243,6 +302,11 @@ public class TextInterface extends ClientView implements InputReceiver {
         printEndGame(nickname, winner, scores);
     }
 
+    /**
+     * Override of the onGameData, handles what the text interface should do in case of a gameData update.
+     * @param gameData - message of the GameData type, which contains information of the game, number of players, number
+     * of common goal cards, of the row and columns of the living room and bookshelves.
+     */
     @Override
     public void onGameData(GameData gameData) {
         synchronized (System.out) {
@@ -267,6 +331,9 @@ public class TextInterface extends ClientView implements InputReceiver {
         }
     }
 
+    /**
+     * Override of the onDisconnection method, handles what the text interface should do in a case of a disconnection.
+     */
     @Override
     public void onDisconnection() {
         if (status == ClientStatus.ERROR) return;
@@ -276,6 +343,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         System.exit(0);
     }
 
+    /**
+     * Override of the login method, handles what the text interface should do in case of a login.
+     * @param message message containing the chosen nickname.
+     */
     @Override
     public void login(Nickname message) {
         String nickname = message.getNickname();
@@ -293,6 +364,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         clientConnection.send(new Nickname(nickname));
     }
 
+    /**
+     * Override of the createGame method, handles what the text interface should do in case of a gameInitialization message.
+     * @param message message containing the information about the game to create.
+     */
     @Override
     public void createGame(GameInitialization message) {
 
@@ -303,6 +378,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         clientConnection.send(message);
     }
 
+    /**
+     * Override of the selectGame method, handles what the text interface should do in case of a GameSelection message.
+     * @param message message containing the id of the game chosen.
+     */
     @Override
     public void selectGame(GameSelection message) {
         if (status != ClientStatus.CREATE_OR_SELECT_GAME){
@@ -312,6 +391,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         clientConnection.send(message);
     }
 
+    /**
+     * Override of the selectFromLivingRoom method, handles what the text interface should do in case of a LivingRoomSelection message.
+     * @param message message containing the chosen positions.
+     */
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
         if (status != ClientStatus.GAME){
@@ -321,6 +404,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         clientConnection.send(message);
     }
 
+    /**
+     * * Override of the insertInBookshelf method, handles what the text interface should do in case of a BookshelfInsertion message.
+     * @param message message containing the column and the order in which to insert the chosen tiles.
+     */
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
         if (status != ClientStatus.GAME){
@@ -330,6 +417,10 @@ public class TextInterface extends ClientView implements InputReceiver {
         clientConnection.send(message);
     }
 
+    /**
+     * * Override of the writeChat method, handles what the text interface should do in case of a Chat message.
+     * @param message message containing the text written.
+     */
     @Override
     public void writeChat(ChatMessage message) {
         if (status != ClientStatus.GAME){
@@ -339,6 +430,9 @@ public class TextInterface extends ClientView implements InputReceiver {
         clientConnection.send(message);
     }
 
+    /**
+     * * Override of the enterChat method, handles what the text interface should do in case of a player entering the chat.
+     */
     @Override
     public void enterChat() {
         if (status != ClientStatus.GAME){
@@ -351,6 +445,9 @@ public class TextInterface extends ClientView implements InputReceiver {
         printChat(chat);
     }
 
+    /**
+     * * Override of the exitChat method, handles what the text interface should do in case of a player exiting the chat.
+     */
     @Override
     public void exitChat() {
         if (status != ClientStatus.GAME){
@@ -368,6 +465,9 @@ public class TextInterface extends ClientView implements InputReceiver {
         else printGameRep();
     }
 
+    /**
+     * This method prints the text interface representation of the whole game.
+     */
     private void printGameRep() {
         printCurrentPlayer(currentPlayer);
 
