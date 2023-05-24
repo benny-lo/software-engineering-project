@@ -4,6 +4,7 @@ import it.polimi.ingsw.network.server.ServerConnection;
 import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
@@ -63,14 +64,17 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                             return;
                         }
                     }
-                    try {
-                        socket.close();
-                    } catch (IOException ignored) {}
+                    synchronized (socket) {
+                        try {
+                            socket.close();
+                        } catch (IOException ignored) {
+                        }
+                    }
                     receiver.disconnect();
                 }
             }, 2000, 2000);
 
-            while (socket.isConnected()) {
+            while (true) {
                 input = in.readObject();
                 receive(input);
             }
@@ -78,9 +82,12 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             serverTimer.cancel();
             clientTimer.cancel();
             receiver.disconnect();
-            try {
-                socket.close();
-            } catch (IOException ignored) {}
+            synchronized (socket) {
+                try {
+                    socket.close();
+                } catch (IOException ignored) {
+                }
+            }
         }
 
         serverTimer.cancel();
@@ -171,6 +178,12 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     @Override
     public void send(EndGameUpdate update) {
         sendPrivate(update);
+        synchronized (socket) {
+            try {
+                socket.close();
+            } catch (IOException ignored) {}
+            receiver.disconnect();
+        }
     }
 
     @Override

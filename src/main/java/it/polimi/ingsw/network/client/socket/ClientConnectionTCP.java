@@ -4,6 +4,7 @@ import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientUpdateViewInterface;
 
@@ -124,14 +125,17 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                             return;
                         }
                     }
-                    try {
-                        socket.close();
-                    } catch (IOException ignored) {}
+                    synchronized (socket) {
+                        try {
+                            socket.close();
+                        } catch (IOException ignored) {
+                        }
+                    }
                     receiver.onDisconnection();
                 }
             }, 2000, 2000);
 
-            while (socket.isConnected()) {
+            while (true) {
                 input = in.readObject();
                 receive(input);
             }
@@ -139,6 +143,11 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             serverTimer.cancel();
             clientTimer.cancel();
             receiver.onDisconnection();
+            synchronized (socket) {
+                try {
+                    socket.close();
+                } catch (IOException ignored) {}
+            }
         }
 
         serverTimer.cancel();

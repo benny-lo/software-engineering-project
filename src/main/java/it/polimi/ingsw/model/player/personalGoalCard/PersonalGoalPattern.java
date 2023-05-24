@@ -34,7 +34,7 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     /**
      * Check pattern on {@code Bookshelf} object.
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return - true if the pattern is found, false if it isn't
+     * @return the number of positions of the bookshelf that match with the personal pattern.
      */
     @Override
     public int check(Bookshelf bookshelf) {
@@ -46,10 +46,9 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     }
 
     /**
-     * Getter of maskPositions of {@code this}
-     * @return - returns the maskPositions of the PersonalGoalPattern
+     * Getter for the map of {@code Position} to {@code Item} contained in {@code this}.
+     * @return the map that is a private attribute of {@code this}.
      */
-    @Override
     public Map<Position, Item> getMaskPositions() {
         return maskPositions;
     }

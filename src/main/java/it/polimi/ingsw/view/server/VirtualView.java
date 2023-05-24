@@ -8,8 +8,11 @@ import it.polimi.ingsw.utils.action.DisconnectionAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
 import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.UpdateViewInterface;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * This class represents the connection to a client. VirtualViews are instantiated once per client.
@@ -29,7 +32,8 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
 
     private ServerConnection serverConnection;
 
-    private boolean disconnected;
+    private final AtomicBoolean disconnected;
+    private final Object lock;
 
     /**
      * The constructor of VirtualView. It only sets the {@code ServerConnection} and
@@ -37,19 +41,26 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      */
     public VirtualView(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
+        this.lock = new Object();
+        disconnected = new AtomicBoolean(false);
     }
 
     /**
      * The constructor of VirtualView, exclusively used for testing.
      */
-    public VirtualView(){}
+    public VirtualView() {
+        this.lock = new Object();
+        disconnected = new AtomicBoolean(false);
+    }
 
     /**
      * Setter for the private attribute {@code nickname}.
      * @param nickname the nickname to set.
      */
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        synchronized (lock) {
+            this.nickname = nickname;
+        }
     }
 
     /**
@@ -57,7 +68,9 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * @return a {@code String} corresponding to the nickname of {@code this}.
      */
     public String getNickname() {
-        return nickname;
+        synchronized (lock) {
+            return nickname;
+        }
     }
 
     /**
@@ -65,7 +78,9 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * @param controller the controller to set.
      */
     public void setController(Controller controller) {
-        this.controller = controller;
+        synchronized (lock) {
+            this.controller = controller;
+        }
     }
 
     /**
@@ -73,7 +88,9 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * @return {@code true} iff the private attribute {@code nickname} is not {@code null}.
      */
     public boolean isLoggedIn() {
-        return nickname != null;
+        synchronized (lock) {
+            return nickname != null;
+        }
     }
 
     /**
@@ -81,7 +98,9 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * @return {@code true} iff the private attribute {@code controller} is not {@code null}.
      */
     public boolean isInGame() {
-        return controller != null;
+        synchronized (lock) {
+            return controller != null;
+        }
     }
 
 
@@ -139,14 +158,14 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
             return;
         }
 
-        controller.perform(new ChatMessageAction(this, message.getText()));
+        controller.perform(new ChatMessageAction(this, message.getText(), message.getReceiver()));
     }
 
     @Override
     public synchronized void disconnect() {
-        if (disconnected) return;
+        if (disconnected.get()) return;
 
-        disconnected = true;
+        disconnected.set(true);
 
         Lobby.getInstance().removeVirtualView(this);
         if (controller != null) {
@@ -158,91 +177,91 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
 
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onBookshelfUpdate(BookshelfUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onWaitingUpdate(WaitingUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onStartTurnUpdate(StartTurnUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(update);
     }
 
     @Override
     public void onGamesList(GamesList gamesList) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(gamesList);
     }
 
     @Override
     public void onItemsSelected(ItemsSelected itemsSelected) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(itemsSelected);
     }
 
     @Override
     public void onAcceptedInsertion(AcceptedInsertion message) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(message);
     }
 
     @Override
     public void onGameData(GameData message){
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(message);
     }
 
     @Override
     public void onChatAccepted(ChatAccepted message) {
-        if (disconnected) return;
+        if (disconnected.get()) return;
         serverConnection.send(message);
     }
 }

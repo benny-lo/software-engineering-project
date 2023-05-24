@@ -129,6 +129,8 @@ public class Player {
 
         bookshelf.insert(permutedItems, column);
 
+        if (bookshelfListener == null) return;
+
         int top;
         for(top = bookshelf.getRows() - 1; top >= 0; top--) {
             if (bookshelf.tileAt(top, column) != null) break;

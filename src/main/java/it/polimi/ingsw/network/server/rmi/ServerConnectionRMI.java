@@ -5,6 +5,7 @@ import it.polimi.ingsw.network.server.ServerConnection;
 import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.*;
+import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
@@ -84,6 +85,10 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                             client.receive((StartTurnUpdate) message);
                         } else if (message instanceof EndGameUpdate) {
                             client.receive((EndGameUpdate) message);
+                            serverTimer.cancel();
+                            clientTimer.cancel();
+                            receiver.disconnect();
+                            return;
                         } else if (message instanceof GamesList) {
                             client.receive((GamesList) message);
                         } else if (message instanceof ItemsSelected) {

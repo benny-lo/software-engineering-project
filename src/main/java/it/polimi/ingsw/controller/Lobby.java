@@ -89,6 +89,13 @@ public class Lobby {
             return;
         }
 
+        for(VirtualView v : views) {
+            if (nickname.equals(v.getNickname())) {
+                view.onGamesList(new GamesList(null));
+                return;
+            }
+        }
+
         views.add(view);
         view.setNickname(nickname);
         view.onGamesList(new GamesList(getGameInfo()));
