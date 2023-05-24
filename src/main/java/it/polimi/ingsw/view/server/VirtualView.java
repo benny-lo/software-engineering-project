@@ -167,6 +167,12 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
 
         disconnected.set(true);
 
+        if (nickname != null) {
+            System.out.println(nickname + " is disconnected.");
+        } else {
+            System.out.println("a client without nickname disconnected.");
+        }
+
         Lobby.getInstance().removeVirtualView(this);
         if (controller != null) {
             Lobby.getInstance().removeController(controller);
@@ -232,6 +238,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
         if (disconnected.get()) return;
+        controller = null;
         serverConnection.send(update);
     }
 
