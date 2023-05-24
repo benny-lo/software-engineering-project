@@ -81,13 +81,13 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         } catch (IOException | ClassNotFoundException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            receiver.disconnect();
             synchronized (socket) {
                 try {
                     socket.close();
                 } catch (IOException ignored) {
                 }
             }
+            receiver.disconnect();
         }
 
         serverTimer.cancel();
@@ -126,6 +126,11 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         } catch (IOException e) {
             serverTimer.cancel();
             clientTimer.cancel();
+            synchronized (socket) {
+                try {
+                    socket.close();
+                } catch (IOException ignored) {}
+            }
             receiver.disconnect();
         }
     }

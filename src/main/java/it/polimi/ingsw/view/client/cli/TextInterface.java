@@ -292,14 +292,16 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
-        endGame = true;
-        winner = update.getWinner();
-        if(status == ClientStatus.CHAT) {
-            exitChat();
+        synchronized (System.out) {
+            endGame = true;
+            winner = update.getWinner();
+            if (status == ClientStatus.CHAT) {
+                exitChat();
+            }
+            status = ClientStatus.ENDED_GAME;
+            clearScreen();
+            printEndGame(nickname, winner, scores);
         }
-        status = ClientStatus.ENDED_GAME;
-        clearScreen();
-        printEndGame(nickname, winner, scores);
     }
 
     /**
@@ -336,11 +338,13 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void onDisconnection() {
-        if (status == ClientStatus.ERROR) return;
-        clearScreen();
-        status = ClientStatus.ERROR;
-        printLostConnection();
-        System.exit(0);
+        synchronized (System.out) {
+            if (status == ClientStatus.ERROR) return;
+            clearScreen();
+            status = ClientStatus.ERROR;
+            printLostConnection();
+            System.exit(0);
+        }
     }
 
     /**
@@ -349,19 +353,21 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void login(Nickname message) {
-        String nickname = message.getNickname();
-        if (status != ClientStatus.LOGIN){
-            printWrongStatus();
-            return;
-        }
+        synchronized (System.out) {
+            String nickname = message.getNickname();
+            if (status != ClientStatus.LOGIN) {
+                printWrongStatus();
+                return;
+            }
 
-        if(!isValidNickname(nickname)){
-            printIncorrectNickname();
-            return;
-        }
+            if (!isValidNickname(nickname)) {
+                printIncorrectNickname();
+                return;
+            }
 
-        this.nickname = nickname;
-        clientConnection.send(new Nickname(nickname));
+            this.nickname = nickname;
+            clientConnection.send(new Nickname(nickname));
+        }
     }
 
     /**
@@ -370,12 +376,13 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void createGame(GameInitialization message) {
-
-        if (status != ClientStatus.CREATE_OR_SELECT_GAME){
-            printWrongStatus();
-            return;
+        synchronized (System.out) {
+            if (status != ClientStatus.CREATE_OR_SELECT_GAME) {
+                printWrongStatus();
+                return;
+            }
+            clientConnection.send(message);
         }
-        clientConnection.send(message);
     }
 
     /**
@@ -384,11 +391,13 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void selectGame(GameSelection message) {
-        if (status != ClientStatus.CREATE_OR_SELECT_GAME){
-            printWrongStatus();
-            return;
+        synchronized (System.out) {
+            if (status != ClientStatus.CREATE_OR_SELECT_GAME) {
+                printWrongStatus();
+                return;
+            }
+            clientConnection.send(message);
         }
-        clientConnection.send(message);
     }
 
     /**
@@ -397,11 +406,13 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
-        if (status != ClientStatus.GAME){
-            printWrongStatus();
-            return;
+        synchronized (System.out) {
+            if (status != ClientStatus.GAME) {
+                printWrongStatus();
+                return;
+            }
+            clientConnection.send(message);
         }
-        clientConnection.send(message);
     }
 
     /**
@@ -410,11 +421,13 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
-        if (status != ClientStatus.GAME){
-            printWrongStatus();
-            return;
+        synchronized (System.out) {
+            if (status != ClientStatus.GAME) {
+                printWrongStatus();
+                return;
+            }
+            clientConnection.send(message);
         }
-        clientConnection.send(message);
     }
 
     /**
@@ -423,11 +436,13 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void writeChat(ChatMessage message) {
-        if (status != ClientStatus.GAME){
-            printWrongStatus();
-            return;
+        synchronized (System.out) {
+            if (status != ClientStatus.GAME) {
+                printWrongStatus();
+                return;
+            }
+            clientConnection.send(message);
         }
-        clientConnection.send(message);
     }
 
     /**
@@ -435,14 +450,16 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void enterChat() {
-        if (status != ClientStatus.GAME){
-            printWrongStatus();
-            return;
+        synchronized (System.out) {
+            if (status != ClientStatus.GAME) {
+                printWrongStatus();
+                return;
+            }
+            printInChat();
+            status = ClientStatus.CHAT;
+            clearScreen();
+            printChat(chat);
         }
-        printInChat();
-        status = ClientStatus.CHAT;
-        clearScreen();
-        printChat(chat);
     }
 
     /**
@@ -450,15 +467,17 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public void exitChat() {
-        if (status != ClientStatus.CHAT){
-            printNotInChat();
-            return;
+        synchronized (System.out) {
+            if (status != ClientStatus.CHAT) {
+                printNotInChat();
+                return;
+            }
+            status = ClientStatus.GAME;
+            clearScreen();
+            printExitChat();
+            if (endGame) printEndGame(nickname, winner, scores);
+            else printGameRep();
         }
-        status = ClientStatus.GAME;
-        clearScreen();
-        printExitChat();
-        if (endGame) printEndGame(nickname, winner, scores);
-        else printGameRep();
     }
 
     /**
@@ -479,6 +498,8 @@ public class TextInterface extends ClientView implements InputReceiver {
     }
 
     public void getStatus() {
-        System.out.println(status);
+        synchronized (System.out) {
+            System.out.println(status);
+        }
     } // this method will be deleted probably
 }
