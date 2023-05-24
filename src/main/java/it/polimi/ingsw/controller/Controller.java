@@ -7,7 +7,6 @@ import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.GameInterface;
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.utils.GameConfig;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.server.VirtualView;
