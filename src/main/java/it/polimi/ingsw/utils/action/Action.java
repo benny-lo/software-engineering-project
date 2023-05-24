@@ -7,10 +7,19 @@ import it.polimi.ingsw.view.server.VirtualView;
  */
 public abstract class Action {
     VirtualView view;
+
+    /**
+     * Constructor for the class
+     * @param view - the view from which the Action is performed from.
+     */
     public Action(VirtualView view) {
         this.view = view;
     }
 
+    /**
+     * Getter for the view of the Action
+     * @return - the Virtual View of the Action
+     */
     public VirtualView getView() {
         return view;
     }

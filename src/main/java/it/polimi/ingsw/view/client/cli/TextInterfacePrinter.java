@@ -246,6 +246,8 @@ class TextInterfacePrinter {
             System.out.println("The winner is " + winner);
             printScores(scores);
         }
+
+        System.out.println("You can now close the game.");
         System.out.flush();
     }
 

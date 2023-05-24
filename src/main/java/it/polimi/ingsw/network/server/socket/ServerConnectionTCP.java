@@ -178,12 +178,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     @Override
     public void send(EndGameUpdate update) {
         sendPrivate(update);
-        synchronized (socket) {
-            try {
-                socket.close();
-            } catch (IOException ignored) {}
-            receiver.disconnect();
-        }
     }
 
     @Override
