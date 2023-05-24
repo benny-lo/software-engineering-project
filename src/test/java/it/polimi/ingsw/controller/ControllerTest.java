@@ -30,7 +30,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(JoinAction action)}'s method with only 2 players.
+     * Test {@code perform(JoinAction action)}'s method with only 2 players.
      */
     @Test
     public void testSuccessfulJoinAction(){
@@ -45,10 +45,22 @@ public class ControllerTest {
 
         assertTrue(controller.getAllPlayers().contains(view0.getNickname()));
         assertTrue(controller.getAllPlayers().contains(view1.getNickname()));
+
+        assertTrue(controller.getViews().contains(view0));
+        assertTrue(controller.getViews().contains(view1));
+
+        assertTrue(controller.getGameBuilder().getPlayers().contains(view0.getNickname()));
+        assertTrue(controller.getGameBuilder().getPlayers().contains(view1.getNickname()));
+
+        assertTrue(controller.getBookshelfListenersOwners().contains(view0.getNickname()));
+        assertTrue(controller.getBookshelfListenersOwners().contains(view1.getNickname()));
+
+        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
+        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));
     }
 
     /**
-     * Test {@code update(JoinAction action)}'s method trying to join while the game is already started.
+     * Test {@code perform(JoinAction action)}'s method trying to join while the game is already started.
      */
     @Test
     public void testUnsuccessfulJoinAction1() {
@@ -67,13 +79,33 @@ public class ControllerTest {
 
         assertTrue(controller.isStarted());
 
+        assertTrue(controller.getViews().contains(view0));
+        assertTrue(controller.getViews().contains(view1));
+
+        assertTrue(controller.getGameBuilder().getPlayers().contains(view0.getNickname()));
+        assertTrue(controller.getGameBuilder().getPlayers().contains(view1.getNickname()));
+
+        assertTrue(controller.getBookshelfListenersOwners().contains(view0.getNickname()));
+        assertTrue(controller.getBookshelfListenersOwners().contains(view1.getNickname()));
+
+        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
+        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));
+
         for(String player : controller.getAllPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
+
+        assertFalse(controller.getViews().contains(view2));
+
+        assertFalse(controller.getGameBuilder().getPlayers().contains(view2.getNickname()));
+
+        assertFalse(controller.getBookshelfListenersOwners().contains(view2.getNickname()));
+
+        assertFalse(controller.getGameBuilder().getBookshelfListenersOwners().contains(view2.getNickname()));
     }
 
     /**
-     * Test {@code update(JoinAction action)}'s method trying to join but the game is ended.
+     * Test {@code perform(JoinAction action)}'s method trying to join but the game is ended.
      */
     @Test
     public void testUnsuccessfulJoinAction2() {
@@ -92,14 +124,33 @@ public class ControllerTest {
         view2.setNickname("tick");
         controller.perform(new JoinAction(view2));
 
+        assertTrue(controller.getViews().contains(view0));
+        assertTrue(controller.getViews().contains(view1));
+
+        assertTrue(controller.getGameBuilder().getPlayers().contains(view0.getNickname()));
+        assertTrue(controller.getGameBuilder().getPlayers().contains(view1.getNickname()));
+
+        assertTrue(controller.getBookshelfListenersOwners().contains(view0.getNickname()));
+        assertTrue(controller.getBookshelfListenersOwners().contains(view1.getNickname()));
+
+        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
+        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));
 
         for(String player : controller.getAllPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
+
+        assertFalse(controller.getViews().contains(view2));
+
+        assertFalse(controller.getGameBuilder().getPlayers().contains(view2.getNickname()));
+
+        assertFalse(controller.getBookshelfListenersOwners().contains(view2.getNickname()));
+
+        assertFalse(controller.getGameBuilder().getBookshelfListenersOwners().contains(view2.getNickname()));
     }
 
     /**
-     * Test {@code update(SelectionFromLivingRoomAction action)}'s method but the game is ended.
+     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method but the game is ended.
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction1() {
@@ -121,7 +172,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionFromLivingRoomAction action)}'s method when the sender is not the current player.
+     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method when the sender is not the current player.
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction2() {
@@ -142,7 +193,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionFromLivingRoomAction action)}'s method when it's not the right game phase.
+     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method when it's not the right game phase.
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction3() {
@@ -163,7 +214,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionFromLivingRoomAction action)}'s method but the item tiles aren't selectable.
+     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method but the item tiles aren't selectable.
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction4() {
@@ -184,7 +235,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionFromLivingRoomAction action)}'s method picking a selectable tile.
+     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method picking a selectable tile.
      */
     @Test
     public void testSuccessfulSelectionFromLivingRoomAction() {
@@ -205,7 +256,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionColumnAndOrder1 action)}'s method but the game is ended.
+     * Test {@code perform(SelectionColumnAndOrder1 action)}'s method but the game is ended.
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder1() {
@@ -227,7 +278,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionColumnAndOrder action)}'s method when the sender is not the current player.
+     * Test {@code perform(SelectionColumnAndOrder action)}'s method when the sender is not the current player.
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder2() {
@@ -248,7 +299,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionColumnAndOrder action)}'s method when it's not the right game phase.
+     * Test {@code perform(SelectionColumnAndOrder action)}'s method when it's not the right game phase.
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder3() {
@@ -269,7 +320,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionColumnAndOrder action)}'s method but the column isn't selectable.
+     * Test {@code perform(SelectionColumnAndOrder action)}'s method but the column isn't selectable.
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder4() {
@@ -320,7 +371,7 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code update(SelectionColumnAndOrder action)}'s method choosing a right column.
+     * Test {@code perform(SelectionColumnAndOrder action)}'s method choosing a right column.
      */
     @Test
     public void testSuccessfulSelectionColumnAndOrder(){

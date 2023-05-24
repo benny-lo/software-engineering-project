@@ -417,4 +417,20 @@ public class Controller implements ActionListener {
     public TurnPhase getTurnPhase(){
         return turnPhase;
     }
+
+    public GameBuilder getGameBuilder() {
+        return gameBuilder;
+    }
+
+    public Set<VirtualView> getViews() {
+        return views;
+    }
+
+    public List<BookshelfListener> getBookshelfListeners() {
+        return bookshelfListeners;
+    }
+
+    public List<String> getBookshelfListenersOwners(){
+        return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
+    }
 }
