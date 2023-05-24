@@ -65,4 +65,19 @@ public class GameBuilder {
 
         return game;
     }
+
+    //METHODS EXCLUSIVELY FOR TESTING
+
+
+    public List<String> getPlayers() {
+        return players;
+    }
+
+    public List<BookshelfListener> getBookshelfListeners() {
+        return bookshelfListeners;
+    }
+
+    public List<String> getBookshelfListenersOwners(){
+        return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
+    }
 }

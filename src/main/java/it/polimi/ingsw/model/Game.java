@@ -279,6 +279,8 @@ public class Game implements GameInterface {
         return numberPlayers;
     }
 
+    //METHODS EXCLUSIVELY FOR TESTING
+
     /**
      * Getter for the players
      * @return - a map of the players.
