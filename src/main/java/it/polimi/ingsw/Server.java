@@ -20,18 +20,30 @@ import java.util.List;
 
 public class Server {
     public static void launch(List<String> args) {
-        startConnectionRMI();
-        startConnectionTCP();
+        try {
+            if (args.size() == 2) {
+                startConnectionRMI(Integer.parseInt(args.get(0)));
+                startConnectionTCP(Integer.parseInt(args.get(1)));
+            } else if (args.size() == 0) {
+                startConnectionRMI(ServerSettings.getRmiPort());
+                startConnectionTCP(ServerSettings.getSocketPort());
+            } else {
+                System.exit(1);
+            }
+        } catch (NumberFormatException e) {
+            System.exit(1);
+        }
+
 
         System.out.println("server is ready ...");
     }
 
-    private static void startConnectionRMI() {
+    private static void startConnectionRMI(int port) {
         ConnectionEstablishmentRMIInterface stub = null;
         ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI();
         try {
             stub = (ConnectionEstablishmentRMIInterface)
-                    UnicastRemoteObject.exportObject(connection, ServerSettings.getRmiPort());
+                    UnicastRemoteObject.exportObject(connection, port);
         } catch (RemoteException e) {
             System.out.println("Failed to export serverRMI.");
             System.exit(0);
@@ -39,7 +51,7 @@ public class Server {
 
         Registry registry = null;
         try {
-            registry = LocateRegistry.createRegistry(ServerSettings.getRmiPort());
+            registry = LocateRegistry.createRegistry(port);
         } catch (RemoteException e) {
             System.out.println("Failed to create registry.");
             System.exit(0);
@@ -59,9 +71,9 @@ public class Server {
         }
     }
 
-    private static void startConnectionTCP() {
+    private static void startConnectionTCP(int port) {
         (new Thread(() -> {
-            try (ServerSocket server = new ServerSocket(ServerSettings.getSocketPort())) {
+            try (ServerSocket server = new ServerSocket(port)) {
                 while(true) {
                     try {
                         Socket socket = server.accept();
