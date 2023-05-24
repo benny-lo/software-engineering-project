@@ -21,12 +21,14 @@ class TextInterfacePrinter {
         if (currentPlayer == null)
             return;
         System.out.println(ANSI_RED + "The current player is " + currentPlayer + ANSI_RESET + "\n");
+        System.out.flush();
     }
 
     static void printWelcomeMessage(){
         System.out.println("""
                 Welcome to MyShelfie!
                 Digit '/help' for all the commands!""");
+        System.out.flush();
     }
 
     static void printHelp(){
@@ -39,17 +41,21 @@ class TextInterfacePrinter {
                 \t /bookshelf [column] [permutation]\s
                 \t /enter_chat\s
                 \t /exit_chat""");
+        System.out.flush();
     }
 
     static void printWrongCommand() {
         System.out.println("This command does not exists! Try to digit '/help' for other commands.");
+        System.out.flush();
     }
 
     static void printIncorrectCommand(){
         System.out.println("This command is misspelled! Try to digit '/help' for other commands.");
+        System.out.flush();
     }
     static void printWrongStatus(){
         System.out.println("You cannot do this action now!\nTry to digit '/help' for other commands.");
+        System.out.flush();
     }
 
     static void printLoginFailed(){
@@ -58,6 +64,7 @@ class TextInterfacePrinter {
 
     static void printNoAvailableGames(){
         System.out.println("There are no available games.\nCreate a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
+        System.out.flush();
     }
 
     static void printIncorrectNickname(){
@@ -65,25 +72,31 @@ class TextInterfacePrinter {
                 This nickname is incorrect! Retry to login.
                 Your nickname has to be at least 1 character and less than 30.
                 It can only contains alphanumeric characters and underscores.""");
+        System.out.flush();
     }
 
     static void printInvalidSelection(){
         System.out.println("Invalid tile selection! Try again.");
+        System.out.flush();
     }
 
     static void printDeniedAction(){
         System.out.println("Action denied. Try again!");
+        System.out.flush();
     }
 
     static void printInChat(){
         System.out.println("You've now entered in the chat!");
+        System.out.flush();
     }
     static void printNotInChat(){
         System.out.println("You've not entered in the chat yet!\nTry with the command '/enter_chat'.");
+        System.out.flush();
     }
 
     static void printExitChat(){
         System.out.println("You've now left the chat!");
+        System.out.flush();
     }
 
     static void clearScreen() {
@@ -106,6 +119,7 @@ class TextInterfacePrinter {
             System.out.println();
         }
         System.out.println();
+        System.out.flush();
     }
 
 
@@ -146,6 +160,7 @@ class TextInterfacePrinter {
         }
         System.out.println("  0 1 2 3 4");
         System.out.println();
+        System.out.flush();
     }
 
     static void printPersonalGoalCard(Item[][] personalGoalCard) {
@@ -177,6 +192,7 @@ class TextInterfacePrinter {
             }
             System.out.println("Id: " + card.getKey() + ", Top token value: " + card.getValue() + description);
         }
+        System.out.flush();
     }
 
     static void printItemsChosen(List<Item> itemsChosen, String currentPlayer) {
@@ -187,12 +203,14 @@ class TextInterfacePrinter {
             System.out.print(item + " ");
         }
         System.out.println();
+        System.out.flush();
     }
 
     static void printEndingToken(String endingToken) {
         if (endingToken != null) {
             System.out.println(endingToken + " has the ending token");
         }
+        System.out.flush();
     }
 
     static void printScores(Map<String, Integer> scores) {
@@ -206,6 +224,7 @@ class TextInterfacePrinter {
     static void printChat(List<ChatUpdate> chat) {
         if (chat.size() == 0) {
             System.out.println("No message in chat yet");
+            System.out.flush();
             return;
         }
 
@@ -216,21 +235,23 @@ class TextInterfacePrinter {
     }
 
     static void printEndGame(String nickname, String winner, Map<String, Integer> scores) {
-        if (winner == null)
+        if (winner == null){
+            System.out.println("The game terminated, as somebody disconnected.");
+        } else if (scores == null) {
             return;
-        else if (scores == null)
-            return;
-        else if (winner.equals(nickname)) {
+        } else if (winner.equals(nickname)) {
             System.out.println("You are the winner");
+            printScores(scores);
         } else {
             System.out.println("The winner is " + winner);
+            printScores(scores);
         }
-        printScores(scores);
         System.out.flush();
     }
 
     static void printLostConnection(){
         System.out.println("Lost connection to server. Shutting down ...");
+        System.out.flush();
     }
 
     static void printPersonalGoalCardConfigurationFailed(){

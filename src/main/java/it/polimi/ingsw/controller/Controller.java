@@ -307,7 +307,7 @@ public class Controller implements ActionListener {
 
         ChatUpdate update = new ChatUpdate(action.getView().getNickname(),
                 action.getText(),
-                action.getText());
+                action.getReceiver());
 
         if (action.getReceiver().equals("all")) {
             action.getView().onChatAccepted(new ChatAccepted(true));

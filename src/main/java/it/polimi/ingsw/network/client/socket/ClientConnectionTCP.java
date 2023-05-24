@@ -125,14 +125,17 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                             return;
                         }
                     }
-                    try {
-                        socket.close();
-                    } catch (IOException ignored) {}
+                    synchronized (socket) {
+                        try {
+                            socket.close();
+                        } catch (IOException ignored) {
+                        }
+                    }
                     receiver.onDisconnection();
                 }
             }, 2000, 2000);
 
-            while (socket.isConnected()) {
+            while (true) {
                 input = in.readObject();
                 receive(input);
             }
@@ -140,6 +143,11 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             serverTimer.cancel();
             clientTimer.cancel();
             receiver.onDisconnection();
+            synchronized (socket) {
+                try {
+                    socket.close();
+                } catch (IOException ignored) {}
+            }
         }
 
         serverTimer.cancel();

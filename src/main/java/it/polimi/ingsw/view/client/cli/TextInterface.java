@@ -45,6 +45,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
             if (games == null) {
                 printLoginFailed();
+                nickname = null;
                 return;
             }
 
@@ -59,6 +60,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 for (GameInfo info : games) {
                     System.out.println(info);
                 }
+                System.out.flush();
             }
         }
     }
@@ -266,8 +268,8 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void onDisconnection() {
         if (status == ClientStatus.ERROR) return;
+        if (status != ClientStatus.ENDED_GAME) clearScreen();
         status = ClientStatus.ERROR;
-        clearScreen();
         printLostConnection();
         System.exit(0);
     }
