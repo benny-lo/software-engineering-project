@@ -85,7 +85,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         }
     }
 
-    private void sendPrivate(Message message) {
+    private synchronized void sendPrivate(Message message) {
         try {
             out.writeObject(message);
             out.flush();
@@ -182,7 +182,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             public void run() {
                 sendPrivate(new Beep());
             }
-        }, 1000, 2000);
+        }, 2000, 4000);
 
         clientTimer.schedule(new TimerTask() {
             @Override
@@ -201,6 +201,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 }
                 receiver.disconnect();
             }
-        }, 2000, 2000);
+        }, 4000, 4000);
     }
 }

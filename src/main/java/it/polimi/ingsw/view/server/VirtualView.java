@@ -36,7 +36,6 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
     private boolean disconnected;
     private final Object nicknameLock;
     private final Object controllerLock;
-    private final Object connectionLock;
     private final Object disconnectedLock;
 
     /**
@@ -47,7 +46,6 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         this.serverConnection = serverConnection;
         this.nicknameLock = new Object();
         this.controllerLock = new Object();
-        this.connectionLock = new Object();
         this.disconnectedLock = new Object();
 
     }
@@ -58,7 +56,6 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
     public VirtualView() {
         this.nicknameLock = new Object();
         this.controllerLock = new Object();
-        this.connectionLock = new Object();
         this.disconnectedLock = new Object();
     }
 
@@ -215,9 +212,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -225,9 +220,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+       serverConnection.send(update);
     }
 
     @Override
@@ -235,9 +228,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -245,9 +236,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -255,9 +244,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -265,9 +252,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -275,9 +260,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -285,9 +268,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -295,9 +276,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -305,9 +284,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(update);
-        }
+        serverConnection.send(update);
     }
 
     @Override
@@ -315,9 +292,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(gamesList);
-        }
+        serverConnection.send(gamesList);
     }
 
     @Override
@@ -325,9 +300,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(itemsSelected);
-        }
+        serverConnection.send(itemsSelected);
     }
 
     @Override
@@ -335,9 +308,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(message);
-        }
+        serverConnection.send(message);
     }
 
     @Override
@@ -345,9 +316,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(message);
-        }
+        serverConnection.send(message);
     }
 
     @Override
@@ -355,8 +324,6 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        synchronized (connectionLock) {
-            serverConnection.send(message);
-        }
+        serverConnection.send(message);
     }
 }

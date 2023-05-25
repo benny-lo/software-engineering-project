@@ -144,7 +144,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             public void run() {
                 sendPrivate(new Beep());
             }
-        }, 1000, 2000);
+        }, 2000, 4000);
 
         serverTimer.schedule(new TimerTask() {
             @Override
@@ -163,6 +163,6 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                 }
                 receiver.onDisconnection();
             }
-        }, 2000, 2000);
+        }, 4000, 4000);
     }
 }

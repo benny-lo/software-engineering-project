@@ -39,9 +39,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                     receiver.onDisconnection();
                 }
             }
-        }, 1000, 2000);
+        }, 2000, 4000);
 
-        clientTimer.schedule(new TimerTask() {
+        serverTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 synchronized (beepLock) {
@@ -52,7 +52,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                 }
                 receiver.onDisconnection();
             }
-        }, 2000, 2000);
+        }, 4000, 4000);
     }
 
     public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {

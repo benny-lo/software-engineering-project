@@ -38,13 +38,12 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         serverTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                try {
-                    client.receive(new Beep());
-                } catch (RemoteException e) {
-                    receiver.disconnect();
+                synchronized (sendingQueue) {
+                    sendingQueue.add(new Beep());
+                    sendingQueue.notifyAll();
                 }
             }
-        }, 1000, 2000);
+        }, 2000, 4000);
 
         clientTimer.schedule(new TimerTask() {
             @Override
@@ -57,51 +56,60 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                 }
                 receiver.disconnect();
             }
-        }, 2000, 2000);
+        }, 4000, 4000);
 
         (new Thread(() -> {
-            while(true) {
+            Message message;
+            while (true) {
                 synchronized (sendingQueue) {
-                    Message message = sendingQueue.poll();
-                    if (message == null) continue;
-                    try {
-                        if (message instanceof LivingRoomUpdate) {
-                            client.receive((LivingRoomUpdate) message);
-                        } else if (message instanceof BookshelfUpdate) {
-                            client.receive((BookshelfUpdate) message);
-                        } else if (message instanceof WaitingUpdate) {
-                            client.receive((WaitingUpdate) message);
-                        } else if (message instanceof ScoresUpdate) {
-                            client.receive((ScoresUpdate) message);
-                        } else if (message instanceof EndingTokenUpdate) {
-                            client.receive((EndingTokenUpdate) message);
-                        } else if (message instanceof CommonGoalCardsUpdate) {
-                            client.receive((CommonGoalCardsUpdate) message);
-                        } else if (message instanceof PersonalGoalCardUpdate) {
-                            client.receive((PersonalGoalCardUpdate) message);
-                        } else if (message instanceof ChatUpdate) {
-                            client.receive((ChatUpdate) message);
-                        } else if (message instanceof StartTurnUpdate) {
-                            client.receive((StartTurnUpdate) message);
-                        } else if (message instanceof EndGameUpdate) {
-                            client.receive((EndGameUpdate) message);
-                        } else if (message instanceof GamesList) {
-                            client.receive((GamesList) message);
-                        } else if (message instanceof ItemsSelected) {
-                            client.receive((ItemsSelected) message);
-                        } else if (message instanceof GameData) {
-                            client.receive((GameData) message);
-                        } else if (message instanceof AcceptedInsertion) {
-                            client.receive((AcceptedInsertion) message);
-                        } else if (message instanceof ChatAccepted) {
-                            client.receive((ChatAccepted) message);
+                    while (sendingQueue.isEmpty()) {
+                        try {
+                            sendingQueue.wait();
+                        } catch (InterruptedException ignored) {
                         }
-                    } catch (RemoteException e) {
-                        serverTimer.cancel();
-                        clientTimer.cancel();
-                        receiver.disconnect();
-                        return;
                     }
+                    message = sendingQueue.poll();
+                }
+
+                try {
+                    if (message instanceof LivingRoomUpdate) {
+                        client.receive((LivingRoomUpdate) message);
+                    } else if (message instanceof BookshelfUpdate) {
+                        client.receive((BookshelfUpdate) message);
+                    } else if (message instanceof WaitingUpdate) {
+                        client.receive((WaitingUpdate) message);
+                    } else if (message instanceof ScoresUpdate) {
+                        client.receive((ScoresUpdate) message);
+                    } else if (message instanceof EndingTokenUpdate) {
+                        client.receive((EndingTokenUpdate) message);
+                    } else if (message instanceof CommonGoalCardsUpdate) {
+                        client.receive((CommonGoalCardsUpdate) message);
+                    } else if (message instanceof PersonalGoalCardUpdate) {
+                        client.receive((PersonalGoalCardUpdate) message);
+                    } else if (message instanceof ChatUpdate) {
+                        client.receive((ChatUpdate) message);
+                    } else if (message instanceof StartTurnUpdate) {
+                        client.receive((StartTurnUpdate) message);
+                    } else if (message instanceof EndGameUpdate) {
+                        client.receive((EndGameUpdate) message);
+                    } else if (message instanceof GamesList) {
+                        client.receive((GamesList) message);
+                    } else if (message instanceof ItemsSelected) {
+                        client.receive((ItemsSelected) message);
+                    } else if (message instanceof GameData) {
+                        client.receive((GameData) message);
+                    } else if (message instanceof AcceptedInsertion) {
+                        client.receive((AcceptedInsertion) message);
+                    } else if (message instanceof ChatAccepted) {
+                        client.receive((ChatAccepted) message);
+                    } else if (message instanceof Beep) {
+                        client.receive((Beep) message);
+                    }
+                } catch (RemoteException e) {
+                    serverTimer.cancel();
+                    clientTimer.cancel();
+                    receiver.disconnect();
+                    return;
                 }
             }
         })).start();
@@ -153,6 +161,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(LivingRoomUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -160,13 +169,16 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(BookshelfUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
+
     }
 
     @Override
     public void send(WaitingUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -174,6 +186,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(ScoresUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -181,6 +194,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(EndingTokenUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -188,6 +202,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(CommonGoalCardsUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -195,6 +210,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(PersonalGoalCardUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -202,6 +218,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(ChatUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -209,6 +226,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(StartTurnUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -216,6 +234,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(EndGameUpdate update) {
         synchronized (sendingQueue) {
             sendingQueue.add(update);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -223,6 +242,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(GamesList gamesList) {
         synchronized (sendingQueue) {
             sendingQueue.add(gamesList);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -230,24 +250,23 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(ItemsSelected itemsSelected) {
         synchronized (sendingQueue) {
             sendingQueue.add(itemsSelected);
+            sendingQueue.notifyAll();
         }
     }
 
     @Override
     public void send(GameData gameData) {
-        try {
-            client.receive(gameData);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.disconnect();
-        }
+       synchronized (sendingQueue) {
+           sendingQueue.add(gameData);
+           sendingQueue.notifyAll();
+       }
     }
 
     @Override
     public void send(AcceptedInsertion acceptedInsertion) {
         synchronized (sendingQueue) {
             sendingQueue.add(acceptedInsertion);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -255,6 +274,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void send(ChatAccepted chatAccepted) {
         synchronized (sendingQueue) {
             sendingQueue.add(chatAccepted);
+            sendingQueue.notifyAll();
         }
     }
 }
