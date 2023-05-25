@@ -29,7 +29,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         beepLock = new Object();
     }
 
-    public void startTimers() {
+    public void scheduleTimers() {
         clientTimer.schedule(new TimerTask() {
             @Override
             public void run() {

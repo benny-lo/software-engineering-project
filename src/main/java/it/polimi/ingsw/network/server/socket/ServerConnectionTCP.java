@@ -22,24 +22,14 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     private Beep clientBeep;
     private final Socket socket;
     private ServerInputViewInterface receiver;
-    private ObjectOutputStream out;
+    private final ObjectOutputStream out;
 
-    public ServerConnectionTCP(Socket socket) {
+    public ServerConnectionTCP(Socket socket) throws IOException {
         serverTimer = new Timer();
         clientTimer = new Timer();
         beepLock = new Object();
         this.socket = socket;
-
-        ObjectOutputStream out;
-        try {
-            out = new ObjectOutputStream(socket.getOutputStream());
-            out.flush();
-        } catch (IOException e) {
-            receiver.disconnect();
-            return;
-        }
-
-        this.out = out;
+        this.out = new ObjectOutputStream(socket.getOutputStream());
     }
 
     @Override
@@ -48,31 +38,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            serverTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    sendPrivate(new Beep());
-                }
-            }, 1000, 2000);
-
-            clientTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    synchronized (beepLock) {
-                        if (clientBeep != null) {
-                            clientBeep = null;
-                            return;
-                        }
-                    }
-                    synchronized (socket) {
-                        try {
-                            socket.close();
-                        } catch (IOException ignored) {
-                        }
-                    }
-                    receiver.disconnect();
-                }
-            }, 2000, 2000);
+            scheduleTimers();
 
             while (true) {
                 input = in.readObject();
@@ -208,5 +174,33 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     @Override
     public void send(AcceptedInsertion acceptedInsertion) {
         sendPrivate(acceptedInsertion);
+    }
+
+    private void scheduleTimers() {
+        serverTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendPrivate(new Beep());
+            }
+        }, 1000, 2000);
+
+        clientTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                synchronized (beepLock) {
+                    if (clientBeep != null) {
+                        clientBeep = null;
+                        return;
+                    }
+                }
+                synchronized (socket) {
+                    try {
+                        socket.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+                receiver.disconnect();
+            }
+        }, 2000, 2000);
     }
 }

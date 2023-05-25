@@ -101,39 +101,12 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
         }
     }
 
-
-
     @Override
     public void run() {
+        scheduleTimers();
         try {
             Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
-
-            clientTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    sendPrivate(new Beep());
-                }
-            }, 1000, 2000);
-
-            serverTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    synchronized (beepLock) {
-                        if (serverBeep != null) {
-                            serverBeep = null;
-                            return;
-                        }
-                    }
-                    synchronized (socket) {
-                        try {
-                            socket.close();
-                        } catch (IOException ignored) {
-                        }
-                    }
-                    receiver.onDisconnection();
-                }
-            }, 2000, 2000);
 
             while (true) {
                 input = in.readObject();
@@ -163,5 +136,33 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             clientTimer.cancel();
             receiver.onDisconnection();
         }
+    }
+
+    private void scheduleTimers() {
+        clientTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendPrivate(new Beep());
+            }
+        }, 1000, 2000);
+
+        serverTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                synchronized (beepLock) {
+                    if (serverBeep != null) {
+                        serverBeep = null;
+                        return;
+                    }
+                }
+                synchronized (socket) {
+                    try {
+                        socket.close();
+                    } catch (IOException ignored) {
+                    }
+                }
+                receiver.onDisconnection();
+            }
+        }, 2000, 2000);
     }
 }

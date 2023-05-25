@@ -83,7 +83,12 @@ public class Server {
                 while(true) {
                     try {
                         Socket socket = server.accept();
-                        ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
+                        ServerConnectionTCP serverConnectionTCP;
+                        try {
+                            serverConnectionTCP = new ServerConnectionTCP(socket);
+                        } catch (IOException e) {
+                            continue;
+                        }
                         VirtualView view = new VirtualView(serverConnectionTCP);
                         serverConnectionTCP.setServerInputViewInterface(view);
                         Lobby.getInstance().addVirtualView(view);

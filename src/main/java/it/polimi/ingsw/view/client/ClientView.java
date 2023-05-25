@@ -97,7 +97,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
 
         clientConnectionRMI.setServerConnectionRMIInterface(serverConnection);
         this.clientConnection = clientConnectionRMI;
-        clientConnectionRMI.startTimers();
+        clientConnectionRMI.scheduleTimers();
     }
 
     /**
