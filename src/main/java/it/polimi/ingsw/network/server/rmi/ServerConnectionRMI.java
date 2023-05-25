@@ -43,7 +43,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                     sendingQueue.notifyAll();
                 }
             }
-        }, 2000, 4000);
+        }, 15000, 30000);
 
         clientTimer.schedule(new TimerTask() {
             @Override
@@ -56,7 +56,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                 }
                 receiver.disconnect();
             }
-        }, 4000, 4000);
+        }, 15000, 30000);
 
         (new Thread(() -> {
             Message message;

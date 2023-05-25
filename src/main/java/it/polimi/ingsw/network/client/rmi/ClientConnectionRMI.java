@@ -39,7 +39,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                     receiver.onDisconnection();
                 }
             }
-        }, 2000, 4000);
+        }, 15000, 30000);
 
         serverTimer.schedule(new TimerTask() {
             @Override
@@ -52,7 +52,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                 }
                 receiver.onDisconnection();
             }
-        }, 4000, 4000);
+        }, 15000, 30000);
     }
 
     public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {
