@@ -27,12 +27,11 @@ public class GameTest {
      * Test {@code Game}'s method {@code setup}, it initializes the {@code CommonGoalCardManager} and the {@code BoardManager}.
      */
     @Test
-    public void testSetup(){
+    public void testSetup() {
         Game game = new Game(List.of("nick", "rick"), 2);
 
         assertNotNull(game.getCommonGoalCardManager());
         assertNotNull(game.getBoardManager());
-        //TODO: It's needed a check on PersonalCards when distributePersonalCards will be added.
     }
 
     /**

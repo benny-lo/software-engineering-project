@@ -11,8 +11,6 @@ import java.util.*;
 // TODO: remove VirtualViews from lobby and controller with ServerUpdateView ?
 // TODO: idea = make both lobby and game action listeners.
 
-// TODO: better GameData creation.
-
 /**
  * This class contains all {@code Controller}s of all games currently being played. It uses the Singleton
  * Pattern. All public methods take the lock on {@code this}.

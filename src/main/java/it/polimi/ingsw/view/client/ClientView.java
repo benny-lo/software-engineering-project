@@ -64,6 +64,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
             System.out.println("Registry not found.");
             System.exit(0);
         }
+        System.out.println("got the registry");
 
         ConnectionEstablishmentRMIInterface stub = null;
         try {
@@ -78,6 +79,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
             System.out.println("Something went wrong with RMI.");
             System.exit(0);
         }
+        System.out.println("get the ConnectionEstablishmentRMIInterface stub");
 
         ClientConnectionRMI clientConnectionRMI = null;
         try {
@@ -87,6 +89,8 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
             System.exit(0);
         }
 
+        System.out.println("created client connection RMI object");
+
         ServerConnectionRMIInterface serverConnection = null;
         try {
             serverConnection = stub.init(clientConnectionRMI);
@@ -94,6 +98,8 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
             System.out.println("Failed to get RMI server.");
             System.exit(0);
         }
+
+        System.out.println("got the connection rmi");
 
         clientConnectionRMI.setServerConnectionRMIInterface(serverConnection);
         this.clientConnection = clientConnectionRMI;

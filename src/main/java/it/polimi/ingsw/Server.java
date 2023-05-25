@@ -19,6 +19,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public class Server {
+    /**
+     * Parameters: [hostname] [RMI_port_number] [TCP_port_number]
+     * @param args cli parameters (except for the first one which was server).
+     */
     public static void launch(List<String> args) {
         try {
             if (args.size() == 3) {
