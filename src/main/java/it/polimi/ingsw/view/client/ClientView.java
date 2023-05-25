@@ -55,6 +55,8 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
 
     /**
      * This method starts the RMI type of connection, catching different exceptions.
+     * @param hostName - server IP
+     * @param rmiPort - RMI port
      */
     public void startRMI(String hostName, int rmiPort) {
         Registry registry = null;
@@ -102,6 +104,8 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
 
     /**
      * This method starts the TCP type of connection, catch different kinds of exceptions
+     * @param hostName - server IP
+     * @param socketPort - client socket port
      */
     public void startTCP(String hostName, int socketPort) {
         Socket socket = null;
