@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionTCP implements ServerConnection, Runnable {
-    private final Timer serverTimer;
+    private static final int HALF_PERIOD = 1000;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep clientBeep;
@@ -25,7 +25,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     private final ObjectOutputStream out;
 
     public ServerConnectionTCP(Socket socket) throws IOException {
-        serverTimer = new Timer();
         clientTimer = new Timer();
         beepLock = new Object();
         this.socket = socket;
@@ -38,14 +37,13 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            scheduleTimers();
+            scheduleTimer();
 
             while (true) {
                 input = in.readObject();
                 receive(input);
             }
         } catch (IOException | ClassNotFoundException e) {
-            serverTimer.cancel();
             clientTimer.cancel();
             synchronized (socket) {
                 try {
@@ -56,7 +54,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             receiver.disconnect();
         }
 
-        serverTimer.cancel();
         clientTimer.cancel();
     }
 
@@ -82,6 +79,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             synchronized (beepLock) {
                 clientBeep = (Beep) input;
             }
+            sendPrivate(new Beep());
         }
     }
 
@@ -167,14 +165,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         sendPrivate(acceptedInsertion);
     }
 
-    private void scheduleTimers() {
-        serverTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendPrivate(new Beep());
-            }
-        }, 2000, 4000);
-
+    private void scheduleTimer() {
         clientTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -192,6 +183,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 }
                 receiver.disconnect();
             }
-        }, 4000, 4000);
+        }, HALF_PERIOD, 2*HALF_PERIOD);
     }
 }
