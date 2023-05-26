@@ -70,7 +70,7 @@
             <!-- Usage: mvn clean javafx:run -->
             <id>default-cli</id>
             <configuration>
-              <mainClass>it.polimi.ingsw.view.client.gui.GUIInterface</mainClass>
+              <mainClass>it.polimi.ingsw.view.client.gui.GUILauncher</mainClass>
             </configuration>
           </execution>
         </executions>

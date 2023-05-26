@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
-    private static final int HALF_PERIOD = 15000;
+    private static final int PERIOD = 2000;
     private ServerConnectionRMIInterface serverConnectionRMIInterface;
     private final ClientUpdateViewInterface receiver;
     private final Timer serverTimer;
@@ -31,18 +31,20 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     public void scheduleTimers() {
-        clientTimer.schedule(new TimerTask() {
+        clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 try {
                     serverConnectionRMIInterface.beep(new Beep());
                 } catch (RemoteException e) {
+                    clientTimer.cancel();
+                    serverTimer.cancel();
                     receiver.onDisconnection();
                 }
             }
-        }, 0, 2*HALF_PERIOD);
+        }, 0, PERIOD);
 
-        serverTimer.schedule(new TimerTask() {
+        serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 synchronized (beepLock) {
@@ -51,9 +53,11 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                         return;
                     }
                 }
+                serverTimer.cancel();
+                clientTimer.cancel();
                 receiver.onDisconnection();
             }
-        }, 2*HALF_PERIOD, 2*HALF_PERIOD);
+        }, PERIOD/2, PERIOD);
     }
 
     public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {

@@ -4,6 +4,7 @@ import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.cli.TextInterface;
 import it.polimi.ingsw.view.client.gui.GUIController;
+import it.polimi.ingsw.view.client.gui.GUILauncher;
 
 import java.util.List;
 
@@ -52,6 +53,9 @@ public class Client {
                     System.err.println("wrong gui arguments : [client] [gui] [hostName] [numberPort]");
                     System.exit(1);
                 }
+                GUILauncher.startGUI();
+            } else {
+                System.exit(0);
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();

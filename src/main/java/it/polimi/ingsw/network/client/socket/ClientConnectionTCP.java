@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientConnectionTCP implements ClientConnection, Runnable {
-    private static final int HALF_PERIOD = 1000;
+    private static final int PERIOD = 2000;
     private final Socket socket;
     private final ClientUpdateViewInterface receiver;
     private final ObjectOutputStream out;
@@ -140,14 +140,14 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
     }
 
     private void scheduleTimers() {
-        clientTimer.schedule(new TimerTask() {
+        clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 sendPrivate(new Beep());
             }
-        }, 0, 2*HALF_PERIOD);
+        }, 0, PERIOD);
 
-        serverTimer.schedule(new TimerTask() {
+        serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 synchronized (beepLock) {
@@ -164,6 +164,6 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                 }
                 receiver.onDisconnection();
             }
-        }, 2*HALF_PERIOD, 2*HALF_PERIOD);
+        }, PERIOD/2, PERIOD);
     }
 }

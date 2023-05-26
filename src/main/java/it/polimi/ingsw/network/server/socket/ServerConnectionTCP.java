@@ -16,7 +16,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionTCP implements ServerConnection, Runnable {
-    private static final int HALF_PERIOD = 1000;
+    private static final int PERIOD = 2000;
+    private final Timer serverTimer;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep clientBeep;
@@ -25,6 +26,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     private final ObjectOutputStream out;
 
     public ServerConnectionTCP(Socket socket) throws IOException {
+        serverTimer = new Timer();
         clientTimer = new Timer();
         beepLock = new Object();
         this.socket = socket;
@@ -37,7 +39,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            scheduleTimer();
+            scheduleTimers();
 
             while (true) {
                 input = in.readObject();
@@ -80,6 +82,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 clientBeep = (Beep) input;
             }
             sendPrivate(new Beep());
+            synchronized (System.out) {System.out.println("got and sent beep from client");}
         }
     }
 
@@ -165,8 +168,14 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         sendPrivate(acceptedInsertion);
     }
 
-    private void scheduleTimer() {
-        clientTimer.schedule(new TimerTask() {
+    private void scheduleTimers() {
+        serverTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                sendPrivate(new Beep());
+            }
+        }, 0, PERIOD);
+        clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 synchronized (beepLock) {
@@ -181,8 +190,9 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                     } catch (IOException ignored) {
                     }
                 }
+                clientTimer.cancel();
                 receiver.disconnect();
             }
-        }, HALF_PERIOD, 2*HALF_PERIOD);
+        }, PERIOD/2, PERIOD);
     }
 }

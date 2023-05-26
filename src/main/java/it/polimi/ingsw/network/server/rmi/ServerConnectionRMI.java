@@ -17,10 +17,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
-    private static final int HALF_PERIOD = 15000;
+    private static final int PERIOD = 2000;
     private final Queue<Message> sendingQueue;
     private ServerInputViewInterface receiver;
     private final ClientConnectionRMIInterface client;
+    private final Timer serverTimer;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep clientBeep;
@@ -29,12 +30,26 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         super();
         this.sendingQueue = new ArrayDeque<>();
         this.client = client;
+        this.serverTimer = new Timer();
         this.clientTimer = new Timer();
         this.beepLock = new Object();
     }
 
     public void start() {
-        clientTimer.schedule(new TimerTask() {
+        serverTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    client.receive(new Beep());
+                } catch (RemoteException ignored) {
+                    serverTimer.cancel();
+                    clientTimer.cancel();
+                    receiver.disconnect();
+                }
+            }
+        }, 0, PERIOD);
+
+        clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 synchronized (beepLock) {
@@ -45,7 +60,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                 }
                 receiver.disconnect();
             }
-        }, HALF_PERIOD, 2*HALF_PERIOD);
+        }, PERIOD/2, PERIOD);
 
         (new Thread(() -> {
             Message message;
@@ -136,12 +151,6 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void beep(Beep beep) throws RemoteException {
         synchronized (beepLock) {
             this.clientBeep = beep;
-        }
-        try {
-            client.receive(new Beep());
-        } catch (RemoteException e) {
-            clientTimer.cancel();
-            receiver.disconnect();
         }
     }
 

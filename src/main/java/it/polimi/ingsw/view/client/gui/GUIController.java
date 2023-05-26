@@ -4,8 +4,7 @@ import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
 
-import static it.polimi.ingsw.view.client.gui.GUIInterface.startGUI;
-
+// TODO: fix GUIController should not extend ClientView.
 public class GUIController extends ClientView {
     @Override
     public void login(Nickname message) {
@@ -119,6 +118,6 @@ public class GUIController extends ClientView {
 
     @Override
     public void start() {
-        startGUI();
+
     }
 }

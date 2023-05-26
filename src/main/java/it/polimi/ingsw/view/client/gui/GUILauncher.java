@@ -9,7 +9,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class GUIInterface extends Application {
+// TODO: fix, this is just starter code.
+
+public class GUILauncher extends Application {
+
 
     public static void startGUI(){
         launch();
