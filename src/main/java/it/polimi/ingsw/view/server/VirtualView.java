@@ -198,13 +198,13 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         }
 
         Lobby.getInstance().removeVirtualView(this);
-        boolean flag = false;
+        boolean flag;
         synchronized (controllerLock) {
-            controller.perform(new DisconnectionAction(this));
-            if (controller.getNumberActualPlayers() < 1) flag = true;
+            flag = (controller != null);
         }
         if (flag) {
-            Lobby.getInstance().removeController(controller);
+            controller.perform(new DisconnectionAction(this));
+            if (controller.getNumberActualPlayers() < 1) Lobby.getInstance().removeController(controller);
         }
 
     }

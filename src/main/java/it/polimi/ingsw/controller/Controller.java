@@ -418,25 +418,29 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void perform(DisconnectionAction action) {
         if (ended) return;
+
+        // disconnection handling during pre-game phase
         if (!isStarted()){
             views.remove(action.getView());
             gameBuilder.removePlayer(action.getView().getNickname());
             gameBuilder.removeBookshelfListener(action.getView().getNickname());
 
-            String player;
-            while (true){
-                player = playerQueue.poll();
-                if (action.getView().getNickname().equals(player))
+            String player = playerQueue.poll(), tmp;
+            if (player == null) return;
+            playerQueue.add(player);
+            do {
+                tmp = playerQueue.poll();
+                if (action.getView().getNickname().equals(tmp)) {
                     break;
-                else
-                    playerQueue.add(player);
-            }
+                }
+                playerQueue.add(tmp);
+            } while(!player.equals(tmp));
 
             for(ServerUpdateViewInterface v : views)
                 v.onWaitingUpdate(new WaitingUpdate(action.getView().getNickname(),numberPlayers - playerQueue.size(), false));
-
             return;
         }
+
         ended = true;
         views.remove(action.getView());
         for (ServerUpdateViewInterface v : views) {
