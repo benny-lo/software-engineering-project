@@ -17,36 +17,82 @@ public class GameBuilder {
     private EndingTokenListener endingTokenListener;
     private LivingRoomListener livingRoomListener;
 
+    /**
+     * Constructor for the class.
+     * @param numberCommonGoalCards - number of common goal cards
+     */
     public GameBuilder(int numberCommonGoalCards) {
         this.numberCommonGoalCards = numberCommonGoalCards;
         players = new ArrayList<>();
         bookshelfListeners = new ArrayList<>();
     }
 
+    /**
+     * This method adds a player
+     * @param nickname - the nickname of the player that is added
+     */
     public void addPlayer(String nickname){
         players.add(nickname);
     }
 
+    /**
+     * This method removes a player
+     * @param nickname - the nickname of the player that is being removed
+     */
+    public void removePlayer(String nickname) {players.remove(nickname);}
+
+    /**
+     * This method adds a bookshelf listener
+     * @param bookshelfListener - the bookshelf listener to be added.
+     */
     public void setBookshelfListener(BookshelfListener bookshelfListener) {
         bookshelfListeners.add(bookshelfListener);
     }
 
+    /**
+     * This method removes a bookshelf listener
+     * @param nickname - bookshelfListener's nickname.
+     */
+    public void removeBookshelfListener(String nickname) {
+        bookshelfListeners.removeIf(bookshelfL -> bookshelfL.getOwner().equals(nickname));
+    }
+
+    /**
+     * This method sets a CommonGoalCards listener
+     * @param commonGoalCardsListener - the listener that needs to be set
+     */
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         this.commonGoalCardsListener = commonGoalCardsListener;
     }
 
+    /**
+     * This method sets an Ending Token Listener
+     * @param endingTokenListener - the listener that needs to be set
+     */
     public void setEndingTokenListener(EndingTokenListener endingTokenListener) {
         this.endingTokenListener = endingTokenListener;
     }
 
+    /**
+     * This method sets a living room listener
+     * @param livingRoomListener - the living room listener that needs to be set.
+     */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         this.livingRoomListener = livingRoomListener;
     }
 
+    /**
+     * Getter for the number of players
+     * @return - the number of players.
+     */
     public int getCurrentPlayers() {
         return players.size();
     }
 
+    /**
+     * This method starts the game, setting all of the new listeners.
+     * @return - the GameInterface item.
+     */
     public GameInterface startGame() {
         if (bookshelfListeners.contains(null) ||
         commonGoalCardsListener == null ||
