@@ -3,7 +3,6 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
-import it.polimi.ingsw.view.server.VirtualView;
 
 import java.util.*;
 
@@ -37,12 +36,19 @@ public class Lobby {
     private static Lobby instance;
     private final static Object lock = new Object();
 
+    /**
+     * The constructor for the class.
+     */
     private Lobby() {
         controllers = new HashMap<>();
         views = new HashSet<>();
         availableId = 0;
     }
 
+    /**
+     * This method returns an Instance of Lobby, or creates a new one
+     * @return - the instance of the lobby, either already existing or newly created.
+     */
     public static Lobby getInstance() {
         synchronized (lock) {
             if (instance == null) instance = new Lobby();
@@ -50,6 +56,10 @@ public class Lobby {
         return instance;
     }
 
+    /**
+     * This method returns a list of game information for every game currently running, but not if they have already started.
+     * @return - the list containing every game's info.
+     */
     private List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
         for (Integer id : controllers.keySet()) {
@@ -59,11 +69,19 @@ public class Lobby {
         return ret;
     }
 
+    /**
+     * This method adds a new controller.
+     * @param controller - the controller to be added.
+     */
     private void addController(Controller controller) {
         controllers.put(availableId, controller);
         availableId++;
     }
 
+    /**
+     * This method removes a controller
+     * @param controller - the controller that needs to be removed.
+     */
     public synchronized void removeController(Controller controller) {
         Integer id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
 
@@ -79,14 +97,27 @@ public class Lobby {
         })).start();
     }
 
+    /**
+     * This method adds a virtual view
+     * @param view - the view to be added
+     */
     public synchronized void addVirtualView(ServerUpdateViewInterface view) {
         views.add(view);
     }
 
+    /**
+     * This method removes a virtual view
+     * @param view - the view to be removed
+     */
     public synchronized void removeVirtualView(ServerUpdateViewInterface view) {
         views.remove(view);
     }
 
+    /**
+     * This method performs the login
+     * @param nickname - the nickname of the player
+     * @param view - the client's view
+     */
     public synchronized void login(String nickname, ServerUpdateViewInterface view) {
         if(view.isLoggedIn() || view.isInGame()) {
             // the nickname is already chosen.
@@ -106,7 +137,13 @@ public class Lobby {
         view.onGamesList(new GamesList(getGameInfo()));
     }
 
-    public synchronized void createGame(int numberPlayers, int numberCommonGoals, VirtualView view) {
+    /**
+     * This method creates a new game
+     * @param numberPlayers - the number of players
+     * @param numberCommonGoals - the number of common goal cards
+     * @param view - the client's view
+     */
+    public synchronized void createGame(int numberPlayers, int numberCommonGoals, ServerUpdateViewInterface view) {
         // not yet registered.
         if (!view.isLoggedIn() || view.isInGame()) {
             view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
@@ -140,8 +177,12 @@ public class Lobby {
         })).start();
     }
 
-
-    public synchronized void selectGame(int id, VirtualView view) {
+    /**
+     * This method allows the player to select a game
+     * @param id - the id of the selected game
+     * @param view - the view of the game
+     */
+    public synchronized void selectGame(int id, ServerUpdateViewInterface view) {
         if (!view.isLoggedIn() || view.isInGame()) {
             view.onGameData(new GameData(-1, -1, -1, -1, -1, -1));
         }

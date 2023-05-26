@@ -84,7 +84,11 @@ public class Controller implements ActionListener {
      */
     private final LivingRoomListener livingRoomListener;
 
-
+    /**
+     * Constructor for the class.
+     * @param numberPlayers - the number of players
+     * @param numberCommonGoalCards - the number of common goal cards
+     */
     public Controller(int numberPlayers, int numberCommonGoalCards) {
         this.numberPlayers = numberPlayers;
         this.game = null;
@@ -106,6 +110,9 @@ public class Controller implements ActionListener {
         gameBuilder.setLivingRoomListener(livingRoomListener);
     }
 
+    /**
+     * This method notifies the players of any changes in the bookshelves and updates them.
+     */
     private void notifyBookshelvesToEverybody() {
         for (BookshelfListener bookshelfListener : bookshelfListeners) {
             if (!bookshelfListener.hasChanged()) return;
@@ -117,6 +124,9 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * This method notifies the players of any changes in the common goal cards and updates them.
+     */
     private void notifyCommonGoalCardsToEverybody() {
         Map<Integer, Integer> map = commonGoalCardsListener.getCards();
         for(ServerUpdateViewInterface view : views) {
@@ -124,6 +134,9 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * This method notifies the players of any changes in the ending token and updates it.
+     */
     private void notifyEndingTokenToEverybody() {
         if (!endingTokenListener.hasChanged()) return;
         EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
@@ -132,6 +145,9 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * This method notifies the players of any changes in the living room and updates it.
+     */
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
        LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoom());
@@ -140,6 +156,9 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * This method notifies the players of any changes in the scores and updates them.
+     */
     private void notifyScoresToEverybody() {
         Map<String, Integer> scores = new HashMap<>();
         for (ServerUpdateViewInterface v : views) {
@@ -155,12 +174,19 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * This method notifies the players of any changes in the personal goal cards and updates them.
+     */
     private void notifyPersonalGoalCardsToEverybody() {
         for (ServerUpdateViewInterface v : views) {
             v.onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(v.getNickname())));
         }
     }
 
+    /**
+     * This method initializes the game, the players' turns , the common goal cards, the personal ones, the living room and
+     * the bookshelves.
+     */
     private void setup() {
         // Choosing a random order for the players.
         List<String> players = new ArrayList<>(playerQueue);
@@ -195,6 +221,9 @@ public class Controller implements ActionListener {
         } */
     }
 
+    /**
+     * This method controls the various cases of next turn.
+     */
     private void nextTurn() {
         String justPlayed = playerQueue.poll();
         playerQueue.add(justPlayed);
@@ -245,6 +274,10 @@ public class Controller implements ActionListener {
         return gameConfig;
     }
 
+    /**
+     * This method performs the Join action , letting a new player join the game.
+     * @param action - action that sets the listener in motion
+     */
     @Override
     public synchronized void perform(JoinAction action) {
         if (game != null || ended) {
@@ -276,6 +309,11 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * This method performs the SelectionFromLivingRoom action, letting a player choose one or more tiles from the
+     * living room.
+     * @param action - action that sets the listener in motion
+     */
     @Override
     public synchronized void perform(SelectionFromLivingRoomAction action) {
         if (ended ||
@@ -297,6 +335,11 @@ public class Controller implements ActionListener {
         turnPhase = TurnPhase.BOOKSHELF;
     }
 
+    /**
+     * This method perfroms the SelectionColumnAndOrder action, letting the player choose in which column of the bookshelf
+     * and in what order put the items.
+     * @param action - action that sets the listener in motion
+     */
     @Override
     public synchronized void perform(SelectionColumnAndOrderAction action) {
         if (ended ||
@@ -327,6 +370,10 @@ public class Controller implements ActionListener {
         nextTurn();
     }
 
+    /**
+     * This method performs the ChatMessage action, letting the player send and recieve messages.
+     * @param action - action that sets the listener in motion
+     */
     @Override
     public synchronized void perform(ChatMessageAction action) {
         if (ended || game.getCurrentPlayer() == null) {
@@ -363,6 +410,10 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * This method performs the Disconnection action.
+     * @param action - action that sets the listener in motion
+     */
     @Override
     public synchronized void perform(DisconnectionAction action) {
         if (ended) return;
@@ -373,14 +424,26 @@ public class Controller implements ActionListener {
         }
     }
 
+    /**
+     * Getter for the turnPhase.
+     * @return - returns the turnPhase, if different than null
+     */
     public synchronized boolean isStarted() {
         return turnPhase != null;
     }
 
+    /**
+     * Getter for the number of players
+     * @return - the number of players
+     */
     public synchronized int getNumberPlayers() {
         return numberPlayers;
     }
 
+    /**
+     * Getter for the number of Common Goal cards
+     * @return - the number of common goal cards
+     */
     public synchronized int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
     }
