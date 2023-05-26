@@ -59,7 +59,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                 }
                 receiver.disconnect();
             }
-        }, 15000, 30000);
+        }, 30000, 30000);
 
         (new Thread(() -> {
             Message message;
