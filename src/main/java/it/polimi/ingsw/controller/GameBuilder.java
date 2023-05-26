@@ -29,11 +29,17 @@ public class GameBuilder {
 
     /**
      * This method adds a player
-     * @param nickname - the nickname of the players that is added
+     * @param nickname - the nickname of the player that is added
      */
     public void addPlayer(String nickname){
         players.add(nickname);
     }
+
+    /**
+     * This method removes a player
+     * @param nickname - the nickname of the player that is being removed
+     */
+    public void removePlayer(String nickname) {players.remove(nickname);}
 
     /**
      * This method adds a bookshelf listener
@@ -41,6 +47,14 @@ public class GameBuilder {
      */
     public void setBookshelfListener(BookshelfListener bookshelfListener) {
         bookshelfListeners.add(bookshelfListener);
+    }
+
+    /**
+     * This method removes a bookshelf listener
+     * @param nickname - bookshelfListener's nickname.
+     */
+    public void removeBookshelfListener(String nickname) {
+        bookshelfListeners.removeIf(bookshelfL -> bookshelfL.getOwner().equals(nickname));
     }
 
     /**

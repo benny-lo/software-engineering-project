@@ -17,10 +17,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
+    private static final int HALF_PERIOD = 15000;
     private final Queue<Message> sendingQueue;
     private ServerInputViewInterface receiver;
     private final ClientConnectionRMIInterface client;
-    private final Timer serverTimer;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep clientBeep;
@@ -29,25 +29,11 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         super();
         this.sendingQueue = new ArrayDeque<>();
         this.client = client;
-        this.serverTimer = new Timer();
         this.clientTimer = new Timer();
         this.beepLock = new Object();
     }
 
     public void start() {
-        serverTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    client.receive(new Beep());
-                } catch(RemoteException e) {
-                    serverTimer.cancel();
-                    clientTimer.cancel();
-                    receiver.disconnect();
-                }
-            }
-        }, 15000, 30000);
-
         clientTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -59,7 +45,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                 }
                 receiver.disconnect();
             }
-        }, 30000, 30000);
+        }, HALF_PERIOD, 2*HALF_PERIOD);
 
         (new Thread(() -> {
             Message message;
@@ -150,6 +136,12 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     public void beep(Beep beep) throws RemoteException {
         synchronized (beepLock) {
             this.clientBeep = beep;
+        }
+        try {
+            client.receive(new Beep());
+        } catch (RemoteException e) {
+            clientTimer.cancel();
+            receiver.disconnect();
         }
     }
 

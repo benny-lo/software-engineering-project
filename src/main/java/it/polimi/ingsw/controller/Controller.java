@@ -300,7 +300,8 @@ public class Controller implements ActionListener {
         for(ServerUpdateViewInterface v : views) {
             v.onWaitingUpdate(new WaitingUpdate(
                     action.getView().getNickname(),
-                    numberPlayers - playerQueue.size()
+                    numberPlayers - playerQueue.size(),
+                    true
             ));
         }
 
@@ -417,6 +418,25 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void perform(DisconnectionAction action) {
         if (ended) return;
+        if (!isStarted()){
+            views.remove(action.getView());
+            gameBuilder.removePlayer(action.getView().getNickname());
+            gameBuilder.removeBookshelfListener(action.getView().getNickname());
+
+            String player;
+            while (true){
+                player = playerQueue.poll();
+                if (action.getView().getNickname().equals(player))
+                    break;
+                else
+                    playerQueue.add(player);
+            }
+
+            for(ServerUpdateViewInterface v : views)
+                v.onWaitingUpdate(new WaitingUpdate(action.getView().getNickname(),numberPlayers - playerQueue.size(), false));
+
+            return;
+        }
         ended = true;
         views.remove(action.getView());
         for (ServerUpdateViewInterface v : views) {
@@ -426,7 +446,7 @@ public class Controller implements ActionListener {
 
     /**
      * Getter for the turnPhase.
-     * @return - returns the turnPhase, if different than null
+     * @return - returns the turnPhase, if different from null
      */
     public synchronized boolean isStarted() {
         return turnPhase != null;
@@ -446,6 +466,14 @@ public class Controller implements ActionListener {
      */
     public synchronized int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
+    }
+
+    /**
+     * Getter for the number of players connected
+     * @return - the number of players connected
+     */
+    public synchronized int getNumberActualPlayers(){
+        return playerQueue.size();
     }
 
     // EXCLUSIVELY FOR TESTING
