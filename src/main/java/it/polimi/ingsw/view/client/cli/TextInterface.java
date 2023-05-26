@@ -154,7 +154,8 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
-        System.out.println(update.getJustConnected() + " just connected");
+        if (update.isTypeOfAction()) printPlayerJustConnected(update.getNickname());
+        else printPlayerJustDisconnected(update.getNickname());
         if (update.getMissing() != 0) System.out.println("Waiting for " + update.getMissing() + " players ...");
         else System.out.println("Game starts!");
 

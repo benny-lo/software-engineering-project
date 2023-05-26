@@ -339,4 +339,11 @@ class TextInterfacePrinter {
                     The configuration file should be in configuration/personalGoalCard
                     with name personal_goal_pattern_{id}""");
     }
+
+    static void printPlayerJustConnected(String nickname){
+        System.out.println(nickname + " just connected");
+    }
+    static void printPlayerJustDisconnected(String nickname){
+        System.out.println(nickname + " just disconnected");
+    }
 }
