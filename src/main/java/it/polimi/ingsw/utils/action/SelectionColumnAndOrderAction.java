@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.action;
 
-import it.polimi.ingsw.view.server.VirtualView;
+import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +15,7 @@ public class SelectionColumnAndOrderAction extends Action {
      * @param column - column selected
      * @param order - order selected
      */
-    public SelectionColumnAndOrderAction(VirtualView view, int column, List<Integer> order) {
+    public SelectionColumnAndOrderAction(ServerUpdateViewInterface view, int column, List<Integer> order) {
         super(view);
         this.column = column;
         this.order = order;

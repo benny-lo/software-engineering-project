@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.action;
 
-import it.polimi.ingsw.view.server.VirtualView;
+import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 
 public class ChatMessageAction extends Action {
     private final String text;
@@ -12,7 +12,7 @@ public class ChatMessageAction extends Action {
      * @param text - the text of the chat message
      * @param receiver - the receiver to which the message is sent.
      */
-    public ChatMessageAction(VirtualView view, String text, String receiver) {
+    public ChatMessageAction(ServerUpdateViewInterface view, String text, String receiver) {
         super(view);
         this.text = text;
         this.receiver = receiver;

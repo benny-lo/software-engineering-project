@@ -89,16 +89,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         try {
             out.writeObject(message);
             out.flush();
-        } catch (IOException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            synchronized (socket) {
-                try {
-                    socket.close();
-                } catch (IOException ignored) {}
-            }
-            receiver.disconnect();
-        }
+        } catch (IOException ignored) {}
     }
 
     @Override

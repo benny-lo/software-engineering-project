@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.message.server.*;
+import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 import it.polimi.ingsw.view.server.VirtualView;
 
 import java.util.*;
@@ -10,6 +11,8 @@ import java.util.*;
 
 // TODO: remove VirtualViews from lobby and controller with ServerUpdateView ?
 // TODO: idea = make both lobby and game action listeners.
+
+// TODO: set better timers.
 
 /**
  * This class contains all {@code Controller}s of all games currently being played. It uses the Singleton
@@ -24,7 +27,7 @@ public class Lobby {
     /**
      * Set of virtual views, representing all players connected either waiting for a game or in game.
      */
-    private final Set<VirtualView> views;
+    private final Set<ServerUpdateViewInterface> views;
 
     /**
      * Smallest available id for the next game to be created.
@@ -70,28 +73,28 @@ public class Lobby {
         (new Thread(() -> {
             List<GameInfo> list = new ArrayList<>();
             list.add(new GameInfo(id, -1, -1));
-            for (VirtualView v : views) {
+            for (ServerUpdateViewInterface v : views) {
                 if (v.isLoggedIn() && !v.isInGame()) v.onGamesList(new GamesList(list));
             }
         })).start();
     }
 
-    public synchronized void addVirtualView(VirtualView view) {
+    public synchronized void addVirtualView(ServerUpdateViewInterface view) {
         views.add(view);
     }
 
-    public synchronized void removeVirtualView(VirtualView view) {
+    public synchronized void removeVirtualView(ServerUpdateViewInterface view) {
         views.remove(view);
     }
 
-    public synchronized void login(String nickname, VirtualView view) {
+    public synchronized void login(String nickname, ServerUpdateViewInterface view) {
         if(view.isLoggedIn() || view.isInGame()) {
             // the nickname is already chosen.
             view.onGamesList(new GamesList(null));
             return;
         }
 
-        for(VirtualView v : views) {
+        for(ServerUpdateViewInterface v : views) {
             if (nickname.equals(v.getNickname())) {
                 view.onGamesList(new GamesList(null));
                 return;
@@ -126,7 +129,7 @@ public class Lobby {
 
         // send to client without game
         (new Thread(() -> {
-            for (VirtualView v : views) {
+            for (ServerUpdateViewInterface v : views) {
                 List<GameInfo> list = new ArrayList<>();
                 list.add(new GameInfo(availableId - 1, numberPlayers, numberCommonGoals));
                 GamesList gamesList = new GamesList(list);

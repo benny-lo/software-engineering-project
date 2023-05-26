@@ -9,7 +9,7 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.GameConfig;
 import it.polimi.ingsw.utils.action.*;
-import it.polimi.ingsw.view.server.VirtualView;
+import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 import it.polimi.ingsw.utils.message.server.*;
 
 import java.io.IOException;
@@ -51,7 +51,7 @@ public class Controller implements ActionListener {
     /**
      * Set of the virtual views connected to the {@code Game} controlled by {@code this}.
      */
-    private final Set<VirtualView> views;
+    private final Set<ServerUpdateViewInterface> views;
 
     /**
      * Flag representing whether the game has ended.
@@ -111,7 +111,7 @@ public class Controller implements ActionListener {
             if (!bookshelfListener.hasChanged()) return;
             Map<Position, Item> map = bookshelfListener.getBookshelf();
             BookshelfUpdate update = new BookshelfUpdate(bookshelfListener.getOwner(), map);
-            for (VirtualView v : views) {
+            for (ServerUpdateViewInterface v : views) {
                 v.onBookshelfUpdate(update);
             }
         }
@@ -119,7 +119,7 @@ public class Controller implements ActionListener {
 
     private void notifyCommonGoalCardsToEverybody() {
         Map<Integer, Integer> map = commonGoalCardsListener.getCards();
-        for(VirtualView view : views) {
+        for(ServerUpdateViewInterface view : views) {
             view.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(map));
         }
     }
@@ -127,7 +127,7 @@ public class Controller implements ActionListener {
     private void notifyEndingTokenToEverybody() {
         if (!endingTokenListener.hasChanged()) return;
         EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
-        for(VirtualView view : views) {
+        for(ServerUpdateViewInterface view : views) {
             view.onEndingTokenUpdate(update);
         }
     }
@@ -135,15 +135,15 @@ public class Controller implements ActionListener {
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
        LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoom());
-        for(VirtualView view : views) {
+        for(ServerUpdateViewInterface view : views) {
             view.onLivingRoomUpdate(update);
         }
     }
 
     private void notifyScoresToEverybody() {
         Map<String, Integer> scores = new HashMap<>();
-        for (VirtualView v : views) {
-            for (VirtualView u : views) {
+        for (ServerUpdateViewInterface v : views) {
+            for (ServerUpdateViewInterface u : views) {
                 int personalScore = game.getPersonalScore(u.getNickname());
                 int publicScore = game.getPublicScore(u.getNickname());
 
@@ -156,7 +156,7 @@ public class Controller implements ActionListener {
     }
 
     private void notifyPersonalGoalCardsToEverybody() {
-        for (VirtualView v : views) {
+        for (ServerUpdateViewInterface v : views) {
             v.onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(v.getNickname())));
         }
     }
@@ -186,7 +186,7 @@ public class Controller implements ActionListener {
         notifyPersonalGoalCardsToEverybody();
         notifyScoresToEverybody();
 
-        for(VirtualView v : views) {
+        for(ServerUpdateViewInterface v : views) {
             v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
         }
 
@@ -213,11 +213,11 @@ public class Controller implements ActionListener {
                 }
             }
 
-            for(VirtualView view : views) {
+            for(ServerUpdateViewInterface view : views) {
                 view.onEndGameUpdate(new EndGameUpdate(winner));
             }
         } else {
-            for(VirtualView v : views) {
+            for(ServerUpdateViewInterface v : views) {
                 v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
             }
         }
@@ -264,7 +264,7 @@ public class Controller implements ActionListener {
         bookshelfListeners.add(bookshelfListener);
         gameBuilder.setBookshelfListener(bookshelfListener);
 
-        for(VirtualView v : views) {
+        for(ServerUpdateViewInterface v : views) {
             v.onWaitingUpdate(new WaitingUpdate(
                     action.getView().getNickname(),
                     numberPlayers - playerQueue.size()
@@ -290,7 +290,7 @@ public class Controller implements ActionListener {
 
         notifyLivingRoomToEverybody();
 
-        for(VirtualView v : views) {
+        for(ServerUpdateViewInterface v : views) {
             v.onItemsSelected(new ItemsSelected(items));
         }
 
@@ -341,12 +341,12 @@ public class Controller implements ActionListener {
         if (action.getReceiver().equals("all")) {
             action.getView().onChatAccepted(new ChatAccepted(true));
 
-            for (VirtualView v : views) {
+            for (ServerUpdateViewInterface v : views) {
                 v.onChatUpdate(update);
             }
         } else {
-            VirtualView view = null;
-            for(VirtualView v : views) {
+            ServerUpdateViewInterface view = null;
+            for(ServerUpdateViewInterface v : views) {
                 if (v.getNickname().equals(action.getReceiver())) {
                     view = v;
                     break;
@@ -368,7 +368,7 @@ public class Controller implements ActionListener {
         if (ended) return;
         ended = true;
         views.remove(action.getView());
-        for (VirtualView v : views) {
+        for (ServerUpdateViewInterface v : views) {
             v.onEndGameUpdate(new EndGameUpdate(null));
         }
     }
@@ -422,7 +422,7 @@ public class Controller implements ActionListener {
         return gameBuilder;
     }
 
-    public Set<VirtualView> getViews() {
+    public Set<ServerUpdateViewInterface> getViews() {
         return views;
     }
 

@@ -38,9 +38,12 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         serverTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                synchronized (sendingQueue) {
-                    sendingQueue.add(new Beep());
-                    sendingQueue.notifyAll();
+                try {
+                    client.receive(new Beep());
+                } catch(RemoteException e) {
+                    serverTimer.cancel();
+                    clientTimer.cancel();
+                    receiver.disconnect();
                 }
             }
         }, 15000, 30000);
@@ -102,15 +105,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                         client.receive((AcceptedInsertion) message);
                     } else if (message instanceof ChatAccepted) {
                         client.receive((ChatAccepted) message);
-                    } else if (message instanceof Beep) {
-                        client.receive((Beep) message);
                     }
-                } catch (RemoteException e) {
-                    serverTimer.cancel();
-                    clientTimer.cancel();
-                    receiver.disconnect();
-                    return;
-                }
+                } catch (RemoteException ignored) {}
             }
         })).start();
     }

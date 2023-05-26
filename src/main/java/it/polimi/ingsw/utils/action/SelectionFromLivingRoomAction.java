@@ -1,7 +1,7 @@
 package it.polimi.ingsw.utils.action;
 
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.view.server.VirtualView;
+import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ public class SelectionFromLivingRoomAction extends Action {
      * @param view - the view of the player selecting the positions
      * @param positions - list of the postions selected.
      */
-    public SelectionFromLivingRoomAction(VirtualView view, List<Position> positions) {
+    public SelectionFromLivingRoomAction(ServerUpdateViewInterface view, List<Position> positions) {
         super(view);
         this.positions = positions;
     }

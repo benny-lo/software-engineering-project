@@ -10,7 +10,6 @@ import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.UpdateViewInterface;
 
 
 /**
@@ -20,7 +19,7 @@ import it.polimi.ingsw.view.UpdateViewInterface;
  * All methods inherited from {@code ServerInputViewInterface} take the lock on {@code this}.
  * All other methods are thread-safe and do not take the lock on {@code this}.
  */
-public class VirtualView implements UpdateViewInterface, ServerInputViewInterface {
+public class VirtualView implements ServerUpdateViewInterface, ServerInputViewInterface {
     /**
      * The nickname chosen by the client represented by {@code this}.
      */
@@ -30,9 +29,7 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * Reference to the Controller, this VirtualView is logged in. Initially, it set to {@code null}.
      */
     private Controller controller;
-
     private ServerConnection serverConnection;
-
     private boolean disconnected;
     private final Object nicknameLock;
     private final Object controllerLock;
@@ -63,7 +60,8 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * Setter for the private attribute {@code nickname}.
      * @param nickname the nickname to set.
      */
-    public synchronized void setNickname(String nickname) {
+    @Override
+    public void setNickname(String nickname) {
         synchronized (nicknameLock) {
             this.nickname = nickname;
         }
@@ -73,7 +71,8 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * Getter for the private attribute {@code nickname}.
      * @return a {@code String} corresponding to the nickname of {@code this}.
      */
-    public synchronized String getNickname() {
+    @Override
+    public String getNickname() {
         synchronized (nicknameLock) {
             return nickname;
         }
@@ -83,7 +82,8 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * Setter for the private attribute {@code controller}.
      * @param controller the controller to set.
      */
-    public synchronized void setController(Controller controller) {
+    @Override
+    public void setController(Controller controller) {
         synchronized (controllerLock) {
             this.controller = controller;
         }
@@ -93,7 +93,8 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * Method to check whether {@code this} is logged in (has a nickname).
      * @return {@code true} iff the private attribute {@code nickname} is not {@code null}.
      */
-    public synchronized boolean isLoggedIn() {
+    @Override
+    public boolean isLoggedIn() {
         synchronized (nicknameLock) {
             return nickname != null;
         }
@@ -103,7 +104,8 @@ public class VirtualView implements UpdateViewInterface, ServerInputViewInterfac
      * Method to check whether {@code this} is logged in any game (has a controller).
      * @return {@code true} iff the private attribute {@code controller} is not {@code null}.
      */
-    public synchronized boolean isInGame() {
+    @Override
+    public boolean isInGame() {
         synchronized (controllerLock) {
             return controller != null;
         }
