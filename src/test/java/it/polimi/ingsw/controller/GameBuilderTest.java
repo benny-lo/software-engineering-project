@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 import it.polimi.ingsw.controller.modelListener.CommonGoalCardsListener;
 import it.polimi.ingsw.controller.modelListener.EndingTokenListener;
 import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
+import it.polimi.ingsw.model.GameInterface;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -63,7 +64,47 @@ public class GameBuilderTest {
         assertEquals(gameBuilder.getBookshelfListenersOwners().get(0),gameBuilder.getPlayers().get(1));
 
     }
+    /**
+     * Testing for the getter for the number of current players
+     */
+    @Test
+    public void getCurrentPlayersTest()
+    {
+        GameBuilder gameBuilder = new GameBuilder(2);
+        gameBuilder.addPlayer("nick");
+        gameBuilder.addPlayer("rick");
+        gameBuilder.addPlayer("john");
+        int num = gameBuilder.getCurrentPlayers();
+        assertEquals(3,num);
+        gameBuilder.removePlayer("john");
+        num = gameBuilder.getCurrentPlayers();
+        assertEquals(2,num);
+    }
+    /**
+     * Testing for the startGame method
+     */
+    @Test
+    public void startGameTest()
+    {
+        GameBuilder gameBuilder = new GameBuilder(2);
+        gameBuilder.addPlayer("nick");
+        gameBuilder.addPlayer("rick");
+        setup(gameBuilder);
+        GameInterface game = gameBuilder.startGame();
+        assertNotNull(game);
+    }
+    //FOR TESTING
+    public void setup(GameBuilder gameBuilder)
+    {
+        for(String nickname : gameBuilder.getPlayers())
+        {
+            gameBuilder.setBookshelfListener(new BookshelfListener(nickname));
+        }
+        gameBuilder.setCommonGoalCardsListener(new CommonGoalCardsListener());
+        gameBuilder.setEndingTokenListener(new EndingTokenListener());
+        gameBuilder.setLivingRoomListener(new LivingRoomListener());
 
+    }
 
 
 }

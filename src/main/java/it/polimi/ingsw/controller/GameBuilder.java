@@ -114,15 +114,26 @@ public class GameBuilder {
 
     //METHODS EXCLUSIVELY FOR TESTING
 
-
+    /**
+     * Getter for the players
+     * @return - a list formed by string of players
+     */
     public List<String> getPlayers() {
         return players;
     }
 
+    /**
+     * Getter for the bookshelves listeners
+     * @return - a list formed by the Bookshelf listeners
+     */
     public List<BookshelfListener> getBookshelfListeners() {
         return bookshelfListeners;
     }
 
+    /**
+     * Getter for the owners of the bookshelves
+     * @return - a list of the owners of the bookshelves.
+     */
     public List<String> getBookshelfListenersOwners(){
         return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
     }
