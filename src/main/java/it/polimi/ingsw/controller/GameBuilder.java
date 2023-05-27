@@ -90,7 +90,7 @@ public class GameBuilder {
     }
 
     /**
-     * This method starts the game, setting all of the new listeners.
+     * This method starts the game, setting all the new listeners.
      * @return - the GameInterface item.
      */
     public GameInterface startGame() {
@@ -126,4 +126,37 @@ public class GameBuilder {
     public List<String> getBookshelfListenersOwners(){
         return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
     }
+    /**
+     * Getter for the number of common goal cards
+     * @return - number of CommonGoalCards
+     */
+    public int getNumberCommonGoalCards()
+    {
+        return this.numberCommonGoalCards;
+    }
+    /**
+     * Getter for Common Goal Cards Listener
+     * @return - the common Goal Cards Listener
+     */
+    public CommonGoalCardsListener getCommonGoalCardsListener()
+    {
+        return this.commonGoalCardsListener;
+    }
+    /**
+     * Getter for Ending Token Listener
+     * @return - the Ending Token Listener
+     */
+    public EndingTokenListener getEndingTokenListener()
+    {
+        return this.endingTokenListener;
+    }
+    /**
+     * Getter for Living Room Listener
+     * @return - the Living Room Listener
+     */
+    public LivingRoomListener getLivingRoomListener()
+    {
+        return this.livingRoomListener;
+    }
+
 }
