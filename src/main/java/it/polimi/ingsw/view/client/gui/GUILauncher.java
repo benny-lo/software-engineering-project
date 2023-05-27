@@ -2,30 +2,27 @@ package it.polimi.ingsw.view.client.gui;
 
 
 import javafx.application.Application;
-import javafx.scene.Group;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
-// TODO: fix, this is just starter code.
-
 public class GUILauncher extends Application {
-
-
     public static void startGUI(){
         launch();
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        Parent root = new Group();
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Login.fxml"));
+        Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setTitle("MyShelfie");
-        primaryStage.setWidth(1080);
-        primaryStage.setHeight(720);
+        primaryStage.setWidth(1920);
+        primaryStage.setHeight(1080);
         primaryStage.show();
         primaryStage.setMaximized(false);
     }

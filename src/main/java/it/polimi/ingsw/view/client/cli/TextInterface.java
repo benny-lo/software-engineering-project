@@ -61,7 +61,7 @@ public class TextInterface extends ClientView implements InputReceiver {
 
         if (status == ClientStatus.LOGIN) clearScreen();
 
-        status = ClientStatus.CREATE_OR_SELECT_GAME;
+        status = ClientStatus.LOBBY;
 
         if (games.size() == 0) {
             printNoAvailableGames();
@@ -374,7 +374,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void createGame(GameInitialization message) {
         synchronized (this) {
-            if (status != ClientStatus.CREATE_OR_SELECT_GAME) {
+            if (status != ClientStatus.LOBBY) {
                 printWrongStatus();
                 System.out.flush();
                 return;
@@ -390,7 +390,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void selectGame(GameSelection message) {
         synchronized (this) {
-            if (status != ClientStatus.CREATE_OR_SELECT_GAME) {
+            if (status != ClientStatus.LOBBY) {
                 printWrongStatus();
                 System.out.flush();
                 return;

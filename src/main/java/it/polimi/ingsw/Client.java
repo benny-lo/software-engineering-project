@@ -3,8 +3,7 @@ package it.polimi.ingsw;
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.cli.TextInterface;
-import it.polimi.ingsw.view.client.gui.GUIController;
-import it.polimi.ingsw.view.client.gui.GUILauncher;
+import it.polimi.ingsw.view.client.gui.GUInterface;
 
 import java.util.List;
 
@@ -35,7 +34,7 @@ public class Client {
                     System.exit(1);
                 }
             } else if (args.get(0).equalsIgnoreCase("gui")) {
-                view = new GUIController();
+                view = new GUInterface();
                 if (args.size() == 2) {
                     if (args.get(1).equalsIgnoreCase("rmi")) {
                         view.startRMI(ServerSettings.getHostName(), ServerSettings.getRmiPort());
@@ -53,7 +52,6 @@ public class Client {
                     System.err.println("wrong gui arguments : [client] [gui] [hostName] [numberPort]");
                     System.exit(1);
                 }
-                GUILauncher.startGUI();
             } else {
                 System.exit(0);
             }

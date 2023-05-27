@@ -132,6 +132,8 @@ public class Lobby {
             }
         }
 
+        System.out.println(nickname + " is connected");
+
         views.add(view);
         view.setNickname(nickname);
         view.onGamesList(new GamesList(getGameInfo()));

@@ -1,14 +1,34 @@
 package it.polimi.ingsw.view.client.gui;
 
+import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
 
-// TODO: fix GUIController should not extend ClientView.
-public class GUIController extends ClientView {
+import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
+import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startLobbyController;
+import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
+
+//TODO: implement everything
+public class GUInterface extends ClientView {
+
+    public GUInterface() {
+        super();
+        startLoginController(this);
+        startLobbyController(this);
+    }
+
     @Override
     public void login(Nickname message) {
-
+        synchronized (this) {
+            String nickname = message.getNickname();
+            if (!isValidNickname(nickname)) {
+                invalidNickname();
+                return;
+            }
+            this.nickname = nickname;
+        }
+        clientConnection.send(new Nickname(nickname));
     }
 
     @Override
@@ -43,7 +63,23 @@ public class GUIController extends ClientView {
 
     @Override
     public void onGameData(GameData message) {
+        if (message.getNumberPlayers() == -1 ||
+                message.getNumberCommonGoalCards() == -1 ||
+                message.getBookshelvesColumns() == -1 ||
+                message.getBookshelvesRows() == -1 ||
+                message.getLivingRoomColumns() == -1 ||
+                message.getLivingRoomRows() == -1) {
+            failedLogin();
+            return;
+        }
 
+        //successfulLogin();
+        numberPlayers = message.getNumberPlayers();
+        numberCommonGoalCards = message.getNumberCommonGoalCards();
+        livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
+        bookshelvesRows = message.getBookshelvesRows();
+        bookshelvesColumns = message.getBookshelvesColumns();
+        personalGoalCard = new Item[bookshelvesRows][bookshelvesColumns];
     }
 
     @Override
@@ -118,6 +154,6 @@ public class GUIController extends ClientView {
 
     @Override
     public void start() {
-
+        startGUI();
     }
 }
