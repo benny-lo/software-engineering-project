@@ -4,18 +4,29 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
+import it.polimi.ingsw.view.client.gui.controllers.LobbyController;
+import it.polimi.ingsw.view.client.gui.controllers.LoginController;
+import it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController;
+import javafx.application.Platform;
+
+import java.util.List;
 
 import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
 import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startLobbyController;
 import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
+import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
 
 //TODO: implement everything
 public class GUInterface extends ClientView {
+    private LoginController loginController;
+    private LobbyController lobbyController;
+    private WaitingRoomController waitingRoomController;
 
     public GUInterface() {
         super();
         startLoginController(this);
         startLobbyController(this);
+        startWaitingRoomController(this);
     }
 
     @Override
@@ -23,7 +34,7 @@ public class GUInterface extends ClientView {
         synchronized (this) {
             String nickname = message.getNickname();
             if (!isValidNickname(nickname)) {
-                invalidNickname();
+                Platform.runLater(() -> loginController.invalidNickname());
                 return;
             }
             this.nickname = nickname;
@@ -33,12 +44,12 @@ public class GUInterface extends ClientView {
 
     @Override
     public void createGame(GameInitialization message) {
-
+        clientConnection.send(message);
     }
 
     @Override
     public void selectGame(GameSelection message) {
-
+        clientConnection.send(message);
     }
 
     @Override
@@ -58,7 +69,17 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onGamesList(GamesList message) {
+        List<GameInfo> games = message.getAvailable();
 
+        if (games == null) {
+            Platform.runLater(() -> loginController.failedLogin());
+            nickname = null;
+            return;
+        }
+
+        Platform.runLater(() -> loginController.successfulLogin());
+
+        Platform.runLater(() -> lobbyController.listOfGames(games));
     }
 
     @Override
@@ -69,11 +90,13 @@ public class GUInterface extends ClientView {
                 message.getBookshelvesRows() == -1 ||
                 message.getLivingRoomColumns() == -1 ||
                 message.getLivingRoomRows() == -1) {
-            failedLogin();
+            Platform.runLater(() -> lobbyController.failedCreateGame());
             return;
         }
 
-        //successfulLogin();
+        Platform.runLater(() -> lobbyController.successfulCreateOrSelectGame());
+
+        //maybe we don't need of all these attributes
         numberPlayers = message.getNumberPlayers();
         numberCommonGoalCards = message.getNumberCommonGoalCards();
         livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
@@ -152,8 +175,24 @@ public class GUInterface extends ClientView {
 
     }
 
+    public String getNickname(){
+        return nickname;
+    }
+
     @Override
     public void start() {
         startGUI();
+    }
+
+    public void receiveController(LoginController controller){
+        loginController = controller;
+    }
+
+    public void receiveController(LobbyController controller){
+        lobbyController = controller;
+    }
+
+    public void receiveController(WaitingRoomController controller){
+        waitingRoomController = controller;
     }
 }

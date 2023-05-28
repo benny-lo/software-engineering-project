@@ -10,13 +10,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class GUILauncher extends Application {
+    private static FXMLLoader fxmlLoader;
     public static void startGUI(){
         launch();
     }
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Login.fxml"));
+        fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Login.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);

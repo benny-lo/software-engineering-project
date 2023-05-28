@@ -63,14 +63,11 @@ public class TextInterface extends ClientView implements InputReceiver {
 
         status = ClientStatus.LOBBY;
 
-        if (games.size() == 0) {
+        if (games.size() == 0)
             printNoAvailableGames();
-        } else {
-            System.out.println("Select a game from the list:");
-            for (GameInfo info : games) {
-                System.out.println(info);
-            }
-        }
+        else
+            printGamesList(games);
+
         System.out.flush();
     }
 
@@ -156,6 +153,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
         if (update.isTypeOfAction()) printPlayerJustConnected(update.getNickname());
         else printPlayerJustDisconnected(update.getNickname());
+
         if (update.getMissing() != 0) System.out.println("Waiting for " + update.getMissing() + " players ...");
         else System.out.println("Game starts!");
 

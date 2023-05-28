@@ -8,7 +8,7 @@
 
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0"
-            prefWidth="1920.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0" xmlns="http://javafx.com/javafx/19.0.2.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="it.polimi.ingsw.view.client.gui.controllers.LoginController">
    <TextField fx:id="usernameField" layoutX="789.0" layoutY="517.0" prefHeight="46.0" prefWidth="341.0"/>
    <Label fx:id="welcomeText" alignment="CENTER" layoutX="719.0" layoutY="204.0" prefHeight="265.0" prefWidth="481.0"

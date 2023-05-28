@@ -2,28 +2,63 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0"
-            prefWidth="1920.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="it.polimi.ingsw.view.client.gui.controllers.LobbyController">
-   <Label alignment="CENTER" layoutX="339.0" layoutY="347.0" prefHeight="203.0" prefWidth="388.0" text="Create a game">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19.0.2.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LobbyController">
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1465.0" layoutY="14.0" prefHeight="175.0" prefWidth="417.0" text="Lobby">
       <font>
-         <Font size="36.0"/>
+         <Font size="48.0" />
       </font>
    </Label>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="727.0" layoutY="42.0" prefHeight="226.0" prefWidth="417.0"
-          text="Lobby">
+   <Spinner fx:id="numberPlayersSpinner" editable="true" layoutX="583.0" layoutY="305.0" />
+   <Spinner fx:id="numberCommonGoalCardsSpinner" editable="true" layoutX="583.0" layoutY="364.0" prefHeight="15.0" prefWidth="149.0" />
+   <Label layoutX="55.0" layoutY="159.0" prefHeight="145.0" prefWidth="355.0" text="Create a Game">
       <font>
-         <Font size="48.0"/>
+         <Font size="36.0" />
       </font>
    </Label>
-   <Button layoutX="325.0" layoutY="564.0" mnemonicParsing="false" prefHeight="203.0" prefWidth="453.0" text="Create"/>
-   <Button layoutX="1312.0" layoutY="589.0" mnemonicParsing="false" text="Select"/>
-   <Label alignment="CENTER" layoutX="1144.0" layoutY="336.0" prefHeight="203.0" prefWidth="388.0" text="Select a game">
+   <Label layoutX="45.0" layoutY="300.0" text="Number of players">
       <font>
-         <Font size="36.0"/>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <Label layoutX="45.0" layoutY="359.0" text="Number of common goal cards">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <Label layoutX="64.0" layoutY="502.0" prefHeight="145.0" prefWidth="355.0" text="Select a Game">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Label>
+   <Button fx:id="createGameButton" layoutX="603.0" layoutY="414.0" mnemonicParsing="false" onAction="#createGame" prefHeight="52.0" prefWidth="109.0" text="Start!">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Button>
+   <Button fx:id="selectGameButton" layoutX="603.0" layoutY="948.0" mnemonicParsing="false" onAction="#selectGame" prefHeight="52.0" prefWidth="109.0" text="Start!">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Button>
+   <Label fx:id="displayNicknameLabel" layoutX="45.0" layoutY="29.0" prefHeight="145.0" prefWidth="455.0">
+      <font>
+         <Font size="38.0" />
+      </font>
+   </Label>
+   <Label fx:id="errorCreateGameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="568.0" layoutY="470.0" prefHeight="52.0" prefWidth="179.0" text="Something gone wrong!&#10;Retry&#10;" textAlignment="CENTER" textFill="#e60000" visible="false">
+      <font>
+         <Font size="16.0" />
+      </font>
+   </Label>
+   <ListView fx:id="gamesListView" layoutX="45.0" layoutY="616.0" prefHeight="307.0" prefWidth="695.0" />
+   <Label fx:id="errorSelectGameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="568.0" layoutY="1004.0" prefHeight="52.0" prefWidth="179.0" text="Something gone wrong!&#10;Retry&#10;" textAlignment="CENTER" textFill="#e60000" visible="false">
+      <font>
+         <Font size="16.0" />
       </font>
    </Label>
 </AnchorPane>

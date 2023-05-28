@@ -2,6 +2,7 @@ package it.polimi.ingsw.view.client.cli;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
+import it.polimi.ingsw.utils.message.server.GameInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -345,5 +346,12 @@ class TextInterfacePrinter {
     }
     static void printPlayerJustDisconnected(String nickname){
         System.out.println(nickname + " just disconnected");
+    }
+
+    static void printGamesList(List<GameInfo> games){
+        System.out.println("Select a game from the list:");
+        for (GameInfo info : games) {
+            System.out.println(info);
+        }
     }
 }
