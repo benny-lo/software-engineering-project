@@ -7,14 +7,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/19.0.2.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LobbyController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LobbyController">
    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1465.0" layoutY="14.0" prefHeight="175.0" prefWidth="417.0" text="Lobby">
       <font>
          <Font size="48.0" />
       </font>
    </Label>
-   <Spinner fx:id="numberPlayersSpinner" editable="true" layoutX="583.0" layoutY="305.0" />
-   <Spinner fx:id="numberCommonGoalCardsSpinner" editable="true" layoutX="583.0" layoutY="364.0" prefHeight="15.0" prefWidth="149.0" />
+   <Spinner fx:id="numberPlayersSpinner" layoutX="583.0" layoutY="305.0" />
+   <Spinner fx:id="numberCommonGoalCardsSpinner" layoutX="583.0" layoutY="364.0" prefHeight="15.0" prefWidth="149.0" />
    <Label layoutX="55.0" layoutY="159.0" prefHeight="145.0" prefWidth="355.0" text="Create a Game">
       <font>
          <Font size="36.0" />

@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -24,13 +23,8 @@ public class LoginController implements Initializable {
     private TextField usernameField;
     @FXML
     private Label welcomeText;
-    @FXML
-    private Button loginButton;
 
-    private FXMLLoader fxmlLoader;
     private Stage stage;
-    private Scene scene;
-    private Parent root;
 
 
     public static void startLoginController(GUInterface guInterface) {
@@ -50,9 +44,9 @@ public class LoginController implements Initializable {
 
     public void successfulLogin() {
         try {
-            fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Lobby.fxml"));
-            root = fxmlLoader.load();
-            scene = new Scene(root);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Lobby.fxml"));
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -62,6 +56,7 @@ public class LoginController implements Initializable {
 
     public void login(ActionEvent event) throws IOException {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
+
 
         String username = usernameField.getText();
 

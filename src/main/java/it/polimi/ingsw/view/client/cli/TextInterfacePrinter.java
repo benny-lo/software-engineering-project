@@ -354,4 +354,15 @@ class TextInterfacePrinter {
             System.out.println(info);
         }
     }
+
+    static void printNumberMissingPlayers(int missing){
+        if (missing == 1)
+            System.out.println("Waiting for " + missing + " player ...");
+        else
+            System.out.println("Waiting for " + missing + " players ...");
+    }
+
+    static void printStartGame(){
+        System.out.println("Game starts!");
+    }
 }

@@ -132,7 +132,14 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onWaitingUpdate(WaitingUpdate update) {
+        if (update.isTypeOfAction()) Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
+        else Platform.runLater(() -> waitingRoomController.playerDisconnected(update.getNickname()));
 
+        if (update.getMissing() != 0) Platform.runLater(() -> waitingRoomController.waitingForPlayers(update.getMissing()));
+        else {
+            Platform.runLater(() -> waitingRoomController.startGame());
+            Platform.runLater(() -> lobbyController.endWindow());
+        }
     }
 
     @Override
@@ -172,16 +179,16 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onDisconnection() {
-
-    }
-
-    public String getNickname(){
-        return nickname;
+        System.exit(0);
     }
 
     @Override
     public void start() {
         startGUI();
+    }
+
+    public String getNickname(){
+        return nickname;
     }
 
     public void receiveController(LoginController controller){

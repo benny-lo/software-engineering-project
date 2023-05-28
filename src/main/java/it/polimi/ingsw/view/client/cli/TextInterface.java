@@ -154,8 +154,8 @@ public class TextInterface extends ClientView implements InputReceiver {
         if (update.isTypeOfAction()) printPlayerJustConnected(update.getNickname());
         else printPlayerJustDisconnected(update.getNickname());
 
-        if (update.getMissing() != 0) System.out.println("Waiting for " + update.getMissing() + " players ...");
-        else System.out.println("Game starts!");
+        if (update.getMissing() != 0) printNumberMissingPlayers(update.getMissing());
+        else printStartGame();
 
         System.out.flush();
     }

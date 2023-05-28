@@ -38,10 +38,7 @@ public class LobbyController implements Initializable {
     @FXML
     private Label displayNicknameLabel;
 
-    private FXMLLoader fxmlLoader;
     private Stage stage;
-    private Scene scene;
-    private Parent root;
     private GameInfo currentSelectedGame;
 
     public static void startLobbyController(GUInterface guInterface){
@@ -74,14 +71,18 @@ public class LobbyController implements Initializable {
 
     public void successfulCreateOrSelectGame(){
         try {
-            fxmlLoader = new FXMLLoader(getClass().getResource("/gui/WaitingRoom.fxml"));
-            root = fxmlLoader.load();
-            scene = new Scene(root);
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/WaitingRoom.fxml"));
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void endWindow(){
+        stage.close();
     }
 
     @Override
