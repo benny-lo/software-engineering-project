@@ -1,17 +1,21 @@
 package it.polimi.ingsw.view.client.gui;
 
 import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
+import it.polimi.ingsw.view.client.gui.controllers.GameController;
 import it.polimi.ingsw.view.client.gui.controllers.LobbyController;
 import it.polimi.ingsw.view.client.gui.controllers.LoginController;
 import it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController;
 import javafx.application.Platform;
 
 import java.util.List;
+import java.util.Map;
 
 import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
+import static it.polimi.ingsw.view.client.gui.controllers.GameController.startGameController;
 import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startLobbyController;
 import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
 import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
@@ -21,12 +25,14 @@ public class GUInterface extends ClientView {
     private LoginController loginController;
     private LobbyController lobbyController;
     private WaitingRoomController waitingRoomController;
+    private GameController gameController;
 
     public GUInterface() {
         super();
         startLoginController(this);
         startLobbyController(this);
         startWaitingRoomController(this);
+        startGameController(this);
     }
 
     @Override
@@ -122,7 +128,11 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
-
+        Map<Position, Item> ups = update.getLivingRoomUpdate();
+        for (Position p : ups.keySet()) {
+            livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
+        }
+        Platform.runLater(() -> gameController.setLivingroomGridPane(livingRoom));
     }
 
     @Override
@@ -202,4 +212,8 @@ public class GUInterface extends ClientView {
     public void receiveController(WaitingRoomController controller){
         waitingRoomController = controller;
     }
+    public void receiveController(GameController controller){
+        gameController = controller;
+    }
+
 }
