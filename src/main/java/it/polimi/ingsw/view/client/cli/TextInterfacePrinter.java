@@ -187,12 +187,31 @@ class TextInterfacePrinter {
      * @param bookshelves - the bookshelves that need to be printed.
      */
     static void printBookshelves(Map<String, Item[][]> bookshelves) {
-        if (bookshelves == null)
-            return;
+        Item[][] array;
+        int length=6, nPlayers=0;
+        if (bookshelves == null) return;
+        System.out.println("These are the respective Bookshelves of: ");
         for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
-            System.out.println(entry.getKey() + "'s bookshelf:");
-            printBookshelfOrPersonalGoalCard(entry.getValue());
+            System.out.print(entry.getKey() + " ");
+            nPlayers++;
         }
+        System.out.println();
+        for (int i = length - 1; i >= 0; i--) {
+            System.out.print(i + " ");
+            for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
+                array=entry.getValue();
+                for (int j = 0; j < array[i].length; j++) {
+                    printItem(array[i][j]);
+                }
+                System.out.print("    ");
+            }
+            System.out.println();
+        }
+        for(int i=0; i<nPlayers; i++){
+            System.out.print("  0 1 2 3 4   ");
+        }
+        System.out.println();
+        System.out.println();
     }
 
     /**
