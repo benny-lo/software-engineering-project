@@ -60,7 +60,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
-
+        clientConnection.send(message);
     }
 
     @Override
@@ -179,7 +179,8 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onStartTurnUpdate(StartTurnUpdate update) {
-
+        currentPlayer = update.getCurrentPlayer();
+        Platform.runLater(() -> gameController.setCurrentPlayer(update.getCurrentPlayer()));
     }
 
     @Override

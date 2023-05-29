@@ -1,54 +1,57 @@
 package it.polimi.ingsw.view.client.gui.controllers;
 
 import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.image.Image;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+
 public class GameController implements Initializable {
+    private static GUInterface guInterface;
     final private String CUP= "gui/17_MyShelfie_BGA/item_tiles/Trofei1.1.png";
     final private String CAT= "gui/17_MyShelfie_BGA/item_tiles/Gatti1.1.png";
     final private String BOOK= "gui/17_MyShelfie_BGA/item_tiles/Libri1.1.png";
     final private String PLANT= "gui/17_MyShelfie_BGA/item_tiles/Piante1.1.png";
     final private String GAME= "gui/17_MyShelfie_BGA/item_tiles/Giochi1.1.png";
     final private String FRAME= "gui/17_MyShelfie_BGA/item_tiles/Cornici1.1.png";
-    private final Image cup = new Image(CUP);
-    private final Image cat = new Image(CAT);
-    private final Image book = new Image(BOOK);
-    private final Image plant = new Image(PLANT);
-    private final Image game = new Image(GAME);
-    private final Image frame = new Image(FRAME);
-    private static GUInterface guInterface;
+    private List<Position> selectedItems;
+    private String currentPlayer;
 
     @FXML
     private GridPane livingroomGridPane;
+    @FXML
+    private Button sendButton;
+    @FXML
+    private Button selectButton;
+
+    //TODO: grid buttons dont work
     public static void startGameController(GUInterface guInterface){
         GameController.guInterface=guInterface;
     }
     public void setLivingroomGridPane(Item[][] livingroom){
-        System.out.println("SetLivingroom");
         if(livingroom==null) return;
-        for(int i=livingroom.length-1; i>=0; i--){
+        for(int i=0; i<livingroom.length; i++){
             for(int j=0; j<livingroom.length; j++){
-                setTile(livingroom[i][j], i, j);
+                setTile(livingroom[i][j], j, i);
             }
         }
+        GridPane.setFillWidth(selectButton, true);
+        GridPane.setFillHeight(selectButton, true);
+        livingroomGridPane.getChildren().addAll(selectButton);
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        guInterface.receiveController(this);
-    }
-
-    public void setTile(Item item, int column, int row){
+    private void setTile(Item item, int column, int row){
         if(item==null) return;
-        System.out.println(item + " " + column + " " + row);
         String image;
         switch (item){
             case CAT -> image=CAT;
@@ -64,5 +67,24 @@ public class GameController implements Initializable {
         imageView.setFitWidth(50);
         imageView.setPreserveRatio(true);
         livingroomGridPane.add(imageView, column, row);
+    }
+    public void setCurrentPlayer(String currentPlayer){
+        this.currentPlayer = currentPlayer;
+    }
+
+    public void selectItems() throws IOException {
+        if (!guInterface.getNickname().equals(currentPlayer)) return;
+        //Position position = new Position((int) round(selectButton.getWidth()),(int) round(selectButton.getHeight()));
+        //System.out.println("stai cliccando" + position);
+        //selectedItems.add(position);
+    }
+    public void selectFromLivingRoom() throws IOException{
+        if (selectedItems.size() < 1 || selectedItems.size() > 3) return;
+        guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        guInterface.receiveController(this);
     }
 }
