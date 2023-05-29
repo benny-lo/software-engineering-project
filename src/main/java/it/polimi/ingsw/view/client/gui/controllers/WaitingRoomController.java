@@ -14,7 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.view.client.gui.GUILauncher.logout;
+import static it.polimi.ingsw.view.client.gui.controllers.Utils.logout;
+
 
 //TODO: the view list doesn't receive the players that had already entered the game
 public class WaitingRoomController implements Initializable {
