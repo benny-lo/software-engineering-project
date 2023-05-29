@@ -51,8 +51,8 @@ public class WaitingRoomController implements Initializable {
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.setTitle("MyShelfie");
-            stage.setWidth(1920);
-            stage.setHeight(1080);
+            stage.setWidth(1080);
+            stage.setHeight(720);
             stage.show();
 
             stage.setOnCloseRequest(event -> {event.consume();
