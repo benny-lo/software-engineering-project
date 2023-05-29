@@ -16,8 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionTCP implements ServerConnection, Runnable {
-    private static final int PERIOD = 2000;
-    private final Timer serverTimer;
+    private static final int RTT = 1000;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep clientBeep;
@@ -26,7 +25,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     private final ObjectOutputStream out;
 
     public ServerConnectionTCP(Socket socket) throws IOException {
-        serverTimer = new Timer();
         clientTimer = new Timer();
         beepLock = new Object();
         this.socket = socket;
@@ -39,24 +37,13 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            scheduleTimers();
+            scheduleTimer();
 
             while (true) {
                 input = in.readObject();
                 receive(input);
             }
-        } catch (IOException | ClassNotFoundException e) {
-            clientTimer.cancel();
-            synchronized (socket) {
-                try {
-                    socket.close();
-                } catch (IOException ignored) {
-                }
-            }
-            receiver.disconnect();
-        }
-
-        clientTimer.cancel();
+        } catch (IOException | ClassNotFoundException ignored) {}
     }
 
     @Override
@@ -82,7 +69,6 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 clientBeep = (Beep) input;
             }
             sendPrivate(new Beep());
-            synchronized (System.out) {System.out.println("got and sent beep from client");}
         }
     }
 
@@ -168,13 +154,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         sendPrivate(acceptedInsertion);
     }
 
-    private void scheduleTimers() {
-        serverTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                sendPrivate(new Beep());
-            }
-        }, 0, PERIOD);
+    private void scheduleTimer() {
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -191,8 +171,9 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                     }
                 }
                 clientTimer.cancel();
+
                 receiver.disconnect();
             }
-        }, PERIOD/2, PERIOD);
+        }, RTT/2, 2*RTT);
     }
 }

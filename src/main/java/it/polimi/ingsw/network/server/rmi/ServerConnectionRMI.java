@@ -17,11 +17,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
-    private static final int PERIOD = 30000;
+    private static final int RTT = 1000;
     private final Queue<Message> sendingQueue;
     private ServerInputViewInterface receiver;
     private final ClientConnectionRMIInterface client;
-    private final Timer serverTimer;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep clientBeep;
@@ -30,25 +29,11 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         super();
         this.sendingQueue = new ArrayDeque<>();
         this.client = client;
-        this.serverTimer = new Timer();
         this.clientTimer = new Timer();
         this.beepLock = new Object();
     }
 
     public void start() {
-        serverTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    client.receive(new Beep());
-                } catch (RemoteException ignored) {
-                    serverTimer.cancel();
-                    clientTimer.cancel();
-                    receiver.disconnect();
-                }
-            }
-        }, PERIOD/2, PERIOD);
-
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -58,9 +43,11 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                         return;
                     }
                 }
+
+                clientTimer.cancel();
                 receiver.disconnect();
             }
-        }, PERIOD/2, PERIOD);
+        }, RTT/2, 2*RTT);
 
         (new Thread(() -> {
             Message message;
@@ -69,8 +56,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                     while (sendingQueue.isEmpty()) {
                         try {
                             sendingQueue.wait();
-                        } catch (InterruptedException ignored) {
-                        }
+                        } catch (InterruptedException ignored) {}
                     }
                     message = sendingQueue.poll();
                 }
@@ -152,6 +138,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         synchronized (beepLock) {
             this.clientBeep = beep;
         }
+        client.receive(new Beep());
     }
 
     @Override

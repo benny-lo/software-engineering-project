@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
-    private static final int PERIOD = 30000;
+    private static final int RTT = 1000;
     private ServerConnectionRMIInterface serverConnectionRMIInterface;
     private final ClientUpdateViewInterface receiver;
     private final Timer serverTimer;
@@ -31,19 +31,6 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     public void scheduleTimers() {
-        clientTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                try {
-                    serverConnectionRMIInterface.beep(new Beep());
-                } catch (RemoteException e) {
-                    clientTimer.cancel();
-                    serverTimer.cancel();
-                    receiver.onDisconnection();
-                }
-            }
-        }, 0, PERIOD);
-
         serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -53,11 +40,21 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                         return;
                     }
                 }
+
                 serverTimer.cancel();
                 clientTimer.cancel();
                 receiver.onDisconnection();
             }
-        }, PERIOD/2, PERIOD);
+        }, RTT, 2*RTT);
+
+        clientTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    serverConnectionRMIInterface.beep(new Beep());
+                } catch (RemoteException ignored) {}
+            }
+        }, 0, 2*RTT);
     }
 
     public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {
@@ -68,66 +65,42 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     public void send(Nickname message) {
         try {
             serverConnectionRMIInterface.login(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-        }
+        } catch (RemoteException ignored) {}
     }
 
     @Override
     public void send(GameInitialization message) {
         try {
             serverConnectionRMIInterface.createGame(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-        }
+        } catch (RemoteException ignored) {}
     }
 
     @Override
     public void send(GameSelection message) {
         try {
             serverConnectionRMIInterface.selectGame(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-        }
+        } catch (RemoteException ignored) {}
     }
 
     @Override
     public void send(LivingRoomSelection message) {
         try {
             serverConnectionRMIInterface.selectFromLivingRoom(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-        }
+        } catch (RemoteException ignored) {}
     }
 
     @Override
     public void send(BookshelfInsertion message) {
         try {
             serverConnectionRMIInterface.insertInBookshelf(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-        }
+        } catch (RemoteException ignored) {}
     }
 
     @Override
     public void send(ChatMessage message) {
         try {
             serverConnectionRMIInterface.writeChat(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-        }
+        } catch (RemoteException ignored) {}
     }
 
     @Override
