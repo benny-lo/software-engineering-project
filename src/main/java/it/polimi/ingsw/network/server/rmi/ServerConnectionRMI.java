@@ -17,7 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
-    private static final int PERIOD = 2000;
+    private static final int PERIOD = 30000;
     private final Queue<Message> sendingQueue;
     private ServerInputViewInterface receiver;
     private final ClientConnectionRMIInterface client;
@@ -47,7 +47,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                     receiver.disconnect();
                 }
             }
-        }, 0, PERIOD);
+        }, PERIOD/2, PERIOD);
 
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override

@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LobbyController">
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1465.0" layoutY="14.0" prefHeight="175.0" prefWidth="417.0" text="Lobby">
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="676.0" layoutY="41.0" prefHeight="133.0" prefWidth="332.0" text="Lobby">
       <font>
          <Font size="48.0" />
       </font>

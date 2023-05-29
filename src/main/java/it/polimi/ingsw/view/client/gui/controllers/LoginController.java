@@ -25,6 +25,8 @@ public class LoginController implements Initializable {
     private TextField usernameField;
     @FXML
     private Label welcomeText;
+    @FXML
+    private Label errorLabel;
 
     private Stage stage;
 
@@ -34,14 +36,12 @@ public class LoginController implements Initializable {
     }
 
     public void failedLogin() {
-        welcomeText.setText("Login failed. Try again!");
+        errorLabel.setText("Login failed. Try again!");
     }
     public void invalidNickname() {
-        welcomeText.setText("""
-                This nickname is incorrect!
-                It can only contains
-                alphanumeric characters
-                and underscores.""");
+        errorLabel.setText("""
+                This nickname is incorrect! It can only contains
+                alphanumeric characters and underscores.""");
     }
 
     public void successfulLogin() {

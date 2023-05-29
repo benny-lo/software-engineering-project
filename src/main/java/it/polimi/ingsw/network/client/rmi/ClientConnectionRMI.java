@@ -14,7 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
-    private static final int PERIOD = 2000;
+    private static final int PERIOD = 30000;
     private ServerConnectionRMIInterface serverConnectionRMIInterface;
     private final ClientUpdateViewInterface receiver;
     private final Timer serverTimer;
