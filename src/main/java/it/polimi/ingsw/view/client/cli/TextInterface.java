@@ -436,7 +436,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public void writeChat(ChatMessage message) {
         synchronized (this) {
-            if (status != ClientStatus.GAME) {
+            if (status != ClientStatus.CHAT) {
                 printWrongStatus();
                 System.out.flush();
                 return;
