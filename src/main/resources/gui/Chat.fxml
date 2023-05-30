@@ -6,15 +6,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.ChatController">
-   <children>
-      <VBox fx:id="chatVBox" layoutX="-1.0" layoutY="-1.0" prefHeight="323.0" prefWidth="600.0" AnchorPane.bottomAnchor="77.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <Label fx:id="sendLabel" layoutX="-1.0" layoutY="324.0" prefHeight="76.0" prefWidth="516.0">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Label>
-      <Button fx:id="sendButton" layoutX="520.0" layoutY="340.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="66.0" text="Send" />
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.ChatController">
+   <VBox fx:id="chatVBox" layoutX="-1.0" layoutY="-1.0" prefHeight="323.0" prefWidth="600.0" AnchorPane.bottomAnchor="77.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   <Label fx:id="sendLabel" layoutX="-1.0" layoutY="324.0" prefHeight="67.0" prefWidth="495.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <Button fx:id="sendButton" layoutX="520.0" layoutY="340.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="66.0" text="Send" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="13.599999999999994" />
 </AnchorPane>

@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.GameController">
-   <ImageView fx:id="Background" fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.GameController">
+   <ImageView fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
       <Image url="@17_MyShelfie_BGA/misc/sfondo_parquet.jpg" />
    </ImageView>
    <ImageView fitHeight="526.0" fitWidth="529.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
@@ -42,9 +42,7 @@
      </rowConstraints>
    </GridPane>
    <ImageView fitHeight="326.0" fitWidth="351.0" layoutX="610.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@17_MyShelfie_BGA/boards/bookshelf.png" />
-      </image>
+       <Image url="@17_MyShelfie_BGA/boards/bookshelf.png" />
    </ImageView>
    <Button fx:id="sendButton" layoutX="454.0" layoutY="554.0" mnemonicParsing="false" onAction="#selectFromLivingRoom" prefHeight="37.0" prefWidth="61.0" text="Select" />
    <Label fx:id="currentPlayerLabel" layoutX="577.0" layoutY="23.0" prefHeight="114.0" prefWidth="454.0">
@@ -52,6 +50,6 @@
          <Font size="36.0" />
       </font>
    </Label>
-   <Button fx:id="bookshelvesButton" layoutX="977.0" layoutY="339.0" mnemonicParsing="false" onAction="#openBookshelves" text="Go to&#10;Bookshelves" />
-   <Button fx:id="enterChatButton" layoutX="972.0" layoutY="660.0" mnemonicParsing="false" onAction="#enterChat" prefHeight="27.0" prefWidth="91.0" text="Enter Chat" />
+   <Button fx:id="bookshelvesButton" layoutX="977.0" layoutY="339.0" mnemonicParsing="false" onAction="#openBookshelves" text="Go to&#10;Bookshelves" AnchorPane.rightAnchor="21.400000000000006" />
+   <Button fx:id="enterChatButton" layoutX="972.0" layoutY="660.0" mnemonicParsing="false" onAction="#enterChat" prefHeight="27.0" prefWidth="91.0" text="Enter Chat" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="25.0" />
 </AnchorPane>
