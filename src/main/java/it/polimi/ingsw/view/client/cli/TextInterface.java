@@ -79,8 +79,9 @@ public class TextInterface extends ClientView implements InputReceiver {
     public synchronized void onAcceptedInsertion(AcceptedInsertion message) {
         if (!message.isAccepted()){
             printDeniedAction();
+        }else {
+            printGameRep();
         }
-        printGameRep();
         System.out.flush();
     }
 
@@ -103,7 +104,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public synchronized void onItemsSelected(ItemsSelected message) {
         itemsChosen = message.getItems();
         if (itemsChosen == null) printInvalidSelection();
-        if (status != ClientStatus.CHAT) {
+        else if (status != ClientStatus.CHAT) {
             clearScreen();
             printGameRep();
         }
