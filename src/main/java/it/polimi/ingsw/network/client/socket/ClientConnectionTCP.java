@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientConnectionTCP implements ClientConnection, Runnable {
-    private static final int PERIOD = 2000;
+    private static final int RTT = 1000;
     private final Socket socket;
     private final ClientUpdateViewInterface receiver;
     private final ObjectOutputStream out;
@@ -113,40 +113,17 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                 input = in.readObject();
                 receive(input);
             }
-        } catch (IOException | ClassNotFoundException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-            synchronized (socket) {
-                try {
-                    socket.close();
-                } catch (IOException ignored) {}
-            }
-        }
-
-        serverTimer.cancel();
-        clientTimer.cancel();
+        } catch (IOException | ClassNotFoundException ignored) {}
     }
 
     private synchronized void sendPrivate(Message message) {
         try {
             out.writeObject(message);
             out.flush();
-        } catch (IOException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
-        }
+        } catch (IOException ignored) {}
     }
 
     private void scheduleTimers() {
-        clientTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                sendPrivate(new Beep());
-            }
-        }, 0, PERIOD);
-
         serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -156,14 +133,24 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                         return;
                     }
                 }
+
                 synchronized (socket) {
                     try {
                         socket.close();
                     } catch (IOException ignored) {
                     }
                 }
+
+                serverTimer.cancel();
+                clientTimer.cancel();
                 receiver.onDisconnection();
             }
-        }, PERIOD/2, PERIOD);
+        }, RTT, 2*RTT);
+        clientTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                sendPrivate(new Beep());
+            }
+        }, 0, 2*RTT);
     }
 }
