@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -32,7 +33,7 @@ public class GameController implements Initializable {
     final private String PLANT= "gui/17_MyShelfie_BGA/item_tiles/Piante1.1.png";
     final private String GAME= "gui/17_MyShelfie_BGA/item_tiles/Giochi1.1.png";
     final private String FRAME= "gui/17_MyShelfie_BGA/item_tiles/Cornici1.1.png";
-    private List<Position> selectedItems;
+    private List<Position> selectedItems=new ArrayList<>();
     private String currentPlayer;
     private final int cellSizeLivingroom = 50;
     @FXML
@@ -146,7 +147,7 @@ public class GameController implements Initializable {
         livingRoomGridPane.getChildren().removeIf( node -> GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row);
     }
 
-    private void clearSelectedPositions() {
-        for (Position selectedItem : selectedItems) clearNodeByColumnRow(selectedItem.getColumn(), selectedItem.getRow());
+    private void clearTilesList(List<Position> tiles) {
+        for (Position selectedItem : tiles) clearNodeByColumnRow(selectedItem.getColumn(), selectedItem.getRow());
     }
 }
