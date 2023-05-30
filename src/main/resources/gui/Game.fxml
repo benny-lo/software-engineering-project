@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.GameController">
    <ImageView fx:id="Background" fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -15,49 +17,41 @@
    <ImageView fitHeight="526.0" fitWidth="529.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="10.0">
       <Image url="@17_MyShelfie_BGA/boards/livingroom.png" />
    </ImageView>
-   <GridPane fx:id="livingroomGridPane" layoutX="37.0" layoutY="33.0" onMouseClicked="#selectItems" prefHeight="481.0" prefWidth="478.0" AnchorPane.leftAnchor="37.0" AnchorPane.topAnchor="33.0">
+   <GridPane fx:id="livingRoomGridPane" hgap="3.0" layoutX="35.0" layoutY="32.0" onMouseClicked="#selectItems" prefHeight="479.0" prefWidth="481.0" vgap="3.0" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="32.0">
      <columnConstraints>
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="50.0" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="91.0" minWidth="10.0" prefWidth="52.80000610351563" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="67.80000000000001" minWidth="0.0" prefWidth="55.199993896484386" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="82.4000244140625" minWidth="0.0" prefWidth="51.199987792968756" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.19995117187497" minWidth="10.0" prefWidth="52.79997558593749" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.20001220703125" minWidth="10.0" prefWidth="52.79996337890623" />
-         <ColumnConstraints hgrow="SOMETIMES" maxWidth="68.20001220703125" minWidth="10.0" prefWidth="56.0" />
-       <ColumnConstraints hgrow="SOMETIMES" maxWidth="103.199951171875" minWidth="10.0" prefWidth="52.0" />
-       <ColumnConstraints hgrow="SOMETIMES" maxWidth="72.0" minWidth="10.0" prefWidth="60.79997558593749" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="49.0" prefWidth="49.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
      </columnConstraints>
      <rowConstraints>
-         <RowConstraints maxHeight="1.7976931348623157E308" minHeight="50.0" prefHeight="53.60001220703125" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="70.79999389648438" minHeight="10.0" prefHeight="51.199999999999996" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="93.39999999999999" minHeight="10.0" prefHeight="54.400000000000006" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="103.19998779296876" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="92.79999999999998" minHeight="10.0" prefHeight="53.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="83.19999999999999" minHeight="10.0" prefHeight="52.800018310546875" vgrow="SOMETIMES" />
-       <RowConstraints maxHeight="64.5999755859375" minHeight="10.0" prefHeight="51.20001831054685" vgrow="NEVER" />
-       <RowConstraints maxHeight="63.99997558593748" minHeight="10.0" prefHeight="52.79995117187502" vgrow="SOMETIMES" />
-       <RowConstraints fillHeight="false" maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="56.800048828125" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+       <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="NEVER" />
+       <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+       <RowConstraints fillHeight="false" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
      </rowConstraints>
    </GridPane>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fitHeight="326.0" fitWidth="351.0" layoutX="610.0" layoutY="273.0" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@17_MyShelfie_BGA/boards/bookshelf.png" />
       </image>
    </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="162.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@17_MyShelfie_BGA/boards/bookshelf.png" />
-      </image>
-   </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="458.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@17_MyShelfie_BGA/boards/bookshelf.png" />
-      </image>
-   </ImageView>
-   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="310.0" layoutY="556.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@17_MyShelfie_BGA/boards/bookshelf.png" />
-      </image>
-   </ImageView>
-   <Button fx:id="sendButton" layoutX="572.0" layoutY="74.0" mnemonicParsing="false" onAction="#selectFromLivingRoom" prefHeight="37.0" prefWidth="61.0" text="Select" />
+   <Button fx:id="sendButton" layoutX="454.0" layoutY="554.0" mnemonicParsing="false" onAction="#selectFromLivingRoom" prefHeight="37.0" prefWidth="61.0" text="Select" />
+   <Label fx:id="currentPlayerLabel" layoutX="577.0" layoutY="23.0" prefHeight="114.0" prefWidth="454.0">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Label>
+   <Button fx:id="bookshelvesButton" layoutX="977.0" layoutY="339.0" mnemonicParsing="false" onAction="#openBookshelves" text="Go to&#10;Bookshelves" />
+   <Button fx:id="enterChatButton" layoutX="972.0" layoutY="660.0" mnemonicParsing="false" onAction="#enterChat" prefHeight="27.0" prefWidth="91.0" text="Enter Chat" />
 </AnchorPane>

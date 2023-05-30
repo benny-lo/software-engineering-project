@@ -5,16 +5,14 @@ import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
-import it.polimi.ingsw.view.client.gui.controllers.GameController;
-import it.polimi.ingsw.view.client.gui.controllers.LobbyController;
-import it.polimi.ingsw.view.client.gui.controllers.LoginController;
-import it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController;
+import it.polimi.ingsw.view.client.gui.controllers.*;
 import javafx.application.Platform;
 
 import java.util.List;
 import java.util.Map;
 
 import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
+import static it.polimi.ingsw.view.client.gui.controllers.ChatController.startChatController;
 import static it.polimi.ingsw.view.client.gui.controllers.GameController.startGameController;
 import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startLobbyController;
 import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
@@ -26,6 +24,7 @@ public class GUInterface extends ClientView {
     private LobbyController lobbyController;
     private WaitingRoomController waitingRoomController;
     private GameController gameController;
+    private ChatController chatController;
 
     public GUInterface() {
         super();
@@ -33,6 +32,7 @@ public class GUInterface extends ClientView {
         startLobbyController(this);
         startWaitingRoomController(this);
         startGameController(this);
+        startChatController(this);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public void writeChat(ChatMessage message) {
-
+        clientConnection.send(message);
     }
 
     @Override
@@ -132,7 +132,7 @@ public class GUInterface extends ClientView {
         for (Position p : ups.keySet()) {
             livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
         }
-        Platform.runLater(() -> gameController.setLivingroomGridPane(livingRoom));
+        Platform.runLater(() -> gameController.setLivingRoomGridPane(livingRoom));
     }
 
     @Override
@@ -215,6 +215,10 @@ public class GUInterface extends ClientView {
     }
     public void receiveController(GameController controller){
         gameController = controller;
+    }
+
+    public void receiveController(ChatController controller){
+        chatController = controller;
     }
 
 }
