@@ -4,7 +4,6 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,7 +16,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -36,7 +34,7 @@ public class GameController implements Initializable {
     final private String FRAME= "gui/17_MyShelfie_BGA/item_tiles/Cornici1.1.png";
     private List<Position> selectedItems;
     private String currentPlayer;
-    private int cellSize = 50;
+    private final int cellSizeLivingroom = 50;
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -99,7 +97,7 @@ public class GameController implements Initializable {
         }
         if(image==null) return;
         ImageView imageView= new ImageView(image);
-        imageView.setFitWidth(50);
+        imageView.setFitWidth(cellSizeLivingroom);
         imageView.setPreserveRatio(true);
         livingRoomGridPane.add(imageView, column, row);
     }
@@ -142,5 +140,13 @@ public class GameController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         guInterface.receiveController(this);
+    }
+
+    public void clearNodeByColumnRow(int column, int row){
+        livingRoomGridPane.getChildren().removeIf( node -> GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row);
+    }
+
+    private void clearSelectedPositions() {
+        for (Position selectedItem : selectedItems) clearNodeByColumnRow(selectedItem.getColumn(), selectedItem.getRow());
     }
 }
