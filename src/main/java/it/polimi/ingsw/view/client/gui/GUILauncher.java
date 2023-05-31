@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import static it.polimi.ingsw.view.client.gui.controllers.Utils.logout;
+import static it.polimi.ingsw.utils.gui.CloseWindow.logout;
 
 
 public class GUILauncher extends Application{

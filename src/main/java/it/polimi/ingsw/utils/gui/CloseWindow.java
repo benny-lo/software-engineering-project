@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.client.gui.controllers;
+package it.polimi.ingsw.utils.gui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 //TODO: find a better name for this class
 
-public class Utils {
+public class CloseWindow {
     public static void logout(Stage stage) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout");

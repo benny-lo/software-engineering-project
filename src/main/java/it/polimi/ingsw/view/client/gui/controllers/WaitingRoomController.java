@@ -8,14 +8,13 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.view.client.gui.controllers.Utils.logout;
+import static it.polimi.ingsw.utils.gui.CloseWindow.logout;
 
 
 //TODO: the view list doesn't receive the players that had already entered the game
