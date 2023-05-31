@@ -115,7 +115,7 @@ public class Controller implements ActionListener {
      */
     private void notifyBookshelvesToEverybody() {
         for (BookshelfListener bookshelfListener : bookshelfListeners) {
-            if (!bookshelfListener.hasChanged()) return;
+            if (!bookshelfListener.hasChanged()) continue;
             Map<Position, Item> map = bookshelfListener.getBookshelf();
             BookshelfUpdate update = new BookshelfUpdate(bookshelfListener.getOwner(), map);
             for (ServerUpdateViewInterface v : views) {

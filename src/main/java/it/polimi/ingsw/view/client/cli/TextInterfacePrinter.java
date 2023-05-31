@@ -20,12 +20,16 @@ class TextInterfacePrinter {
 
     /**
      * This method prints the current player
+     * @param nickname - the nickname of the player owning the view that calls this method.
      * @param currentPlayer - the current player that needs to be printed
      */
-    static void printCurrentPlayer(String currentPlayer){
-        if (currentPlayer == null)
-            return;
-        System.out.println(ANSI_RED + "The current player is " + currentPlayer + ANSI_RESET + "\n");
+    static void printCurrentPlayer(String nickname, String currentPlayer){
+        if (currentPlayer == null) return;
+        if (currentPlayer.equals(nickname)) {
+            System.out.println(ANSI_RED + "You are the current player" + ANSI_RESET + "\n");
+        } else {
+            System.out.println(ANSI_RED + "The current player is " + currentPlayer + ANSI_RESET + "\n");
+        }
     }
 
     /**
