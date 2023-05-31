@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import it.polimi.ingsw.utils.message.server.GameInfo;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -378,7 +379,14 @@ class TextInterfacePrinter {
         }
     }
 
-    static void printNumberMissingPlayers(int missing){
+    static void printNumberMissingPlayers(int missing, Collection<String> connectedPlayers){
+        if (connectedPlayers == null) return;
+
+        System.out.println("Connected players: ");
+        for (String player : connectedPlayers) {
+            System.out.println(player);
+        }
+
         if (missing == 1)
             System.out.println("Waiting for " + missing + " player ...");
         else

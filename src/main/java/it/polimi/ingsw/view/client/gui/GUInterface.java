@@ -39,7 +39,7 @@ public class GUInterface extends ClientView {
     public void login(Nickname message) {
         synchronized (this) {
             String nickname = message.getNickname();
-            if (!isValidNickname(nickname)) {
+            if (isNicknameValid(nickname)) {
                 Platform.runLater(() -> loginController.invalidNickname());
                 return;
             }
@@ -69,12 +69,10 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void writeChat(ChatMessage message) {
-        clientConnection.send(message);
-    }
+    public void writeChat(ChatMessage message) {clientConnection.send(message);}
 
     @Override
-    public void onGamesList(GamesList message) {
+    public synchronized void onGamesList(GamesList message) {
         List<GameInfo> games = message.getAvailable();
 
         if (games == null) {
@@ -89,7 +87,7 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onGameData(GameData message) {
+    public synchronized void onGameData(GameData message) {
         if (message.getNumberPlayers() == -1 ||
                 message.getNumberCommonGoalCards() == -1 ||
                 message.getBookshelvesColumns() == -1 ||
@@ -104,10 +102,11 @@ public class GUInterface extends ClientView {
 
         //maybe we don't need of all these attributes
         numberPlayers = message.getNumberPlayers();
-        numberCommonGoalCards = message.getNumberCommonGoalCards();
+        for (String Player : message.getConnectedPlayers()) {
+            Platform.runLater(() -> waitingRoomController.playerConnected(Player));
+        }
         livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
-        bookshelvesRows = message.getBookshelvesRows();
-        bookshelvesColumns = message.getBookshelvesColumns();
+        numberCommonGoalCards = message.getNumberCommonGoalCards();
         personalGoalCard = new Item[bookshelvesRows][bookshelvesColumns];
     }
 
@@ -127,7 +126,7 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onLivingRoomUpdate(LivingRoomUpdate update) {
+    public synchronized void onLivingRoomUpdate(LivingRoomUpdate update) {
         Map<Position, Item> ups = update.getLivingRoomUpdate();
         for (Position p : ups.keySet()) {
             livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
@@ -141,9 +140,12 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onWaitingUpdate(WaitingUpdate update) {
-        if (update.isTypeOfAction()) Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
-        else Platform.runLater(() -> waitingRoomController.playerDisconnected(update.getNickname()));
+    public synchronized void onWaitingUpdate(WaitingUpdate update) {
+        if (update.isTypeOfAction()) {
+            Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
+        } else {
+            Platform.runLater(() -> waitingRoomController.playerDisconnected(update.getNickname()));
+        }
 
         if (update.getMissing() != 0) Platform.runLater(() -> waitingRoomController.waitingForPlayers(update.getMissing()));
         else {
@@ -178,7 +180,7 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onStartTurnUpdate(StartTurnUpdate update) {
+    public synchronized void onStartTurnUpdate(StartTurnUpdate update) {
         currentPlayer = update.getCurrentPlayer();
         Platform.runLater(() -> gameController.setCurrentPlayer(update.getCurrentPlayer()));
     }
@@ -198,26 +200,26 @@ public class GUInterface extends ClientView {
         startGUI();
     }
 
-    public String getNickname(){
+    public synchronized String getNickname(){
         return nickname;
     }
 
-    public void receiveController(LoginController controller){
+    public synchronized void receiveController(LoginController controller){
         loginController = controller;
     }
 
-    public void receiveController(LobbyController controller){
+    public synchronized void receiveController(LobbyController controller){
         lobbyController = controller;
     }
 
-    public void receiveController(WaitingRoomController controller){
+    public synchronized void receiveController(WaitingRoomController controller){
         waitingRoomController = controller;
     }
-    public void receiveController(GameController controller){
+    public synchronized void receiveController(GameController controller){
         gameController = controller;
     }
 
-    public void receiveController(ChatController controller){
+    public synchronized void receiveController(ChatController controller){
         chatController = controller;
     }
 

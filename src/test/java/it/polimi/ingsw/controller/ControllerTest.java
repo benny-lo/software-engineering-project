@@ -43,8 +43,8 @@ public class ControllerTest {
         view1.setNickname("rick");
         controller.perform(new JoinAction(view1));
 
-        assertTrue(controller.getAllPlayers().contains(view0.getNickname()));
-        assertTrue(controller.getAllPlayers().contains(view1.getNickname()));
+        assertTrue(controller.getConnectedPlayers().contains(view0.getNickname()));
+        assertTrue(controller.getConnectedPlayers().contains(view1.getNickname()));
 
         assertTrue(controller.getViews().contains(view0));
         assertTrue(controller.getViews().contains(view1));
@@ -91,7 +91,7 @@ public class ControllerTest {
         assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
         assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));
 
-        for(String player : controller.getAllPlayers()) {
+        for(String player : controller.getConnectedPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
 
@@ -136,7 +136,7 @@ public class ControllerTest {
         assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
         assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));
 
-        for(String player : controller.getAllPlayers()) {
+        for(String player : controller.getConnectedPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
 

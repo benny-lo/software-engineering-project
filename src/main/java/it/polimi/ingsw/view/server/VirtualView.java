@@ -138,7 +138,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     public synchronized void selectGame(GameSelection message) {
         synchronized (controllerLock) {
             if (controller != null) {
-                onGameData(new GameData(-1, -1, -1, -1, -1, -1));
+                onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
                 return;
             }
         }

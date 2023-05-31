@@ -152,10 +152,15 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
-        if (update.isTypeOfAction()) printPlayerJustConnected(update.getNickname());
-        else printPlayerJustDisconnected(update.getNickname());
+        if (update.isTypeOfAction()){
+            printPlayerJustConnected(update.getNickname());
+            connectedPlayers.add(update.getNickname());
+        } else {
+            printPlayerJustDisconnected(update.getNickname());
+            connectedPlayers.remove(update.getNickname());
+        }
 
-        if (update.getMissing() != 0) printNumberMissingPlayers(update.getMissing());
+        if (update.getMissing() != 0) printNumberMissingPlayers(update.getMissing(), connectedPlayers);
         else printStartGame();
 
         System.out.flush();
@@ -309,6 +314,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     public synchronized void onGameData(GameData gameData) {
         if (gameData.getNumberPlayers() == -1 ||
                 gameData.getNumberCommonGoalCards() == -1 ||
+                gameData.getConnectedPlayers() == null ||
                 gameData.getBookshelvesColumns() == -1 ||
                 gameData.getBookshelvesRows() == -1 ||
                 gameData.getLivingRoomColumns() == -1 ||
@@ -321,6 +327,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         status = ClientStatus.GAME;
 
         numberPlayers = gameData.getNumberPlayers();
+        connectedPlayers = gameData.getConnectedPlayers();
         numberCommonGoalCards = gameData.getNumberCommonGoalCards();
         livingRoom = new Item[gameData.getLivingRoomRows()][gameData.getLivingRoomColumns()];
         bookshelvesRows = gameData.getBookshelvesRows();
@@ -356,7 +363,7 @@ public class TextInterface extends ClientView implements InputReceiver {
                 return;
             }
 
-            if (!isValidNickname(nickname)) {
+            if (isNicknameValid(nickname)) {
                 printIncorrectNickname();
                 System.out.flush();
                 return;

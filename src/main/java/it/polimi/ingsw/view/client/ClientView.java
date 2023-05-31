@@ -16,10 +16,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,6 +25,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
     protected String currentPlayer;
     protected String winner;
     protected int numberPlayers;
+    protected Collection<String> connectedPlayers;
     protected int numberCommonGoalCards;
     protected Item[][] livingRoom;
     protected Map<String, Item[][]> bookshelves;
@@ -140,16 +138,16 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
      * @param nickname - the nickname that needs to be checked.
      * @return - true if the nickname is valid, false if not.
      */
-    public static boolean isValidNickname(String nickname){
+    public static boolean isNicknameValid(String nickname){
         String regex = "^[A-Za-z]\\w{0,29}$";
         Pattern pattern = Pattern.compile(regex);
 
         if (nickname == null) {
-            return false;
+            return true;
         }
 
         Matcher matcher = pattern.matcher(nickname);
 
-        return matcher.matches();
+        return !matcher.matches();
     }
 }

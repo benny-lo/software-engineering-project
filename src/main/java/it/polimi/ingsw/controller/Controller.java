@@ -281,12 +281,12 @@ public class Controller implements ActionListener {
     @Override
     public synchronized void perform(JoinAction action) {
         if (game != null || ended) {
-            action.getView().onGameData(new GameData(-1, -1, -1, -1, -1, -1));
+            action.getView().onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
             return;
         }
 
         GameConfig gameConfig = getGameConfig();
-        action.getView().onGameData(new GameData(numberPlayers, numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
+        action.getView().onGameData(new GameData(numberPlayers, getConnectedPlayers(), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
 
         playerQueue.add(action.getView().getNickname());
         views.add(action.getView());
@@ -480,10 +480,11 @@ public class Controller implements ActionListener {
         return playerQueue.size();
     }
 
-    // EXCLUSIVELY FOR TESTING
-    public List<String> getAllPlayers(){
+    public synchronized List<String> getConnectedPlayers(){
         return new LinkedList<>(playerQueue);
     }
+
+    // EXCLUSIVELY FOR TESTING
 
     public void setEnded() {
         ended = true;
