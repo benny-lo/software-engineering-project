@@ -272,6 +272,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public synchronized void onStartTurnUpdate(StartTurnUpdate update) {
         currentPlayer = update.getCurrentPlayer();
+        itemsChosen = null;
 
         if (status != ClientStatus.CHAT) {
             clearScreen();
@@ -485,7 +486,7 @@ public class TextInterface extends ClientView implements InputReceiver {
      * This method prints the text interface representation of the whole game.
      */
     private void printGameRep() {
-        printCurrentPlayer(currentPlayer);
+        printCurrentPlayer(nickname, currentPlayer);
 
         printLivingRoom(livingRoom);
         printBookshelves(bookshelves);

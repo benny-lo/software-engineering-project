@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionTCP implements ServerConnection, Runnable {
-    private static final int RTT = 1000;
+    private static final int RTT = 5000;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep clientBeep;
@@ -43,7 +43,10 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 input = in.readObject();
                 receive(input);
             }
-        } catch (IOException | ClassNotFoundException ignored) {}
+        } catch (IOException | ClassNotFoundException e) {
+            clientTimer.cancel();
+            receiver.disconnect();
+        }
     }
 
     @Override
@@ -167,11 +170,9 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 synchronized (socket) {
                     try {
                         socket.close();
-                    } catch (IOException ignored) {
-                    }
+                    } catch (IOException ignored) {}
                 }
                 clientTimer.cancel();
-
                 receiver.disconnect();
             }
         }, RTT/2, 2*RTT);

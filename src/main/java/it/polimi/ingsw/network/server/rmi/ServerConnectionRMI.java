@@ -17,7 +17,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
-    private static final int RTT = 1000;
+    private static final int RTT = 5000;
     private final Queue<Message> sendingQueue;
     private ServerInputViewInterface receiver;
     private final ClientConnectionRMIInterface client;
@@ -93,7 +93,10 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                     } else if (message instanceof ChatAccepted) {
                         client.receive((ChatAccepted) message);
                     }
-                } catch (RemoteException ignored) {}
+                } catch (RemoteException e) {
+                    clientTimer.cancel();
+                    receiver.disconnect();
+                }
             }
         })).start();
     }
@@ -138,7 +141,12 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         synchronized (beepLock) {
             this.clientBeep = beep;
         }
-        client.receive(new Beep());
+        try {
+            client.receive(new Beep());
+        } catch (RemoteException e) {
+            clientTimer.cancel();
+            receiver.disconnect();
+        }
     }
 
     @Override

@@ -16,7 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ClientConnectionTCP implements ClientConnection, Runnable {
-    private static final int RTT = 1000;
+    private static final int RTT = 5000;
     private final Socket socket;
     private final ClientUpdateViewInterface receiver;
     private final ObjectOutputStream out;
@@ -113,14 +113,22 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                 input = in.readObject();
                 receive(input);
             }
-        } catch (IOException | ClassNotFoundException ignored) {}
+        } catch (IOException | ClassNotFoundException ignored) {
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.onDisconnection();
+        }
     }
 
     private synchronized void sendPrivate(Message message) {
         try {
             out.writeObject(message);
             out.flush();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+            serverTimer.cancel();
+            clientTimer.cancel();
+            receiver.onDisconnection();
+        }
     }
 
     private void scheduleTimers() {
