@@ -34,7 +34,7 @@ public class InputHandler implements Runnable {
             } catch (IllegalStateException e) {
                 return;
             }
-
+            if (line.length() == 0) continue;
             if (line.charAt(0) != '/') {
                 inputReceiver.writeChat(new ChatMessage(line.replace("\n", "").replace("\r", ""), "all"));
                 continue;

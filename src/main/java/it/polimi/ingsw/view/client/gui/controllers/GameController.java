@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.view.client.gui.controllers.Utils.logout;
+import static it.polimi.ingsw.view.client.gui.controllers.Utils.exitChat;
 
 
 public class GameController implements Initializable {
@@ -97,7 +98,7 @@ public class GameController implements Initializable {
             default -> image=null;
         }
         if(image==null) return;
-        ImageView imageView= new ImageView(image);
+        ImageView imageView= new MyImageView(image, image, column, row);
         imageView.setFitWidth(cellSizeLivingroom);
         imageView.setPreserveRatio(true);
         livingRoomGridPane.add(imageView, column, row);
@@ -111,6 +112,7 @@ public class GameController implements Initializable {
 //    }
 
     public void selectItems(MouseEvent mouseEvent) {
+        System.out.println(livingRoomGridPane.getOnMouseClicked());
     }
 
     //CHAT
@@ -126,7 +128,7 @@ public class GameController implements Initializable {
         stage.show();
 
         stage.setOnCloseRequest(event -> {event.consume();
-                                            logout(stage);});
+                                            exitChat(stage);});
     }
 
     //BOOKSHELVES
@@ -138,11 +140,6 @@ public class GameController implements Initializable {
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        guInterface.receiveController(this);
-    }
-
     public void clearNodeByColumnRow(int column, int row){
         livingRoomGridPane.getChildren().removeIf( node -> GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row);
     }
@@ -150,4 +147,16 @@ public class GameController implements Initializable {
     private void clearTilesList(List<Position> tiles) {
         for (Position selectedItem : tiles) clearNodeByColumnRow(selectedItem.getColumn(), selectedItem.getRow());
     }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        guInterface.receiveController(this);
+        livingRoomGridPane.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                int i = 1;
+            }
+        });
+    }
+
 }

@@ -21,4 +21,17 @@ public class Utils {
             System.exit(0);
         }
     }
+
+    public static void exitChat(Stage stage) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit Chat");
+        alert.setHeaderText("You're about to leave the chat!");
+        alert.setContentText("Do you really want to exit?");
+
+        Optional<ButtonType> opt = alert.showAndWait();
+        if (opt.isPresent() && opt.get() == ButtonType.OK) {
+            stage.close();
+            System.exit(0);
+        }
+    }
 }
