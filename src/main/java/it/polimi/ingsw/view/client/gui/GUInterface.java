@@ -19,6 +19,7 @@ import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
 import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
 
 //TODO: implement everything
+//TODO: when then server crashes, send an error
 public class GUInterface extends ClientView {
     private LoginController loginController;
     private LobbyController lobbyController;
@@ -112,6 +113,10 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onItemsSelected(ItemsSelected message) {
+        itemsChosen = message.getItems();
+        if (itemsChosen == null){return;} //TODO: invalid selection
+        Platform.runLater(() -> gameController.receiveSelectedItems(itemsChosen));
+        Platform.runLater(() -> gameController.clearTilesList());
 
     }
 

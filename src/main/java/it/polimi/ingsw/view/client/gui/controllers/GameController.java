@@ -2,7 +2,6 @@ package it.polimi.ingsw.view.client.gui.controllers;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.utils.gui.ItemImageView;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.fxml.FXML;
@@ -12,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
@@ -33,6 +33,7 @@ public class GameController implements Initializable {
     private final List<Position> selectedItems = new ArrayList<>();
     private String currentPlayer;
     private final static int cellSizeLivingRoom = 49;
+    private List<Item> itemsChosen;
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -76,26 +77,25 @@ public class GameController implements Initializable {
             default -> image=null;
         }
         if(image==null) return;
-        ItemImageView imageView= new ItemImageView(image, column, row);
+        ImageView imageView= new ImageView(image);
         imageView.setOnMouseClicked(mouseEvent -> this.selectItem(new Position(row, column)));
         imageView.setFitWidth(cellSizeLivingRoom);
+        imageView.setFitHeight(cellSizeLivingRoom);
         imageView.setPreserveRatio(true);
         livingRoomGridPane.add(imageView, column, row);
     }
 
     public void selectItem(Position position) {
         if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
-        if (selectedItems.contains(position)) { //TODO: fix this
+        if (selectedItems.contains(position)) {
             selectedItems.remove(position);
-            ItemImageView itemImageView = (ItemImageView) livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0);
-            itemImageView.setVisible(true);
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(1.0);
             return;
         }
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
-            ItemImageView itemImageView = (ItemImageView) livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0);
-            itemImageView.setVisible(false);
-            return;
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(0.3);
+            return; //this will be used; don't delete
         }
         //TODO: show an error on gui; already 3 tiles selected
     }
@@ -103,17 +103,21 @@ public class GameController implements Initializable {
 
 
     public void selectFromLivingRoom() throws IOException {
+        if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
         if (selectedItems.size() < 1) return; //TODO: show an error on gui
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
-        System.out.println("hai inviato " + selectedItems.size());
     }
 
-    public void clearNodeByColumnRow(int column, int row){
+    public void receiveSelectedItems(List<Item> itemsChosen){
+        this.itemsChosen = itemsChosen;
+    }
+
+    private void clearNodeByColumnRow(int column, int row){
         livingRoomGridPane.getChildren().removeIf( node -> GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row);
     }
 
-    private void clearTilesList(List<Position> tiles) {
-        for (Position selectedItem : tiles) clearNodeByColumnRow(selectedItem.getColumn(), selectedItem.getRow());
+    public void clearTilesList() {
+        for (Position items : selectedItems) clearNodeByColumnRow(items.getColumn(), items.getRow());
     }
 
     //CHAT
@@ -136,5 +140,4 @@ public class GameController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         guInterface.receiveController(this);
     }
-
 }

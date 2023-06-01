@@ -197,7 +197,7 @@ class TextInterfacePrinter {
         if (bookshelves == null) return;
         System.out.println("These are the respective Bookshelves of: ");
         for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
-            System.out.print(entry.getKey() + " ");
+            System.out.print(entry.getKey() + "\t\t    "); //TODO: fix this
             nPlayers++;
         }
         System.out.println();
