@@ -27,7 +27,7 @@ public class GUInterface extends ClientView {
     private WaitingRoomController waitingRoomController;
     private GameController gameController;
     private ChatController chatController;
-    private List<String> nicknames = new ArrayList<>();
+    private final List<String> nicknames = new ArrayList<>();
 
     public GUInterface() {
         super();
@@ -157,8 +157,9 @@ public class GUInterface extends ClientView {
 
         if (update.getMissing() != 0) Platform.runLater(() -> waitingRoomController.waitingForPlayers(update.getMissing()));
         else {
-            Platform.runLater(() -> gameController.initializeBookshelves(nicknames));
             Platform.runLater(() -> waitingRoomController.startGame());
+            Platform.runLater(() -> gameController.setNickname(nickname));
+            Platform.runLater(() -> gameController.initializeBookshelves(nicknames));
             Platform.runLater(() -> lobbyController.endWindow());
         }
     }

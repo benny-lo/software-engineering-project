@@ -32,6 +32,7 @@ public class GameController implements Initializable {
     final private String GAME= "gui/myShelfieImages/item_tiles/Giochi1.1.png";
     final private String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
     private final List<Position> selectedItems = new ArrayList<>();
+    private String nickname;
     private String currentPlayer;
     private int numberPlayers;
     private List<String> nicknames = new ArrayList<>();
@@ -41,6 +42,8 @@ public class GameController implements Initializable {
     private GridPane livingRoomGridPane;
     @FXML
     private Button sendButton;
+    @FXML
+    private Label nicknameLabel;
     @FXML
     private Label currentPlayerLabel;
     @FXML
@@ -69,6 +72,11 @@ public class GameController implements Initializable {
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;
         currentPlayerLabel.setText("It's " + currentPlayer + "'s turn!");
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+        nicknameLabel.setText("Hi " + nickname + " !");
     }
 
     //GRID
@@ -148,6 +156,7 @@ public class GameController implements Initializable {
     public void initializeBookshelves(List<String> nicknames) {
         numberPlayers = nicknames.size();
         this.nicknames = nicknames;
+        nicknames.remove(nickname); //TODO: a map between nicknames and bookshelves' imageview
         if (numberPlayers == 2) {
             firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
             firstBookshelfLabel.setText(nicknames.get(0) + "'s bookshelf");
