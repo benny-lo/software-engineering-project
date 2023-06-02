@@ -96,6 +96,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
             serverConnection = stub.init(clientConnectionRMI);
         } catch (RemoteException e) {
             System.out.println("Failed to get RMI server.");
+            e.printStackTrace();
             System.exit(0);
         }
 

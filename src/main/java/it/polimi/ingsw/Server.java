@@ -19,6 +19,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public class Server {
+    private static Registry registry = null;
     /**
      * Parameters: [hostname] [RMI_port_number] [TCP_port_number]
      * @param args cli parameters (except for the first one which was server).
@@ -59,7 +60,6 @@ public class Server {
             System.exit(0);
         }
 
-        Registry registry = null;
         try {
             registry = LocateRegistry.createRegistry(port);
         } catch (RemoteException e) {

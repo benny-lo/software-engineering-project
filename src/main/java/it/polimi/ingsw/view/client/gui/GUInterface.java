@@ -8,6 +8,7 @@ import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.gui.controllers.*;
 import javafx.application.Platform;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ public class GUInterface extends ClientView {
     private WaitingRoomController waitingRoomController;
     private GameController gameController;
     private ChatController chatController;
+    private List<String> nicknames = new ArrayList<>();
 
     public GUInterface() {
         super();
@@ -103,21 +105,20 @@ public class GUInterface extends ClientView {
 
         //maybe we don't need of all these attributes
         numberPlayers = message.getNumberPlayers();
-        for (String Player : message.getConnectedPlayers()) {
-            Platform.runLater(() -> waitingRoomController.playerConnected(Player));
+        for (String player : message.getConnectedPlayers()) {
+            Platform.runLater(() -> waitingRoomController.playerConnected(player));
+            nicknames.add(player);
         }
         livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
         numberCommonGoalCards = message.getNumberCommonGoalCards();
-        personalGoalCard = new Item[bookshelvesRows][bookshelvesColumns];
     }
 
     @Override
-    public void onItemsSelected(ItemsSelected message) {
+    public synchronized void onItemsSelected(ItemsSelected message) {
         itemsChosen = message.getItems();
         if (itemsChosen == null){return;} //TODO: invalid selection
-        Platform.runLater(() -> gameController.receiveSelectedItems(itemsChosen));
+        Platform.runLater(() -> gameController.setSelectedItems(itemsChosen));
         Platform.runLater(() -> gameController.clearTilesList());
-
     }
 
     @Override
@@ -148,12 +149,15 @@ public class GUInterface extends ClientView {
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
         if (update.isTypeOfAction()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
+            nicknames.add(update.getNickname());
         } else {
             Platform.runLater(() -> waitingRoomController.playerDisconnected(update.getNickname()));
+            nicknames.remove(update.getNickname());
         }
 
         if (update.getMissing() != 0) Platform.runLater(() -> waitingRoomController.waitingForPlayers(update.getMissing()));
         else {
+            Platform.runLater(() -> gameController.initializeBookshelves(nicknames));
             Platform.runLater(() -> waitingRoomController.startGame());
             Platform.runLater(() -> lobbyController.endWindow());
         }
@@ -176,7 +180,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
-
+        Platform.runLater(() -> gameController.setPersonalGoalCard(update.getId()));
     }
 
     @Override
@@ -198,7 +202,7 @@ public class GUInterface extends ClientView {
     @Override
     public void onDisconnection() {
         System.exit(0);
-    }
+    } //TODO: implement this
 
     @Override
     public void start() {

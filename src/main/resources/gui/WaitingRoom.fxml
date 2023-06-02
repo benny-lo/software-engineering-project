@@ -5,18 +5,18 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="620.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController">
-   <Label alignment="CENTER" layoutX="14.0" layoutY="14.0" prefHeight="163.0" prefWidth="373.0" text="WaitingRoom">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController">
+   <Label alignment="CENTER" layoutX="78.0" layoutY="45.0" prefHeight="185.0" prefWidth="406.0" text="WaitingRoom">
       <font>
          <Font size="50.0" />
       </font>
    </Label>
-   <Label fx:id="waitingLabel" alignment="CENTER" layoutX="585.0" layoutY="496.0" prefHeight="97.0" prefWidth="373.0">
+   <Label fx:id="waitingLabel" alignment="CENTER" layoutX="1142.0" layoutY="889.0" prefHeight="97.0" prefWidth="373.0">
       <font>
          <Font size="24.0" />
       </font></Label>
-   <ListView fx:id="playersListView" layoutX="585.0" layoutY="153.0" prefHeight="333.0" prefWidth="373.0" />
-   <Label layoutX="606.0" layoutY="96.0" prefHeight="57.0" prefWidth="332.0" text="Connected players">
+   <ListView fx:id="playersListView" layoutX="942.0" layoutY="255.0" prefHeight="593.0" prefWidth="774.0" />
+   <Label layoutX="1163.0" layoutY="187.0" prefHeight="57.0" prefWidth="332.0" text="Connected players">
       <font>
          <Font size="36.0" />
       </font>

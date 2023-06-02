@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -24,16 +25,18 @@ import static it.polimi.ingsw.utils.gui.CloseWindow.exitChat;
 
 public class GameController implements Initializable {
     private static GUInterface guInterface;
-    final private String CUP= "gui/17_MyShelfie_BGA/item_tiles/Trofei1.1.png";
-    final private String CAT= "gui/17_MyShelfie_BGA/item_tiles/Gatti1.1.png";
-    final private String BOOK= "gui/17_MyShelfie_BGA/item_tiles/Libri1.1.png";
-    final private String PLANT= "gui/17_MyShelfie_BGA/item_tiles/Piante1.1.png";
-    final private String GAME= "gui/17_MyShelfie_BGA/item_tiles/Giochi1.1.png";
-    final private String FRAME= "gui/17_MyShelfie_BGA/item_tiles/Cornici1.1.png";
+    final private String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
+    final private String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
+    final private String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
+    final private String PLANT= "gui/myShelfieImages/item_tiles/Piante1.1.png";
+    final private String GAME= "gui/myShelfieImages/item_tiles/Giochi1.1.png";
+    final private String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
     private final List<Position> selectedItems = new ArrayList<>();
     private String currentPlayer;
+    private int numberPlayers;
+    private List<String> nicknames = new ArrayList<>();
     private final static int cellSizeLivingRoom = 49;
-    private List<Item> itemsChosen;
+    private List<Item> chosenItems = new ArrayList<>();
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -44,6 +47,20 @@ public class GameController implements Initializable {
     private Button bookshelvesButton;
     @FXML
     private Button enterChatButton;
+    @FXML
+    private ImageView personalGoalCardImageView;
+    @FXML
+    private Label firstBookshelfLabel;
+    @FXML
+    private Label secondBookshelfLabel;
+    @FXML
+    private Label thirdBookshelfLabel;
+    @FXML
+    private ImageView firstBookshelfImageView;
+    @FXML
+    private ImageView secondBookshelfImageView;
+    @FXML
+    private ImageView thirdBookshelfImageView;
 
     public static void startGameController(GUInterface guInterface){
         GameController.guInterface=guInterface;
@@ -108,8 +125,8 @@ public class GameController implements Initializable {
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
-    public void receiveSelectedItems(List<Item> itemsChosen){
-        this.itemsChosen = itemsChosen;
+    public void setSelectedItems(List<Item> itemsChosen){
+        this.chosenItems = itemsChosen;
     }
 
     private void clearNodeByColumnRow(int column, int row){
@@ -120,6 +137,33 @@ public class GameController implements Initializable {
         for (Position items : selectedItems) clearNodeByColumnRow(items.getColumn(), items.getRow());
     }
 
+    //PERSONAL GOAL CARD
+
+    public void setPersonalGoalCard(int id){
+        personalGoalCardImageView.setImage(new Image("/gui/myShelfieImages/personal_goal_cards/personal_goal_card_" + id + ".png"));
+    }
+
+    //BOOKSHELVES
+
+    public void initializeBookshelves(List<String> nicknames) {
+        numberPlayers = nicknames.size();
+        this.nicknames = nicknames;
+        if (numberPlayers == 2) {
+            firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
+            firstBookshelfLabel.setText(nicknames.get(0) + "'s bookshelf");
+        } else if (numberPlayers == 3) {
+            firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
+            firstBookshelfLabel.setText(nicknames.get(1) + "'s bookshelf");
+        } else if (numberPlayers == 4) {
+            firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
+            firstBookshelfLabel.setText(nicknames.get(2) + "'s bookshelf");
+        }
+    }
+
+    public void updateBookshelf(String owner, Map<Position, Item> bookshelf) {
+
+    }
+
     //CHAT
     public void enterChat() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Chat.fxml"));
@@ -128,8 +172,6 @@ public class GameController implements Initializable {
         Stage stage = new Stage();
         stage.setScene(scene);
         stage.setTitle("MyShelfieChat");
-        stage.setWidth(600);
-        stage.setHeight(400);
         stage.show();
 
         stage.setOnCloseRequest(event -> {event.consume();

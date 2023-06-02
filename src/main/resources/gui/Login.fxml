@@ -6,19 +6,19 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LoginController">
-   <TextField fx:id="usernameField" layoutX="369.0" layoutY="379.0" prefHeight="46.0" prefWidth="341.0" />
-   <Label fx:id="welcomeText" alignment="CENTER" layoutX="299.0" layoutY="173.0" prefHeight="205.0" prefWidth="481.0" text="Welcome to MyShelfie!&#10;Write your username here&#10;" textAlignment="CENTER">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LoginController">
+   <TextField fx:id="usernameField" layoutX="789.0" layoutY="517.0" prefHeight="46.0" prefWidth="341.0" />
+   <Label fx:id="welcomeText" alignment="CENTER" layoutX="719.0" layoutY="298.0" prefHeight="205.0" prefWidth="481.0" text="Welcome to MyShelfie!&#10;Write your username here&#10;" textAlignment="CENTER">
       <font>
          <Font size="36.0" />
       </font>
    </Label>
-   <Button fx:id="loginButton" layoutX="483.0" layoutY="451.0" mnemonicParsing="false" onAction="#login" prefHeight="53.0" prefWidth="113.0" text="Login">
+   <Button fx:id="loginButton" layoutX="903.0" layoutY="602.0" mnemonicParsing="false" onAction="#login" prefHeight="53.0" prefWidth="113.0" text="Login">
       <font>
          <Font size="18.0" />
       </font>
    </Button>
-   <Label fx:id="errorLabel" alignment="CENTER" layoutX="311.0" layoutY="569.0" prefHeight="65.0" prefWidth="457.0" textAlignment="CENTER" textFill="#f60000">
+   <Label fx:id="errorLabel" alignment="CENTER" layoutX="731.0" layoutY="704.0" prefHeight="65.0" prefWidth="457.0" textAlignment="CENTER" textFill="#f60000">
       <font>
          <Font size="18.0" />
       </font>

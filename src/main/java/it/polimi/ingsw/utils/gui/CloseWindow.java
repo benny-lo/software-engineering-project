@@ -31,7 +31,6 @@ public class CloseWindow {
         Optional<ButtonType> opt = alert.showAndWait();
         if (opt.isPresent() && opt.get() == ButtonType.OK) {
             stage.close();
-            System.exit(0);
         }
     }
 }
