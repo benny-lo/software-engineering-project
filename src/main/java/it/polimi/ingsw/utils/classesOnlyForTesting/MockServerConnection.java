@@ -6,14 +6,14 @@ import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MockServerConnection implements ServerConnection {
 
-    public Set<Message> set;
+    public List<Message> list;
     public MockServerConnection() {
-        set = new HashSet<>();
+        list = new ArrayList<>();
     }
 
     @Override
@@ -23,76 +23,75 @@ public class MockServerConnection implements ServerConnection {
 
     @Override
     public void send(LivingRoomUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(BookshelfUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(WaitingUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(ScoresUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(EndingTokenUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(CommonGoalCardsUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(PersonalGoalCardUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(ChatUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(StartTurnUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(EndGameUpdate update) {
-        set.add(update);
+        list.add(update);
     }
 
     @Override
     public void send(GamesList gamesList) {
-        set.add(gamesList);
+        list.add(gamesList);
     }
 
     @Override
     public void send(ItemsSelected itemsSelected) {
-        set.add(itemsSelected);
+        list.add(itemsSelected);
     }
 
     @Override
-    public void send(GameData gameData) {
-        set.add(gameData);
+    public void send(GameData gameData) { list.add(gameData);
     }
 
     @Override
     public void send(AcceptedInsertion acceptedInsertion) {
-        set.add(acceptedInsertion);
+        list.add(acceptedInsertion);
     }
 
     @Override
     public void send(ChatAccepted chatAccepted) {
-        set.add(chatAccepted);
+        list.add(chatAccepted);
     }
 }
