@@ -102,8 +102,8 @@ public class TextInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onItemsSelected(ItemsSelected message) {
-        itemsChosen = message.getItems();
-        if (itemsChosen == null) printInvalidSelection();
+        chosenItems = message.getItems();
+        if (chosenItems == null) printInvalidSelection();
         else if (status != ClientStatus.CHAT) {
             clearScreen();
             printGameRep();
@@ -277,7 +277,7 @@ public class TextInterface extends ClientView implements InputReceiver {
     @Override
     public synchronized void onStartTurnUpdate(StartTurnUpdate update) {
         currentPlayer = update.getCurrentPlayer();
-        itemsChosen = null;
+        chosenItems = null;
 
         if (status != ClientStatus.CHAT) {
             clearScreen();
@@ -499,7 +499,7 @@ public class TextInterface extends ClientView implements InputReceiver {
         printBookshelves(bookshelves);
         printPersonalGoalCard(personalGoalCard);
         printCommonGoalCards(commonGoalCards);
-        printItemsChosen(itemsChosen, currentPlayer);
+        printItemsChosen(chosenItems, currentPlayer);
         printEndingToken(endingToken);
         printScores(scores);
 

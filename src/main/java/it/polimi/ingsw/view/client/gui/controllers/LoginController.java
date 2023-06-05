@@ -24,8 +24,6 @@ public class LoginController implements Initializable {
     @FXML
     private TextField usernameField;
     @FXML
-    private Label welcomeText;
-    @FXML
     private Label errorLabel;
 
     private Stage stage;
@@ -67,6 +65,6 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        guInterface.receiveController(this); // IDK if it is supposed to work, but it works
+        guInterface.receiveController(this);
     }
 }

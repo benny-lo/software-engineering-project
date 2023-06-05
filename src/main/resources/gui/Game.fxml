@@ -17,7 +17,7 @@
    <ImageView fitHeight="630.0" fitWidth="649.0" layoutX="423.0" layoutY="138.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="138.0">
       <Image url="@myShelfieImages/boards/livingroom.png" />
    </ImageView>
-   <GridPane fx:id="livingRoomGridPane" hgap="3.0" layoutX="447.0" layoutY="164.0" prefHeight="576.0" prefWidth="582.0" vgap="3.0" AnchorPane.topAnchor="164.0">
+   <GridPane fx:id="livingRoomGridPane" hgap="3.0" layoutX="451.0" layoutY="161.0" prefHeight="578.0" prefWidth="564.0" vgap="3.0" AnchorPane.topAnchor="161.0">
      <columnConstraints>
          <ColumnConstraints hgrow="SOMETIMES" minWidth="49.0" prefWidth="49.0" />
          <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
@@ -41,10 +41,10 @@
        <RowConstraints fillHeight="false" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
      </rowConstraints>
    </GridPane>
-   <ImageView fitHeight="464.0" fitWidth="451.0" layoutX="1155.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="314.0">
+   <ImageView fitHeight="464.0" fitWidth="451.0" layoutX="1271.0" layoutY="391.0" pickOnBounds="true" preserveRatio="true" AnchorPane.rightAnchor="198.0">
        <Image url="@myShelfieImages/boards/bookshelf.png" />
    </ImageView>
-   <Button fx:id="sendButton" layoutX="981.0" layoutY="797.0" mnemonicParsing="false" onAction="#selectFromLivingRoom" prefHeight="37.0" prefWidth="61.0" text="Select" AnchorPane.bottomAnchor="245.66666666666666" />
+   <Button fx:id="sendButton" layoutX="991.0" layoutY="796.0" mnemonicParsing="false" onAction="#selectFromLivingRoom" prefHeight="37.0" prefWidth="61.0" text="Select" AnchorPane.bottomAnchor="246.66666666666663" />
    <Label fx:id="currentPlayerLabel" layoutX="1219.0" layoutY="97.0" prefHeight="70.0" prefWidth="662.0" AnchorPane.rightAnchor="39.0">
       <font>
          <Font size="24.0" />
@@ -54,12 +54,12 @@
     <ImageView fx:id="personalGoalCardImageView" fitHeight="225.0" fitWidth="226.0" layoutX="114.0" layoutY="834.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="21.0" AnchorPane.leftAnchor="114.0">
         <Image url="@myShelfieImages/personal_goal_cards/front_EMPTY.jpg" />
     </ImageView>
-   <Label alignment="CENTER" layoutX="54.0" layoutY="779.0" prefHeight="64.0" prefWidth="274.0" text="Your personal goal card" AnchorPane.bottomAnchor="237.0">
+   <Label alignment="CENTER" layoutX="54.0" layoutY="774.0" prefHeight="64.0" prefWidth="274.0" text="Your personal goal card" AnchorPane.bottomAnchor="242.0">
       <font>
          <Font size="24.0" />
       </font>
    </Label>
-   <Label fx:id="firstBookshelfLabel" alignment="CENTER" layoutX="46.0" layoutY="102.0" prefHeight="35.0" prefWidth="289.0" AnchorPane.leftAnchor="46.0" AnchorPane.topAnchor="102.0">
+   <Label fx:id="firstBookshelfLabel" alignment="CENTER" layoutX="46.0" layoutY="92.0" prefHeight="35.0" prefWidth="289.0" AnchorPane.leftAnchor="46.0" AnchorPane.topAnchor="92.0">
       <font>
          <Font size="24.0" />
       </font></Label>
@@ -67,21 +67,156 @@
       <font>
          <Font size="24.0" />
       </font></Label>
-   <Label fx:id="thirdBookshelfLabel" alignment="CENTER" layoutX="46.0" layoutY="503.0" prefHeight="35.0" prefWidth="289.0" AnchorPane.leftAnchor="46.0">
+   <Label fx:id="thirdBookshelfLabel" alignment="CENTER" layoutX="47.0" layoutY="522.0" prefHeight="35.0" prefWidth="289.0" AnchorPane.leftAnchor="47.0">
       <font>
          <Font size="24.0" />
       </font></Label>
-   <ImageView fx:id="firstBookshelfImageView" fitHeight="144.0" fitWidth="139.0" layoutX="122.0" layoutY="137.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="122.0" />
-   <ImageView fx:id="secondBookshelfImageView" fitHeight="144.0" fitWidth="139.0" layoutX="119.0" layoutY="353.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="119.0" />
-   <ImageView fx:id="thirdBookshelfImageView" fitHeight="144.0" fitWidth="139.0" layoutX="119.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="119.0" />
-   <Button layoutX="1200.0" layoutY="328.0" mnemonicParsing="false" text="Button" />
-   <Button layoutX="1284.0" layoutY="328.0" mnemonicParsing="false" text="Button" />
-   <Button layoutX="1354.0" layoutY="328.0" mnemonicParsing="false" text="Button" />
-   <Button layoutX="1431.0" layoutY="328.0" mnemonicParsing="false" text="Button" />
-   <Button layoutX="1505.0" layoutY="328.0" mnemonicParsing="false" text="Button" AnchorPane.rightAnchor="363.0" />
+   <ImageView fx:id="firstBookshelfImageView" fitHeight="144.0" fitWidth="139.0" layoutX="119.0" layoutY="138.0"
+              pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="119.0">
+      <Image url="@myShelfieImages/boards/bookshelf.png"/>
+   </ImageView>
+   <ImageView fx:id="secondBookshelfImageView" fitHeight="144.0" fitWidth="139.0" layoutX="119.0" layoutY="353.0"
+              pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="119.0">
+      <Image url="@myShelfieImages/boards/bookshelf.png"/>
+   </ImageView>
+   <ImageView fx:id="thirdBookshelfImageView" fitHeight="144.0" fitWidth="139.0" layoutX="119.0" layoutY="573.0"
+              pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="119.0">
+      <Image url="@myShelfieImages/boards/bookshelf.png"/>
+   </ImageView>
+   <Button fx:id="insertColumn0Button" alignment="CENTER" layoutX="1321.0" layoutY="327.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" />
+   <Button fx:id="insertColumn1Button" alignment="CENTER" layoutX="1396.0" layoutY="328.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" />
+   <Button fx:id="insertColumn2Button" alignment="CENTER" layoutX="1470.0" layoutY="327.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" />
+   <Button fx:id="insertColumn3Button" alignment="CENTER" layoutX="1543.0" layoutY="328.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" />
+   <Button fx:id="insertColumn4Button" alignment="CENTER" layoutX="1615.0" layoutY="327.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" AnchorPane.rightAnchor="253.0" />
    <Label fx:id="nicknameLabel" layoutX="1226.0" layoutY="27.0" prefHeight="70.0" prefWidth="662.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="27.0">
       <font>
          <Font size="36.0" />
+      </font>
+   </Label>
+   <Label layoutX="423.0" layoutY="827.0" prefHeight="44.0" prefWidth="274.0" text="Common Goal Cards">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <Label fx:id="firstCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="417.0" layoutY="960.0" prefHeight="106.0" prefWidth="226.0">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="firstCommonGoalCardId" layoutX="417.0" layoutY="876.0" prefHeight="35.0" prefWidth="226.0">
+      <font>
+         <Font size="20.0" />
+      </font>
+   </Label>
+   <Label fx:id="secondCommonGoalCardId" layoutX="697.0" layoutY="876.0" prefHeight="35.0" prefWidth="226.0">
+      <font>
+         <Font size="20.0" />
+      </font>
+   </Label>
+   <Label fx:id="secondCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="697.0" layoutY="960.0" prefHeight="106.0" prefWidth="226.0">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Label>
+   <Label fx:id="firstCommonGoalCardTop" layoutX="417.0" layoutY="916.0" prefHeight="35.0" prefWidth="203.0" AnchorPane.bottomAnchor="128.66666666666663">
+      <font>
+         <Font size="20.0" />
+      </font>
+   </Label>
+   <Label fx:id="secondCommonGoalCardTop" layoutX="697.0" layoutY="916.0" prefHeight="35.0" prefWidth="203.0">
+      <font>
+         <Font size="20.0" />
+      </font>
+   </Label>
+   <Label layoutX="21.0" layoutY="27.0" prefHeight="56.0" prefWidth="342.0" text="Other Players' Bookshelves">
+      <font>
+         <Font size="28.0" />
+      </font>
+   </Label>
+   <GridPane fx:id="firstBookshelfGridPane" layoutX="133.0" layoutY="144.0" prefHeight="117.0" prefWidth="112.0">
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints maxHeight="28.666656494140625" minHeight="0.0" prefHeight="28.666656494140625" vgrow="SOMETIMES" />
+       <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="31.333343505859375" vgrow="SOMETIMES" />
+       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+     </rowConstraints>
+   </GridPane>
+   <GridPane fx:id="secondBookshelfGridPane" layoutX="133.0" layoutY="361.0" prefHeight="117.0" prefWidth="112.0">
+      <columnConstraints>
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints maxHeight="28.666656494140625" minHeight="0.0" prefHeight="28.666656494140625" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="31.333343505859375" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+   </GridPane>
+   <GridPane fx:id="thirdBookshelfGridPane" layoutX="133.0" layoutY="581.0" prefHeight="117.0" prefWidth="112.0">
+      <columnConstraints>
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints maxHeight="28.666656494140625" minHeight="0.0" prefHeight="28.666656494140625" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="31.333343505859375" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+   </GridPane>
+   <GridPane fx:id="bookshelfGridPane" layoutX="1316.0" layoutY="415.0" prefHeight="369.0" prefWidth="359.0">
+      <columnConstraints>
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+         <ColumnConstraints hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+      </columnConstraints>
+      <rowConstraints>
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+      </rowConstraints>
+   </GridPane>
+   <ImageView fx:id="firstChosenItemImageView" fitHeight="70.0" fitWidth="70.0" layoutX="1373.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="secondChosenItemImageView" fitHeight="70.0" fitWidth="70.0" layoutX="1461.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="thirdChosenItemImageView" fitHeight="70.0" fitWidth="70.0" layoutX="1543.0" layoutY="226.0" pickOnBounds="true" preserveRatio="true" />
+   <Label fx:id="firstChosenItemLabel" alignment="CENTER" layoutX="1393.0" layoutY="188.0" prefHeight="30.0" prefWidth="30.0">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <Label fx:id="secondChosenItemLabel" alignment="CENTER" layoutX="1481.0" layoutY="190.0" prefHeight="30.0" prefWidth="30.0">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <Label fx:id="thirdChosenItemLabel" alignment="CENTER" layoutX="1563.0" layoutY="185.0" prefHeight="30.0" prefWidth="30.0">
+      <font>
+         <Font size="24.0" />
       </font>
    </Label>
 </AnchorPane>

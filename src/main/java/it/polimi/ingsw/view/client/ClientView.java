@@ -37,7 +37,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
     protected Map<String, Integer> scores;
     protected boolean endGame;
     protected List<ChatUpdate> chat;
-    protected List<Item> itemsChosen;
+    protected List<Item> chosenItems;
     protected ClientConnection clientConnection;
 
     /**

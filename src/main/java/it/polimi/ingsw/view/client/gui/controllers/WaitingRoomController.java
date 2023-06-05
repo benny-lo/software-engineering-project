@@ -63,6 +63,6 @@ public class WaitingRoomController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        guInterface.receiveController(this); // IDK if it is supposed to work, but it works
+        guInterface.receiveController(this);
     }
 }

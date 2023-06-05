@@ -26,10 +26,6 @@ public class LobbyController implements Initializable {
     @FXML
     private Spinner<Integer> numberCommonGoalCardsSpinner;
     @FXML
-    private Button createGameButton;
-    @FXML
-    private Button selectGameButton;
-    @FXML
     private Label errorCreateGameLabel;
     @FXML
     private Label errorSelectGameLabel;
@@ -87,7 +83,7 @@ public class LobbyController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        guInterface.receiveController(this); // IDK if it is supposed to work, but it works
+        guInterface.receiveController(this);
 
         displayNicknameLabel.setText("Hi " + guInterface.getNickname() + "!");
 

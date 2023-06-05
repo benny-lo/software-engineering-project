@@ -68,11 +68,13 @@ public class GUInterface extends ClientView {
 
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
-
+        clientConnection.send(message);
     }
 
     @Override
-    public void writeChat(ChatMessage message) {clientConnection.send(message);}
+    public void writeChat(ChatMessage message) {
+        clientConnection.send(message);
+    }
 
     @Override
     public synchronized void onGamesList(GamesList message) {
@@ -111,19 +113,22 @@ public class GUInterface extends ClientView {
         }
         livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
         numberCommonGoalCards = message.getNumberCommonGoalCards();
+        bookshelvesColumns = message.getBookshelvesColumns();
+        bookshelvesRows = message.getBookshelvesRows();
     }
 
     @Override
     public synchronized void onItemsSelected(ItemsSelected message) {
-        itemsChosen = message.getItems();
-        if (itemsChosen == null){return;} //TODO: invalid selection
-        Platform.runLater(() -> gameController.setSelectedItems(itemsChosen));
+        chosenItems = message.getItems();
+        if (chosenItems == null){return;} //TODO: invalid selection error
         Platform.runLater(() -> gameController.clearTilesList());
+        Platform.runLater(() -> gameController.setChosenItems(chosenItems));
     }
 
     @Override
-    public void onAcceptedInsertion(AcceptedInsertion message) {
-
+    public synchronized void onAcceptedInsertion(AcceptedInsertion message) {
+        if (!message.isAccepted()) {return;} //TODO: invalid insertion error
+        Platform.runLater(() -> gameController.insertItems());
     }
 
     @Override
@@ -141,8 +146,8 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onBookshelfUpdate(BookshelfUpdate update) {
-
+    public synchronized void onBookshelfUpdate(BookshelfUpdate update) {
+        Platform.runLater(() -> gameController.updateBookshelf(update.getOwner(), update.getBookshelf()));
     }
 
     @Override
@@ -159,7 +164,7 @@ public class GUInterface extends ClientView {
         else {
             Platform.runLater(() -> waitingRoomController.startGame());
             Platform.runLater(() -> gameController.setNickname(nickname));
-            Platform.runLater(() -> gameController.initializeBookshelves(nicknames));
+            Platform.runLater(() -> gameController.initializeBookshelves(nicknames, bookshelvesRows, bookshelvesColumns));
             Platform.runLater(() -> lobbyController.endWindow());
         }
     }
@@ -175,12 +180,12 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
-
+    public synchronized void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
+        Platform.runLater(() -> gameController.updateCommonGoalCards(update.getCommonGoalCardsUpdate()));
     }
 
     @Override
-    public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
+    public synchronized void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
         Platform.runLater(() -> gameController.setPersonalGoalCard(update.getId()));
     }
 
