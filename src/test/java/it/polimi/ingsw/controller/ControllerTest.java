@@ -406,14 +406,17 @@ public class ControllerTest {
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
         controller.perform(new JoinAction(view0));
+
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
         controller.perform(new JoinAction(view1));
+
         MockServerConnection mockServerConnection2 = new MockServerConnection();
         VirtualView view2 = new VirtualView(mockServerConnection2);
         view2.setNickname("tick");
         controller.perform(new JoinAction(view2));
+
         GameData failedJoin = (GameData) mockServerConnection2.list.get(0);
         assertEquals(-1,failedJoin.getNumberPlayers());
         assertEquals(-1,failedJoin.getNumberCommonGoalCards());
@@ -489,7 +492,41 @@ public class ControllerTest {
 
 
         }
+
+    /**
+     * Testing for content of SelectionFromLivingRoomAction Messages when the action fails.
+     */
+    @Test
+    public void contentUnsuccessfulSelectionFromLivingRoomTest()
+    {
+        Controller controller = new Controller(2, 2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+
+        controller.setTurnPhase(TurnPhase.BOOKSHELF);
+        List<Position> pos = new ArrayList<>();
+        List<Message> list1 = new ArrayList<>(mockServerConnection0.list);
+        controller.perform(new SelectionFromLivingRoomAction(view0,pos));
+        assertEquals(list1.size(),mockServerConnection0.list.size()-1);
+        for(Message message : mockServerConnection0.list)
+        {
+            if(!(message instanceof ItemsSelected))
+            {
+                assertEquals(message,list1.get(mockServerConnection0.list.indexOf(message)));
+            }
+        }
+        ItemsSelected itemsSelected = (ItemsSelected) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertNull(itemsSelected.getItems());
     }
+
+}
 
 
 
