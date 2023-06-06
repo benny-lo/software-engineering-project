@@ -26,12 +26,12 @@ import static it.polimi.ingsw.utils.gui.CloseWindow.exitChat;
 
 public class GameController implements Initializable {
     private static GUInterface guInterface;
-    final private String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
-    final private String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
-    final private String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
-    final private String PLANT= "gui/myShelfieImages/item_tiles/Piante1.1.png";
-    final private String GAME= "gui/myShelfieImages/item_tiles/Giochi1.1.png";
-    final private String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
+    final private static String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
+    final private static String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
+    final private static String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
+    final private static String PLANT= "gui/myShelfieImages/item_tiles/Piante1.1.png";
+    final private static String GAME= "gui/myShelfieImages/item_tiles/Giochi1.1.png";
+    final private static String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
     private final List<Position> selectedItems = new ArrayList<>(numberSelectedItems);
     private String nickname;
     private String currentPlayer;
@@ -39,13 +39,19 @@ public class GameController implements Initializable {
     private final static int numberSelectedItems = 3;
     private final Map<String, GridPane> otherPlayersBookshelf = new HashMap<>();
     private final static int cellSizeLivingRoom = 60;
+    private final static int cellSizeOthersBookshelf = 15;
+    private final static int cellSizeBookshelf = 50;
     private final static int livingRoomGap = 5;
+    private final static int bookshelfGap = 7;
+    private final static int othersBookshelfGap = 2;
     private int bookshelvesRows;
     private int bookshelvesColumns;
     private List<Item> chosenItems = new ArrayList<>(numberSelectedItems);
     private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
     private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
     private int selectedColumn;
+    private final static double selectedOpacity = 0.3;
+    private final static double notSelectedOpacity = 1.0;
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -143,9 +149,19 @@ public class GameController implements Initializable {
         return new Image(image);
     }
 
+    private int getRealRow(int row) {
+        if (row == 0) return 5;
+        if (row == 1) return 4;
+        if (row == 2) return 3;
+        if (row == 3) return 2;
+        if (row == 4) return 1;
+        return 0;
+    }
+
     //GRID
     public void setLivingRoomGridPane(Item[][] livingRoom){
         if(livingRoom ==null) return;
+        livingRoomGridPane.getChildren().clear();
         for(int i = 0; i< livingRoom.length; i++){
             for(int j = 0; j< livingRoom.length; j++){
                 setLivingRoomTile(livingRoom[i][j], j, i);
@@ -166,12 +182,12 @@ public class GameController implements Initializable {
         if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
         if (selectedItems.contains(position)) {
             selectedItems.remove(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(1.0);
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
             return;
         }
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(0.3);
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(selectedOpacity);
             return; //this will be used; don't delete
         }
         //TODO: show an error on gui; already 3 tiles selected
@@ -179,7 +195,9 @@ public class GameController implements Initializable {
 
     public void selectFromLivingRoom() throws IOException {
         if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
-        if (selectedItems.size() < 1) return; //TODO: show an error on gui
+        if (selectedItems.size() < 1) return; //TODO: show an error on gui; select at least one item
+        System.out.println("lato client select funzionante\n" + selectedItems);
+
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
@@ -200,6 +218,7 @@ public class GameController implements Initializable {
     //BOOKSHELF
 
     private void updateChosenItemsImageView() {
+        System.out.println("sto settando le immagini");
         firstChosenItemImageView.setImage(getImage(chosenItems.get(0)));
         firstChosenItemImageView.setOnMouseClicked(mouseEvent -> this.selectOrder(firstChosenItemImageView));
         if (chosenItems.size() > 1) {
@@ -216,32 +235,38 @@ public class GameController implements Initializable {
         if (!guInterface.getNickname().equals(currentPlayer)) return;
         if (!orderItems.contains(selected)) {
             orderItems.add(selected);
-            selected.setOpacity(0.3);
+            selected.setOpacity(selectedOpacity);
         } else {
             orderItems.remove(selected);
-            selected.setOpacity(1.0);
+            selected.setOpacity(notSelectedOpacity);
         }
-        updateOrderLabels();
+        updateOrderItems();
     }
 
-    private void updateOrderLabels() {
+    private void updateOrderItems() {
         boolean first = false, second = false, third = false;
 
         for (ImageView imageView : orderItems) {
             if (imageView.equals(firstChosenItemImageView)) {
                 firstChosenItemLabel.setText(String.valueOf(orderItems.indexOf(imageView)+1));
-                selectedOrder.add(orderItems.indexOf(imageView)); //TODO: i dont think that selectedOrder works as intended
                 first = true;
             } else if (imageView.equals(secondChosenItemImageView)) {
                 secondChosenItemLabel.setText(String.valueOf(orderItems.indexOf(imageView)+1));
-                selectedOrder.add(orderItems.indexOf(imageView));
                 second = true;
             } else if (imageView.equals(thirdChosenItemImageView)) {
                 thirdChosenItemLabel.setText(String.valueOf(orderItems.indexOf(imageView)+1));
-                selectedOrder.add(orderItems.indexOf(imageView));
                 third = true;
             }
         }
+
+        selectedOrder.clear();
+
+        if (orderItems.contains(firstChosenItemImageView))
+            selectedOrder.add(orderItems.indexOf(firstChosenItemImageView));
+        if (orderItems.contains(secondChosenItemImageView))
+            selectedOrder.add(orderItems.indexOf(secondChosenItemImageView));
+        if (orderItems.contains(thirdChosenItemImageView))
+            selectedOrder.add(orderItems.indexOf(thirdChosenItemImageView));
 
         if (!first)
             firstChosenItemLabel.setText("");
@@ -255,14 +280,21 @@ public class GameController implements Initializable {
         if (chosenItems.size() == 0) return; //TODO: show an error on gui; select items from livingRoom
         if (!(orderItems.size() == selectedItems.size())) return; //TODO: show an error on gui; select all the items
         selectedColumn = column;
-        guInterface.insertInBookshelf(new BookshelfInsertion(column, selectedOrder));
+        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, selectedOrder));
     }
 
     public void insertItems() {
-
+        for (ImageView item : orderItems) {
+            bookshelfGridPane.add(item, selectedColumn, findFreeRowBookshelf(bookshelfGridPane, selectedColumn));
+            item.setOpacity(notSelectedOpacity);
+            item.setFitWidth(cellSizeBookshelf);
+            item.setFitHeight(cellSizeBookshelf);
+            clearChosenItemLabels();
+        }
+        endTurnClear();
     }
 
-    private int checkBookshelfGridPane(GridPane bookshelfGridPane, int column, int numberItems) {
+    private int findFreeRowBookshelf(GridPane bookshelfGridPane, int column) {
         for (int i = bookshelvesRows - 1; i >= 0; i--) {
             int finalI = i;
             if (bookshelfGridPane.getChildren().stream().noneMatch(n -> (GridPane.getColumnIndex(n) == column && GridPane.getRowIndex(n) == finalI)))
@@ -271,14 +303,17 @@ public class GameController implements Initializable {
         return -1;
     }
 
-    public void updateBookshelf(String owner, Map<Position, Item> bookshelf) {
-        if (owner == null) return;
-        if (bookshelf == null) return;
-        if (!otherPlayersBookshelf.containsKey(owner)) return;
-        for (Position position : bookshelf.keySet()) {
-            ImageView imageView = new ImageView(getImage(bookshelf.get(position)));
-            otherPlayersBookshelf.get(owner).add(imageView, position.getColumn(), position.getRow());
-        }
+    private void clearChosenItemLabels() {
+        firstChosenItemLabel.setText("");
+        secondChosenItemLabel.setText("");
+        thirdChosenItemLabel.setText("");
+    }
+
+    private void endTurnClear() {
+        selectedItems.clear();
+        selectedOrder.clear();
+        chosenItems.clear();
+        orderItems.clear();
     }
 
     //PERSONAL GOAL CARD
@@ -312,12 +347,16 @@ public class GameController implements Initializable {
         }
     }
 
-    private void setBookshelfGridPane(GridPane bookshelfGridPane) { //delete this later
-        bookshelfGridPane.add(new ImageView(), 0, 5);
-        bookshelfGridPane.add(new ImageView(), 0, 4);
-        bookshelfGridPane.add(new ImageView(), 0, 3);
-        bookshelfGridPane.add(new Label(), 0, 2);
-        bookshelfGridPane.add(new Label(), 0, 1);
+    public void updateBookshelf(String owner, Map<Position, Item> bookshelf) {
+        if (owner == null) return;
+        if (bookshelf == null) return;
+        if (!otherPlayersBookshelf.containsKey(owner)) return;
+        for (Position position : bookshelf.keySet()) {
+            ImageView imageView = new ImageView(getImage(bookshelf.get(position)));
+            imageView.setFitHeight(cellSizeOthersBookshelf);
+            imageView.setFitWidth(cellSizeOthersBookshelf);
+            otherPlayersBookshelf.get(owner).add(imageView, position.getColumn(), getRealRow(position.getRow()));
+        }
     }
 
     //COMMON GOAL CARDS
@@ -344,6 +383,14 @@ public class GameController implements Initializable {
         guInterface.receiveController(this);
         livingRoomGridPane.setHgap(livingRoomGap);
         livingRoomGridPane.setVgap(livingRoomGap);
+        bookshelfGridPane.setHgap(bookshelfGap);
+        bookshelfGridPane.setVgap(bookshelfGap);
+        firstBookshelfGridPane.setHgap(othersBookshelfGap);
+        firstBookshelfGridPane.setVgap(othersBookshelfGap);
+        secondBookshelfGridPane.setHgap(othersBookshelfGap);
+        secondBookshelfGridPane.setVgap(othersBookshelfGap);
+        thirdBookshelfGridPane.setHgap(othersBookshelfGap);
+        thirdBookshelfGridPane.setVgap(othersBookshelfGap);
         insertColumn0Button.setOnMouseClicked(mouseEvent -> selectColumn(0));
         insertColumn1Button.setOnMouseClicked(mouseEvent -> selectColumn(1));
         insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));

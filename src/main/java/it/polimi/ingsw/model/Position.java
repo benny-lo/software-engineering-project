@@ -86,4 +86,9 @@ public class Position implements Comparable<Position>, Serializable {
             return column - other.getColumn();
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "row: " + row + "\ncolumn: " + column + "\n";
+    }
 }

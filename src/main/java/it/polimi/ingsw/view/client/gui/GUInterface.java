@@ -105,7 +105,6 @@ public class GUInterface extends ClientView {
 
         Platform.runLater(() -> lobbyController.successfulCreateOrSelectGame());
 
-        //maybe we don't need of all these attributes
         numberPlayers = message.getNumberPlayers();
         for (String player : message.getConnectedPlayers()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(player));
@@ -120,7 +119,11 @@ public class GUInterface extends ClientView {
     @Override
     public synchronized void onItemsSelected(ItemsSelected message) {
         chosenItems = message.getItems();
-        if (chosenItems == null){return;} //TODO: invalid selection error
+        if (chosenItems == null){
+            System.out.println("lato server rifiutato");
+            return;
+        } //TODO: invalid selection error
+        System.out.println("lato server accettato");
         Platform.runLater(() -> gameController.clearTilesList());
         Platform.runLater(() -> gameController.setChosenItems(chosenItems));
     }
