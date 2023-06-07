@@ -117,9 +117,11 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public synchronized void onItemsSelected(ItemsSelected message) {
+    public synchronized void onSelectedItems(SelectedItems message) {
         chosenItems = message.getItems();
         if (chosenItems == null){
+            Platform.runLater(() -> gameController.resetOpacity());
+            Platform.runLater(() -> gameController.clearSelectedItems());
             System.out.println("lato server rifiutato");
             return;
         } //TODO: invalid selection error
@@ -132,6 +134,7 @@ public class GUInterface extends ClientView {
     public synchronized void onAcceptedInsertion(AcceptedInsertion message) {
         if (!message.isAccepted()) {return;} //TODO: invalid insertion error
         Platform.runLater(() -> gameController.insertItems());
+        Platform.runLater(() -> gameController.clearChosenItemsImageView());
     }
 
     @Override
@@ -174,12 +177,12 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
-
+        Platform.runLater(() -> gameController.setRankings(update.getScores()));
     }
 
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
-
+        Platform.runLater(() -> gameController.setEndingToken(update.getOwner()));
     }
 
     @Override

@@ -67,8 +67,8 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
     private void receive(Object object) {
         if (object instanceof GamesList) {
             receiver.onGamesList((GamesList) object);
-        } else if (object instanceof ItemsSelected) {
-            receiver.onItemsSelected((ItemsSelected) object);
+        } else if (object instanceof SelectedItems) {
+            receiver.onSelectedItems((SelectedItems) object);
         } else if (object instanceof LivingRoomUpdate) {
             receiver.onLivingRoomUpdate((LivingRoomUpdate) object);
         } else if (object instanceof BookshelfUpdate) {

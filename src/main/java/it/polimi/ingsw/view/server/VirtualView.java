@@ -149,7 +149,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     public synchronized void selectFromLivingRoom(LivingRoomSelection message) {
         synchronized (controllerLock) {
             if (controller == null) {
-                onItemsSelected(new ItemsSelected(null));
+                onSelectedItems(new SelectedItems(null));
                 return;
             }
         }
@@ -298,11 +298,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     }
 
     @Override
-    public void onItemsSelected(ItemsSelected itemsSelected) {
+    public void onSelectedItems(SelectedItems selectedItems) {
         synchronized (disconnectedLock) {
             if (disconnected) return;
         }
-        serverConnection.send(itemsSelected);
+        serverConnection.send(selectedItems);
     }
 
     @Override

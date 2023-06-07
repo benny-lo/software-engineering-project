@@ -101,7 +101,7 @@ public class TextInterface extends ClientView implements InputReceiver {
      * @param message - message of onItemsSelected type, which contains the item chosen.
      */
     @Override
-    public synchronized void onItemsSelected(ItemsSelected message) {
+    public synchronized void onSelectedItems(SelectedItems message) {
         chosenItems = message.getItems();
         if (chosenItems == null) printInvalidSelection();
         else if (status != ClientStatus.CHAT) {

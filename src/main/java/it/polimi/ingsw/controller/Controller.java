@@ -321,7 +321,7 @@ public class Controller implements ActionListener {
                 !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
-            action.getView().onItemsSelected(new ItemsSelected(null));
+            action.getView().onSelectedItems(new SelectedItems(null));
             return;
         }
 
@@ -329,8 +329,13 @@ public class Controller implements ActionListener {
 
         notifyLivingRoomToEverybody();
 
+//        for(ServerUpdateViewInterface v : views) { maybe I'll use this
+//            v.onSelectedItems(new SelectedItems(items));
+//        }
+
         for(ServerUpdateViewInterface v : views) {
-            v.onItemsSelected(new ItemsSelected(items));
+            if (v.equals(action.getView()))
+                v.onSelectedItems(new SelectedItems(items));
         }
 
         turnPhase = TurnPhase.BOOKSHELF;

@@ -187,8 +187,8 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     @Override
-    public void receive(ItemsSelected selected) throws RemoteException {
-        receiver.onItemsSelected(selected);
+    public void receive(SelectedItems selected) throws RemoteException {
+        receiver.onSelectedItems(selected);
     }
 
     @Override

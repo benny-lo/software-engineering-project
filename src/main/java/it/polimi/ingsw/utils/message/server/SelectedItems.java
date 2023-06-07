@@ -5,14 +5,14 @@ import it.polimi.ingsw.utils.message.Message;
 
 import java.util.List;
 
-public class ItemsSelected extends Message {
+public class SelectedItems extends Message {
     private final List<Item> items;
 
     /**
      * Constructor for the class.
      * @param items - list of items
      */
-    public ItemsSelected(List<Item> items) {
+    public SelectedItems(List<Item> items) {
         this.items = items;
     }
     /**

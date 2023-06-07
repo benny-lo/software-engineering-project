@@ -253,7 +253,7 @@ class TextInterfacePrinter {
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
         if (commonGoalCards == null)
             return;
-        String description="";
+        String description = "";
         System.out.println("Your common goal cards are: ");
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
             switch (card.getKey()){

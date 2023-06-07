@@ -517,13 +517,13 @@ public class ControllerTest {
         assertEquals(list1.size(),mockServerConnection0.list.size()-1);
         for(Message message : mockServerConnection0.list)
         {
-            if(!(message instanceof ItemsSelected))
+            if(!(message instanceof SelectedItems))
             {
                 assertEquals(message,list1.get(mockServerConnection0.list.indexOf(message)));
             }
         }
-        ItemsSelected itemsSelected = (ItemsSelected) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
-        assertNull(itemsSelected.getItems());
+        SelectedItems selectedItems = (SelectedItems) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertNull(selectedItems.getItems());
     }
 
 }
