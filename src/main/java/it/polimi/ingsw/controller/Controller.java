@@ -337,7 +337,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method perfroms the SelectionColumnAndOrder action, letting the player choose in which column of the bookshelf
+     * This method performs the SelectionColumnAndOrder action, letting the player choose in which column of the bookshelf
      * and in what order put the items.
      * @param action - action that sets the listener in motion
      */
@@ -372,7 +372,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method performs the ChatMessage action, letting the player send and recieve messages.
+     * This method performs the ChatMessage action, letting the player send and receive messages.
      * @param action - action that sets the listener in motion
      */
     @Override

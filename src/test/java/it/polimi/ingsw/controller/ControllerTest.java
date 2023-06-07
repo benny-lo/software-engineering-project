@@ -1,6 +1,8 @@
 package it.polimi.ingsw.controller;
 
 
+
+import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
 import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
 import it.polimi.ingsw.utils.action.JoinAction;
@@ -524,6 +526,59 @@ public class ControllerTest {
         }
         ItemsSelected itemsSelected = (ItemsSelected) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
         assertNull(itemsSelected.getItems());
+    }
+
+    /**
+     * Testing for content of SelectionFromLivingRoomAction Messages when the action succeeds
+     */
+    @Test
+    public void contentSuccessfulSelectionFromLivingRoomTest()
+    {
+        int index = 0;
+        Controller controller = new Controller(2, 2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+
+        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
+        List<Position> pos = new ArrayList<>();
+        pos.add(new Position(1, 3));
+        controller.setCurrentPlayer(view0.getNickname());
+        LivingRoomUpdate oldLivingRoom ;
+        for (Message message : mockServerConnection0.list) {
+            if (message instanceof LivingRoomUpdate) {
+                index = mockServerConnection0.list.indexOf(message);
+            }
+        }
+        oldLivingRoom = (LivingRoomUpdate) mockServerConnection0.list.get(index);
+
+        controller.perform(new SelectionFromLivingRoomAction(view0, pos));
+        ItemsSelected itemsSelected = (ItemsSelected) mockServerConnection0.list.get(mockServerConnection0.list.size() - 1);
+        LivingRoomUpdate adjournedLivingRoom = (LivingRoomUpdate) mockServerConnection0.list.get(mockServerConnection0.list.size() - 2);
+        assertNull(adjournedLivingRoom.getLivingRoomUpdate().get(new Position(1, 3)));
+        assertEquals(oldLivingRoom.getLivingRoomUpdate().get(new Position(1,3)),itemsSelected.getItems().get(0));
+
+        for(Map.Entry<Position, Item> entry: ((LivingRoomUpdate) mockServerConnection0.list.get(index)).getLivingRoomUpdate().entrySet())
+        {
+            if(entry.getKey().getRow() != 1 && entry.getKey().getColumn() != 3)
+            {
+                assertEquals(entry.getValue(),oldLivingRoom.getLivingRoomUpdate().get(entry.getKey()));
+            }
+        }
+
+        ItemsSelected otherView = (ItemsSelected) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
+        assertEquals(otherView.getItems().get(0), itemsSelected.getItems().get(0));
+        LivingRoomUpdate livingRoomUpdate2 = (LivingRoomUpdate) mockServerConnection1.list.get(mockServerConnection1.list.size()-2);
+        assertNull(livingRoomUpdate2.getLivingRoomUpdate().get(new Position(1,3)));
+
+
+
     }
 
 }
