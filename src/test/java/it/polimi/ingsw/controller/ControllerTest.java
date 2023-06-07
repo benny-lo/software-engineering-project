@@ -576,11 +576,117 @@ public class ControllerTest {
         assertEquals(otherView.getItems().get(0), itemsSelected.getItems().get(0));
         LivingRoomUpdate livingRoomUpdate2 = (LivingRoomUpdate) mockServerConnection1.list.get(mockServerConnection1.list.size()-2);
         assertNull(livingRoomUpdate2.getLivingRoomUpdate().get(new Position(1,3)));
-
-
-
     }
 
+
+    /**
+     * Testing for the content of the Selection of Column and Order Action messages, when it fails
+     */
+    @Test
+    public void contentUnsuccessfulSelectionColumnAndOrderTest()
+    {
+        Controller controller = new Controller(2,2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+
+        List<Integer> order = new ArrayList<>();
+        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
+        controller.perform(new SelectionColumnAndOrderAction(view0,0,order));
+
+        AcceptedInsertion acceptedInsertion = (AcceptedInsertion) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertFalse(acceptedInsertion.isAccepted());
+    }
+
+    /**
+     * Testing for the content of the Selection of Column and Order Action messages, when it succeeds
+     */
+    @Test
+    public void contentSuccessfulSelectionColumnAndOrderTest()
+    {
+        int index = 0;
+        Controller controller = new Controller(2,2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+        List<Position> pos = new ArrayList<>();
+        pos.add(new Position(1,3));
+        List<Integer> order = new ArrayList<>();
+        order.add(0);
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
+        controller.perform(new SelectionFromLivingRoomAction(view0,pos));
+        controller.setTurnPhase(TurnPhase.BOOKSHELF);
+        controller.perform(new SelectionColumnAndOrderAction(view0,0,order));
+        AcceptedInsertion acceptedInsertion;
+        for(Message message : mockServerConnection0.list)
+        {
+            if(message instanceof AcceptedInsertion)
+            {
+                index = mockServerConnection0.list.indexOf(message);
+            }
+        }
+        acceptedInsertion = (AcceptedInsertion) mockServerConnection0.list.get(index);
+
+        assertTrue(acceptedInsertion.isAccepted());
+
+
+        for (Message message : mockServerConnection0.list)
+        {
+
+            if (message instanceof BookshelfUpdate bookshelfUpdate) {
+                assertTrue(bookshelfUpdate.getOwner().equals(view0.getNickname()) || bookshelfUpdate.getOwner().equals(view1.getNickname()));
+                for (Position position : bookshelfUpdate.getBookshelf().keySet()) {
+                    if(position.getColumn() != 0 && position.getRow() != 0)
+                    {
+                        assertNull(bookshelfUpdate.getBookshelf().get(position));
+                    }
+
+                }
+            }
+
+            if (message instanceof CommonGoalCardsUpdate commonGoalCardsUpdate) {
+                assertNotNull(commonGoalCardsUpdate.getCommonGoalCardsUpdate());
+                assertTrue(commonGoalCardsUpdate.getCommonGoalCardsUpdate().size() == 2 || commonGoalCardsUpdate.getCommonGoalCardsUpdate().size() == 0);
+            }
+
+            if (message instanceof EndingTokenUpdate endingTokenUpdate) {
+                assertNull(endingTokenUpdate.getOwner());
+            }
+
+            if (message instanceof PersonalGoalCardUpdate personalGoalCardUpdate) {
+                assertEquals(personalGoalCardUpdate.getId(), controller.getGame().getPersonalID(view0.getNickname()));
+            }
+
+            if (message instanceof  ScoresUpdate scoresUpdate)
+            {
+                assertEquals(2,scoresUpdate.getScores().size());
+                for(String string : scoresUpdate.getScores().keySet())
+                {
+                    assertEquals(0,scoresUpdate.getScores().get(string));
+                }
+            }
+
+            if (message instanceof  StartTurnUpdate startTurnUpdate)
+            {
+                assertTrue(startTurnUpdate.getCurrentPlayer().equals("nick") || startTurnUpdate.getCurrentPlayer().equals("rick"));
+            }
+
+        }
+
+    }
 }
 
 
