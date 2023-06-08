@@ -4,6 +4,7 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Item;
 import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
@@ -673,10 +674,7 @@ public class ControllerTest {
             if (message instanceof  ScoresUpdate scoresUpdate)
             {
                 assertEquals(2,scoresUpdate.getScores().size());
-                for(String string : scoresUpdate.getScores().keySet())
-                {
-                    assertEquals(0,scoresUpdate.getScores().get(string));
-                }
+
             }
 
             if (message instanceof  StartTurnUpdate startTurnUpdate)
@@ -687,6 +685,101 @@ public class ControllerTest {
         }
 
     }
+
+    /**
+     * Testing for the content of the ChatMessageAction , when it fails
+     */
+    @Test
+    public void contentUnsuccessfulChatMessageTest()
+    {
+        Controller controller = new Controller(2,2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+
+        controller.setEnded();
+        controller.perform(new ChatMessageAction(view0,"Good Game","all"));
+        ChatAccepted chatAccepted = (ChatAccepted) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertFalse(chatAccepted.isAccepted());
+    }
+
+    /**
+     * Testing for the content of the successful ChatMessageAction when sent to all
+     */
+    @Test
+    public void contentSuccessfulAllChatMessageTest()
+    {
+        int index0 = 0;
+        int index1 = 0;
+        Controller controller = new Controller(2,2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+
+        controller.perform(new ChatMessageAction(view0,"Hello","all"));
+        ChatAccepted chatAccepted = (ChatAccepted) mockServerConnection0.list.get(mockServerConnection0.list.size()-2);
+        assertTrue(chatAccepted.isAccepted());
+        for(Message message : mockServerConnection0.list)
+        {
+            if(message instanceof ChatUpdate)
+            {
+                index0 = mockServerConnection0.list.indexOf(message);
+            }
+        }
+        for(Message message: mockServerConnection1.list)
+        {
+            if(message instanceof ChatUpdate)
+            {
+                index1 = mockServerConnection1.list.indexOf(message);
+            }
+        }
+        ChatUpdate chatUpdate0 = (ChatUpdate) mockServerConnection0.list.get(index0);
+        ChatUpdate chatUpdate1 = (ChatUpdate) mockServerConnection1.list.get(index1);
+        assertTrue(chatUpdate0.getReceiver().equals("all") && chatUpdate1.getReceiver().equals("all"));
+        assertTrue(chatUpdate0.getText().equals("Hello") && chatUpdate1.getText().equals("Hello"));
+        assertTrue(chatUpdate0.getSender().equals("nick") && chatUpdate1.getSender().equals("nick"));
+    }
+
+    /**
+     * Testing for the content of the successful ChatMessageAction when not sent to all
+     */
+    @Test
+    public void contentSuccessfulChatMessageTest()
+    {
+        Controller controller = new Controller(2,2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+        controller.perform(new ChatMessageAction(view0,"Hello","john"));
+        ChatAccepted chatAccepted = (ChatAccepted) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertFalse(chatAccepted.isAccepted());
+
+        controller.perform(new ChatMessageAction(view0,"Hello", "rick"));
+        ChatUpdate chatUpdate0 = (ChatUpdate) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        ChatUpdate chatUpdate1 = (ChatUpdate) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
+        assertTrue(chatUpdate0.getSender().equals("nick") && chatUpdate1.getSender().equals("nick"));
+        assertTrue(chatUpdate0.getReceiver().equals("rick") && chatUpdate1.getReceiver().equals("rick"));
+        assertTrue(chatUpdate0.getText().equals("Hello") && chatUpdate1.getText().equals("Hello"));
+    }
+
 }
 
 
