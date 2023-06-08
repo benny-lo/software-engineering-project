@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.client.gui.controllers;
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.BookshelfInsertion;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;
@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -53,6 +54,7 @@ public class GameController implements Initializable {
     private int selectedColumn;
     private final static double selectedOpacity = 0.3;
     private final static double notSelectedOpacity = 1.0;
+    private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -193,7 +195,12 @@ public class GameController implements Initializable {
     }
 
     public void selectItem(Position position) {
-        if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
+        if (!guInterface.getNickname().equals(currentPlayer)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (selectedItems.contains(position)) {
             selectedItems.remove(position);
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
@@ -204,12 +211,24 @@ public class GameController implements Initializable {
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(selectedOpacity);
             return; //this will be used; don't delete
         }
-        //TODO: show an error on gui; already 3 tiles selected
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("You have already selected 3 items!");
+        warningAlert.showAndWait();
     }
 
     public void selectFromLivingRoom() throws IOException {
-        if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
-        if (selectedItems.size() < 1) return; //TODO: show an error on gui; select at least one item
+        if (!guInterface.getNickname().equals(currentPlayer)){
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (selectedItems.size() < 1){
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You have to select at least one item!");
+            warningAlert.showAndWait();
+            return;
+        }
         System.out.println("lato client select funzionante\n" + selectedItems);
 
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
@@ -237,6 +256,13 @@ public class GameController implements Initializable {
 
     public void clearSelectedItems() {
         selectedItems.clear();
+    }
+
+    public void failedSelection() {
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("Failed selection, retry!");
+        warningAlert.showAndWait();
+
     }
 
     //BOOKSHELF
@@ -300,9 +326,24 @@ public class GameController implements Initializable {
             thirdChosenItemLabel.setText("");
     }
     public void selectColumn(int column) {
-        if (!currentPlayer.equals(nickname)) return; //TODO: show an error on gui; not your turn
-        if (chosenItems.size() == 0) return; //TODO: show an error on gui; select items from livingRoom
-        if (!(orderItems.size() == selectedItems.size())) return; //TODO: show an error on gui; select all the items
+        if (!currentPlayer.equals(nickname)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (chosenItems.size() == 0) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You have to select items from the Living Room!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (!(orderItems.size() == selectedItems.size())) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You have to choose an order for all the items!");
+            warningAlert.showAndWait();
+            return;
+        }
         selectedColumn = column;
         guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, selectedOrder));
     }
@@ -345,6 +386,12 @@ public class GameController implements Initializable {
         firstChosenItemImageView.setImage(null);
         secondChosenItemImageView.setImage(null);
         thirdChosenItemImageView.setImage(null);
+    }
+
+    public void failedInsertion() {
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("Failed insertion, retry!");
+        warningAlert.showAndWait();
     }
 
     //PERSONAL GOAL CARD

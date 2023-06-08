@@ -3,9 +3,9 @@ package it.polimi.ingsw.model.player;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.ScoringToken;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.game.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 

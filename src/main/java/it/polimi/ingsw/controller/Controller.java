@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.GameInterface;
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.GameConfig;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
@@ -329,13 +329,8 @@ public class Controller implements ActionListener {
 
         notifyLivingRoomToEverybody();
 
-//        for(ServerUpdateViewInterface v : views) { maybe I'll use this
-//            v.onSelectedItems(new SelectedItems(items));
-//        }
-
         for(ServerUpdateViewInterface v : views) {
-            if (v.equals(action.getView()))
-                v.onSelectedItems(new SelectedItems(items));
+            v.onSelectedItems(new SelectedItems(items));
         }
 
         turnPhase = TurnPhase.BOOKSHELF;
@@ -505,7 +500,6 @@ public class Controller implements ActionListener {
         while(!playerQueue.peek().equals(nickname)){
             p = playerQueue.poll();
             playerQueue.add(p);
-            assert playerQueue.peek() != null;
         }
 
         game.setCurrentPlayer(nickname);

@@ -2,7 +2,7 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.view.client.ClientView;
-import it.polimi.ingsw.view.client.cli.TextInterface;
+import it.polimi.ingsw.view.client.cli.CLInterface;
 import it.polimi.ingsw.view.client.gui.GUInterface;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public class Client {
         if (args.size() == 0) System.exit(1);
         try {
             if (args.get(0).equalsIgnoreCase("cli")) {
-                view = new TextInterface();
+                view = new CLInterface();
                 if (args.size() == 2) {
                     if (args.get(1).equalsIgnoreCase("rmi")) {
                         view.startRMI(ServerSettings.getHostName(), ServerSettings.getRmiPort());

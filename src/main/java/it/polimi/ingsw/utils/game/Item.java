@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.utils.game;
 
 /**
  * Enumeration of all possible types of item tiles.

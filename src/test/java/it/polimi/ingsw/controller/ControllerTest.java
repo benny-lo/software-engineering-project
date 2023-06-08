@@ -2,8 +2,8 @@ package it.polimi.ingsw.controller;
 
 
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
@@ -402,7 +402,7 @@ public class ControllerTest {
      * Testing content of Join Action Messages
      */
     @Test
-    public void contentJoinActionTest() {
+    public void testContentJoinAction() {
         Controller controller = new Controller(2, 2);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
@@ -499,7 +499,7 @@ public class ControllerTest {
      * Testing for content of SelectionFromLivingRoomAction Messages when the action fails.
      */
     @Test
-    public void contentUnsuccessfulSelectionFromLivingRoomTest()
+    public void testContentUnsuccessfulSelectionFromLivingRoom()
     {
         Controller controller = new Controller(2, 2);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -532,7 +532,7 @@ public class ControllerTest {
      * Testing for content of SelectionFromLivingRoomAction Messages when the action succeeds
      */
     @Test
-    public void contentSuccessfulSelectionFromLivingRoomTest()
+    public void testContentSuccessfulSelectionFromLivingRoom()
     {
         int index = 0;
         Controller controller = new Controller(2, 2);
@@ -559,10 +559,10 @@ public class ControllerTest {
         oldLivingRoom = (LivingRoomUpdate) mockServerConnection0.list.get(index);
 
         controller.perform(new SelectionFromLivingRoomAction(view0, pos));
-        ItemsSelected itemsSelected = (ItemsSelected) mockServerConnection0.list.get(mockServerConnection0.list.size() - 1);
+        SelectedItems selectedItems = (SelectedItems) mockServerConnection0.list.get(mockServerConnection0.list.size() - 1);
         LivingRoomUpdate adjournedLivingRoom = (LivingRoomUpdate) mockServerConnection0.list.get(mockServerConnection0.list.size() - 2);
         assertNull(adjournedLivingRoom.getLivingRoomUpdate().get(new Position(1, 3)));
-        assertEquals(oldLivingRoom.getLivingRoomUpdate().get(new Position(1,3)),itemsSelected.getItems().get(0));
+        assertEquals(oldLivingRoom.getLivingRoomUpdate().get(new Position(1,3)),selectedItems.getItems().get(0));
 
         for(Map.Entry<Position, Item> entry: ((LivingRoomUpdate) mockServerConnection0.list.get(index)).getLivingRoomUpdate().entrySet())
         {
@@ -572,8 +572,8 @@ public class ControllerTest {
             }
         }
 
-        ItemsSelected otherView = (ItemsSelected) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
-        assertEquals(otherView.getItems().get(0), itemsSelected.getItems().get(0));
+        SelectedItems otherView = (SelectedItems) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
+        assertEquals(otherView.getItems().get(0), selectedItems.getItems().get(0));
         LivingRoomUpdate livingRoomUpdate2 = (LivingRoomUpdate) mockServerConnection1.list.get(mockServerConnection1.list.size()-2);
         assertNull(livingRoomUpdate2.getLivingRoomUpdate().get(new Position(1,3)));
     }
@@ -583,7 +583,7 @@ public class ControllerTest {
      * Testing for the content of the Selection of Column and Order Action messages, when it fails
      */
     @Test
-    public void contentUnsuccessfulSelectionColumnAndOrderTest()
+    public void testContentUnsuccessfulSelectionColumnAndOrder()
     {
         Controller controller = new Controller(2,2);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -608,7 +608,7 @@ public class ControllerTest {
      * Testing for the content of the Selection of Column and Order Action messages, when it succeeds
      */
     @Test
-    public void contentSuccessfulSelectionColumnAndOrderTest()
+    public void testContentSuccessfulSelectionColumnAndOrder()
     {
         int index = 0;
         Controller controller = new Controller(2,2);
@@ -670,7 +670,7 @@ public class ControllerTest {
                 assertEquals(personalGoalCardUpdate.getId(), controller.getGame().getPersonalID(view0.getNickname()));
             }
 
-            if (message instanceof  ScoresUpdate scoresUpdate)
+            if (message instanceof ScoresUpdate scoresUpdate)
             {
                 assertEquals(2,scoresUpdate.getScores().size());
                 for(String string : scoresUpdate.getScores().keySet())
@@ -679,7 +679,7 @@ public class ControllerTest {
                 }
             }
 
-            if (message instanceof  StartTurnUpdate startTurnUpdate)
+            if (message instanceof StartTurnUpdate startTurnUpdate)
             {
                 assertTrue(startTurnUpdate.getCurrentPlayer().equals("nick") || startTurnUpdate.getCurrentPlayer().equals("rick"));
             }

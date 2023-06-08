@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.client.gui;
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
@@ -19,7 +19,6 @@ import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startL
 import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
 import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
 
-//TODO: implement everything
 //TODO: when then server crashes, send an error
 public class GUInterface extends ClientView {
     private LoginController loginController;
@@ -122,7 +121,7 @@ public class GUInterface extends ClientView {
         if (chosenItems == null){
             Platform.runLater(() -> gameController.resetOpacity());
             Platform.runLater(() -> gameController.clearSelectedItems());
-            System.out.println("lato server rifiutato");
+            Platform.runLater(() -> gameController.failedSelection());
             return;
         } //TODO: invalid selection error
         System.out.println("lato server accettato");
@@ -132,7 +131,10 @@ public class GUInterface extends ClientView {
 
     @Override
     public synchronized void onAcceptedInsertion(AcceptedInsertion message) {
-        if (!message.isAccepted()) {return;} //TODO: invalid insertion error
+        if (!message.isAccepted()) {
+            Platform.runLater(() -> gameController.failedInsertion());
+            return;
+        }
         Platform.runLater(() -> gameController.insertItems());
         Platform.runLater(() -> gameController.clearChosenItemsImageView());
     }
@@ -213,6 +215,8 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onDisconnection() {
+//        if (disconnectionInLauncher()) return;
+//        if (disconnectionInGame()) return;
         System.exit(0);
     } //TODO: implement this
 

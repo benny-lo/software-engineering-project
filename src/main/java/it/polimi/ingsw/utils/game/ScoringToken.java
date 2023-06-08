@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model;
+package it.polimi.ingsw.utils.game;
 
 /**
  * Class representing a scoring/ending token. It is characterized by its score and its type.

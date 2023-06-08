@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.commonGoalCardTest.commonGoalPatternTest;
 
-import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPattern11;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;

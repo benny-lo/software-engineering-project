@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.commonGoalCard;
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.ScoringToken;
+import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.game.ScoringToken;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.*;
 import it.polimi.ingsw.model.player.Bookshelf;
 import it.polimi.ingsw.controller.modelListener.CommonGoalCardsListener;

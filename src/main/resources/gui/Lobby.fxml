@@ -11,9 +11,9 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LobbyController">
    <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true">
-      <Image url="@myShelfieImages/misc/sfondo_parquet.jpg"/>
+      <Image url="@myShelfieImages/misc/sfondo_parquet.jpg" />
    </ImageView>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1388.0" layoutY="55.0" prefHeight="133.0" prefWidth="332.0" text="Lobby">
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1262.0" layoutY="54.0" prefHeight="133.0" prefWidth="332.0" text="Lobby">
       <font>
          <Font size="48.0" />
       </font>
@@ -55,15 +55,9 @@
          <Font size="38.0" />
       </font>
    </Label>
-   <Label fx:id="errorCreateGameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="475.0" layoutY="503.0" prefHeight="52.0" prefWidth="179.0" text="Something gone wrong!&#10;Retry&#10;" textAlignment="CENTER" textFill="#e60000" visible="false">
-      <font>
-         <Font size="16.0" />
-      </font>
-   </Label>
    <ListView fx:id="gamesListView" layoutX="33.0" layoutY="634.0" prefHeight="343.0" prefWidth="441.0" />
-   <Label fx:id="errorSelectGameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="494.0" layoutY="904.0" prefHeight="52.0" prefWidth="179.0" text="Something gone wrong!&#10;Retry&#10;" textAlignment="CENTER" textFill="#e60000" visible="false">
-      <font>
-         <Font size="16.0" />
-      </font>
-   </Label>
+   <ImageView fitHeight="561.0" fitWidth="829.0" layoutX="1014.0" layoutY="264.0" pickOnBounds="true"
+              preserveRatio="true">
+      <Image url="@myShelfieImages/publisher_material/Display_1.jpg"/>
+   </ImageView>
 </AnchorPane>

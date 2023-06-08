@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.client.cli;
 
-import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import it.polimi.ingsw.utils.message.server.GameInfo;
 
@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-class TextInterfacePrinter {
+class CLInterfacePrinter {
 
     private static final String ANSI_RESET = "\u001B[0m";
     private static final String ANSI_RED = "\u001B[31m";

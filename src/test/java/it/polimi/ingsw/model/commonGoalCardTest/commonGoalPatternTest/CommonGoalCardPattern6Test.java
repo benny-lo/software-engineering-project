@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.utils.game.Item;
 
 /**
  * Unit test for common goal card pattern 6

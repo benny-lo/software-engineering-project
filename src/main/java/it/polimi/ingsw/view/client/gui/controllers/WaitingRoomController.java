@@ -8,6 +8,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -16,8 +18,6 @@ import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.utils.gui.CloseWindow.logout;
 
-
-//TODO: the view list doesn't receive the players that had already entered the game
 public class WaitingRoomController implements Initializable {
     private static GUInterface guInterface;
     @FXML
@@ -64,5 +64,10 @@ public class WaitingRoomController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         guInterface.receiveController(this);
+        playersListView.setCellFactory(param -> {
+            TextFieldListCell<String> cell = new TextFieldListCell<>();
+            cell.setFont(Font.font(22));
+            return cell;
+        });
     }
 }

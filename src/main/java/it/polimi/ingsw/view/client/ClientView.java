@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.client;
 
-import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMI;
 import it.polimi.ingsw.network.client.socket.ClientConnectionTCP;

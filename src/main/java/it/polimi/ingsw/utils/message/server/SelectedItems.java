@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.message.server;
 
-import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.message.Message;
 
 import java.util.List;
