@@ -107,6 +107,9 @@ public class GUInterface extends ClientView {
         numberPlayers = message.getNumberPlayers();
         for (String player : message.getConnectedPlayers()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(player));
+            if (nickname != null && !nickname.equals(player)) {
+                Platform.runLater(() -> chatController.addReceiver(player));
+            }
             nicknames.add(player);
         }
         livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
@@ -141,7 +144,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onChatAccepted(ChatAccepted message) {
-
+        // TODO:
     }
 
     @Override
@@ -162,9 +165,11 @@ public class GUInterface extends ClientView {
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
         if (update.isTypeOfAction()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
+            Platform.runLater(() -> chatController.addReceiver(update.getNickname()));
             nicknames.add(update.getNickname());
         } else {
             Platform.runLater(() -> waitingRoomController.playerDisconnected(update.getNickname()));
+            Platform.runLater(() -> chatController.removeReceiver(update.getNickname()));
             nicknames.remove(update.getNickname());
         }
 
@@ -199,7 +204,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-
+        Platform.runLater(() -> chatController.receiveMessage(update));
     }
 
     @Override
