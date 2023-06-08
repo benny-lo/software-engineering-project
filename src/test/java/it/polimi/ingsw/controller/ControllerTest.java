@@ -2,17 +2,16 @@ package it.polimi.ingsw.controller;
 
 
 
+import it.polimi.ingsw.controller.modelListener.BookshelfListener;
+import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
-import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
-import it.polimi.ingsw.utils.action.JoinAction;
-import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
-import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.server.*;
 
+import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 import it.polimi.ingsw.view.server.VirtualView;
 import org.junit.jupiter.api.Test;
 
@@ -779,6 +778,68 @@ public class ControllerTest {
         assertTrue(chatUpdate0.getReceiver().equals("rick") && chatUpdate1.getReceiver().equals("rick"));
         assertTrue(chatUpdate0.getText().equals("Hello") && chatUpdate1.getText().equals("Hello"));
     }
+
+    /**
+     * Testing for DisconnectionAction after the game is started.
+     */
+    @Test
+    public void beforeDisconnectionActionTest()
+    {
+        Controller controller = new Controller(2,2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("rick");
+        controller.perform(new JoinAction(view1));
+
+        controller.perform(new DisconnectionAction(view0));
+        assertTrue(controller.getEnded());
+        for(ServerUpdateViewInterface v : controller.getViews())
+        {
+            assertNotEquals(v,view0);
+        }
+        EndGameUpdate endGameUpdate = (EndGameUpdate) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
+        assertNull(endGameUpdate.getWinner());
+    }
+
+    /**
+     * Testing for DisconnectionAction before the game is started.
+     */
+    @Test
+    public void afterDisconnectionActionTest()
+    {
+        Controller controller = new Controller(3,2);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+
+        MockServerConnection mockServerConnection1 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection1);
+        view1.setNickname("john");
+
+        MockServerConnection mockServerConnection2 = new MockServerConnection();
+        VirtualView view2 = new VirtualView(mockServerConnection2);
+        view2.setNickname("rick");
+
+        controller.perform(new DisconnectionAction(view0));
+        for(ServerUpdateViewInterface v : controller.getViews())
+        {
+            assertNotEquals(v,view0);
+        }
+        for(String s : controller.getGameBuilder().getPlayers())
+        {
+            assertNotEquals(s,view0.getNickname());
+        }
+        for(BookshelfListener b : controller.getGameBuilder().getBookshelfListeners())
+        {
+            assertNotEquals(b.getOwner(), view0.getNickname());
+        }
+    }
+
 
 }
 
