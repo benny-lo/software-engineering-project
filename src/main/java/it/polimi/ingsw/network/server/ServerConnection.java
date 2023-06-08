@@ -16,7 +16,7 @@ public interface ServerConnection {
     void send(StartTurnUpdate update);
     void send(EndGameUpdate update);
     void send(GamesList gamesList);
-    void send(ItemsSelected itemsSelected);
+    void send(SelectedItems selectedItems);
     void send(GameData gameData);
     void send(AcceptedInsertion acceptedInsertion);
     void send(ChatAccepted chatAccepted);

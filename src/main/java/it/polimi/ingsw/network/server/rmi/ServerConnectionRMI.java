@@ -84,8 +84,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                         client.receive((EndGameUpdate) message);
                     } else if (message instanceof GamesList) {
                         client.receive((GamesList) message);
-                    } else if (message instanceof ItemsSelected) {
-                        client.receive((ItemsSelected) message);
+                    } else if (message instanceof SelectedItems) {
+                        client.receive((SelectedItems) message);
                     } else if (message instanceof GameData) {
                         client.receive((GameData) message);
                     } else if (message instanceof AcceptedInsertion) {
@@ -239,9 +239,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
-    public void send(ItemsSelected itemsSelected) {
+    public void send(SelectedItems selectedItems) {
         synchronized (sendingQueue) {
-            sendingQueue.add(itemsSelected);
+            sendingQueue.add(selectedItems);
             sendingQueue.notifyAll();
         }
     }

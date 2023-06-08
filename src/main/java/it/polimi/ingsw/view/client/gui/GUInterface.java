@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.client.gui;
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
@@ -19,7 +19,6 @@ import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startL
 import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
 import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
 
-//TODO: implement everything
 //TODO: when then server crashes, send an error
 public class GUInterface extends ClientView {
     private LoginController loginController;
@@ -108,6 +107,9 @@ public class GUInterface extends ClientView {
         numberPlayers = message.getNumberPlayers();
         for (String player : message.getConnectedPlayers()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(player));
+            if (nickname != null && !nickname.equals(player)) {
+                Platform.runLater(() -> chatController.addReceiver(player));
+            }
             nicknames.add(player);
         }
         livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
@@ -117,10 +119,12 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public synchronized void onItemsSelected(ItemsSelected message) {
+    public synchronized void onSelectedItems(SelectedItems message) {
         chosenItems = message.getItems();
         if (chosenItems == null){
-            System.out.println("lato server rifiutato");
+            Platform.runLater(() -> gameController.resetOpacity());
+            Platform.runLater(() -> gameController.clearSelectedItems());
+            Platform.runLater(() -> gameController.failedSelection());
             return;
         } //TODO: invalid selection error
         System.out.println("lato server accettato");
@@ -130,13 +134,17 @@ public class GUInterface extends ClientView {
 
     @Override
     public synchronized void onAcceptedInsertion(AcceptedInsertion message) {
-        if (!message.isAccepted()) {return;} //TODO: invalid insertion error
+        if (!message.isAccepted()) {
+            Platform.runLater(() -> gameController.failedInsertion());
+            return;
+        }
         Platform.runLater(() -> gameController.insertItems());
+        Platform.runLater(() -> gameController.clearChosenItemsImageView());
     }
 
     @Override
     public void onChatAccepted(ChatAccepted message) {
-
+        // TODO:
     }
 
     @Override
@@ -157,9 +165,11 @@ public class GUInterface extends ClientView {
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
         if (update.isTypeOfAction()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
+            Platform.runLater(() -> chatController.addReceiver(update.getNickname()));
             nicknames.add(update.getNickname());
         } else {
             Platform.runLater(() -> waitingRoomController.playerDisconnected(update.getNickname()));
+            Platform.runLater(() -> chatController.removeReceiver(update.getNickname()));
             nicknames.remove(update.getNickname());
         }
 
@@ -174,12 +184,12 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
-
+        Platform.runLater(() -> gameController.setRankings(update.getScores()));
     }
 
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
-
+        Platform.runLater(() -> gameController.setEndingToken(update.getOwner()));
     }
 
     @Override
@@ -194,7 +204,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-
+        Platform.runLater(() -> chatController.receiveMessage(update));
     }
 
     @Override
@@ -210,6 +220,8 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onDisconnection() {
+//        if (disconnectionInLauncher()) return;
+//        if (disconnectionInGame()) return;
         System.exit(0);
     } //TODO: implement this
 

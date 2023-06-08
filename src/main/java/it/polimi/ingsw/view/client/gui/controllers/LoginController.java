@@ -9,8 +9,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -20,26 +21,29 @@ import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
     private static GUInterface guInterface;
+    private Stage stage;
+    private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
+    @FXML
     public Button loginButton;
     @FXML
     private TextField usernameField;
-    @FXML
-    private Label errorLabel;
-
-    private Stage stage;
-
 
     public static void startLoginController(GUInterface guInterface) {
         LoginController.guInterface = guInterface;
     }
 
     public void failedLogin() {
-        errorLabel.setText("Login failed. Try again!");
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("Login failed. Try again!");
+        warningAlert.showAndWait();
     }
     public void invalidNickname() {
-        errorLabel.setText("""
-                This nickname is incorrect! It can only contains
-                alphanumeric characters and underscores.""");
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("""
+                This nickname is incorrect!
+                It can only contains alphanumeric
+                characters and underscores.""");
+        warningAlert.showAndWait();
     }
 
     public void successfulLogin() {
@@ -56,7 +60,6 @@ public class LoginController implements Initializable {
 
     public void login(ActionEvent event) throws IOException {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
-
 
         String username = usernameField.getText();
 

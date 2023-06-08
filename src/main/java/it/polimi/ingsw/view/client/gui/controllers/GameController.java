@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.client.gui.controllers;
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.BookshelfInsertion;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;
@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -38,6 +39,7 @@ public class GameController implements Initializable {
     private int numberPlayers;
     private final static int numberSelectedItems = 3;
     private final Map<String, GridPane> otherPlayersBookshelf = new HashMap<>();
+    private final Map<String, ImageView> otherPlayersEndingToken = new HashMap<>();
     private final static int cellSizeLivingRoom = 60;
     private final static int cellSizeOthersBookshelf = 15;
     private final static int cellSizeBookshelf = 50;
@@ -52,6 +54,7 @@ public class GameController implements Initializable {
     private int selectedColumn;
     private final static double selectedOpacity = 0.3;
     private final static double notSelectedOpacity = 1.0;
+    private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -118,6 +121,16 @@ public class GameController implements Initializable {
     private Button insertColumn4Button;
     @FXML
     private GridPane bookshelfGridPane;
+    @FXML
+    private ImageView currentEndingTokenImageView;
+    @FXML
+    private ImageView firstEndingTokenImageView;
+    @FXML
+    private ImageView secondEndingTokenImageView;
+    @FXML
+    private ImageView thirdEndingTokenImageView;
+    @FXML
+    private Label rankingsLabel;
 
     public static void startGameController(GUInterface guInterface){
         GameController.guInterface=guInterface;
@@ -125,12 +138,15 @@ public class GameController implements Initializable {
 
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;
-        currentPlayerLabel.setText("It's " + currentPlayer + "'s turn!");
+        if (currentPlayer.equals(nickname))
+            currentPlayerLabel.setText("It's your turn!");
+        else
+            currentPlayerLabel.setText("It's " + currentPlayer + "'s turn!");
     }
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
-        nicknameLabel.setText("Hi " + nickname + " !");
+        nicknameLabel.setText("Hi " + nickname + "!");
     }
 
     private Image getImage(Item item) {
@@ -179,7 +195,12 @@ public class GameController implements Initializable {
     }
 
     public void selectItem(Position position) {
-        if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
+        if (!guInterface.getNickname().equals(currentPlayer)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (selectedItems.contains(position)) {
             selectedItems.remove(position);
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
@@ -190,12 +211,24 @@ public class GameController implements Initializable {
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(selectedOpacity);
             return; //this will be used; don't delete
         }
-        //TODO: show an error on gui; already 3 tiles selected
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("You have already selected 3 items!");
+        warningAlert.showAndWait();
     }
 
     public void selectFromLivingRoom() throws IOException {
-        if (!guInterface.getNickname().equals(currentPlayer)) return; //TODO: show an error on gui; not your turn
-        if (selectedItems.size() < 1) return; //TODO: show an error on gui; select at least one item
+        if (!guInterface.getNickname().equals(currentPlayer)){
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (selectedItems.size() < 1){
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You have to select at least one item!");
+            warningAlert.showAndWait();
+            return;
+        }
         System.out.println("lato client select funzionante\n" + selectedItems);
 
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
@@ -213,6 +246,23 @@ public class GameController implements Initializable {
 
     public void clearTilesList() {
         for (Position items : selectedItems) clearNodeByColumnRow(items.getColumn(), items.getRow());
+    }
+
+    public void resetOpacity() {
+        for (Position position : selectedItems) {
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
+        }
+    }
+
+    public void clearSelectedItems() {
+        selectedItems.clear();
+    }
+
+    public void failedSelection() {
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("Failed selection, retry!");
+        warningAlert.showAndWait();
+
     }
 
     //BOOKSHELF
@@ -276,19 +326,35 @@ public class GameController implements Initializable {
             thirdChosenItemLabel.setText("");
     }
     public void selectColumn(int column) {
-        if (!currentPlayer.equals(nickname)) return; //TODO: show an error on gui; not your turn
-        if (chosenItems.size() == 0) return; //TODO: show an error on gui; select items from livingRoom
-        if (!(orderItems.size() == selectedItems.size())) return; //TODO: show an error on gui; select all the items
+        if (!currentPlayer.equals(nickname)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (chosenItems.size() == 0) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You have to select items from the Living Room!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (!(orderItems.size() == selectedItems.size())) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You have to choose an order for all the items!");
+            warningAlert.showAndWait();
+            return;
+        }
         selectedColumn = column;
         guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, selectedOrder));
     }
 
     public void insertItems() {
         for (ImageView item : orderItems) {
-            bookshelfGridPane.add(item, selectedColumn, findFreeRowBookshelf(bookshelfGridPane, selectedColumn));
-            item.setOpacity(notSelectedOpacity);
-            item.setFitWidth(cellSizeBookshelf);
-            item.setFitHeight(cellSizeBookshelf);
+            ImageView imageView = new ImageView(item.getImage());
+            bookshelfGridPane.add(imageView, selectedColumn, findFreeRowBookshelf(bookshelfGridPane, selectedColumn));
+            imageView.setOpacity(notSelectedOpacity);
+            imageView.setFitWidth(cellSizeBookshelf);
+            imageView.setFitHeight(cellSizeBookshelf);
             clearChosenItemLabels();
         }
         endTurnClear();
@@ -316,6 +382,18 @@ public class GameController implements Initializable {
         orderItems.clear();
     }
 
+    public void clearChosenItemsImageView() {
+        firstChosenItemImageView.setImage(null);
+        secondChosenItemImageView.setImage(null);
+        thirdChosenItemImageView.setImage(null);
+    }
+
+    public void failedInsertion() {
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("Failed insertion, retry!");
+        warningAlert.showAndWait();
+    }
+
     //PERSONAL GOAL CARD
 
     public void setPersonalGoalCard(int id){
@@ -333,17 +411,20 @@ public class GameController implements Initializable {
         firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
         firstBookshelfLabel.setText(nicknames.get(0));
         otherPlayersBookshelf.put(nicknames.get(0), firstBookshelfGridPane);
+        otherPlayersEndingToken.put(nicknames.get(0), firstEndingTokenImageView);
 
         if (numberPlayers > 2) {
             secondBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
             secondBookshelfLabel.setText(nicknames.get(1));
             otherPlayersBookshelf.put(nicknames.get(1), secondBookshelfGridPane);
+            otherPlayersEndingToken.put(nicknames.get(1), secondEndingTokenImageView);
 
         }
         if (numberPlayers > 3) {
             thirdBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
             thirdBookshelfLabel.setText(nicknames.get(2));
             otherPlayersBookshelf.put(nicknames.get(2), thirdBookshelfGridPane);
+            otherPlayersEndingToken.put(nicknames.get(2), thirdEndingTokenImageView);
         }
     }
 
@@ -362,6 +443,56 @@ public class GameController implements Initializable {
     //COMMON GOAL CARDS
 
     public void updateCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
+        if (commonGoalCards == null)
+            return;
+        String description = "";
+        boolean first = true;
+        for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
+            switch (card.getKey()){
+                case 0 -> description="Two groups each containing 4 tiles of\nthe same type in a 2x2 square.\nThe tiles of one square can be different\nfrom those of the other square.";
+                case 1 -> description="Two columns each formed by 6 different\ntypes of tiles.";
+                case 2 -> description="Four groups each containing at least 4\ntiles of the same type.\nThe tiles of one group can be different\nfrom those of another group.";
+                case 3 -> description="Six groups each containing at least 2\ntiles of the same type\nThe tiles of one group can be different\nfrom those of another group.";
+                case 4 -> description="Three columns each formed by 6 tiles\nof maximum three different types.\nOne column can show the same or\na different combination of another column";
+                case 5 -> description="Two lines each formed by 5 different\ntypes of tiles. One line can\nshow the same or a different\ncombination of the other line.";
+                case 6 -> description="Four lines each formed by 5 tiles of\nmaximum three different types. One \nline can show the same or a different\ncombination of another line.";
+                case 7 -> description="Four tiles of the same type in the\nfour corners of the bookshelf.";
+                case 8 -> description="Eight or more tiles of the same type\nwith no restrictions about the\nposition of these tiles.";
+                case 9 -> description="Five tiles of the same type forming an X.";
+                case 10 -> description="Five tiles of the same type forming a diagonal";
+                case 11 -> description="Five columns of increasing or decreasing height.\nStarting from the first column\non the left or on the right,\neach next column must be made\nof exactly one more tile.\nTiles can be of any type.";
+            }
+            if (first) {
+                firstCommonGoalCardId.setText("Id: " + card.getKey());
+                firstCommonGoalCardTop.setText("Top token value: " + card.getValue());
+                firstCommonGoalCardDescription.setText(description);
+                first = false;
+            } else {
+                secondCommonGoalCardId.setText("Id: " + card.getKey());
+                secondCommonGoalCardTop.setText("Top token value: " + card.getValue());
+                secondCommonGoalCardDescription.setText(description);
+            }
+        }
+    }
+
+    //ENDING TOKEN
+
+    public void setEndingToken(String owner) {
+        if (owner == null) return;
+        if (owner.equals(nickname))
+            currentEndingTokenImageView.setImage(new Image("/gui/myShelfieImages/scoring_tokens/end_game.jpg"));
+        else
+            otherPlayersEndingToken.get(owner).setImage(new Image("/gui/myShelfieImages/scoring_tokens/end_game.jpg"));
+    }
+
+    //RANKINGS
+
+    public void setRankings(Map<String, Integer> scores) {
+        if (scores == null) return;
+        rankingsLabel.setText("");
+        for(String player : scores.keySet()) {
+            rankingsLabel.setText(rankingsLabel.getText() + player + ": " + scores.get(player) + " points\n");
+        }
     }
 
     //CHAT

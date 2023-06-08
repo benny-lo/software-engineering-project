@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import it.polimi.ingsw.utils.game.Position;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -50,10 +52,10 @@ public class PositionTest {
         Object obj = new Object();
         Position two = new Position(1,2);
         Position three = new Position(0,0);
-        assertTrue(one.equals(one));
-        assertTrue(one.equals(two));
-        assertFalse(one.equals(three));
-        assertFalse(one.equals(obj));
+        assertEquals(one, one);
+        assertEquals(one, two);
+        assertNotEquals(one, three);
+        assertNotEquals(one, obj);
     }
 
     /**

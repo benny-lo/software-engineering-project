@@ -1,8 +1,8 @@
 package it.polimi.ingsw.controller.modelListenerTest;
 
 import it.polimi.ingsw.controller.modelListener.BookshelfListener;
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

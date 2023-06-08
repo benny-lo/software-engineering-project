@@ -20,6 +20,7 @@ import java.util.List;
 
 public class Server {
     private static Registry registry = null;
+    private static ConnectionEstablishmentRMIInterface stub = null;
     /**
      * Parameters: [hostname] [RMI_port_number] [TCP_port_number]
      * @param args cli parameters (except for the first one which was server).
@@ -49,8 +50,6 @@ public class Server {
     }
 
     private static void startConnectionRMI(int port) {
-
-        ConnectionEstablishmentRMIInterface stub = null;
         ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI();
         try {
             stub = (ConnectionEstablishmentRMIInterface)

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.player;
 
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.Item;
+import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.game.Item;
 
 import java.util.ArrayDeque;
 import java.util.List;

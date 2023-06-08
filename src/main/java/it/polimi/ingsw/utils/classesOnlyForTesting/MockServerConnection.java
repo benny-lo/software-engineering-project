@@ -77,8 +77,8 @@ public class MockServerConnection implements ServerConnection {
     }
 
     @Override
-    public void send(ItemsSelected itemsSelected) {
-        list.add(itemsSelected);
+    public void send(SelectedItems selectedItems) {
+        list.add(selectedItems);
     }
 
     @Override

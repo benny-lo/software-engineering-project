@@ -138,8 +138,8 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     @Override
-    public void send(ItemsSelected itemsSelected) {
-        sendPrivate(itemsSelected);
+    public void send(SelectedItems selectedItems) {
+        sendPrivate(selectedItems);
     }
 
     @Override

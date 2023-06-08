@@ -21,21 +21,23 @@ import java.util.ResourceBundle;
 
 public class LobbyController implements Initializable {
     private static GUInterface guInterface;
+    private Stage stage;
+    private GameInfo currentSelectedGame;
+    private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
+    private final static int minNumberPlayers = 2;
+    private final static int maxNumberPlayers = 4;
+    private final static int defaultNumberPlayers = 3;
+    private final static int minNumberCommonGoalCards = 1;
+    private final static int maxNumberCommonGoalCards = 2;
+    private final static int defaultNumberCommonGoalCards = 2;
     @FXML
     private Spinner<Integer> numberPlayersSpinner;
     @FXML
     private Spinner<Integer> numberCommonGoalCardsSpinner;
     @FXML
-    private Label errorCreateGameLabel;
-    @FXML
-    private Label errorSelectGameLabel;
-    @FXML
     private ListView<GameInfo> gamesListView;
     @FXML
     private Label displayNicknameLabel;
-
-    private Stage stage;
-    private GameInfo currentSelectedGame;
 
     public static void startLobbyController(GUInterface guInterface){
         LobbyController.guInterface = guInterface;
@@ -49,7 +51,12 @@ public class LobbyController implements Initializable {
 
     public void selectGame(ActionEvent event) throws IOException {
         if (currentSelectedGame == null){
-            errorSelectGameLabel.setVisible(true);
+
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("""
+                Something gone wrong in the game selection!
+                Please retry.""");
+            warningAlert.showAndWait();
             return;
         }
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -61,8 +68,12 @@ public class LobbyController implements Initializable {
         gamesListView.getItems().addAll(games);
     }
 
-    public void failedCreateGame(){
-        errorCreateGameLabel.setVisible(true);
+    public void failedCreateGame() {
+        warningAlert.setHeaderText("Warning!");
+        warningAlert.setContentText("""
+            Something gone wrong in the game creation!
+            Please retry.""");
+        warningAlert.showAndWait();
     }
 
     public void successfulCreateOrSelectGame(){
@@ -87,12 +98,12 @@ public class LobbyController implements Initializable {
 
         displayNicknameLabel.setText("Hi " + guInterface.getNickname() + "!");
 
-        SpinnerValueFactory<Integer> numberPlayersValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(2,4);
-        numberPlayersValueFactory.setValue(3);
+        SpinnerValueFactory<Integer> numberPlayersValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumberPlayers, maxNumberPlayers);
+        numberPlayersValueFactory.setValue(defaultNumberPlayers);
         numberPlayersSpinner.setValueFactory(numberPlayersValueFactory);
 
-        SpinnerValueFactory<Integer> numberCommonGoalCardsValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,2);
-        numberCommonGoalCardsValueFactory.setValue(2);
+        SpinnerValueFactory<Integer> numberCommonGoalCardsValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumberCommonGoalCards, maxNumberCommonGoalCards);
+        numberCommonGoalCardsValueFactory.setValue(defaultNumberCommonGoalCards);
         numberCommonGoalCardsSpinner.setValueFactory(numberCommonGoalCardsValueFactory);
 
         gamesListView.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> currentSelectedGame = gamesListView.getSelectionModel().getSelectedItem());

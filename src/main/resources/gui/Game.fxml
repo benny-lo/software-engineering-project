@@ -45,7 +45,7 @@
        <Image url="@myShelfieImages/boards/bookshelf.png" />
    </ImageView>
    <Button fx:id="sendButton" layoutX="991.0" layoutY="796.0" mnemonicParsing="false" onAction="#selectFromLivingRoom" prefHeight="37.0" prefWidth="61.0" text="Select" AnchorPane.bottomAnchor="246.66666666666663" />
-   <Label fx:id="currentPlayerLabel" layoutX="1219.0" layoutY="97.0" prefHeight="70.0" prefWidth="662.0" AnchorPane.rightAnchor="39.0">
+   <Label fx:id="currentPlayerLabel" layoutX="1219.0" layoutY="97.0" prefHeight="56.0" prefWidth="395.0" AnchorPane.rightAnchor="306.0">
       <font>
          <Font size="24.0" />
       </font>
@@ -59,15 +59,15 @@
          <Font size="24.0" />
       </font>
    </Label>
-   <Label fx:id="firstBookshelfLabel" alignment="CENTER" layoutX="46.0" layoutY="92.0" prefHeight="35.0" prefWidth="289.0" AnchorPane.leftAnchor="46.0" AnchorPane.topAnchor="92.0">
+   <Label fx:id="firstBookshelfLabel" alignment="CENTER" layoutX="89.0" layoutY="92.0" prefHeight="35.0" prefWidth="203.0" AnchorPane.leftAnchor="89.0" AnchorPane.topAnchor="92.0">
       <font>
          <Font size="24.0" />
       </font></Label>
-   <Label fx:id="secondBookshelfLabel" alignment="CENTER" layoutX="46.0" layoutY="305.0" prefHeight="35.0" prefWidth="289.0" AnchorPane.leftAnchor="46.0">
+   <Label fx:id="secondBookshelfLabel" alignment="CENTER" layoutX="86.0" layoutY="309.0" prefHeight="35.0" prefWidth="203.0" AnchorPane.leftAnchor="86.0">
       <font>
          <Font size="24.0" />
       </font></Label>
-   <Label fx:id="thirdBookshelfLabel" alignment="CENTER" layoutX="47.0" layoutY="522.0" prefHeight="35.0" prefWidth="289.0" AnchorPane.leftAnchor="47.0">
+   <Label fx:id="thirdBookshelfLabel" alignment="CENTER" layoutX="90.0" layoutY="527.0" prefHeight="35.0" prefWidth="203.0" AnchorPane.leftAnchor="90.0">
       <font>
          <Font size="24.0" />
       </font></Label>
@@ -85,42 +85,42 @@
    <Button fx:id="insertColumn2Button" alignment="CENTER" layoutX="1470.0" layoutY="327.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" AnchorPane.rightAnchor="400.0" />
    <Button fx:id="insertColumn3Button" alignment="CENTER" layoutX="1543.0" layoutY="328.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" AnchorPane.rightAnchor="327.0" />
    <Button fx:id="insertColumn4Button" alignment="CENTER" layoutX="1615.0" layoutY="327.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="50.0" text="Insert" AnchorPane.rightAnchor="253.0" />
-   <Label fx:id="nicknameLabel" layoutX="1226.0" layoutY="27.0" prefHeight="70.0" prefWidth="662.0" AnchorPane.rightAnchor="32.0" AnchorPane.topAnchor="27.0">
+   <Label fx:id="nicknameLabel" layoutX="1217.0" layoutY="27.0" prefHeight="56.0" prefWidth="359.0" AnchorPane.rightAnchor="343.66666666666674" AnchorPane.topAnchor="27.0">
       <font>
          <Font size="36.0" />
       </font>
    </Label>
-   <Label layoutX="423.0" layoutY="827.0" prefHeight="44.0" prefWidth="274.0" text="Common Goal Cards" AnchorPane.bottomAnchor="209.0">
+   <Label layoutX="353.0" layoutY="826.0" prefHeight="44.0" prefWidth="274.0" text="Common Goal Cards" AnchorPane.bottomAnchor="210.0">
       <font>
          <Font size="24.0" />
       </font>
    </Label>
-   <Label fx:id="firstCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="417.0" layoutY="960.0" prefHeight="106.0" prefWidth="226.0" AnchorPane.bottomAnchor="14.0">
+   <Label fx:id="firstCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="349.0" layoutY="949.0" prefHeight="106.0" prefWidth="379.0" AnchorPane.bottomAnchor="27.0">
       <font>
          <Font size="18.0" />
       </font>
    </Label>
-   <Label fx:id="firstCommonGoalCardId" layoutX="417.0" layoutY="876.0" prefHeight="35.0" prefWidth="226.0" AnchorPane.bottomAnchor="168.66666666666666">
+   <Label fx:id="firstCommonGoalCardId" layoutX="349.0" layoutY="875.0" prefHeight="35.0" prefWidth="226.0" AnchorPane.bottomAnchor="169.66666666666663">
       <font>
          <Font size="20.0" />
       </font>
    </Label>
-   <Label fx:id="secondCommonGoalCardId" layoutX="697.0" layoutY="876.0" prefHeight="35.0" prefWidth="226.0" AnchorPane.bottomAnchor="168.66666666666666">
+   <Label fx:id="secondCommonGoalCardId" layoutX="742.0" layoutY="875.0" prefHeight="35.0" prefWidth="226.0" AnchorPane.bottomAnchor="169.66666666666663">
       <font>
          <Font size="20.0" />
       </font>
    </Label>
-   <Label fx:id="secondCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="697.0" layoutY="960.0" prefHeight="106.0" prefWidth="226.0" AnchorPane.bottomAnchor="14.0">
+   <Label fx:id="secondCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="742.0" layoutY="947.0" prefHeight="106.0" prefWidth="379.0" AnchorPane.bottomAnchor="27.0">
       <font>
          <Font size="18.0" />
       </font>
    </Label>
-   <Label fx:id="firstCommonGoalCardTop" layoutX="417.0" layoutY="916.0" prefHeight="35.0" prefWidth="203.0" AnchorPane.bottomAnchor="128.66666666666663">
+   <Label fx:id="firstCommonGoalCardTop" layoutX="349.0" layoutY="908.0666666666666" prefHeight="35.0" prefWidth="203.0" AnchorPane.bottomAnchor="136.60000000000002">
       <font>
          <Font size="20.0" />
       </font>
    </Label>
-   <Label fx:id="secondCommonGoalCardTop" layoutX="697.0" layoutY="916.0" prefHeight="35.0" prefWidth="203.0" AnchorPane.bottomAnchor="128.66666666666663">
+   <Label fx:id="secondCommonGoalCardTop" layoutX="742.0" layoutY="908.0" prefHeight="35.0" prefWidth="203.0" AnchorPane.bottomAnchor="136.66666666666663">
       <font>
          <Font size="20.0" />
       </font>
@@ -216,4 +216,21 @@
          <Font size="24.0" />
       </font>
    </Label>
+   <ImageView fx:id="currentEndingTokenImageView" fitHeight="61.0" fitWidth="61.0" layoutX="1612.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="firstEndingTokenImageView" fitHeight="43.0" fitWidth="43.0" layoutX="307.0" layoutY="88.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="secondEndingTokenImageView" fitHeight="43.0" fitWidth="43.0" layoutX="306.0" layoutY="307.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="thirdEndingTokenImageView" fitHeight="43.0" fitWidth="43.0" layoutX="306.0" layoutY="523.0" pickOnBounds="true" preserveRatio="true" />
+   <Label fx:id="rankingsLabel" alignment="TOP_LEFT" layoutX="1160.0" layoutY="906.0" prefHeight="159.0" prefWidth="342.0">
+      <font>
+         <Font size="18.0" />
+      </font>
+   </Label>
+   <Label layoutX="1160.0" layoutY="868.0" prefHeight="37.0" prefWidth="153.0" text="Rankings">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <ImageView fitHeight="96.0" fitWidth="395.0" layoutX="483.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@myShelfieImages/publisher_material/Title_2000x618px.png"/>
+   </ImageView>
 </AnchorPane>

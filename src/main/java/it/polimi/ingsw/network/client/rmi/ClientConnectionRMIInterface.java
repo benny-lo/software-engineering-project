@@ -18,7 +18,7 @@ public interface ClientConnectionRMIInterface extends Remote {
     void receive(StartTurnUpdate update) throws RemoteException;
     void receive(EndGameUpdate update) throws RemoteException;
     void receive(GamesList list) throws RemoteException;
-    void receive(ItemsSelected selected) throws RemoteException;
+    void receive(SelectedItems selected) throws RemoteException;
     void receive(GameData gameData) throws RemoteException;
     void receive(AcceptedInsertion acceptedInsertion) throws RemoteException;
     void receive(ChatAccepted chatAccepted) throws RemoteException;

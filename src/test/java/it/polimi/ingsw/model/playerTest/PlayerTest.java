@@ -2,9 +2,9 @@ package it.polimi.ingsw.model.playerTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
-import it.polimi.ingsw.model.ScoringToken;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.game.ScoringToken;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;

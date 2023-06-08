@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.action;
 
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 
 import java.util.ArrayList;

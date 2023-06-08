@@ -3,8 +3,8 @@ package it.polimi.ingsw.view.client.cli;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.model.Item;
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
@@ -19,15 +19,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static it.polimi.ingsw.view.client.cli.TextInterfacePrinter.*;
+import static it.polimi.ingsw.view.client.cli.CLInterfacePrinter.*;
 
-public class TextInterface extends ClientView implements InputReceiver {
+public class CLInterface extends ClientView implements InputReceiver {
     private ClientStatus status;
 
     /**
      * Constructor for the class.
      */
-    public TextInterface() {
+    public CLInterface() {
         super();
     }
 
@@ -101,7 +101,7 @@ public class TextInterface extends ClientView implements InputReceiver {
      * @param message - message of onItemsSelected type, which contains the item chosen.
      */
     @Override
-    public synchronized void onItemsSelected(ItemsSelected message) {
+    public synchronized void onSelectedItems(SelectedItems message) {
         chosenItems = message.getItems();
         if (chosenItems == null) printInvalidSelection();
         else if (status != ClientStatus.CHAT) {

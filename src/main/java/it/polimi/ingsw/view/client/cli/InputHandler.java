@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.client.cli;
 
-import it.polimi.ingsw.model.Position;
+import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.view.client.InputReceiver;
 
@@ -49,10 +49,10 @@ public class InputHandler implements Runnable {
                 switch (command) {
                     case "/help" -> {
                         if (tokenizer.countTokens() == 0) {
-                            TextInterfacePrinter.printHelp();
+                            CLInterfacePrinter.printHelp();
                             inputReceiver.getStatus();
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/login" -> {
@@ -60,7 +60,7 @@ public class InputHandler implements Runnable {
                             String nickname = tokenizer.nextToken();
                             inputReceiver.login(new Nickname(nickname));
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/create_game" -> {
@@ -69,7 +69,7 @@ public class InputHandler implements Runnable {
                             int numberCommonGoalCards = Integer.parseInt(tokenizer.nextToken());
                             inputReceiver.createGame(new GameInitialization(numberPlayer, numberCommonGoalCards));
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/select_game" -> {
@@ -77,7 +77,7 @@ public class InputHandler implements Runnable {
                             int id = Integer.parseInt(tokenizer.nextToken());
                             inputReceiver.selectGame(new GameSelection(id));
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/living_room" -> {
@@ -90,7 +90,7 @@ public class InputHandler implements Runnable {
                             }
                             inputReceiver.selectFromLivingRoom(new LivingRoomSelection(positions));
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/bookshelf" -> {
@@ -103,21 +103,21 @@ public class InputHandler implements Runnable {
                             }
                             inputReceiver.insertInBookshelf(new BookshelfInsertion(column, permutation));
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/enter_chat" -> {
                         if (tokenizer.countTokens() == 0) {
                             inputReceiver.enterChat();
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/exit_chat" -> {
                         if (tokenizer.countTokens() == 0) {
                             inputReceiver.exitChat();
                         } else {
-                            TextInterfacePrinter.printIncorrectCommand();
+                            CLInterfacePrinter.printIncorrectCommand();
                         }
                     }
                     case "/dm" -> {
@@ -126,10 +126,10 @@ public class InputHandler implements Runnable {
                         String text = tokenizer.nextToken();
                         inputReceiver.writeChat(new ChatMessage(text, receiver));
                     }
-                    default -> TextInterfacePrinter.printWrongCommand();
+                    default -> CLInterfacePrinter.printWrongCommand();
                 }
             } catch (NumberFormatException e) {
-                TextInterfacePrinter.printIncorrectCommand();
+                CLInterfacePrinter.printIncorrectCommand();
             }
         }
     }
