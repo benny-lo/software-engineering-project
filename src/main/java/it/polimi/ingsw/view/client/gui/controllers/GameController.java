@@ -52,6 +52,7 @@ public class GameController implements Initializable {
     private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
     private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
     private int selectedColumn;
+    private boolean chat;
     private final static double selectedOpacity = 0.3;
     private final static double notSelectedOpacity = 1.0;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
@@ -505,8 +506,13 @@ public class GameController implements Initializable {
         stage.setTitle("MyShelfieChat");
         stage.show();
 
-        stage.setOnCloseRequest(event -> {event.consume();
-            exitChat(stage);});
+        stage.setOnCloseRequest(event -> {
+            event.consume();
+            chat = false;
+            exitChat(stage);
+        });
+
+        chat = true;
     }
 
     @Override
@@ -527,5 +533,9 @@ public class GameController implements Initializable {
         insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));
         insertColumn3Button.setOnMouseClicked(mouseEvent -> selectColumn(3));
         insertColumn4Button.setOnMouseClicked(mouseEvent -> selectColumn(4));
+    }
+
+    public boolean isChatOpen() {
+        return chat;
     }
 }

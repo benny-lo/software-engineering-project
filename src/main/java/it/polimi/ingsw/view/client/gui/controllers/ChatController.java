@@ -20,8 +20,6 @@ public class ChatController implements Initializable {
     @FXML
     private VBox messagesDisplayed;
     @FXML
-    private Button sendButton;
-    @FXML
     private TextField textToSend;
 
     private List<ChatUpdate> messages;
@@ -36,14 +34,11 @@ public class ChatController implements Initializable {
         messages = new ArrayList<>();
         playerMenu.getItems().add("all");
         playerMenu.setValue("all");
-    }
 
-    public void addReceiver(String nickname) {
-        playerMenu.getItems().add(nickname);
-    }
-
-    public void removeReceiver(String nickname) {
-        playerMenu.getItems().remove(nickname);
+        List<String> nicknames = guInterface.getOthersNicknames();
+        for(String nick : nicknames) {
+            playerMenu.getItems().add(nick);
+        }
     }
 
     public void receiveMessage(ChatUpdate message) {

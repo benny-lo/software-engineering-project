@@ -8,6 +8,7 @@ import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.gui.controllers.*;
 import javafx.application.Platform;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -107,9 +108,6 @@ public class GUInterface extends ClientView {
         numberPlayers = message.getNumberPlayers();
         for (String player : message.getConnectedPlayers()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(player));
-            if (nickname != null && !nickname.equals(player)) {
-                Platform.runLater(() -> chatController.addReceiver(player));
-            }
             nicknames.add(player);
         }
         livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
@@ -165,11 +163,9 @@ public class GUInterface extends ClientView {
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
         if (update.isTypeOfAction()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
-            Platform.runLater(() -> chatController.addReceiver(update.getNickname()));
             nicknames.add(update.getNickname());
         } else {
             Platform.runLater(() -> waitingRoomController.playerDisconnected(update.getNickname()));
-            Platform.runLater(() -> chatController.removeReceiver(update.getNickname()));
             nicknames.remove(update.getNickname());
         }
 
@@ -204,7 +200,19 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-        Platform.runLater(() -> chatController.receiveMessage(update));
+        if (!gameController.isChatOpen()) {
+            Platform.runLater(() -> {
+                try {
+                    gameController.enterChat();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        if (!gameController.isChatOpen()) {
+            Platform.runLater(() -> chatController.receiveMessage(update));
+        }
     }
 
     @Override
@@ -234,21 +242,22 @@ public class GUInterface extends ClientView {
         return nickname;
     }
 
+    public synchronized List<String> getOthersNicknames() {
+        return nicknames.stream().filter((n) -> n.equals(nickname)).toList();
+    }
+
     public synchronized void receiveController(LoginController controller){
         loginController = controller;
     }
-
     public synchronized void receiveController(LobbyController controller){
         lobbyController = controller;
     }
-
     public synchronized void receiveController(WaitingRoomController controller){
         waitingRoomController = controller;
     }
     public synchronized void receiveController(GameController controller){
         gameController = controller;
     }
-
     public synchronized void receiveController(ChatController controller){
         chatController = controller;
     }
