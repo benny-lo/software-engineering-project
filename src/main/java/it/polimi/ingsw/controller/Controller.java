@@ -485,6 +485,10 @@ public class Controller implements ActionListener {
     }
 
     // EXCLUSIVELY FOR TESTING
+    public boolean getEnded()
+    {
+        return this.ended;
+    }
 
     public void setEnded() {
         ended = true;
