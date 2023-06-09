@@ -203,9 +203,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-        if (!gameController.isChatOpen()) {
-            Platform.runLater(() -> gameController.enterChat());
-        }
+        Platform.runLater(() -> gameController.enterChat());
         Platform.runLater(() -> chatController.receiveMessage(update));
     }
 

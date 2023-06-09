@@ -52,7 +52,6 @@ public class GameController implements Initializable {
     private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
     private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
     private int selectedColumn;
-    private boolean chat;
     private final static double selectedOpacity = 0.3;
     private final static double notSelectedOpacity = 1.0;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
@@ -516,12 +515,10 @@ public class GameController implements Initializable {
 
         chatStage.setOnCloseRequest(event -> {
             event.consume();
-            chat = false;
             exitChat(chatStage);
         });
     }
     public void enterChat() {
-        chat = true;
         chatStage.show();
     }
 
@@ -548,9 +545,5 @@ public class GameController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public boolean isChatOpen() {
-        return chat;
     }
 }
