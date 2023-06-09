@@ -231,6 +231,6 @@
       </font>
    </Label>
    <ImageView fitHeight="96.0" fitWidth="395.0" layoutX="483.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@myShelfieImages/publisher_material/Title_2000x618px.png"/>
+      <Image url="@myShelfieImages/publisher_material/Title_2000x618px.png" />
    </ImageView>
 </AnchorPane>
