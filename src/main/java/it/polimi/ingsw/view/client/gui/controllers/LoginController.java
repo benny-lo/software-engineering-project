@@ -66,6 +66,13 @@ public class LoginController implements Initializable {
         guInterface.login(new Nickname(username));
     }
 
+    public void disconnectionInLauncher() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error!");
+        alert.setContentText("You have been disconnected from the server.\n");
+        alert.showAndWait();
+        System.exit(0);
+    }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         guInterface.receiveController(this);

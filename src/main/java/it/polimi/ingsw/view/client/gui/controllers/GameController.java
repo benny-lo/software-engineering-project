@@ -175,6 +175,14 @@ public class GameController implements Initializable {
         return 0;
     }
 
+    public void disconnectionInGame() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error!");
+        alert.setContentText("You have been disconnected from the server.\n");
+        alert.showAndWait();
+        System.exit(0);
+    }
+
     //GRID
     public void setLivingRoomGridPane(Item[][] livingRoom){
         if(livingRoom ==null) return;
@@ -210,7 +218,7 @@ public class GameController implements Initializable {
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(selectedOpacity);
-            return; //this will be used; don't delete
+            return;
         }
         warningAlert.setHeaderText("Warning!");
         warningAlert.setContentText("You have already selected 3 items!");

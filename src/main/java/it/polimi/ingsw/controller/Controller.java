@@ -485,6 +485,10 @@ public class Controller implements ActionListener {
     }
 
     // EXCLUSIVELY FOR TESTING
+    public boolean getEnded()
+    {
+        return this.ended;
+    }
 
     public void setEnded() {
         ended = true;
@@ -495,6 +499,7 @@ public class Controller implements ActionListener {
     }
 
     public void setCurrentPlayer(String nickname){
+        if (nickname == null) return;
         String p;
         assert playerQueue.peek() != null;
         while(!playerQueue.peek().equals(nickname)){

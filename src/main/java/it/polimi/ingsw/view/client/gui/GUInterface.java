@@ -28,6 +28,8 @@ public class GUInterface extends ClientView {
     private GameController gameController;
     private ChatController chatController;
     private final List<String> nicknames = new ArrayList<>();
+    private boolean inLauncher = true;
+    private boolean inGame = false;
 
     public GUInterface() {
         super();
@@ -124,7 +126,7 @@ public class GUInterface extends ClientView {
             Platform.runLater(() -> gameController.clearSelectedItems());
             Platform.runLater(() -> gameController.failedSelection());
             return;
-        } //TODO: invalid selection error
+        }
         System.out.println("lato server accettato");
         Platform.runLater(() -> gameController.clearTilesList());
         Platform.runLater(() -> gameController.setChosenItems(chosenItems));
@@ -172,6 +174,8 @@ public class GUInterface extends ClientView {
         if (update.getMissing() != 0) Platform.runLater(() -> waitingRoomController.waitingForPlayers(update.getMissing()));
         else {
             Platform.runLater(() -> waitingRoomController.startGame());
+            inGame = true;
+            inLauncher = false;
             Platform.runLater(() -> gameController.setNickname(nickname));
             Platform.runLater(() -> gameController.initializeBookshelves(nicknames, bookshelvesRows, bookshelvesColumns));
             Platform.runLater(() -> lobbyController.endWindow());
@@ -179,12 +183,12 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onScoresUpdate(ScoresUpdate update) {
+    public synchronized void onScoresUpdate(ScoresUpdate update) {
         Platform.runLater(() -> gameController.setRankings(update.getScores()));
     }
 
     @Override
-    public void onEndingTokenUpdate(EndingTokenUpdate update) {
+    public synchronized void onEndingTokenUpdate(EndingTokenUpdate update) {
         Platform.runLater(() -> gameController.setEndingToken(update.getOwner()));
     }
 
@@ -228,10 +232,11 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onDisconnection() {
-//        if (disconnectionInLauncher()) return;
-//        if (disconnectionInGame()) return;
-        System.exit(0);
-    } //TODO: implement this
+        if (inLauncher)
+            Platform.runLater(() -> loginController.disconnectionInLauncher());
+        if (inGame)
+            Platform.runLater(() -> gameController.disconnectionInGame());
+    }
 
     @Override
     public void start() {
@@ -255,11 +260,11 @@ public class GUInterface extends ClientView {
     public synchronized void receiveController(WaitingRoomController controller){
         waitingRoomController = controller;
     }
+
     public synchronized void receiveController(GameController controller){
         gameController = controller;
     }
     public synchronized void receiveController(ChatController controller){
         chatController = controller;
     }
-
 }
