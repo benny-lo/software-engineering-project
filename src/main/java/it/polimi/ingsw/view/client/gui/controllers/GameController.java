@@ -40,12 +40,12 @@ public class GameController implements Initializable {
     private final static int numberSelectedItems = 3;
     private final Map<String, GridPane> otherPlayersBookshelf = new HashMap<>();
     private final Map<String, ImageView> otherPlayersEndingToken = new HashMap<>();
-    private final static int cellSizeLivingRoom = 40;
-    private final static int cellSizeOthersBookshelf = 15;
-    private final static int cellSizeBookshelf = 50;
-    private final static int livingRoomGap = 3;
-    private final static int bookshelfGap = 7;
-    private final static int othersBookshelfGap = 2;
+    private final static int cellSizeLivingRoom = 39;
+    private final static int cellSizeOthersBookshelf = 14;
+    private final static int cellSizeBookshelf = 31;
+    private final static int livingRoomGap = 0;
+    private final static int bookshelfGap = 0;
+    private final static int othersBookshelfGap = 0;
     private int bookshelvesRows;
     private int bookshelvesColumns;
     private List<Item> chosenItems = new ArrayList<>(numberSelectedItems);
