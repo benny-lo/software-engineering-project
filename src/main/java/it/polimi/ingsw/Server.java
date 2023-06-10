@@ -2,7 +2,6 @@ package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.view.server.VirtualView;
-import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMI;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.socket.ServerConnectionTCP;
@@ -94,8 +93,6 @@ public class Server {
                         }
                         VirtualView view = new VirtualView(serverConnectionTCP);
                         serverConnectionTCP.setServerInputViewInterface(view);
-                        Lobby.getInstance().addVirtualView(view);
-
                         (new Thread(serverConnectionTCP)).start();
                     } catch (IOException e) {
                         System.out.println("Server closed.");
