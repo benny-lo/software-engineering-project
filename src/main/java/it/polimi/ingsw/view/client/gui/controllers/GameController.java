@@ -40,10 +40,10 @@ public class GameController implements Initializable {
     private final static int numberSelectedItems = 3;
     private final Map<String, GridPane> otherPlayersBookshelf = new HashMap<>();
     private final Map<String, ImageView> otherPlayersEndingToken = new HashMap<>();
-    private final static int cellSizeLivingRoom = 60;
+    private final static int cellSizeLivingRoom = 40;
     private final static int cellSizeOthersBookshelf = 15;
     private final static int cellSizeBookshelf = 50;
-    private final static int livingRoomGap = 5;
+    private final static int livingRoomGap = 3;
     private final static int bookshelfGap = 7;
     private final static int othersBookshelfGap = 2;
     private int bookshelvesRows;
@@ -512,6 +512,7 @@ public class GameController implements Initializable {
         chatStage.setScene(scene);
         chatStage.setTitle("MyShelfieChat");
         chatStage.hide();
+        chatStage.setResizable(false);
 
         chatStage.setOnCloseRequest(event -> {
             event.consume();

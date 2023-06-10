@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.ChatController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.ChatController">
    <Button layoutX="520.0" layoutY="340.0" mnemonicParsing="false" onMouseClicked="#onSendButtonClick" prefHeight="44.0" prefWidth="66.0" text="Send" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="13.599999999999994" />
    <TextField fx:id="textToSend" layoutX="14.0" layoutY="340.0" prefHeight="44.0" prefWidth="491.0" />
     <ScrollPane layoutX="15.0" layoutY="51.0" prefHeight="277.0" prefWidth="570.0">
