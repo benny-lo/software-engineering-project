@@ -18,8 +18,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 public class Server {
-    private static Registry registry = null;
-    private static ConnectionEstablishmentRMIInterface stub = null;
+    private static final ConnectionEstablishmentRMI remoteObject = new ConnectionEstablishmentRMI();
     /**
      * Parameters: [hostname] [RMI_port_number] [TCP_port_number]
      * @param args cli parameters (except for the first one which was server).
@@ -49,15 +48,17 @@ public class Server {
     }
 
     private static void startConnectionRMI(int port) {
-        ConnectionEstablishmentRMI connection = new ConnectionEstablishmentRMI();
+        ConnectionEstablishmentRMIInterface stub = null;
+
         try {
             stub = (ConnectionEstablishmentRMIInterface)
-                    UnicastRemoteObject.exportObject(connection, port);
+                    UnicastRemoteObject.exportObject(remoteObject, port);
         } catch (RemoteException e) {
             System.out.println("Failed to export serverRMI.");
             System.exit(0);
         }
 
+        Registry registry = null;
         try {
             registry = LocateRegistry.createRegistry(port);
         } catch (RemoteException e) {
