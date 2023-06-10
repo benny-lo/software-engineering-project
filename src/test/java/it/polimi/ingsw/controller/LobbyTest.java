@@ -28,26 +28,6 @@ public class LobbyTest {
 
     }
 
-    /**
-     * Testing for adding and removing controllers and Virtual Views
-     */
-    @Test
-    public void testAddingRemoving()
-    {
-        Lobby lobby1 = Lobby.getInstance();
-        Controller controller = new Controller(2,2);
-        MockServerConnection mockServerConnection0 = new MockServerConnection();
-        VirtualView view0 = new VirtualView(mockServerConnection0);
-        lobby1.addController(controller);
-        lobby1.addVirtualView(view0);
-        assertEquals(lobby1.getControllers().get(0), controller);
-        assertTrue(lobby1.getViews().contains(view0));
-        lobby1.removeController(controller);
-        lobby1.removeVirtualView(view0);
-        assertTrue(lobby1.getControllers().isEmpty());
-        assertTrue(lobby1.getViews().isEmpty());
-    }
-
 
     /**
      * Testing the login method when it fails because the nickname is already chosen.

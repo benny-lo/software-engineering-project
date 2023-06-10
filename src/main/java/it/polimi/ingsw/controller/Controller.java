@@ -501,8 +501,7 @@ public class Controller implements ActionListener {
     public void setCurrentPlayer(String nickname){
         if (nickname == null) return;
         String p;
-        assert playerQueue.peek() != null;
-        while(!playerQueue.peek().equals(nickname)){
+        while(!nickname.equals(playerQueue.peek())){
             p = playerQueue.poll();
             playerQueue.add(p);
         }

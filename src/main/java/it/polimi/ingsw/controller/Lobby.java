@@ -78,7 +78,7 @@ public class Lobby {
      * Adds a new controller to {@code Lobby}.
      * @param controller the controller to add.
      */
-    public void addController(Controller controller) {
+    private void addController(Controller controller) {
         controllers.put(availableId, controller);
         availableId++;
     }
@@ -213,10 +213,5 @@ public class Lobby {
     public Set<ServerUpdateViewInterface> getViews()
     {
         return this.views;
-    }
-
-    public int getAvailableId()
-    {
-        return this.availableId;
     }
 }

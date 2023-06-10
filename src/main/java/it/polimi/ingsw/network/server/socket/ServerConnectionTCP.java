@@ -46,6 +46,13 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         } catch (IOException | ClassNotFoundException e) {
             clientTimer.cancel();
             receiver.disconnect();
+        } finally {
+            synchronized (socket) {
+                try {
+                    socket.close();
+                } catch (IOException ignored) {
+                }
+            }
         }
     }
 
@@ -75,11 +82,13 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         }
     }
 
-    private synchronized void sendPrivate(Message message) {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (IOException ignored) {}
+    private void sendPrivate(Message message) {
+        synchronized (out) {
+            try {
+                out.writeObject(message);
+                out.flush();
+            } catch (IOException ignored) {}
+        }
     }
 
     @Override
@@ -167,11 +176,16 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                         return;
                     }
                 }
+
                 synchronized (socket) {
                     try {
+                        socket.shutdownInput();
+                        socket.shutdownOutput();
                         socket.close();
-                    } catch (IOException ignored) {}
+                    } catch (IOException ignored) {
+                    }
                 }
+
                 clientTimer.cancel();
                 receiver.disconnect();
             }
