@@ -78,7 +78,7 @@ public class Lobby {
      * Adds a new controller to {@code Lobby}.
      * @param controller the controller to add.
      */
-    private void addController(Controller controller) {
+    public void addController(Controller controller) {
         controllers.put(availableId, controller);
         availableId++;
     }
@@ -201,5 +201,22 @@ public class Lobby {
 
         controllers.get(id).perform(new JoinAction(view));
         // the controller is sending the player the game dimensions.
+    }
+
+    //FOR TESTING ONLY
+
+    public Map<Integer, Controller> getControllers()
+    {
+        return this.controllers;
+    }
+
+    public Set<ServerUpdateViewInterface> getViews()
+    {
+        return this.views;
+    }
+
+    public int getAvailableId()
+    {
+        return this.availableId;
     }
 }

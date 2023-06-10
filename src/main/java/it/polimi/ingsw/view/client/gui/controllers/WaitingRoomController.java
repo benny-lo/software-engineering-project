@@ -53,6 +53,7 @@ public class WaitingRoomController implements Initializable {
             stage.setScene(scene);
             stage.setTitle("MyShelfie");
             stage.show();
+            stage.setResizable(false);
 
             stage.setOnCloseRequest(event -> {event.consume();
                                                 logout(stage);});

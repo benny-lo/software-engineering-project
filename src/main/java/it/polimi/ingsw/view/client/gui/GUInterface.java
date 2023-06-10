@@ -8,7 +8,6 @@ import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.gui.controllers.*;
 import javafx.application.Platform;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -204,19 +203,8 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-        if (!gameController.isChatOpen()) {
-            Platform.runLater(() -> {
-                try {
-                    gameController.enterChat();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-
-        if (!gameController.isChatOpen()) {
-            Platform.runLater(() -> chatController.receiveMessage(update));
-        }
+        Platform.runLater(() -> gameController.enterChat());
+        Platform.runLater(() -> chatController.receiveMessage(update));
     }
 
     @Override

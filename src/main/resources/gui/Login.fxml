@@ -8,22 +8,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LoginController">
-   <ImageView fitHeight="1080.0" fitWidth="1920.0" layoutX="-1.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="462.0" AnchorPane.topAnchor="0.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.LoginController">
+   <ImageView fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true">
       <Image url="@myShelfieImages/misc/sfondo_parquet.jpg" />
    </ImageView>
-   <TextField fx:id="usernameField" layoutX="789.0" layoutY="517.0" prefHeight="46.0" prefWidth="341.0" />
-   <Label fx:id="welcomeText" alignment="CENTER" layoutX="697.0" layoutY="192.0" prefHeight="167.0" prefWidth="539.0" text="Welcome to MyShelfie!&#10;" textAlignment="CENTER">
+   <TextField fx:id="usernameField" layoutX="372.0" layoutY="397.0" prefHeight="46.0" prefWidth="341.0" />
+   <Label fx:id="welcomeText" alignment="CENTER" layoutX="298.0" layoutY="161.0" prefHeight="122.0" prefWidth="507.0" text="Welcome to MyShelfie!&#10;" textAlignment="CENTER">
       <font>
          <Font size="48.0" />
       </font>
    </Label>
-   <Button fx:id="loginButton" layoutX="903.0" layoutY="587.0" mnemonicParsing="false" onAction="#login" prefHeight="53.0" prefWidth="113.0" text="Login">
+   <Button fx:id="loginButton" layoutX="486.0" layoutY="470.0" mnemonicParsing="false" onAction="#login" prefHeight="53.0" prefWidth="113.0" text="Login">
       <font>
          <Font size="18.0" />
       </font>
    </Button>
-   <Label alignment="CENTER" layoutX="789.0" layoutY="457.0" prefHeight="53.0" prefWidth="341.0" text="Write your username here">
+   <Label alignment="CENTER" layoutX="392.0" layoutY="332.0" prefHeight="54.0" prefWidth="306.0" text="Write your username here">
       <font>
          <Font size="20.0" />
       </font>

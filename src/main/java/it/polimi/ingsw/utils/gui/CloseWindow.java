@@ -30,7 +30,7 @@ public class CloseWindow {
 
         Optional<ButtonType> opt = alert.showAndWait();
         if (opt.isPresent() && opt.get() == ButtonType.OK) {
-            stage.close();
+            stage.hide();
         }
     }
 }

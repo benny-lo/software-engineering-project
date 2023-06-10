@@ -7,27 +7,26 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController">
-   <ImageView fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController">
+   <ImageView fitHeight="720.0" fitWidth="1080.0" pickOnBounds="true">
       <Image url="@myShelfieImages/misc/sfondo_parquet.jpg" />
    </ImageView>
-   <Label alignment="CENTER" layoutX="234.0" layoutY="41.0" prefHeight="185.0" prefWidth="406.0" text="Waiting Room">
-      <font>
-         <Font size="50.0" />
-      </font>
-   </Label>
-   <Label fx:id="waitingLabel" alignment="CENTER" layoutX="1218.0" layoutY="756.0" prefHeight="57.0" prefWidth="373.0">
-      <font>
-         <Font size="20.0" />
-      </font></Label>
-   <ListView fx:id="playersListView" fixedCellSize="87.5" layoutX="1098.0" layoutY="350.0" prefHeight="384.0" prefWidth="613.0" />
-   <Label alignment="CENTER" layoutX="1239.0" layoutY="268.0" prefHeight="57.0" prefWidth="332.0" text="Connected players">
+   <Label alignment="CENTER" layoutX="164.0" layoutY="55.0" prefHeight="94.0" prefWidth="341.0" text="Waiting Room">
       <font>
          <Font size="36.0" />
       </font>
    </Label>
-   <ImageView fitHeight="545.0" fitWidth="827.0" layoutX="28.0" layoutY="268.0" pickOnBounds="true"
-              preserveRatio="true">
-      <Image url="@myShelfieImages/publisher_material/Display_2.jpg"/>
+   <Label fx:id="waitingLabel" alignment="CENTER" layoutX="717.0" layoutY="547.0" prefHeight="59.0" prefWidth="269.0">
+      <font>
+         <Font size="14.0" />
+      </font></Label>
+   <ListView fx:id="playersListView" fixedCellSize="87.5" layoutX="700.0" layoutY="243.0" prefHeight="259.0" prefWidth="321.0" />
+   <Label alignment="CENTER" layoutX="681.0" layoutY="145.0" prefHeight="78.0" prefWidth="359.0" text="Connected players">
+      <font>
+         <Font size="24.0" />
+      </font>
+   </Label>
+   <ImageView fitHeight="381.0" fitWidth="559.0" layoutX="55.0" layoutY="174.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@myShelfieImages/publisher_material/Display_2.jpg" />
    </ImageView>
 </AnchorPane>
