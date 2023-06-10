@@ -689,7 +689,7 @@ public class ControllerTest {
      * Testing for the content of the ChatMessageAction , when it fails
      */
     @Test
-    public void contentUnsuccessfulChatMessageTest()
+    public void testContentUnsuccessfulChatMessage()
     {
         Controller controller = new Controller(2,2);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -712,7 +712,7 @@ public class ControllerTest {
      * Testing for the content of the successful ChatMessageAction when sent to all
      */
     @Test
-    public void contentSuccessfulAllChatMessageTest()
+    public void testContentSuccessfulAllChatMessage()
     {
         int index0 = 0;
         int index1 = 0;
@@ -755,7 +755,7 @@ public class ControllerTest {
      * Testing for the content of the successful ChatMessageAction when not sent to all
      */
     @Test
-    public void contentSuccessfulChatMessageTest()
+    public void testContentSuccessfulChatMessage()
     {
         Controller controller = new Controller(2,2);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -783,7 +783,7 @@ public class ControllerTest {
      * Testing for DisconnectionAction after the game is started.
      */
     @Test
-    public void beforeDisconnectionActionTest()
+    public void testBeforeDisconnectionAction()
     {
         Controller controller = new Controller(2,2);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -810,20 +810,23 @@ public class ControllerTest {
      * Testing for DisconnectionAction before the game is started.
      */
     @Test
-    public void afterDisconnectionActionTest()
+    public void testAfterDisconnectionAction()
     {
-        Controller controller = new Controller(3,2);
+        Controller controller = new Controller(4,2);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
+        controller.perform(new JoinAction(view0));
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("john");
+        controller.perform(new JoinAction(view1));
 
         MockServerConnection mockServerConnection2 = new MockServerConnection();
         VirtualView view2 = new VirtualView(mockServerConnection2);
         view2.setNickname("rick");
+        controller.perform(new JoinAction(view2));
 
         controller.perform(new DisconnectionAction(view0));
         for(ServerUpdateViewInterface v : controller.getViews())
@@ -838,6 +841,11 @@ public class ControllerTest {
         {
             assertNotEquals(b.getOwner(), view0.getNickname());
         }
+        WaitingUpdate waitingUpdate0 = (WaitingUpdate) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
+        WaitingUpdate waitingUpdate1 = (WaitingUpdate) mockServerConnection2.list.get(mockServerConnection2.list.size()-1);
+        assertTrue(waitingUpdate0.getNickname().equals("nick") && waitingUpdate1.getNickname().equals("nick"));
+        assertTrue(waitingUpdate0.getMissing() == 2 && waitingUpdate1.getMissing() == 2);
+        assertFalse(waitingUpdate0.isTypeOfAction() && waitingUpdate1.isTypeOfAction());
     }
 
 

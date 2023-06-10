@@ -52,10 +52,10 @@ public class GameController implements Initializable {
     private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
     private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
     private int selectedColumn;
-    private boolean chat;
     private final static double selectedOpacity = 0.3;
     private final static double notSelectedOpacity = 1.0;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
+    private final Stage chatStage = new Stage();
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -505,22 +505,21 @@ public class GameController implements Initializable {
     }
 
     //CHAT
-    public void enterChat() throws IOException {
+    private void createChat() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Chat.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("MyShelfieChat");
-        stage.show();
+        chatStage.setScene(scene);
+        chatStage.setTitle("MyShelfieChat");
+        chatStage.hide();
 
-        stage.setOnCloseRequest(event -> {
+        chatStage.setOnCloseRequest(event -> {
             event.consume();
-            chat = false;
-            exitChat(stage);
+            exitChat(chatStage);
         });
-
-        chat = true;
+    }
+    public void enterChat() {
+        chatStage.show();
     }
 
     @Override
@@ -541,9 +540,10 @@ public class GameController implements Initializable {
         insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));
         insertColumn3Button.setOnMouseClicked(mouseEvent -> selectColumn(3));
         insertColumn4Button.setOnMouseClicked(mouseEvent -> selectColumn(4));
-    }
-
-    public boolean isChatOpen() {
-        return chat;
+        try {
+            createChat();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
