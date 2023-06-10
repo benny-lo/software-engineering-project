@@ -53,6 +53,8 @@ public class ChatController implements Initializable {
         String receiver = playerMenu.getValue();
         ChatMessage message = new ChatMessage(text, receiver);
 
+        textToSend.clear();
+
         guInterface.writeChat(message);
     }
 

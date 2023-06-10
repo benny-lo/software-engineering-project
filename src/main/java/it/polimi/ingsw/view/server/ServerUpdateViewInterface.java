@@ -7,6 +7,5 @@ public interface ServerUpdateViewInterface extends UpdateViewInterface {
     String getNickname();
     void setNickname(String nickname);
     void setController(Controller controller);
-    boolean isLoggedIn();
     boolean isInGame();
 }

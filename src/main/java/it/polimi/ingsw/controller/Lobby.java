@@ -8,14 +8,9 @@ import java.util.*;
 
 // TODO: propagate exceptions in Model and (add methods get dimensions --> where?).
 
-// TODO: remove VirtualViews from lobby and controller with ServerUpdateView ?
-// TODO: idea = make both lobby and game action listeners.
-
-// TODO: set better timers.
-
 /**
- * This class contains all {@code Controller}s of all games currently being played. It uses the Singleton
- * Pattern. All public methods take the lock on {@code this}.
+ * Class containing all {@code Controller}s of all games currently being played. It uses the Singleton
+ * Pattern. Some public methods take the lock on {@code this}.
  */
 public class Lobby {
     /**
@@ -24,7 +19,9 @@ public class Lobby {
     private final Map<Integer, Controller> controllers;
 
     /**
-     * Set of virtual views, representing all players connected either waiting for a game or in game.
+     * Set of all logged in (with a nickname) {@code ServerUpdateViewInterface}s,
+     * representing all players connected either waiting for a game or in game.
+     * They can be used by {@code this} to send updates to a player.
      */
     private final Set<ServerUpdateViewInterface> views;
 
@@ -33,11 +30,19 @@ public class Lobby {
      */
     private int availableId;
 
+    /**
+     * Attribute used to implement the Singleton Pattern.
+     */
     private static Lobby instance;
+
+    /**
+     * Object only used as a lock by the {@code getInstance} method for synchronization.
+     */
     private final static Object lock = new Object();
 
     /**
-     * The constructor for the class.
+     * The constructor for the class. Initializes the lobby with an empty map of {@code Controller}s
+     * and an empty set of {@code ServerUpdateViewInterface}s. The first available id is 0.
      */
     private Lobby() {
         controllers = new HashMap<>();
@@ -46,8 +51,8 @@ public class Lobby {
     }
 
     /**
-     * This method returns an Instance of Lobby, or creates a new one
-     * @return - the instance of the lobby, either already existing or newly created.
+     * Getter for the instance of {@code Lobby}. If no instance exists, it creates a new one.
+     * @return the instance of the lobby, either already existing or newly created.
      */
     public static Lobby getInstance() {
         synchronized (lock) {
@@ -57,8 +62,8 @@ public class Lobby {
     }
 
     /**
-     * This method returns a list of game information for every game currently running, but not if they have already started.
-     * @return - the list containing every game's info.
+     * Getter for the list of games information for every match in pre-game phase.
+     * @return a list containing the games info.
      */
     private List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
@@ -70,8 +75,8 @@ public class Lobby {
     }
 
     /**
-     * This method adds a new controller.
-     * @param controller - the controller to be added.
+     * Adds a new controller to {@code Lobby}.
+     * @param controller the controller to add.
      */
     private void addController(Controller controller) {
         controllers.put(availableId, controller);
@@ -79,60 +84,49 @@ public class Lobby {
     }
 
     /**
-     * This method removes a controller
-     * @param controller - the controller that needs to be removed.
+     * Removes a controller from {@code Lobby}. It synchronizes on {@code this}. Moreover, it notifies
+     * asynchronously all players still waiting to join a match.
+     * @param controller the controller to remove.
      */
     public synchronized void removeController(Controller controller) {
         Integer id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
 
         if (id != -1) controllers.remove(id);
-
-        // notify not playing views that id is no longer available.
-        (new Thread(() -> {
-            List<GameInfo> list = new ArrayList<>();
-            list.add(new GameInfo(id, -1, -1));
-            for (ServerUpdateViewInterface v : views) {
-                if (v.isLoggedIn() && !v.isInGame()) v.onGamesList(new GamesList(list));
-            }
-        })).start();
     }
 
     /**
-     * This method adds a virtual view
-     * @param view - the view to be added
-     */
-    public synchronized void addVirtualView(ServerUpdateViewInterface view) {
-        views.add(view);
-    }
-
-    /**
-     * This method removes a virtual view
+     * Unsubscribes a {@code ServerUpdateViewInterface} from updates sent by {@code this}.
+     * It synchronizes on {@code this}.
      * @param view - the view to be removed
      */
-    public synchronized void removeVirtualView(ServerUpdateViewInterface view) {
+    public synchronized void removeServerUpdateViewInterface(ServerUpdateViewInterface view) {
         views.remove(view);
     }
 
     /**
-     * This method performs the login
-     * @param nickname - the nickname of the player
-     * @param view - the client's view
+     * Processes a login request from a {@code ServerUpdateViewInterface} and registers that view.
+     * It synchronizes on {@code this}.
+     * @param nickname the nickname chosen by the {@code ServerUpdateViewInterface}.
+     * @param view the {@code ServerUpdateViewInterface} performing the request.
      */
     public synchronized void login(String nickname, ServerUpdateViewInterface view) {
-        if(view.isLoggedIn() || view.isInGame()) {
-            // the nickname is already chosen.
+        if(views.contains(view)) {
+            // this view has already logged in.
             view.onGamesList(new GamesList(null));
             return;
         }
 
         for(ServerUpdateViewInterface v : views) {
             if (nickname.equals(v.getNickname())) {
+                // a view with nickname already exists.
                 view.onGamesList(new GamesList(null));
                 return;
             }
         }
 
-        System.out.println(nickname + " is connected");
+        synchronized (System.out) {
+            System.out.println(nickname + " is connected");
+        }
 
         views.add(view);
         view.setNickname(nickname);
@@ -140,14 +134,18 @@ public class Lobby {
     }
 
     /**
-     * This method creates a new game
-     * @param numberPlayers - the number of players
-     * @param numberCommonGoals - the number of common goal cards
-     * @param view - the client's view
+     * Creates a new {@code Controller} with the parameters requested and logs the
+     * {@code ServerUpdateViewInterface} that performed the request into the newly created game.
+     * Moreover, all clients that have not joined in a match yet are notified of the creation of the
+     * match.
+     * It synchronizes on {@code this}.
+     * @param numberPlayers the number of players in the game to create.
+     * @param numberCommonGoals the number of common goal cards in the game to create.
+     * @param view the {@code ServerUpdateViewInterface} that performed the request.
      */
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, ServerUpdateViewInterface view) {
-        // not yet registered.
-        if (!view.isLoggedIn() || view.isInGame()) {
+        // not yet registered or already playing.
+        if (!views.contains(view) || view.isInGame()) {
             view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
             return;
         }
@@ -168,32 +166,37 @@ public class Lobby {
 
         // send to client without game
         (new Thread(() -> {
-            for (ServerUpdateViewInterface v : views) {
-                List<GameInfo> list = new ArrayList<>();
-                list.add(new GameInfo(availableId - 1, numberPlayers, numberCommonGoals));
-                GamesList gamesList = new GamesList(list);
-                if (v.isLoggedIn() && !v.isInGame()) {
-                    v.onGamesList(gamesList);
+            synchronized (this) {
+                for (ServerUpdateViewInterface v : views) {
+                    List<GameInfo> list = new ArrayList<>();
+                    list.add(new GameInfo(availableId - 1, numberPlayers, numberCommonGoals));
+                    GamesList gamesList = new GamesList(list);
+                    if (!v.isInGame()) {
+                        v.onGamesList(gamesList);
+                    }
                 }
             }
         })).start();
     }
 
     /**
-     * This method allows the player to select a game
-     * @param id - the id of the selected game
-     * @param view - the view of the game
+     * Joins the {@code ServerUpdateViewInterface} that performed the request in the selected math (by id).
+     * @param id the id of the selected game.
+     * @param view the {@code ServerUpdateViewInterface} that performed the request.
      */
     public synchronized void selectGame(int id, ServerUpdateViewInterface view) {
-        if (!view.isLoggedIn() || view.isInGame()) {
+        // not yet registered or already in a match.
+        if (!views.contains(view) || view.isInGame()) {
             view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
         }
 
+        // selected match does not exist or is already started.
         if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
             view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
             return;
         }
 
+        // join successful.
         view.setController(controllers.get(id));
 
         controllers.get(id).perform(new JoinAction(view));

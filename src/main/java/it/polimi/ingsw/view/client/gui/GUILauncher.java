@@ -25,7 +25,6 @@ public class GUILauncher extends Application{
         primaryStage.setScene(scene);
         primaryStage.setTitle("MyShelfieLauncher");
         primaryStage.show();
-
         primaryStage.setOnCloseRequest(event -> {event.consume();
                                                 logout(primaryStage);});
     }

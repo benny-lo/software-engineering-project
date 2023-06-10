@@ -90,17 +90,6 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     }
 
     /**
-     * Method to check whether {@code this} is logged in (has a nickname).
-     * @return {@code true} iff the private attribute {@code nickname} is not {@code null}.
-     */
-    @Override
-    public boolean isLoggedIn() {
-        synchronized (nicknameLock) {
-            return nickname != null;
-        }
-    }
-
-    /**
      * Method to check whether {@code this} is logged in any game (has a controller).
      * @return {@code true} iff the private attribute {@code controller} is not {@code null}.
      */
@@ -197,7 +186,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
             }
         }
 
-        Lobby.getInstance().removeVirtualView(this);
+        Lobby.getInstance().removeServerUpdateViewInterface(this);
         boolean flag;
         synchronized (controllerLock) {
             flag = (controller != null);
