@@ -63,7 +63,7 @@ public class Lobby {
 
     /**
      * Getter for the list of games information for every match in pre-game phase.
-     * @return a list containing the games info.
+     * @return a list containing the game's info.
      */
     private List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
@@ -203,5 +203,9 @@ public class Lobby {
         // the controller is sending the player the game dimensions.
     }
 
-
+    //FOR TESTING ONLY
+    public static void setNull()
+    {
+        instance = null;
+    }
 }
