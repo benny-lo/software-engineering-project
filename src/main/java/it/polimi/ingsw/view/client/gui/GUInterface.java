@@ -19,7 +19,6 @@ import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startL
 import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
 import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
 
-//TODO: when then server crashes, send an error
 public class GUInterface extends ClientView {
     private LoginController loginController;
     private LobbyController lobbyController;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.client.cli;
 
-public enum ClientStatus {
+public enum CLIStatus {
     LOGIN, //you can only log in
     LOBBY, //you can create or select a game
     GAME, //you can select or insert tiles, and you can chat
