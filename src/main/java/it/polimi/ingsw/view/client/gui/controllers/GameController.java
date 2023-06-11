@@ -57,6 +57,7 @@ public class GameController implements Initializable {
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     private final Stage chatStage = new Stage();
     private final Map <String, Integer> scores = new HashMap<>();
+    private GameControllerStatus status = GameControllerStatus.Waiting;
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -140,8 +141,10 @@ public class GameController implements Initializable {
 
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;
-        if (currentPlayer.equals(nickname))
+        if (currentPlayer.equals(nickname)) {
+            status = GameControllerStatus.LivingRoom;
             currentPlayerLabel.setText("It's your turn!");
+        }
         else
             currentPlayerLabel.setText("It's " + currentPlayer + "'s turn!");
     }
@@ -153,17 +156,17 @@ public class GameController implements Initializable {
 
     private Image getImage(Item item) {
         String image;
-        if(item==null) return null;
-        switch (item){
-            case CAT -> image=CAT;
-            case CUP -> image=CUP;
-            case FRAME -> image=FRAME;
-            case GAME -> image=GAME;
-            case PLANT -> image=PLANT;
-            case BOOK -> image=BOOK;
-            default -> image=null;
+        if(item == null) return null;
+        switch (item) {
+            case CAT -> image = CAT;
+            case CUP -> image = CUP;
+            case FRAME -> image = FRAME;
+            case GAME -> image = GAME;
+            case PLANT -> image = PLANT;
+            case BOOK -> image = BOOK;
+            default -> image = null;
         }
-        if(image==null) return null;
+        if(image == null) return null;
         return new Image(image);
     }
 
@@ -186,7 +189,7 @@ public class GameController implements Initializable {
 
     //GRID
     public void setLivingRoomGridPane(Item[][] livingRoom){
-        if(livingRoom ==null) return;
+        if(livingRoom == null) return;
         livingRoomGridPane.getChildren().clear();
         for(int i = 0; i< livingRoom.length; i++){
             for(int j = 0; j< livingRoom.length; j++){
@@ -211,6 +214,12 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
+        if (!status.equals(GameControllerStatus.LivingRoom)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (selectedItems.contains(position)) {
             selectedItems.remove(position);
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
@@ -226,10 +235,16 @@ public class GameController implements Initializable {
         warningAlert.showAndWait();
     }
 
-    public void selectFromLivingRoom() throws IOException {
+    public void selectFromLivingRoom() throws IOException { //TODO: sometimes the server rejects the selection
         if (!guInterface.getNickname().equals(currentPlayer)){
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (!status.equals(GameControllerStatus.LivingRoom)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
             warningAlert.showAndWait();
             return;
         }
@@ -244,9 +259,10 @@ public class GameController implements Initializable {
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
-    public void setChosenItems(List<Item> itemsChosen){
+    public void setChosenItems(List<Item> chosenItems){
         if (!currentPlayer.equals(nickname)) return;
-        this.chosenItems = itemsChosen;
+        status = GameControllerStatus.Bookshelf;
+        this.chosenItems = chosenItems;
         updateChosenItemsImageView();
     }
 
@@ -255,6 +271,7 @@ public class GameController implements Initializable {
     }
 
     public void clearTilesList() {
+        if (!currentPlayer.equals(nickname)) return;
         for (Position items : selectedItems) clearNodeByColumnRow(items.getColumn(), items.getRow());
     }
 
@@ -272,7 +289,6 @@ public class GameController implements Initializable {
         warningAlert.setHeaderText("Warning!");
         warningAlert.setContentText("Failed selection, retry!");
         warningAlert.showAndWait();
-
     }
 
     //BOOKSHELF
@@ -293,6 +309,12 @@ public class GameController implements Initializable {
 
     public void selectOrder(ImageView selected) {
         if (!guInterface.getNickname().equals(currentPlayer)) return;
+        if (!status.equals(GameControllerStatus.Bookshelf)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (!orderItems.contains(selected)) {
             orderItems.add(selected);
             selected.setOpacity(selectedOpacity);
@@ -342,6 +364,12 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
+        if (!status.equals(GameControllerStatus.Bookshelf)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (chosenItems.size() == 0) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You have to select items from the Living Room!");
@@ -368,6 +396,7 @@ public class GameController implements Initializable {
             clearChosenItemLabels();
         }
         endTurnClear();
+        status = GameControllerStatus.Waiting;
     }
 
     private int findFreeRowBookshelf(GridPane bookshelfGridPane, int column) {
@@ -390,12 +419,20 @@ public class GameController implements Initializable {
         selectedOrder.clear();
         chosenItems.clear();
         orderItems.clear();
+        System.out.println("ho clearato tutto");
+        System.out.println("selected items: " + selectedItems);
+        System.out.println("selected order: " + selectedOrder);
+        System.out.println("chosen items: " + chosenItems);
+        System.out.println("order items: " + orderItems);
     }
 
     public void clearChosenItemsImageView() {
         firstChosenItemImageView.setImage(null);
+        firstChosenItemImageView.setOpacity(notSelectedOpacity);
         secondChosenItemImageView.setImage(null);
+        secondChosenItemImageView.setOpacity(notSelectedOpacity);
         thirdChosenItemImageView.setImage(null);
+        thirdChosenItemImageView.setOpacity(notSelectedOpacity);
     }
 
     public void failedInsertion() {
