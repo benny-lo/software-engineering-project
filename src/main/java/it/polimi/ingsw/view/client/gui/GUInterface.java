@@ -236,7 +236,7 @@ public class GUInterface extends ClientView {
     }
 
     public synchronized List<String> getOthersNicknames() {
-        return nicknames.stream().filter((n) -> n.equals(nickname)).toList();
+        return nicknames.stream().filter((n) -> !n.equals(nickname)).toList();
     }
 
     public synchronized void receiveController(LoginController controller){
