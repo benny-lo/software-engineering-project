@@ -203,15 +203,5 @@ public class Lobby {
         // the controller is sending the player the game dimensions.
     }
 
-    //FOR TESTING ONLY
 
-    public Map<Integer, Controller> getControllers()
-    {
-        return this.controllers;
-    }
-
-    public Set<ServerUpdateViewInterface> getViews()
-    {
-        return this.views;
-    }
 }

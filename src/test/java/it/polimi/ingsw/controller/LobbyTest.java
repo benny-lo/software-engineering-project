@@ -1,8 +1,8 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.utils.action.JoinAction;
+
 import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
-import it.polimi.ingsw.utils.message.Message;
+
 import it.polimi.ingsw.utils.message.server.GamesList;
 import it.polimi.ingsw.view.server.VirtualView;
 import org.junit.jupiter.api.Test;
@@ -15,45 +15,40 @@ import static org.junit.jupiter.api.Assertions.*;
 public class LobbyTest {
 
     /**
-     * Test {@code Lobby}'s constructor
-     */
-    @Test
-    public void testLobbyConstructor()
-    {
-        Lobby lobby = Lobby.getInstance();
-        assertNotNull(lobby.getControllers());
-        assertNotNull(lobby.getViews());
-        //assertEquals(lobby.getAvailableId(),0);
-
-
-    }
-
-
-    /**
      * Testing the login method when it fails because the nickname is already chosen.
      */
     @Test
-    public void testLoginFailed()
+    public void testLoginFailedChosen()
     {
-        int check = 0;
         Lobby lobby = Lobby.getInstance();
-        Controller controller = new Controller(2,2);
-        MockServerConnection mockServerConnection = new MockServerConnection();
-        VirtualView view0 = new VirtualView(mockServerConnection);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        lobby.login(view0.getNickname(), view0);
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
-        lobby.login("nick", view1);
+        view1.setNickname("nick");
+        lobby.login(view1.getNickname(),view1);
         GamesList gamesList = (GamesList) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
-        assertTrue(gamesList.getAvailable().isEmpty());
-        for(Message message : mockServerConnection.list)
-        {
-            if(message instanceof GamesList)
-            {
-                check++;
-            }
-        }
-        assertEquals(check,0);
+        assertNull(gamesList.getAvailable());
     }
+
+    /**
+     * Testing the Login method when it fails because the view is already logged in
+     */
+    @Test
+    public void testLoginFailedLogged()
+    {
+        Lobby lobby = Lobby.getInstance();
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        view0.setNickname("nick");
+        lobby.login(view0.getNickname(), view0);
+        view0.setNickname("rick");
+        lobby.login(view0.getNickname(), view0);
+        GamesList gamesList = (GamesList) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertNull(gamesList.getAvailable());
+    }
+
+
 }
