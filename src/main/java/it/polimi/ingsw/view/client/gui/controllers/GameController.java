@@ -42,7 +42,7 @@ public class GameController implements Initializable {
     private final Map<String, ImageView> otherPlayersEndingToken = new HashMap<>();
     private final static int cellSizeLivingRoom = 39;
     private final static int cellSizeOthersBookshelf = 14;
-    private final static int cellSizeBookshelf = 31;
+    private final static int cellSizeBookshelf = 27;
     private final static int livingRoomGap = 0;
     private final static int bookshelfGap = 0;
     private final static int othersBookshelfGap = 0;

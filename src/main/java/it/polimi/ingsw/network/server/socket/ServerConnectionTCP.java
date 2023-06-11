@@ -18,17 +18,19 @@ import java.util.TimerTask;
 public class ServerConnectionTCP implements ServerConnection, Runnable {
     private static final int RTT = 5000;
     private final Timer clientTimer;
-    private final Object beepLock;
     private Beep clientBeep;
     private final Socket socket;
     private ServerInputViewInterface receiver;
     private final ObjectOutputStream out;
+    private boolean toDisconnect;
+    private final Object disconnectLock;
 
     public ServerConnectionTCP(Socket socket) throws IOException {
         clientTimer = new Timer();
-        beepLock = new Object();
         this.socket = socket;
         this.out = new ObjectOutputStream(socket.getOutputStream());
+        toDisconnect = false;
+        disconnectLock = new Object();
     }
 
     @Override
@@ -44,14 +46,8 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                 receive(input);
             }
         } catch (IOException | ClassNotFoundException e) {
-            clientTimer.cancel();
-            receiver.disconnect();
-        } finally {
-            synchronized (socket) {
-                try {
-                    socket.close();
-                } catch (IOException ignored) {
-                }
+            synchronized (disconnectLock) {
+                toDisconnect = true;
             }
         }
     }
@@ -75,7 +71,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         } else if (input instanceof ChatMessage) {
             receiver.writeChat((ChatMessage) input);
         } else if (input instanceof Beep) {
-            synchronized (beepLock) {
+            synchronized (disconnectLock) {
                 clientBeep = (Beep) input;
             }
             sendPrivate(new Beep());
@@ -83,11 +79,14 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     private void sendPrivate(Message message) {
-        synchronized (out) {
+        synchronized (disconnectLock) {
+            if (toDisconnect) return;
             try {
                 out.writeObject(message);
                 out.flush();
-            } catch (IOException ignored) {}
+            } catch (IOException e) {
+                toDisconnect = true;
+            }
         }
     }
 
@@ -170,21 +169,20 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                synchronized (beepLock) {
-                    if (clientBeep != null) {
+                synchronized (disconnectLock) {
+                    if (clientBeep != null && !toDisconnect) {
                         clientBeep = null;
                         return;
                     }
                 }
 
-                synchronized (socket) {
-                    try {
-                        socket.shutdownInput();
-                        socket.shutdownOutput();
-                        socket.close();
-                    } catch (IOException ignored) {
-                    }
-                }
+                toDisconnect = true;
+
+                try {
+                    socket.shutdownInput();
+                    socket.shutdownOutput();
+                    socket.close();
+                } catch (IOException ignored) {}
 
                 clientTimer.cancel();
                 receiver.disconnect();
