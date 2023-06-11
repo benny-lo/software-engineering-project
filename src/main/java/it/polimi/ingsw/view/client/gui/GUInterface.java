@@ -183,7 +183,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public synchronized void onScoresUpdate(ScoresUpdate update) {
-        Platform.runLater(() -> gameController.setRankings(update.getScores()));
+        Platform.runLater(() -> gameController.setScores(update.getScores()));
     }
 
     @Override

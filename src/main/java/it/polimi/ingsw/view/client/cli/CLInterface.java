@@ -172,9 +172,7 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onScoresUpdate(ScoresUpdate update) {
-        for (String nick : update.getScores().keySet()) {
-            scores.put(nick, update.getScores().get(nick));
-        }
+        scores.putAll(update.getScores());
 
         if (status != ClientStatus.CHAT) {
             clearScreen();

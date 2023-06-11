@@ -27,9 +27,7 @@
       </font>
    </Label>
    <Button fx:id="enterChatButton" layoutX="981.0" layoutY="669.0" mnemonicParsing="false" onAction="#enterChat" prefHeight="45.0" prefWidth="92.0" text="Enter Chat" />
-    <ImageView fx:id="personalGoalCardImageView" fitHeight="168.0" fitWidth="86.0" layoutX="136.0" layoutY="589.0158869425458" pickOnBounds="true" preserveRatio="true">
-        <Image url="@myShelfieImages/personal_goal_cards/front_EMPTY.jpg" />
-    </ImageView>
+    <ImageView fx:id="personalGoalCardImageView" fitHeight="122.0" fitWidth="86.0" layoutX="136.0" layoutY="589.0" pickOnBounds="true" preserveRatio="true" />
    <Label alignment="CENTER" layoutX="52.0" layoutY="557.0" prefHeight="29.0" prefWidth="262.0" text="Your personal goal card">
       <font>
          <Font size="20.0" />
@@ -48,19 +46,9 @@
       <font>
          <Font size="18.0" />
       </font></Label>
-   <ImageView fx:id="firstBookshelfImageView" fitHeight="113.0" fitWidth="120.0" layoutX="124.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@myShelfieImages/boards/bookshelf.png" />
-   </ImageView>
-   <ImageView fx:id="secondBookshelfImageView" fitHeight="113.0" fitWidth="120.0" layoutX="124.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@myShelfieImages/boards/bookshelf.png" />
-      </image>
-   </ImageView>
-   <ImageView fx:id="thirdBookshelfImageView" fitHeight="113.0" fitWidth="120.0" layoutX="124.0" layoutY="434.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@myShelfieImages/boards/bookshelf.png" />
-      </image>
-   </ImageView>
+   <ImageView fx:id="firstBookshelfImageView" fitHeight="113.0" fitWidth="120.0" layoutX="124.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="secondBookshelfImageView" fitHeight="113.0" fitWidth="120.0" layoutX="124.0" layoutY="268.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="thirdBookshelfImageView" fitHeight="113.0" fitWidth="120.0" layoutX="124.0" layoutY="434.0" pickOnBounds="true" preserveRatio="true" />
    <Button fx:id="insertColumn0Button" alignment="CENTER" layoutX="836.0" layoutY="202.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="35.0" text="Insert">
       <font>
          <Font size="8.0" />
@@ -91,11 +79,6 @@
          <Font size="20.0" />
       </font>
    </Label>
-   <Label fx:id="firstCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="343.0" layoutY="630.0" prefHeight="84.0" prefWidth="223.0">
-      <font>
-         <Font size="16.0" />
-      </font>
-   </Label>
    <Label fx:id="firstCommonGoalCardId" layoutX="343.0" layoutY="567.0" prefHeight="14.0" prefWidth="223.0">
       <font>
          <Font size="18.0" />
@@ -104,11 +87,6 @@
    <Label fx:id="secondCommonGoalCardId" layoutX="564.0" layoutY="567.6666666666666" prefHeight="27.0" prefWidth="223.0">
       <font>
          <Font size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="secondCommonGoalCardDescription" alignment="TOP_LEFT" layoutX="565.0" layoutY="630.0" prefHeight="84.0" prefWidth="223.0">
-      <font>
-         <Font size="16.0" />
       </font>
    </Label>
    <Label fx:id="firstCommonGoalCardTop" layoutX="343.0" layoutY="598.0" prefHeight="25.0" prefWidth="223.0">
@@ -164,7 +142,7 @@
    <ImageView fitHeight="249.0" fitWidth="247.0" layoutX="813.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true">
        <Image url="@myShelfieImages/boards/bookshelf.png" />
    </ImageView>
-   <GridPane fx:id="bookshelfGridPane" layoutX="845.0" layoutY="256.0" prefHeight="199.0" prefWidth="192.0">
+   <GridPane fx:id="bookshelfGridPane" layoutX="847.0" layoutY="256.0" prefHeight="199.0" prefWidth="192.0">
      <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -256,4 +234,6 @@
          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
    </GridPane>
+   <ImageView fx:id="secondCommonGoalCardImageView" fitHeight="80.0" fitWidth="121.0" layoutX="564.0" layoutY="634.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="firstCommonGoalCardImageView" fitHeight="84.0" fitWidth="121.0" layoutX="343.0" layoutY="635.0" pickOnBounds="true" preserveRatio="true" />
 </AnchorPane>
