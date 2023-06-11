@@ -174,15 +174,15 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
                         clientBeep = null;
                         return;
                     }
+
+                    toDisconnect = true;
+
+                    try {
+                        socket.shutdownInput();
+                        socket.shutdownOutput();
+                        socket.close();
+                    } catch (IOException ignored) {}
                 }
-
-                toDisconnect = true;
-
-                try {
-                    socket.shutdownInput();
-                    socket.shutdownOutput();
-                    socket.close();
-                } catch (IOException ignored) {}
 
                 clientTimer.cancel();
                 receiver.disconnect();
