@@ -399,7 +399,8 @@ public class ControllerTest {
     }
 
     /**
-     * Testing content of Join Action Messages
+     * Testing content of Join Action Messages when it fails with the nickname tick, because it's the third player in
+     * a game that has 2 maximum players, and for both of the two other players as it succeeds
      */
     @Test
     public void testContentJoinAction() {
@@ -529,7 +530,7 @@ public class ControllerTest {
     }
 
     /**
-     * Testing for content of SelectionFromLivingRoomAction Messages when the action succeeds
+     * Testing for content of SelectionFromLivingRoomAction Messages when the action succeeds.
      */
     @Test
     public void testContentSuccessfulSelectionFromLivingRoom()
@@ -605,7 +606,7 @@ public class ControllerTest {
     }
 
     /**
-     * Testing for the content of the Selection of Column and Order Action messages, when it succeeds
+     * Testing for the content of the Selection of Column and Order Action messages, when it succeeds.
      */
     @Test
     public void testContentSuccessfulSelectionColumnAndOrder()
@@ -686,7 +687,7 @@ public class ControllerTest {
     }
 
     /**
-     * Testing for the content of the ChatMessageAction , when it fails
+     * Testing for the content of the ChatMessageAction , when it fails.
      */
     @Test
     public void testContentUnsuccessfulChatMessage()
@@ -709,7 +710,7 @@ public class ControllerTest {
     }
 
     /**
-     * Testing for the content of the successful ChatMessageAction when sent to all
+     * Testing for the content of the successful ChatMessageAction when sent to all.
      */
     @Test
     public void testContentSuccessfulAllChatMessage()
@@ -752,7 +753,7 @@ public class ControllerTest {
     }
 
     /**
-     * Testing for the content of the successful ChatMessageAction when not sent to all
+     * Testing for the content of the successful ChatMessageAction when it is not sent to all.
      */
     @Test
     public void testContentSuccessfulChatMessage()

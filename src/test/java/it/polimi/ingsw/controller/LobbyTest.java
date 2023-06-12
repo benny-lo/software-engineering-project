@@ -1,6 +1,7 @@
 package it.polimi.ingsw.controller;
 
 
+
 import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
 
 import it.polimi.ingsw.utils.message.Message;
@@ -271,6 +272,35 @@ public class LobbyTest {
         assertEquals(scores,2);
         assertEquals(startTurn,2);
 
+
+    }
+
+    /**
+     * Testing the removeServerUpdateViewInterface method.
+     */
+    @Test
+    public void testRemoveView()
+    {
+        int numGamesList = 0;
+        Lobby.setNull();
+        Lobby lobby = Lobby.getInstance();
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view0 = new VirtualView(mockServerConnection0);
+        lobby.login(view0.getNickname(), view0);
+        GamesList gamesList = (GamesList) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertNotNull(gamesList.getAvailable());
+        lobby.removeServerUpdateViewInterface(view0);
+        lobby.login(view0.getNickname(),view0);
+        GamesList gamesList1 = (GamesList) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        assertNotNull(gamesList1.getAvailable());
+        for(Message message : mockServerConnection0.list)
+        {
+            if(message instanceof GamesList)
+            {
+                numGamesList++;
+            }
+        }
+        assertEquals(2,numGamesList);
 
     }
 

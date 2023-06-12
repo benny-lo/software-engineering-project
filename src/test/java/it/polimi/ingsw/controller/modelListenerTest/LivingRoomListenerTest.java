@@ -14,7 +14,7 @@ public class LivingRoomListenerTest {
      * Testing for the constructor for the class
      */
     @Test
-    public void constructorTest()
+    public void testConstructor()
     {
         LivingRoomListener livingRoomListener = new LivingRoomListener();
         assertFalse(livingRoomListener.hasChanged());
@@ -23,10 +23,10 @@ public class LivingRoomListenerTest {
         assertTrue(livingRoomListener.getLivingRoom().isEmpty());
     }
     /**
-     * Testing for the updateState method
+     * Testing for the updateState method working as intended
      */
     @Test
-    public void updateStateTest()
+    public void testUpdateState()
     {
         LivingRoomListener livingRoomListener = new LivingRoomListener();
         livingRoomListener.updateState(new Position(0,0), Item.CAT);

@@ -9,7 +9,7 @@ public class EndingTokenListenerTest {
      * Testing for the constructor and getter for the class
      */
     @Test
-    public void constructorGetterTest()
+    public void testConstructorGetter()
     {
         EndingTokenListener endingTokenListener = new EndingTokenListener();
         assertFalse(endingTokenListener.hasChanged());
@@ -17,10 +17,10 @@ public class EndingTokenListenerTest {
     }
 
     /**
-     * Testing for the updateState method
+     * Testing for the updateState method working as intended
      */
     @Test
-    public void updateStateTest()
+    public void testUpdateState()
     {
         EndingTokenListener endingTokenListener = new EndingTokenListener();
         assertFalse(endingTokenListener.hasChanged());

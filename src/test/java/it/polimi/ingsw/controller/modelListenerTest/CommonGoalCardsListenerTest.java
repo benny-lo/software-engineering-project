@@ -12,7 +12,7 @@ public class CommonGoalCardsListenerTest {
      * Testing for the class constructor
      */
     @Test
-    public void constructorTest()
+    public void testConstructor()
     {
         CommonGoalCardsListener commonGoalCardsListener = new CommonGoalCardsListener();
         assertFalse(commonGoalCardsListener.hasChanged());
@@ -22,10 +22,10 @@ public class CommonGoalCardsListenerTest {
 
     }
     /**
-     * Testing for the updateState method
+     * Testing for the updateState method working as intended
      */
     @Test
-    public void updateStateTest()
+    public void testUpdateState()
     {
         CommonGoalCardsListener commonGoalCardsListener = new CommonGoalCardsListener();
         assertFalse(commonGoalCardsListener.hasChanged());

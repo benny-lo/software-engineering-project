@@ -15,7 +15,7 @@ public class BookshelfListenerTest {
      * Testing for the constructor for the class
      */
     @Test
-    public void constructorTest()
+    public void testConstructor()
     {
         BookshelfListener bookshelfListener = new BookshelfListener("nick");
         assertEquals("nick", bookshelfListener.getOwner());
@@ -23,10 +23,10 @@ public class BookshelfListenerTest {
         assertTrue(bookshelfListener.getBookshelf().isEmpty());
     }
     /**
-     * Testing for the updateState method
+     * Testing for the updateState method working as intended
      */
     @Test
-    public void updateStateTest()
+    public void testUpdateState()
     {
         BookshelfListener bookshelfListener = new BookshelfListener("nick");
         bookshelfListener.updateState(new Position(0,0), Item.CAT);
