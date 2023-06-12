@@ -214,7 +214,12 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
-
+        winner = update.getWinner();
+        if(winner==null){
+            Platform.runLater(() -> gameController.playerDisconnectionInGame());
+        }else{
+            Platform.runLater(() -> gameController.endGame(winner));
+        }
     }
 
     @Override

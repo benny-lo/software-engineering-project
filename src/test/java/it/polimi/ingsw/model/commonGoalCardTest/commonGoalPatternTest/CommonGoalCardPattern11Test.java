@@ -14,7 +14,7 @@ public class CommonGoalCardPattern11Test {
      * test given a 6x5 Bookshelf with a full diagonal of BOOKs from the first right tile to upper left
      */
     @Test
-    public void correct6x5rightToLeft(){
+    public void testCorrect6x5rightToLeft(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=bookshelf.getColumns()-1; i>=0; i--){
@@ -31,7 +31,7 @@ public class CommonGoalCardPattern11Test {
      * test given a 6x5 Bookshelf with a full diagonal of BOOKs from the second lower left tile (0,1) to upper right
      */
     @Test
-    public void correct6x5leftToRight(){
+    public void testCorrect6x5leftToRight(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i<bookshelf.getColumns(); i++){
@@ -48,7 +48,7 @@ public class CommonGoalCardPattern11Test {
      * test given a 6x5 Bookshelf without a full diagonal from left to upper right
      */
     @Test
-    public void incorrect6x5(){
+    public void testIncorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=1; i<bookshelf.getColumns()-1; i++){
@@ -65,7 +65,7 @@ public class CommonGoalCardPattern11Test {
      * Test of pattern on an empty bookshelf.
      */
     @Test
-    public void emptyBookshelf()
+    public void testEmptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPattern11();
         Bookshelf bookshelf = new Bookshelf();

@@ -10,7 +10,7 @@ public class ScoringTokenTest {
      * Test for the class constructor
      */
     @Test
-    public void constructorTest()
+    public void testConstructor()
     {
         ScoringToken token = new ScoringToken(1,2);
         assertEquals(token.getScore(),1);

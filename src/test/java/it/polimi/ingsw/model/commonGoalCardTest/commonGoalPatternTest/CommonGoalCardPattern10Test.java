@@ -15,7 +15,7 @@ public class CommonGoalCardPattern10Test {
      * test if given a 3x3 Bookshelf full of CATs
      */
     @Test
-    public void correct3x3(){
+    public void testCorrect3x3(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf=new Bookshelf(3,3);
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -29,7 +29,7 @@ public class CommonGoalCardPattern10Test {
      * test if given a 6x5 Bookshelf full of CATs
      */
     @Test
-    public void correct6x5(){
+    public void testCorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -43,7 +43,7 @@ public class CommonGoalCardPattern10Test {
      * test if given a 2x2 Bookshelf full of CATs
      */
     @Test
-    public void incorrect2x2(){
+    public void testIncorrect2x2(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf = new Bookshelf(2, 2);
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -58,7 +58,7 @@ public class CommonGoalCardPattern10Test {
      * test if given a 3x3 Bookshelf with the first column full of CATs and the last column full of BOOKs
      */
     @Test
-    public void incorrect3x3(){
+    public void testIncorrect3x3(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
         Bookshelf bookshelf=new Bookshelf(3,3);
         for(int j=0; j< bookshelf.getRows(); j++){
@@ -74,7 +74,7 @@ public class CommonGoalCardPattern10Test {
      * test if given a 6x5 Bookshelf with even columns full of CATs and odd columns full of BOOKs
      */
     @Test
-    public void incorrect6x5(){
+    public void testIncorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -89,7 +89,7 @@ public class CommonGoalCardPattern10Test {
      * test if given a 6x5 Bookshelf with even columns full of CATs and odd columns full of BOOKs, but an X in the upper corner
      */
     @Test
-    public void upperCornerCorrect6x5(){
+    public void testUpperCornerCorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -105,7 +105,7 @@ public class CommonGoalCardPattern10Test {
      * Test of pattern on an empty bookshelf.
      */
     @Test
-    public void emptyBookshelf()
+    public void testEmptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf = new Bookshelf();

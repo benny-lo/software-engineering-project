@@ -13,7 +13,7 @@ public class PositionTest {
      * Test for the {@code Position}'s constructor with row and column
      */
     @Test
-    public void constructorTest()
+    public void testConstructor()
     {
         Position one = new Position(1,2);
 
@@ -24,7 +24,7 @@ public class PositionTest {
      * Test for the {@code Position}'s constructor with another position
      */
     @Test
-    public void constructorTest2()
+    public void testConstructor2()
     {
         Position one = new Position(1,2);
         Position two = new Position(one);
@@ -36,17 +36,17 @@ public class PositionTest {
      * Test for the json constructor
      */
     @Test
-    public void jsonTest()
+    public void testJson()
     {
         Position json = new Position();
         assertEquals(-1, json.getColumn());
         assertEquals(-1, json.getRow());
     }
     /**
-    * Test for the equals.
+    * Test for the override of the equals method
     */
     @Test
-    public void equalsTest()
+    public void testEquals()
     {
         Position one = new Position(1,2);
         Object obj = new Object();
@@ -59,10 +59,10 @@ public class PositionTest {
     }
 
     /**
-     * Test for the override of hashCode
+     * Test for the override of hashCode method
      */
     @Test
-    public void hashCodeTest()
+    public void testHashCode()
     {
         Position one = new Position(1,1);
         int obj = one.hashCode();
@@ -70,10 +70,10 @@ public class PositionTest {
         assertEquals(obj,obj1);
     }
     /**
-     * Tests for override of compareTo
+     * Tests for override of compareTo method
      */
     @Test
-    public void compareToTest()
+    public void testCompareTo()
     {
         Position one = new Position(1,1);
         Position two = new Position(1,1);

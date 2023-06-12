@@ -17,7 +17,7 @@ public class GameBuilderTest {
      * Testing for the class constructor
      */
     @Test
-    public void constructorTest()
+    public void testConstructor()
     {
         GameBuilder gameBuilder = new GameBuilder(2);
         assertEquals(gameBuilder.getNumberCommonGoalCards(),2);
@@ -28,7 +28,7 @@ public class GameBuilderTest {
      * Testing for adding and removing players
      */
     @Test
-    public void playerTest()
+    public void testPlayer()
     {
         GameBuilder gameBuilder = new GameBuilder(2);
         gameBuilder.addPlayer("nick");
@@ -47,7 +47,7 @@ public class GameBuilderTest {
      * Then we add and test if adding a common goal card listener, an ending token listener and living room listener works
      */
     @Test
-    public void listenersTest()
+    public void testListeners()
     {
         GameBuilder gameBuilder = new GameBuilder(2);
         gameBuilder.addPlayer("rick");
@@ -68,7 +68,7 @@ public class GameBuilderTest {
      * Testing for the getter for the number of current players
      */
     @Test
-    public void getCurrentPlayersTest()
+    public void testGetCurrentPlayers()
     {
         GameBuilder gameBuilder = new GameBuilder(2);
         gameBuilder.addPlayer("nick");
@@ -84,7 +84,7 @@ public class GameBuilderTest {
      * Testing for the startGame method
      */
     @Test
-    public void startGameTest()
+    public void testStartGame()
     {
         GameBuilder gameBuilder = new GameBuilder(2);
         gameBuilder.addPlayer("nick");

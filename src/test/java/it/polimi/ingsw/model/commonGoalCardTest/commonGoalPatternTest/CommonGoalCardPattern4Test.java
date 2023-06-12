@@ -15,7 +15,7 @@ public class CommonGoalCardPattern4Test {
      * Test of pattern on exactly 6 adjacent couples
      */
     @Test
-    public void exactlySix()
+    public void testExactlySix()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf(2,6);
@@ -32,7 +32,7 @@ public class CommonGoalCardPattern4Test {
      * Test of pattern on an empty bookshelf.
      */
     @Test
-    public void emptyBookshelf()
+    public void testEmptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf();
@@ -44,7 +44,7 @@ public class CommonGoalCardPattern4Test {
      * Test of pattern on a bookshelf with less than 6 adjacent couples
      */
     @Test
-    public void lessThanSix()
+    public void testLessThanSix()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf();
@@ -58,7 +58,7 @@ public class CommonGoalCardPattern4Test {
      * Test of pattern on a bookshelf with 6 groups with items in common
      */
     @Test
-    public void commonItems()
+    public void testCommonItems()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf();
@@ -77,7 +77,7 @@ public class CommonGoalCardPattern4Test {
      * Test of pattern on a bookshelf with 12 not adjacent items of the same kind
      */
     @Test
-    public void twelveNotAdjacent()
+    public void testTwelveNotAdjacent()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf();
