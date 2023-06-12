@@ -201,10 +201,10 @@ public class GameController implements Initializable {
         alert.setHeaderText("The Game has ended!");
         int i=0;
         for (Map.Entry<String, Integer> e : scores.entrySet()) {
-            ranking[i]=(e.getKey() + ": " + e.getValue() + "\n");
+            ranking[i]=(e.getKey() + ": " + e.getValue());
             i++;
         }
-        alert.setContentText("The winner is: " + winner + ".\n" + Arrays.toString(ranking));
+        alert.setContentText("The winner is: " + winner + ".\nRanking: " + Arrays.toString(ranking));
         alert.showAndWait();
         System.exit(0);
     }
