@@ -175,7 +175,7 @@ public class GUInterface extends ClientView {
             inGame = true;
             inLauncher = false;
             Platform.runLater(() -> gameController.setNickname(nickname));
-            Platform.runLater(() -> gameController.initializeBookshelves(nicknames, bookshelvesRows, bookshelvesColumns));
+            Platform.runLater(() -> gameController.initializeBookshelves(nicknames, bookshelvesRows));
             Platform.runLater(() -> lobbyController.endWindow());
         }
     }
