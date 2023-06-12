@@ -19,7 +19,6 @@ import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startL
 import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
 import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
 
-//TODO: when then server crashes, send an error
 public class GUInterface extends ClientView {
     private LoginController loginController;
     private LobbyController lobbyController;
@@ -183,7 +182,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public synchronized void onScoresUpdate(ScoresUpdate update) {
-        Platform.runLater(() -> gameController.setRankings(update.getScores()));
+        Platform.runLater(() -> gameController.setScores(update.getScores()));
     }
 
     @Override
@@ -215,7 +214,12 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
-
+        winner = update.getWinner();
+        if(winner==null){
+            Platform.runLater(() -> gameController.playerDisconnectionInGame());
+        }else{
+            Platform.runLater(() -> gameController.endGame(winner));
+        }
     }
 
     @Override
@@ -236,7 +240,7 @@ public class GUInterface extends ClientView {
     }
 
     public synchronized List<String> getOthersNicknames() {
-        return nicknames.stream().filter((n) -> n.equals(nickname)).toList();
+        return nicknames.stream().filter((n) -> !n.equals(nickname)).toList();
     }
 
     public synchronized void receiveController(LoginController controller){

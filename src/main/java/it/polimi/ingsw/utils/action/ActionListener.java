@@ -5,32 +5,33 @@ package it.polimi.ingsw.utils.action;
  */
 public interface ActionListener {
     /**
-     * This method listens for a player to join
-     * @param action - action that sets the listener in motion
+     * Listens for a player to join into {@code this}.
+     * @param action information passed to listener as a {@code JoinAction}
      */
     void perform(JoinAction action);
 
     /**
-     * This method listens for a player to make a selection from the living room
-     * @param action - action that sets the listener in motion
+     * Listens for a player to select some tile from the living room.
+     * @param action information passed to listener as a {@code SelectionFromLivingRoomAction}.
      */
     void perform(SelectionFromLivingRoomAction action);
 
     /**
-     * This method listens for a player to select column and order
-     * @param action - action that sets the listener in motion
+     * Listens for a player to select the order and column where to insert the previously selected item tiles in their
+     * bookshelf.
+     * @param action information passed to listener as a {@code SelectionColumnAndOrderAction}.
      */
     void perform(SelectionColumnAndOrderAction action);
 
     /**
-     * This method listens for a Chat Message
-     * @param action - action that sets the listener in motion
+     * Listens for a player to send a chat message (either broadcast or unicast).
+     * @param action information passed to listener as a {@code ChatMessageAction}.
      */
     void perform(ChatMessageAction action);
 
     /**
-     * This method listens for a Disconnection
-     * @param action - action that sets the listener in motion
+     * Listens for a player to disconnect.
+     * @param action information passed to listener as a {@code DisconnectionAction}.
      */
     void perform(DisconnectionAction action);
 }

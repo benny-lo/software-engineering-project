@@ -42,7 +42,7 @@ public class GameController implements Initializable {
     private final Map<String, ImageView> otherPlayersEndingToken = new HashMap<>();
     private final static int cellSizeLivingRoom = 39;
     private final static int cellSizeOthersBookshelf = 14;
-    private final static int cellSizeBookshelf = 27;
+    private final static int cellSizeBookshelf = 29;
     private final static int livingRoomGap = 0;
     private final static int bookshelfGap = 0;
     private final static int othersBookshelfGap = 0;
@@ -56,6 +56,8 @@ public class GameController implements Initializable {
     private final static double notSelectedOpacity = 1.0;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     private final Stage chatStage = new Stage();
+    private final Map <String, Integer> scores = new HashMap<>();
+    private GameControllerStatus status = GameControllerStatus.Waiting;
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -95,9 +97,9 @@ public class GameController implements Initializable {
     @FXML
     private Label secondCommonGoalCardTop;
     @FXML
-    private Label firstCommonGoalCardDescription;
+    private ImageView firstCommonGoalCardImageView;
     @FXML
-    private Label secondCommonGoalCardDescription;
+    private ImageView secondCommonGoalCardImageView;
     @FXML
     private ImageView firstChosenItemImageView;
     @FXML
@@ -139,8 +141,10 @@ public class GameController implements Initializable {
 
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;
-        if (currentPlayer.equals(nickname))
+        if (currentPlayer.equals(nickname)) {
+            status = GameControllerStatus.LivingRoom;
             currentPlayerLabel.setText("It's your turn!");
+        }
         else
             currentPlayerLabel.setText("It's " + currentPlayer + "'s turn!");
     }
@@ -152,17 +156,17 @@ public class GameController implements Initializable {
 
     private Image getImage(Item item) {
         String image;
-        if(item==null) return null;
-        switch (item){
-            case CAT -> image=CAT;
-            case CUP -> image=CUP;
-            case FRAME -> image=FRAME;
-            case GAME -> image=GAME;
-            case PLANT -> image=PLANT;
-            case BOOK -> image=BOOK;
-            default -> image=null;
+        if(item == null) return null;
+        switch (item) {
+            case CAT -> image = CAT;
+            case CUP -> image = CUP;
+            case FRAME -> image = FRAME;
+            case GAME -> image = GAME;
+            case PLANT -> image = PLANT;
+            case BOOK -> image = BOOK;
+            default -> image = null;
         }
-        if(image==null) return null;
+        if(image == null) return null;
         return new Image(image);
     }
 
@@ -174,7 +178,7 @@ public class GameController implements Initializable {
         if (row == 4) return 1;
         return 0;
     }
-
+    //ENDGAME
     public void disconnectionInGame() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Error!");
@@ -183,9 +187,31 @@ public class GameController implements Initializable {
         System.exit(0);
     }
 
+    public void playerDisconnectionInGame() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error!");
+        alert.setContentText("A player disconnected, the game has ended.\n");
+        alert.showAndWait();
+        System.exit(0);
+    }
+
+    public void endGame(String winner){
+        String[] ranking= new String[4];
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("The Game has ended!");
+        int i=0;
+        for (Map.Entry<String, Integer> e : scores.entrySet()) {
+            ranking[i]=(e.getKey() + ": " + e.getValue());
+            i++;
+        }
+        alert.setContentText("The winner is: " + winner + ".\nRanking: " + Arrays.toString(ranking));
+        alert.showAndWait();
+        System.exit(0);
+    }
+
     //GRID
     public void setLivingRoomGridPane(Item[][] livingRoom){
-        if(livingRoom ==null) return;
+        if(livingRoom == null) return;
         livingRoomGridPane.getChildren().clear();
         for(int i = 0; i< livingRoom.length; i++){
             for(int j = 0; j< livingRoom.length; j++){
@@ -210,6 +236,12 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
+        if (!status.equals(GameControllerStatus.LivingRoom)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (selectedItems.contains(position)) {
             selectedItems.remove(position);
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
@@ -225,10 +257,16 @@ public class GameController implements Initializable {
         warningAlert.showAndWait();
     }
 
-    public void selectFromLivingRoom() throws IOException {
+    public void selectFromLivingRoom() throws IOException { //TODO: sometimes the server rejects the selection
         if (!guInterface.getNickname().equals(currentPlayer)){
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("Wait for your turn!");
+            warningAlert.showAndWait();
+            return;
+        }
+        if (!status.equals(GameControllerStatus.LivingRoom)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
             warningAlert.showAndWait();
             return;
         }
@@ -243,9 +281,10 @@ public class GameController implements Initializable {
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
-    public void setChosenItems(List<Item> itemsChosen){
+    public void setChosenItems(List<Item> chosenItems){
         if (!currentPlayer.equals(nickname)) return;
-        this.chosenItems = itemsChosen;
+        status = GameControllerStatus.Bookshelf;
+        this.chosenItems = chosenItems;
         updateChosenItemsImageView();
     }
 
@@ -254,6 +293,7 @@ public class GameController implements Initializable {
     }
 
     public void clearTilesList() {
+        if (!currentPlayer.equals(nickname)) return;
         for (Position items : selectedItems) clearNodeByColumnRow(items.getColumn(), items.getRow());
     }
 
@@ -271,7 +311,6 @@ public class GameController implements Initializable {
         warningAlert.setHeaderText("Warning!");
         warningAlert.setContentText("Failed selection, retry!");
         warningAlert.showAndWait();
-
     }
 
     //BOOKSHELF
@@ -292,6 +331,12 @@ public class GameController implements Initializable {
 
     public void selectOrder(ImageView selected) {
         if (!guInterface.getNickname().equals(currentPlayer)) return;
+        if (!status.equals(GameControllerStatus.Bookshelf)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (!orderItems.contains(selected)) {
             orderItems.add(selected);
             selected.setOpacity(selectedOpacity);
@@ -341,6 +386,12 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
+        if (!status.equals(GameControllerStatus.Bookshelf)) {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You cannot do this now!");
+            warningAlert.showAndWait();
+            return;
+        }
         if (chosenItems.size() == 0) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You have to select items from the Living Room!");
@@ -367,6 +418,7 @@ public class GameController implements Initializable {
             clearChosenItemLabels();
         }
         endTurnClear();
+        status = GameControllerStatus.Waiting;
     }
 
     private int findFreeRowBookshelf(GridPane bookshelfGridPane, int column) {
@@ -389,12 +441,20 @@ public class GameController implements Initializable {
         selectedOrder.clear();
         chosenItems.clear();
         orderItems.clear();
+        System.out.println("ho clearato tutto");
+        System.out.println("selected items: " + selectedItems);
+        System.out.println("selected order: " + selectedOrder);
+        System.out.println("chosen items: " + chosenItems);
+        System.out.println("order items: " + orderItems);
     }
 
     public void clearChosenItemsImageView() {
         firstChosenItemImageView.setImage(null);
+        firstChosenItemImageView.setOpacity(notSelectedOpacity);
         secondChosenItemImageView.setImage(null);
+        secondChosenItemImageView.setOpacity(notSelectedOpacity);
         thirdChosenItemImageView.setImage(null);
+        thirdChosenItemImageView.setOpacity(notSelectedOpacity);
     }
 
     public void failedInsertion() {
@@ -452,34 +512,20 @@ public class GameController implements Initializable {
     //COMMON GOAL CARDS
 
     public void updateCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
-        if (commonGoalCards == null)
-            return;
-        String description = "";
+        String filename;
+        if (commonGoalCards == null) return;
         boolean first = true;
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
-            switch (card.getKey()){
-                case 0 -> description="Two groups each containing 4 tiles of\nthe same type in a 2x2 square.\nThe tiles of one square can be different\nfrom those of the other square.";
-                case 1 -> description="Two columns each formed by 6 different\ntypes of tiles.";
-                case 2 -> description="Four groups each containing at least 4\ntiles of the same type.\nThe tiles of one group can be different\nfrom those of another group.";
-                case 3 -> description="Six groups each containing at least 2\ntiles of the same type\nThe tiles of one group can be different\nfrom those of another group.";
-                case 4 -> description="Three columns each formed by 6 tiles\nof maximum three different types.\nOne column can show the same or\na different combination of another column";
-                case 5 -> description="Two lines each formed by 5 different\ntypes of tiles. One line can\nshow the same or a different\ncombination of the other line.";
-                case 6 -> description="Four lines each formed by 5 tiles of\nmaximum three different types. One \nline can show the same or a different\ncombination of another line.";
-                case 7 -> description="Four tiles of the same type in the\nfour corners of the bookshelf.";
-                case 8 -> description="Eight or more tiles of the same type\nwith no restrictions about the\nposition of these tiles.";
-                case 9 -> description="Five tiles of the same type forming an X.";
-                case 10 -> description="Five tiles of the same type forming a diagonal";
-                case 11 -> description="Five columns of increasing or decreasing height.\nStarting from the first column\non the left or on the right,\neach next column must be made\nof exactly one more tile.\nTiles can be of any type.";
-            }
+            filename = "/gui/myShelfieImages/common_goal_cards/common_goal_card_" + card.getKey() + ".jpg";
             if (first) {
                 firstCommonGoalCardId.setText("Id: " + card.getKey());
                 firstCommonGoalCardTop.setText("Top token value: " + card.getValue());
-                firstCommonGoalCardDescription.setText(description);
+                firstCommonGoalCardImageView.setImage(new Image(filename));
                 first = false;
             } else {
                 secondCommonGoalCardId.setText("Id: " + card.getKey());
                 secondCommonGoalCardTop.setText("Top token value: " + card.getValue());
-                secondCommonGoalCardDescription.setText(description);
+                secondCommonGoalCardImageView.setImage(new Image(filename));
             }
         }
     }
@@ -494,13 +540,15 @@ public class GameController implements Initializable {
             otherPlayersEndingToken.get(owner).setImage(new Image("/gui/myShelfieImages/scoring_tokens/end_game.jpg"));
     }
 
-    //RANKINGS
 
-    public void setRankings(Map<String, Integer> scores) {
-        if (scores == null) return;
+    //SCORES
+
+    public void setScores(Map<String, Integer> newScores) {
+        if (newScores == null) return;
+        this.scores.putAll(newScores);
         rankingsLabel.setText("");
-        for(String player : scores.keySet()) {
-            rankingsLabel.setText(rankingsLabel.getText() + player + ": " + scores.get(player) + " points\n");
+        for(String player : this.scores.keySet()) {
+            rankingsLabel.setText(rankingsLabel.getText() + player + ": " + this.scores.get(player) + " points\n");
         }
     }
 
@@ -547,4 +595,5 @@ public class GameController implements Initializable {
             e.printStackTrace();
         }
     }
+
 }
