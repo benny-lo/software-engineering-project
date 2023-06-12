@@ -126,12 +126,12 @@
    <ImageView fx:id="firstEndingTokenImageView" fitHeight="30.0" fitWidth="30.0" layoutX="301.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="secondEndingTokenImageView" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="233.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="thirdEndingTokenImageView" fitHeight="30.0" fitWidth="30.0" layoutX="302.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true" />
-   <Label fx:id="rankingsLabel" alignment="TOP_LEFT" layoutX="790.0" layoutY="557.0" prefHeight="146.0" prefWidth="188.0">
+   <Label fx:id="rankingLabel" alignment="TOP_LEFT" layoutX="790.0" layoutY="557.0" prefHeight="146.0" prefWidth="188.0">
       <font>
          <Font size="18.0" />
       </font>
    </Label>
-   <Label layoutX="790.0" layoutY="516.0" prefHeight="31.0" prefWidth="128.0" text="Rankings">
+   <Label layoutX="790.0" layoutY="516.0" prefHeight="31.0" prefWidth="128.0" text="Ranking">
       <font>
          <Font size="20.0" />
       </font>

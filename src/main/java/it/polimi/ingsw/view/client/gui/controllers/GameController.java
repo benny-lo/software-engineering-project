@@ -45,7 +45,6 @@ public class GameController implements Initializable {
     private final static int livingRoomGap = 0;
     private final static int bookshelfGap = 0;
     private final static int othersBookshelfGap = 0;
-    private int bookshelvesRows;
     private List<Item> chosenItems = new ArrayList<>(numberSelectedItems);
     private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
     private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
@@ -129,7 +128,7 @@ public class GameController implements Initializable {
     @FXML
     private ImageView thirdEndingTokenImageView;
     @FXML
-    private Label rankingsLabel;
+    private Label rankingLabel;
 
     public static void startGameController(GUInterface guInterface){
         GameController.guInterface=guInterface;
@@ -192,26 +191,23 @@ public class GameController implements Initializable {
     }
 
     public void endGame(String winner){
-        String[] ranking= new String[4];
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("The Game has ended!");
-        int i=0;
+        alert.setContentText("The winner is: " + winner + ".\nRanking: ");
         for (Map.Entry<String, Integer> e : scores.entrySet()) {
-            ranking[i]=(e.getKey() + ": " + e.getValue());
-            i++;
+            alert.setContentText(alert.getContentText() + "\n" + e.getKey() + ": " + e.getValue());
         }
-        alert.setContentText("The winner is: " + winner + ".\nRanking: " + Arrays.toString(ranking));
         alert.showAndWait();
         System.exit(0);
     }
 
     //GRID
-    public void setLivingRoomGridPane(Item[][] livingRoom){
-        if(livingRoom == null) return;
+    public void setLivingRoomGridPane(Map<Position, Item> livingRoom) {
+        if (livingRoom == null) return;
         livingRoomGridPane.getChildren().clear();
-        for(int i = 0; i< livingRoom.length; i++){
-            for(int j = 0; j< livingRoom.length; j++){
-                setLivingRoomTile(livingRoom[i][j], j, i);
+        for(int i = 0; i< livingRoomGridPane.getRowCount(); i++) {
+            for(int j = 0; j< livingRoomGridPane.getColumnCount(); j++) {
+                setLivingRoomTile(livingRoom.get(new Position(i, j)), j, i);
             }
         }
     }
@@ -245,7 +241,6 @@ public class GameController implements Initializable {
         }
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
-            System.out.println(position);
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(selectedOpacity);
             return;
         }
@@ -273,11 +268,8 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-        System.out.println("lato client select funzionante\n" + selectedItems);
 
         LivingRoomSelection livingRoomSelection = new LivingRoomSelection(new ArrayList<>(selectedItems));
-
-        System.out.println(livingRoomSelection);
 
         guInterface.selectFromLivingRoom(livingRoomSelection);
     }
@@ -317,7 +309,6 @@ public class GameController implements Initializable {
     //BOOKSHELF
 
     private void updateChosenItemsImageView() {
-        System.out.println("sto settando le immagini");
         firstChosenItemImageView.setImage(getImage(chosenItems.get(0)));
         firstChosenItemImageView.setOnMouseClicked(mouseEvent -> this.selectOrder(firstChosenItemImageView));
         if (chosenItems.size() > 1) {
@@ -423,7 +414,7 @@ public class GameController implements Initializable {
     }
 
     private int findFreeRowBookshelf(GridPane bookshelfGridPane, int column) {
-        for (int i = bookshelvesRows - 1; i >= 0; i--) {
+        for (int i = bookshelfGridPane.getColumnCount(); i >= 0; i--) {
             int finalI = i;
             if (bookshelfGridPane.getChildren().stream().noneMatch(n -> (GridPane.getColumnIndex(n) == column && GridPane.getRowIndex(n) == finalI)))
                 return finalI;
@@ -470,9 +461,8 @@ public class GameController implements Initializable {
 
     //BOOKSHELVES
 
-    public void initializeBookshelves(List<String> nicknames, int bookshelvesRows) {
+    public void initializeBookshelves(List<String> nicknames) {
         int numberPlayers = nicknames.size();
-        this.bookshelvesRows = bookshelvesRows;
         nicknames.remove(nickname);
 
         firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
@@ -544,9 +534,9 @@ public class GameController implements Initializable {
     public void setScores(Map<String, Integer> newScores) {
         if (newScores == null) return;
         this.scores.putAll(newScores);
-        rankingsLabel.setText("");
+        rankingLabel.setText("");
         for(String player : this.scores.keySet()) {
-            rankingsLabel.setText(rankingsLabel.getText() + player + ": " + this.scores.get(player) + " points\n");
+            rankingLabel.setText(rankingLabel.getText() + player + ": " + this.scores.get(player) + " points\n");
         }
     }
 
