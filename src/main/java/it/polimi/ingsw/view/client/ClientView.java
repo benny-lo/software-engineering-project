@@ -6,7 +6,7 @@ import it.polimi.ingsw.network.client.rmi.ClientConnectionRMI;
 import it.polimi.ingsw.network.client.socket.ClientConnectionTCP;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
-import it.polimi.ingsw.utils.message.server.ChatUpdate;
+import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.view.InputViewInterface;
 
 import java.io.IOException;
@@ -25,31 +25,12 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
     protected String currentPlayer;
     protected String winner;
     protected int numberPlayers;
-    protected Collection<String> connectedPlayers;
-    protected int numberCommonGoalCards;
-    protected Item[][] livingRoom;
-    protected Map<String, Item[][]> bookshelves;
     protected int bookshelvesRows;
     protected int bookshelvesColumns;
-    protected String endingToken;
-    protected Item[][] personalGoalCard;
-    protected Map<Integer, Integer> commonGoalCards;
-    protected Map<String, Integer> scores;
-    protected boolean endGame;
-    protected List<ChatUpdate> chat;
+    protected int numberCommonGoalCards;
     protected List<Item> chosenItems;
+    protected Item[][] livingRoom;
     protected ClientConnection clientConnection;
-
-    /**
-     * Constructor for the class.
-     * Creates a new HashMap for the bookshelves, for the common goal cards, for the scores and for the chat.
-     */
-    public ClientView() {
-        bookshelves = new HashMap<>();
-        commonGoalCards = new HashMap<>();
-        scores = new HashMap<>();
-        chat = new ArrayList<>();
-    }
 
     /**
      * This method starts the RMI type of connection, catching different exceptions.
@@ -150,5 +131,37 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         Matcher matcher = pattern.matcher(nickname);
 
         return !matcher.matches();
+    }
+
+    @Override
+    public void login(Nickname message) {
+        clientConnection.send(message);
+    }
+
+    @Override
+    public void createGame(GameInitialization message) {
+        clientConnection.send(message);
+    }
+
+    @Override
+    public void selectGame(GameSelection message) {
+        clientConnection.send(message);
+    }
+
+    @Override
+    public void selectFromLivingRoom(LivingRoomSelection message) {
+        System.out.println("prima della send: " + message.getPositions());
+        clientConnection.send(message);
+        System.out.println("dopo la send: " + message.getPositions());
+    }
+
+    @Override
+    public void insertInBookshelf(BookshelfInsertion message) {
+        clientConnection.send(message);
+    }
+
+    @Override
+    public void writeChat(ChatMessage message) {
+        clientConnection.send(message);
     }
 }

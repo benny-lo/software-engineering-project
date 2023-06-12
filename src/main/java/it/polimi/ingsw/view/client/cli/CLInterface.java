@@ -15,20 +15,30 @@ import it.polimi.ingsw.view.client.InputReceiver;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static it.polimi.ingsw.view.client.cli.CLInterfacePrinter.*;
 
 public class CLInterface extends ClientView implements InputReceiver {
     private CLIStatus status;
+    private Collection<String> connectedPlayers;
+    private final Map<String, Item[][]> bookshelves;
+    private String endingToken;
+    private Item[][] personalGoalCard;
+    private final Map<Integer, Integer> commonGoalCards;
+    private final Map<String, Integer> scores;
+    private boolean endGame;
+
+    private final List<ChatUpdate> chat;
 
     /**
      * Constructor for the class.
      */
     public CLInterface() {
-        super();
+        bookshelves = new HashMap<>();
+        commonGoalCards = new HashMap<>();
+        scores = new HashMap<>();
+        chat = new ArrayList<>();
     }
 
     /**
@@ -369,7 +379,7 @@ public class CLInterface extends ClientView implements InputReceiver {
 
             this.nickname = nickname;
         }
-        clientConnection.send(new Nickname(nickname));
+        super.login(new Nickname(nickname));
     }
 
     /**
@@ -385,7 +395,7 @@ public class CLInterface extends ClientView implements InputReceiver {
                 return;
             }
         }
-        clientConnection.send(message);
+        super.createGame(message);
     }
 
     /**
@@ -401,7 +411,7 @@ public class CLInterface extends ClientView implements InputReceiver {
                 return;
             }
         }
-        clientConnection.send(message);
+        super.selectGame(message);
     }
 
     /**
@@ -417,7 +427,7 @@ public class CLInterface extends ClientView implements InputReceiver {
                 return;
             }
         }
-        clientConnection.send(message);
+        super.selectFromLivingRoom(message);
     }
 
     /**
@@ -433,7 +443,7 @@ public class CLInterface extends ClientView implements InputReceiver {
                 return;
             }
         }
-        clientConnection.send(message);
+        super.insertInBookshelf(message);
     }
 
     /**
@@ -449,7 +459,7 @@ public class CLInterface extends ClientView implements InputReceiver {
                 return;
             }
         }
-        clientConnection.send(message);
+        super.writeChat(message);
     }
 
     /**

@@ -259,7 +259,7 @@ public class GameController implements Initializable {
     }
 
     public void selectFromLivingRoom() throws IOException { //TODO: sometimes the server rejects the selection
-        if (!guInterface.getNickname().equals(currentPlayer)){
+        if (!guInterface.getNickname().equals(currentPlayer)) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("Wait for your turn!");
             warningAlert.showAndWait();
@@ -271,7 +271,7 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-        if (selectedItems.size() < 1){
+        if (selectedItems.size() < 1) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You have to select at least one item!");
             warningAlert.showAndWait();
@@ -279,7 +279,7 @@ public class GameController implements Initializable {
         }
         System.out.println("lato client select funzionante\n" + selectedItems);
 
-        LivingRoomSelection livingRoomSelection = new LivingRoomSelection(selectedItems);
+        LivingRoomSelection livingRoomSelection = new LivingRoomSelection(new ArrayList<>(selectedItems));
 
         System.out.println(livingRoomSelection);
 
