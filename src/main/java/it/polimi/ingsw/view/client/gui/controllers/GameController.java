@@ -227,6 +227,7 @@ public class GameController implements Initializable {
         }
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
+            System.out.println(position);
             livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(selectedOpacity);
             return;
         }
@@ -256,7 +257,11 @@ public class GameController implements Initializable {
         }
         System.out.println("lato client select funzionante\n" + selectedItems);
 
-        guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
+        LivingRoomSelection livingRoomSelection = new LivingRoomSelection(selectedItems);
+
+        System.out.println(livingRoomSelection);
+
+        guInterface.selectFromLivingRoom(livingRoomSelection);
     }
 
     public void setChosenItems(List<Item> chosenItems){

@@ -24,4 +24,9 @@ public class LivingRoomSelection extends Message {
     public List<Position> getPositions() {
         return positions;
     }
+
+    @Override
+    public String toString() {
+        return positions.toString();
+    }
 }
