@@ -273,7 +273,13 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-        guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
+        System.out.println("lato client select funzionante\n" + selectedItems);
+
+        LivingRoomSelection livingRoomSelection = new LivingRoomSelection(new ArrayList<>(selectedItems));
+
+        System.out.println(livingRoomSelection);
+
+        guInterface.selectFromLivingRoom(livingRoomSelection);
     }
 
     public void setChosenItems(List<Item> chosenItems){

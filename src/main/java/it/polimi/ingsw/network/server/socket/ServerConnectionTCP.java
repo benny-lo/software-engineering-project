@@ -84,13 +84,12 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     @Override
     public void run() {
         try {
-            Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
             scheduleTimer();
 
             while (true) {
-                input = in.readObject();
+                Object input = in.readObject();
                 receive(input);
             }
         } catch (IOException | ClassNotFoundException e) {

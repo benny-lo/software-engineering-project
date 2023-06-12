@@ -48,32 +48,7 @@ public class GUInterface extends ClientView {
             }
             this.nickname = nickname;
         }
-        clientConnection.send(new Nickname(nickname));
-    }
-
-    @Override
-    public void createGame(GameInitialization message) {
-        clientConnection.send(message);
-    }
-
-    @Override
-    public void selectGame(GameSelection message) {
-        clientConnection.send(message);
-    }
-
-    @Override
-    public void selectFromLivingRoom(LivingRoomSelection message) {
-        clientConnection.send(message);
-    }
-
-    @Override
-    public void insertInBookshelf(BookshelfInsertion message) {
-        clientConnection.send(message);
-    }
-
-    @Override
-    public void writeChat(ChatMessage message) {
-        clientConnection.send(message);
+        super.login(new Nickname(nickname));
     }
 
     @Override

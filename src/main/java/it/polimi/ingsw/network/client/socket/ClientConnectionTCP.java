@@ -104,10 +104,11 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
 
     @Override
     public void run() {
-        scheduleTimers();
         try {
             Object input;
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
+
+            scheduleTimers();
 
             while (true) {
                 input = in.readObject();
