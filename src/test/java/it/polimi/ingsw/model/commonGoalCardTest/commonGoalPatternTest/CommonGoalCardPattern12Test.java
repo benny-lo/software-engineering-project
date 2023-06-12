@@ -14,7 +14,7 @@ public class CommonGoalCardPattern12Test {
      * test given a 6x5 Bookshelf with 6 tiles in the first column and every column they decrease by 1
      */
     @Test
-    public void correct6x5rightToLeft(){
+    public void testCorrect6x5rightToLeft(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=bookshelf.getColumns()-1; i>=0; i--){
@@ -28,7 +28,7 @@ public class CommonGoalCardPattern12Test {
      * test given a 6x5 Bookshelf with 1 tile in the first column and every column they increase by 1
      */
     @Test
-    public void correct6x5leftToRight(){
+    public void testCorrect6x5leftToRight(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -43,7 +43,7 @@ public class CommonGoalCardPattern12Test {
      * but one more tile in the fourth column
      */
     @Test
-    public void incorrect6x5leftToRight(){
+    public void testIncorrect6x5leftToRight(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -58,7 +58,7 @@ public class CommonGoalCardPattern12Test {
      * test given a 3x3 Bookshelf full of CATs
      */
     @Test
-    public void incorrect3x3(){
+    public void testIncorrect3x3(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int j=0; j< bookshelf.getColumns(); j++){
@@ -70,7 +70,7 @@ public class CommonGoalCardPattern12Test {
      * Test of pattern on an empty bookshelf.
      */
     @Test
-    public void emptyBookshelf()
+    public void testEmptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf = new Bookshelf();

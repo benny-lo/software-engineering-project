@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.client.rmi;
 
 import it.polimi.ingsw.network.client.ClientConnection;
-import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;

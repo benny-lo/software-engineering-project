@@ -214,7 +214,12 @@ public class GUInterface extends ClientView {
 
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
-
+        winner = update.getWinner();
+        if(winner==null){
+            Platform.runLater(() -> gameController.playerDisconnectionInGame());
+        }else{
+            Platform.runLater(() -> gameController.endGame(winner));
+        }
     }
 
     @Override
@@ -235,7 +240,7 @@ public class GUInterface extends ClientView {
     }
 
     public synchronized List<String> getOthersNicknames() {
-        return nicknames.stream().filter((n) -> n.equals(nickname)).toList();
+        return nicknames.stream().filter((n) -> !n.equals(nickname)).toList();
     }
 
     public synchronized void receiveController(LoginController controller){

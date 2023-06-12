@@ -178,11 +178,33 @@ public class GameController implements Initializable {
         if (row == 4) return 1;
         return 0;
     }
-
+    //ENDGAME
     public void disconnectionInGame() {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText("Error!");
         alert.setContentText("You have been disconnected from the server.\n");
+        alert.showAndWait();
+        System.exit(0);
+    }
+
+    public void playerDisconnectionInGame() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error!");
+        alert.setContentText("A player disconnected, the game has ended.\n");
+        alert.showAndWait();
+        System.exit(0);
+    }
+
+    public void endGame(String winner){
+        String[] ranking= new String[4];
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("The Game has ended!");
+        int i=0;
+        for (Map.Entry<String, Integer> e : scores.entrySet()) {
+            ranking[i]=(e.getKey() + ": " + e.getValue());
+            i++;
+        }
+        alert.setContentText("The winner is: " + winner + ".\nRanking: " + Arrays.toString(ranking));
         alert.showAndWait();
         System.exit(0);
     }
@@ -523,6 +545,7 @@ public class GameController implements Initializable {
             otherPlayersEndingToken.get(owner).setImage(new Image("/gui/myShelfieImages/scoring_tokens/end_game.jpg"));
     }
 
+
     //SCORES
 
     public void setScores(Map<String, Integer> newScores) {
@@ -577,4 +600,5 @@ public class GameController implements Initializable {
             e.printStackTrace();
         }
     }
+
 }

@@ -17,6 +17,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.*;
 
+/**
+ * Controller of a single game. Its purpose is to construct the model, manage request from clients and
+ * appropriately send updates to clients. Some methods synchronize on {@code this}.
+ */
 public class Controller implements ActionListener {
     /**
      * The model of the game.
@@ -29,7 +33,7 @@ public class Controller implements ActionListener {
     private final GameBuilder gameBuilder;
 
     /**
-     * The number of players that can join the game.
+     * The number of players that have to join the game.
      */
     private final int numberPlayers;
 
@@ -49,7 +53,8 @@ public class Controller implements ActionListener {
     private Queue<String> playerQueue;
 
     /**
-     * Set of the virtual views connected to the {@code Game} controlled by {@code this}.
+     * Set of {@code ServerUpdateViewInterface}s connected to the {@code Game}
+     * controlled by {@code this}.
      */
     private final Set<ServerUpdateViewInterface> views;
 
@@ -65,7 +70,7 @@ public class Controller implements ActionListener {
     private TurnPhase turnPhase;
 
     /**
-     * Listener for the bookshelves.
+     * Listeners for the bookshelves, one per player.
      */
     private final List<BookshelfListener> bookshelfListeners;
 
@@ -85,9 +90,9 @@ public class Controller implements ActionListener {
     private final LivingRoomListener livingRoomListener;
 
     /**
-     * Constructor for the class.
-     * @param numberPlayers - the number of players
-     * @param numberCommonGoalCards - the number of common goal cards
+     * Constructor for the class. It creates a {@code Controller} for a not yet started (and constructed) game.
+     * @param numberPlayers - the number of players that need to join the game to make it start.
+     * @param numberCommonGoalCards - the number of common goal cards of the game.
      */
     public Controller(int numberPlayers, int numberCommonGoalCards) {
         this.numberPlayers = numberPlayers;
@@ -111,7 +116,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method notifies the players of any changes in the bookshelves and updates them.
+     * Notifies the players of any changes in the bookshelves.
      */
     private void notifyBookshelvesToEverybody() {
         for (BookshelfListener bookshelfListener : bookshelfListeners) {
@@ -125,7 +130,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method notifies the players of any changes in the common goal cards and updates them.
+     * Notifies the players of any changes in the common goal cards.
      */
     private void notifyCommonGoalCardsToEverybody() {
         Map<Integer, Integer> map = commonGoalCardsListener.getCards();
@@ -135,7 +140,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method notifies the players of any changes in the ending token and updates it.
+     * Notifies the players of any changes in the ending token.
      */
     private void notifyEndingTokenToEverybody() {
         if (!endingTokenListener.hasChanged()) return;
@@ -146,7 +151,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method notifies the players of any changes in the living room and updates it.
+     * Notifies the players of any changes in the living room.
      */
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
@@ -157,7 +162,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method notifies the players of any changes in the scores and updates them.
+     * Notifies the players of any changes in the scores.
      */
     private void notifyScoresToEverybody() {
         Map<String, Integer> scores = new HashMap<>();
@@ -175,7 +180,7 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method notifies the players of any changes in the personal goal cards and updates them.
+     * Notifies the players of any changes in the personal goal cards.
      */
     private void notifyPersonalGoalCardsToEverybody() {
         for (ServerUpdateViewInterface v : views) {
@@ -184,8 +189,8 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method initializes the game, the players' turns , the common goal cards, the personal ones, the living room and
-     * the bookshelves.
+     * Helper method to initialize the game: it shuffles the players, constructs the model, sets the turn and
+     * sends all start-game updates.
      */
     private void setup() {
         // Choosing a random order for the players.
@@ -212,24 +217,25 @@ public class Controller implements ActionListener {
         notifyPersonalGoalCardsToEverybody();
         notifyScoresToEverybody();
 
+        //
         for(ServerUpdateViewInterface v : views) {
             v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
         }
-
-        /* for (VirtualView v : views) {
-            v.onItemsSelected(new ItemsSelected(null));
-        } */
     }
 
     /**
-     * This method controls the various cases of next turn.
+     * Starts the next turn: move the queue of players one step forward; if the game is ending, notify the players,
+     * else notify the beginning of the turn of the new current player.
      */
     private void nextTurn() {
+
+        // Move the queue forward.
         String justPlayed = playerQueue.poll();
         playerQueue.add(justPlayed);
         game.setCurrentPlayer(playerQueue.peek());
 
         if (firstPlayer.equals(game.getCurrentPlayer()) && game.IsEndingTokenAssigned()) {
+            // Game ended -> Find the winner.
             ended = true;
 
             List<String> nicknames = playerQueue.stream().toList();
@@ -246,12 +252,17 @@ public class Controller implements ActionListener {
                 view.onEndGameUpdate(new EndGameUpdate(winner));
             }
         } else {
+            // Game continues.
             for(ServerUpdateViewInterface v : views) {
                 v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
             }
         }
     }
 
+    /**
+     * Gets the game config parameters from JSON file.
+     * @return {@code GameConfig} object storing the game info (bookshelf and living room dimensions).
+     */
     private GameConfig getGameConfig(){
         Gson gson = new GsonBuilder().serializeNulls()
                 .setPrettyPrinting()
@@ -275,28 +286,34 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method performs the Join action , letting a new player join the game.
-     * @param action - action that sets the listener in motion
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param action information passed to {@code Controller} as a {@code JoinAction}.
      */
     @Override
     public synchronized void perform(JoinAction action) {
-        if (game != null || ended) {
+        if (turnPhase != null || ended) {
+            // Game already started or already ended.
             action.getView().onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
             return;
         }
 
+        // Get the GameConfig and send them to player.
         GameConfig gameConfig = getGameConfig();
         action.getView().onGameData(new GameData(numberPlayers, getConnectedPlayers(), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
 
+        // Add player to queue and to list of views.
         playerQueue.add(action.getView().getNickname());
         views.add(action.getView());
 
+        // Update builder with player and listener for their bookshelf.
         gameBuilder.addPlayer(action.getView().getNickname());
 
         BookshelfListener bookshelfListener = new BookshelfListener(action.getView().getNickname());
         bookshelfListeners.add(bookshelfListener);
         gameBuilder.setBookshelfListener(bookshelfListener);
 
+        // Update all waiting players that a new one just connected.
         for(ServerUpdateViewInterface v : views) {
             v.onWaitingUpdate(new WaitingUpdate(
                     action.getView().getNickname(),
@@ -306,14 +323,15 @@ public class Controller implements ActionListener {
         }
 
         if (gameBuilder.getCurrentPlayers() == this.numberPlayers) {
+            // All players joined.
             setup();
         }
     }
 
     /**
-     * This method performs the SelectionFromLivingRoom action, letting a player choose one or more tiles from the
-     * living room.
-     * @param action - action that sets the listener in motion
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param action information passed to {@code Controller} as a {@code SelectionFromLivingRoomAction}.
      */
     @Override
     public synchronized void perform(SelectionFromLivingRoomAction action) {
@@ -321,6 +339,7 @@ public class Controller implements ActionListener {
                 !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
+            // Action failed.
             action.getView().onSelectedItems(new SelectedItems(null));
             System.out.println("ended " + ended);
             System.out.println("action by " + action.getView().getNickname());
@@ -337,17 +356,19 @@ public class Controller implements ActionListener {
 
         notifyLivingRoomToEverybody();
 
+        // Send the selected items to everybody.
         for(ServerUpdateViewInterface v : views) {
             v.onSelectedItems(new SelectedItems(items));
         }
 
+        // Update the turn phase.
         turnPhase = TurnPhase.BOOKSHELF;
     }
 
     /**
-     * This method performs the SelectionColumnAndOrder action, letting the player choose in which column of the bookshelf
-     * and in what order put the items.
-     * @param action - action that sets the listener in motion
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param action information passed to {@code Controller} as a {@code SelectionColumnAndOrderAction}.
      */
     @Override
     public synchronized void perform(SelectionColumnAndOrderAction action) {
@@ -355,6 +376,7 @@ public class Controller implements ActionListener {
                 !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
+            // Action failed.
             action.getView().onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
@@ -369,24 +391,23 @@ public class Controller implements ActionListener {
         notifyCommonGoalCardsToEverybody();
         notifyEndingTokenToEverybody();
         notifyScoresToEverybody();
-        /* for(VirtualView v : views) {
-            v.onItemsSelected(new ItemsSelected(null));
-        } */
 
-        // maybe move in nextTurn
+        // Set the new turn phase.
         turnPhase = TurnPhase.LIVING_ROOM;
 
         nextTurn();
     }
 
     /**
-     * This method performs the ChatMessage action, letting the player send and receive messages.
-     * @param action - action that sets the listener in motion
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param action information passed to {@code Controller} as a {@code ChatMessageAction}.
      */
     @Override
     public synchronized void perform(ChatMessageAction action) {
-        if (ended || game.getCurrentPlayer() == null) {
+        if (ended || game.getCurrentPlayer() == null || action.getReceiver().equals(action.getView().getNickname())) {
             action.getView().onChatAccepted(new ChatAccepted(false));
+            // Action failed.
             return;
         }
 
@@ -395,12 +416,14 @@ public class Controller implements ActionListener {
                 action.getReceiver());
 
         if (action.getReceiver().equals("all")) {
+            // Broadcast chat message.
             action.getView().onChatAccepted(new ChatAccepted(true));
 
             for (ServerUpdateViewInterface v : views) {
                 v.onChatUpdate(update);
             }
         } else {
+            // Unicast chat message.
             ServerUpdateViewInterface view = null;
             for(ServerUpdateViewInterface v : views) {
                 if (v.getNickname().equals(action.getReceiver())) {
@@ -420,76 +443,92 @@ public class Controller implements ActionListener {
     }
 
     /**
-     * This method performs the Disconnection action.
-     * @param action - action that sets the listener in motion
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param action information passed to {@code Controller} as a {@code DisconnectionAction}.
      */
     @Override
     public synchronized void perform(DisconnectionAction action) {
+        // Game already finished.
         if (ended) return;
 
-        // disconnection handling during pre-game phase
-        if (!isStarted()){
+        if (isStarted()) {
+            // Disconnection during game-phase.
+            // The game is killed.
+            ended = true;
             views.remove(action.getView());
-            gameBuilder.removePlayer(action.getView().getNickname());
-            gameBuilder.removeBookshelfListener(action.getView().getNickname());
-
-            String player = playerQueue.poll(), tmp;
-            if (player == null) return;
-            playerQueue.add(player);
-            do {
-                tmp = playerQueue.poll();
-                if (action.getView().getNickname().equals(tmp)) {
-                    break;
-                }
-                playerQueue.add(tmp);
-            } while(!player.equals(tmp));
-
-            for(ServerUpdateViewInterface v : views)
-                v.onWaitingUpdate(new WaitingUpdate(action.getView().getNickname(),numberPlayers - playerQueue.size(), false));
+            for (ServerUpdateViewInterface v : views) {
+                v.onEndGameUpdate(new EndGameUpdate(null));
+            }
             return;
         }
 
-        ended = true;
+        // Disconnection during pre-game phase.
+        // The game is not killed.
         views.remove(action.getView());
-        for (ServerUpdateViewInterface v : views) {
-            v.onEndGameUpdate(new EndGameUpdate(null));
+        gameBuilder.removePlayer(action.getView().getNickname());
+        gameBuilder.removeBookshelfListener(action.getView().getNickname());
+
+        String player = playerQueue.poll(), tmp;
+        if (player == null) return;
+        playerQueue.add(player);
+        do {
+            tmp = playerQueue.poll();
+            if (action.getView().getNickname().equals(tmp)) {
+                break;
+            }
+            playerQueue.add(tmp);
+        } while(!player.equals(tmp));
+
+        for(ServerUpdateViewInterface v : views) {
+            v.onWaitingUpdate(new WaitingUpdate(action.getView().getNickname(),
+                    numberPlayers - playerQueue.size(),
+                    false));
         }
     }
 
     /**
-     * Getter for the turnPhase.
-     * @return - returns the turnPhase, if different from null
+     * Returns whether the game is started.
+     * It synchronizes on {@code this}.
+     * @return {@code true} iff the game is started.
      */
     public synchronized boolean isStarted() {
         return turnPhase != null;
     }
 
     /**
-     * Getter for the number of players
-     * @return - the number of players
+     * Getter for the number of players.
+     * It synchronizes on {@code this}.
+     * @return the number of players.
      */
     public synchronized int getNumberPlayers() {
         return numberPlayers;
     }
 
     /**
-     * Getter for the number of Common Goal cards
-     * @return - the number of common goal cards
+     * Getter for the number of Common Goal cards.
+     * @return the number of common goal cards.
      */
-    public synchronized int getNumberCommonGoalCards() {
+    public int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
     }
 
     /**
-     * Getter for the number of players connected
-     * @return - the number of players connected
+     * Getter for the number of players currently connected.
+     * It synchronizes on {@code this}.
+     * @return the number of players connected.
      */
     public synchronized int getNumberActualPlayers(){
         return playerQueue.size();
     }
 
+    /**
+     * Getter for the list of nicknames of the players connected so far.
+     * It synchronizes on {@code this}.
+     * @return an {@code List} of nicknames ({@code String}s).
+     */
     public synchronized List<String> getConnectedPlayers(){
-        return new LinkedList<>(playerQueue);
+        return new ArrayList<>(playerQueue);
     }
 
     // EXCLUSIVELY FOR TESTING
