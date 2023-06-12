@@ -36,7 +36,6 @@ public class GameController implements Initializable {
     private final List<Position> selectedItems = new ArrayList<>(numberSelectedItems);
     private String nickname;
     private String currentPlayer;
-    private int numberPlayers;
     private final static int numberSelectedItems = 3;
     private final Map<String, GridPane> otherPlayersBookshelf = new HashMap<>();
     private final Map<String, ImageView> otherPlayersEndingToken = new HashMap<>();
@@ -47,7 +46,6 @@ public class GameController implements Initializable {
     private final static int bookshelfGap = 0;
     private final static int othersBookshelfGap = 0;
     private int bookshelvesRows;
-    private int bookshelvesColumns;
     private List<Item> chosenItems = new ArrayList<>(numberSelectedItems);
     private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
     private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
@@ -66,8 +64,6 @@ public class GameController implements Initializable {
     private Label nicknameLabel;
     @FXML
     private Label currentPlayerLabel;
-    @FXML
-    private Button enterChatButton;
     @FXML
     private ImageView personalGoalCardImageView;
     @FXML
@@ -258,8 +254,8 @@ public class GameController implements Initializable {
         warningAlert.showAndWait();
     }
 
-    public void selectFromLivingRoom() throws IOException { //TODO: sometimes the server rejects the selection
-        if (!guInterface.getNickname().equals(currentPlayer)) {
+    public void selectFromLivingRoom() throws IOException {
+        if (!guInterface.getNickname().equals(currentPlayer)){
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("Wait for your turn!");
             warningAlert.showAndWait();
@@ -271,7 +267,7 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-        if (selectedItems.size() < 1) {
+        if (selectedItems.size() < 1){
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You have to select at least one item!");
             warningAlert.showAndWait();
@@ -446,11 +442,9 @@ public class GameController implements Initializable {
         selectedOrder.clear();
         chosenItems.clear();
         orderItems.clear();
-        System.out.println("ho clearato tutto");
-        System.out.println("selected items: " + selectedItems);
-        System.out.println("selected order: " + selectedOrder);
-        System.out.println("chosen items: " + chosenItems);
-        System.out.println("order items: " + orderItems);
+        firstChosenItemImageView.setOnMouseClicked(null);
+        secondChosenItemImageView.setOnMouseClicked(null);
+        thirdChosenItemImageView.setOnMouseClicked(null);
     }
 
     public void clearChosenItemsImageView() {
@@ -476,10 +470,9 @@ public class GameController implements Initializable {
 
     //BOOKSHELVES
 
-    public void initializeBookshelves(List<String> nicknames, int bookshelvesRows, int bookshelvesColumns) {
-        numberPlayers = nicknames.size();
+    public void initializeBookshelves(List<String> nicknames, int bookshelvesRows) {
+        int numberPlayers = nicknames.size();
         this.bookshelvesRows = bookshelvesRows;
-        this.bookshelvesColumns = bookshelvesColumns;
         nicknames.remove(nickname);
 
         firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
