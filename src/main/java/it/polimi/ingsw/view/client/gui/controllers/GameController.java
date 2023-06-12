@@ -406,7 +406,7 @@ public class GameController implements Initializable {
             return;
         }
         selectedColumn = column;
-        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, selectedOrder));
+        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, new ArrayList<>(selectedOrder)));
     }
 
     public void insertItems() {
