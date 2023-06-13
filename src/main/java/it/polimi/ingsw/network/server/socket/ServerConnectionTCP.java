@@ -151,6 +151,10 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(Message message) {
         sendPrivate(message);

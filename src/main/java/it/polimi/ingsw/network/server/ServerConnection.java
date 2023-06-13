@@ -13,5 +13,9 @@ public interface ServerConnection {
      */
     void setServerInputViewInterface(ServerInputViewInterface serverInputViewInterface);
 
+    /**
+     * Send a {@code Message} to client.
+     * @param message the message to send.
+     */
     void send(Message message);
 }
