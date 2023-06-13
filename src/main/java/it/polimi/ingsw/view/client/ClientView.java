@@ -140,9 +140,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
 
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
-        System.out.println("prima della send: " + message.getPositions());
         clientConnection.send(message);
-        System.out.println("dopo la send: " + message.getPositions());
     }
 
     @Override

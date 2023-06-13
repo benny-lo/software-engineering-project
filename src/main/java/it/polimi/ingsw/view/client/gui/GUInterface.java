@@ -38,12 +38,11 @@ public class GUInterface extends ClientView {
     @Override
     public void login(Nickname message) {
         synchronized (this) {
-            String nickname = message.getNickname();
-            if (isNicknameValid(nickname)) {
+            if (isNicknameValid(message.getNickname())) {
                 Platform.runLater(() -> loginController.invalidNickname());
                 return;
             }
-            this.nickname = nickname;
+            this.nickname = message.getNickname();
         }
         super.login(new Nickname(nickname));
     }
@@ -59,7 +58,6 @@ public class GUInterface extends ClientView {
         }
 
         Platform.runLater(() -> loginController.successfulLogin());
-
         Platform.runLater(() -> lobbyController.listOfGames(games));
     }
 
@@ -162,7 +160,7 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onChatUpdate(ChatUpdate update) {
+    public synchronized void onChatUpdate(ChatUpdate update) {
         Platform.runLater(() -> gameController.enterChat());
         Platform.runLater(() -> chatController.receiveMessage(update));
     }
@@ -173,7 +171,7 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onEndGameUpdate(EndGameUpdate update) {
+    public synchronized void onEndGameUpdate(EndGameUpdate update) {
         if(update.getWinner() == null){
             Platform.runLater(() -> gameController.playerDisconnectionInGame());
         }else{
@@ -182,7 +180,7 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onDisconnection() {
+    public synchronized void onDisconnection() {
         if (inLauncher)
             Platform.runLater(() -> loginController.disconnectionInLauncher());
         if (inGame)

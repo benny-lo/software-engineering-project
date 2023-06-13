@@ -204,16 +204,15 @@ public class GameController implements Initializable {
     //GRID
     public void setLivingRoomGridPane(Map<Position, Item> livingRoom) {
         if (livingRoom == null) return;
-        livingRoomGridPane.getChildren().clear();
-        for(int i = 0; i< livingRoomGridPane.getRowCount(); i++) {
-            for(int j = 0; j< livingRoomGridPane.getColumnCount(); j++) {
-                setLivingRoomTile(livingRoom.get(new Position(i, j)), j, i);
-            }
+        for (Position position : livingRoom.keySet()) {
+            setLivingRoomTile(livingRoom.get(new Position(position.getRow(), position.getColumn())), position.getColumn(), position.getRow());
         }
     }
 
-    private void setLivingRoomTile(Item item, int column, int row){
+    private void setLivingRoomTile(Item item, int column, int row) {
         ImageView imageView = new ImageView(getImage(item));
+        if (imageView.getImage() == null)
+            clearNodeByColumnRow(column, row);
         imageView.setOnMouseClicked(mouseEvent -> selectItem(new Position(row, column)));
         imageView.setFitWidth(cellSizeLivingRoom);
         imageView.setFitHeight(cellSizeLivingRoom);
@@ -269,9 +268,7 @@ public class GameController implements Initializable {
             return;
         }
 
-        LivingRoomSelection livingRoomSelection = new LivingRoomSelection(new ArrayList<>(selectedItems));
-
-        guInterface.selectFromLivingRoom(livingRoomSelection);
+        guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
     public void setChosenItems(List<Item> chosenItems){
@@ -397,7 +394,7 @@ public class GameController implements Initializable {
             return;
         }
         selectedColumn = column;
-        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, new ArrayList<>(selectedOrder)));
+        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, selectedOrder));
     }
 
     public void insertItems() {

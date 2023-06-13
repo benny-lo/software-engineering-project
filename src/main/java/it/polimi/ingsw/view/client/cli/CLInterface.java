@@ -367,20 +367,19 @@ public class CLInterface extends ClientView implements InputReceiver {
     @Override
     public void login(Nickname message) {
         synchronized (this) {
-            String nickname = message.getNickname();
             if (status != CLIStatus.LOGIN) {
                 printWrongStatus();
                 System.out.flush();
                 return;
             }
 
-            if (isNicknameValid(nickname)) {
+            if (isNicknameValid(message.getNickname())) {
                 printIncorrectNickname();
                 System.out.flush();
                 return;
             }
 
-            this.nickname = nickname;
+            this.nickname = message.getNickname();
         }
         super.login(new Nickname(nickname));
     }
