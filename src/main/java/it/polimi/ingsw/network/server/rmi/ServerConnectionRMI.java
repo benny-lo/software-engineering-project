@@ -17,14 +17,47 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
+    /**
+     * Estimate of the Round-Trip-Time for the connection between server and client.
+     */
     private static final int RTT = 5000;
+
+    /**
+     * Queue that contains all messages that need to be sent to the client.
+     */
     private final Queue<Message> sendingQueue;
-    private ServerInputViewInterface receiver;
+
+    /**
+     * Listener for messages coming from the client.
+     */
+    private ServerInputViewInterface listener;
+
+    /**
+     * RMI interface provided by the client. Used to send message to the client.
+     */
     private final ClientConnectionRMIInterface client;
+
+    /**
+     * Timer used for disconnection handling.
+     */
     private final Timer clientTimer;
+
+    /**
+     * Object used for synchronization purposes.
+     */
     private final Object beepLock;
+
+    /**
+     * Last {@code Beep} message received from client.
+     */
     private Beep clientBeep;
 
+    /**
+     * Constructs a new {@code ServerConnectionRMI}. It sets the clientRMI interface.
+     * @param client the clientRMI interface.
+     * @throws RemoteException rmi exception. It is the one thrown by the no-args constructor
+     * of {@code UnicastRemoteObject}.
+     */
     public ServerConnectionRMI(ClientConnectionRMIInterface client) throws RemoteException {
         super();
         this.sendingQueue = new ArrayDeque<>();
@@ -33,6 +66,11 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         this.beepLock = new Object();
     }
 
+    /**
+     * Starts the timer that constantly checks whether a {@code Beep} from client has arrived. Moreover, it
+     * starts the {@code Thread} that will be listening for messages to send (in the {@code sendingQueue})
+     * and will be calling the appropriate clientRMI methods.
+     */
     public void start() {
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -45,7 +83,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                 }
 
                 clientTimer.cancel();
-                receiver.disconnect();
+                listener.disconnect();
             }
         }, RTT/2, 2*RTT);
 
@@ -95,47 +133,86 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                     }
                 } catch (RemoteException e) {
                     clientTimer.cancel();
-                    receiver.disconnect();
+                    listener.disconnect();
                 }
             }
         })).start();
     }
 
+    /**
+     * {@inheritDoc}
+     * @param receiver the listener.
+     */
     @Override
     public void setServerInputViewInterface(ServerInputViewInterface receiver) {
-        this.receiver = receiver;
+        this.listener = receiver;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the request from the client.
+     * @throws RemoteException
+     */
     @Override
     public void login(Nickname message) throws RemoteException {
-        receiver.login(message);
+        listener.login(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the request from the client.
+     * @throws RemoteException
+     */
     @Override
     public void createGame(GameInitialization message) throws RemoteException {
-        receiver.createGame(message);
+        listener.createGame(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the request from the client.
+     * @throws RemoteException
+     */
     @Override
     public void selectGame(GameSelection message) throws RemoteException {
-        receiver.selectGame(message);
+        listener.selectGame(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the request from the client.
+     * @throws RemoteException
+     */
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) throws RemoteException {
-        receiver.selectFromLivingRoom(message);
+        listener.selectFromLivingRoom(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the request from the client.
+     * @throws RemoteException
+     */
     @Override
     public void insertInBookshelf(BookshelfInsertion message) throws RemoteException {
-        receiver.insertInBookshelf(message);
+        listener.insertInBookshelf(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the request from the client.
+     * @throws RemoteException
+     */
     @Override
     public void writeChat(ChatMessage message) throws RemoteException {
-        receiver.writeChat(message);
+        listener.writeChat(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param beep the beep from the client.
+     * @throws RemoteException
+     */
     @Override
     public void beep(Beep beep) throws RemoteException {
         synchronized (beepLock) {
@@ -145,10 +222,14 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
             client.receive(new Beep());
         } catch (RemoteException e) {
             clientTimer.cancel();
-            receiver.disconnect();
+            listener.disconnect();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(Message message) {
         synchronized (sendingQueue) {
