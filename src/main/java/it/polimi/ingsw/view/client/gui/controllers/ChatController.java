@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 public class ChatController implements Initializable {
+    private final static String BROADCAST = "all";
     private static GUInterface guInterface;
     @FXML
     private ComboBox<String> playerMenu;
@@ -66,8 +67,13 @@ public class ChatController implements Initializable {
     }
 
     private boolean isToDisplay(ChatUpdate message) {
+        if (isBroadcast(message)) return BROADCAST.equals(playerMenu.getValue());
         return playerMenu.getValue().equals(message.getSender()) ||
                 playerMenu.getValue().equals(message.getReceiver());
+    }
+
+    private boolean isBroadcast(ChatUpdate message) {
+        return BROADCAST.equals(message.getReceiver()) || BROADCAST.equals(message.getSender());
     }
 
     private Label createLabel(ChatUpdate message) {
