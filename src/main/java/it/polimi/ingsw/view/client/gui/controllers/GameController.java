@@ -55,10 +55,13 @@ public class GameController implements Initializable {
     private final Stage chatStage = new Stage();
     private final Map <String, Integer> scores = new HashMap<>();
     private GameControllerStatus status = GameControllerStatus.Waiting;
+    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
     public Button sendButton;
+    @FXML
+    public Button enterChatButton;
     @FXML
     private Label nicknameLabel;
     @FXML
@@ -175,18 +178,16 @@ public class GameController implements Initializable {
     }
     //ENDGAME
     public void disconnectionInGame() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText("Error!");
-        alert.setContentText("You have been disconnected from the server.\n");
-        alert.showAndWait();
+        errorAlert.setHeaderText("Error!");
+        errorAlert.setContentText("You have been disconnected from the server.\n");
+        errorAlert.showAndWait();
         System.exit(0);
     }
 
     public void playerDisconnectionInGame() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText("Error!");
-        alert.setContentText("A player disconnected, the game has ended.\n");
-        alert.showAndWait();
+        errorAlert.setHeaderText("Error!");
+        errorAlert.setContentText("A player has disconnected, the game has ended.\n");
+        errorAlert.showAndWait();
         System.exit(0);
     }
 
@@ -235,12 +236,12 @@ public class GameController implements Initializable {
         }
         if (selectedItems.contains(position)) {
             selectedItems.remove(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(notSelectedOpacity));
             return;
         }
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(selectedOpacity);
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().forEach(n -> n.setOpacity(selectedOpacity));
             return;
         }
         warningAlert.setHeaderText("Warning!");
@@ -267,7 +268,6 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
@@ -546,6 +546,7 @@ public class GameController implements Initializable {
         chatStage.setTitle("MyShelfieChat");
         chatStage.hide();
         chatStage.setResizable(false);
+        chatStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
 
         chatStage.setOnCloseRequest(event -> {
             event.consume();

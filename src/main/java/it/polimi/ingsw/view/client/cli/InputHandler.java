@@ -50,7 +50,6 @@ public class InputHandler implements Runnable {
                     case "/help" -> {
                         if (tokenizer.countTokens() == 0) {
                             CLInterfacePrinter.printHelp();
-                            inputReceiver.getStatus();
                         } else {
                             CLInterfacePrinter.printIncorrectCommand();
                         }
@@ -125,6 +124,10 @@ public class InputHandler implements Runnable {
                         String receiver = tokenizer.nextToken();
                         String text = tokenizer.nextToken();
                         inputReceiver.writeChat(new ChatMessage(text, receiver));
+                    }
+                    case "/exit" -> {
+                        if (tokenizer.countTokens() != 1) return;
+                        inputReceiver.exit();
                     }
                     default -> CLInterfacePrinter.printWrongCommand();
                 }

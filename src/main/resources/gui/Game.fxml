@@ -21,7 +21,7 @@
       <font>
          <Font size="8.0" />
       </font></Button>
-   <Label fx:id="currentPlayerLabel" layoutX="760.0" layoutY="74.0" prefHeight="35.0" prefWidth="217.0">
+   <Label fx:id="currentPlayerLabel" layoutX="813.0" layoutY="76.0" prefHeight="35.0" prefWidth="246.0">
       <font>
          <Font size="20.0" />
       </font>
@@ -69,9 +69,9 @@
       <font>
          <Font size="8.0" />
       </font></Button>
-   <Label fx:id="nicknameLabel" layoutX="761.0" layoutY="24.0" prefHeight="56.0" prefWidth="230.0">
+   <Label fx:id="nicknameLabel" layoutX="813.0" layoutY="16.0" prefHeight="56.0" prefWidth="192.0">
       <font>
-         <Font size="24.0" />
+         <Font size="22.0" />
       </font>
    </Label>
    <Label layoutX="332.0" layoutY="532.0" prefHeight="25.0" prefWidth="230.0" text="Common Goal Cards">
@@ -122,18 +122,18 @@
          <Font size="18.0" />
       </font>
    </Label>
-   <ImageView fx:id="currentEndingTokenImageView" fitHeight="56.0" fitWidth="56.0" layoutX="997.0" layoutY="27.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="currentEndingTokenImageView" fitHeight="56.0" fitWidth="56.0" layoutX="1011.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="firstEndingTokenImageView" fitHeight="30.0" fitWidth="30.0" layoutX="301.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="secondEndingTokenImageView" fitHeight="30.0" fitWidth="30.0" layoutX="300.0" layoutY="233.0" pickOnBounds="true" preserveRatio="true" />
    <ImageView fx:id="thirdEndingTokenImageView" fitHeight="30.0" fitWidth="30.0" layoutX="302.0" layoutY="397.0" pickOnBounds="true" preserveRatio="true" />
-   <Label fx:id="rankingLabel" alignment="TOP_LEFT" layoutX="790.0" layoutY="557.0" prefHeight="146.0" prefWidth="188.0">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Label>
-   <Label layoutX="790.0" layoutY="516.0" prefHeight="31.0" prefWidth="128.0" text="Ranking">
+   <Label fx:id="rankingLabel" alignment="TOP_LEFT" layoutX="813.0" layoutY="554.0" prefHeight="113.0" prefWidth="188.0" text="&#10;">
       <font>
          <Font size="20.0" />
+      </font>
+   </Label>
+   <Label layoutX="813.0" layoutY="510.0" prefHeight="31.0" prefWidth="128.0" text="Ranking">
+      <font>
+         <Font size="22.0" />
       </font>
    </Label>
    <ImageView fitHeight="84.0" fitWidth="284.0" layoutX="379.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">

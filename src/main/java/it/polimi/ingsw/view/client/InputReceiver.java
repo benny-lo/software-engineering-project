@@ -5,5 +5,5 @@ import it.polimi.ingsw.view.InputViewInterface;
 public interface InputReceiver extends InputViewInterface {
     void enterChat();
     void exitChat();
-    void getStatus();
+    void exit();
 }
