@@ -3,6 +3,7 @@ package it.polimi.ingsw.utils.message.client;
 import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LivingRoomSelection extends Message {
@@ -14,7 +15,7 @@ public class LivingRoomSelection extends Message {
      */
     public LivingRoomSelection(List<Position> positions) {
         super();
-        this.positions = positions;
+        this.positions = new ArrayList<>(positions);
     }
 
     /**

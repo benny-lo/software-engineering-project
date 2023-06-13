@@ -28,8 +28,13 @@ public class CLInterface extends ClientView implements InputReceiver {
     private final Map<Integer, Integer> commonGoalCards;
     private final Map<String, Integer> scores;
     private boolean endGame;
-
+    private Item[][] livingRoom;
     private final List<ChatUpdate> chat;
+    private List<Item> chosenItems;
+    private String currentPlayer;
+    private String winner;
+    private int bookshelvesRows;
+    private int bookshelvesColumns;
 
     /**
      * Constructor for the class.
@@ -334,9 +339,7 @@ public class CLInterface extends ClientView implements InputReceiver {
 
         status = CLIStatus.GAME;
 
-        numberPlayers = gameData.getNumberPlayers();
         connectedPlayers = gameData.getConnectedPlayers();
-        numberCommonGoalCards = gameData.getNumberCommonGoalCards();
         livingRoom = new Item[gameData.getLivingRoomRows()][gameData.getLivingRoomColumns()];
         bookshelvesRows = gameData.getBookshelvesRows();
         bookshelvesColumns = gameData.getBookshelvesColumns();
@@ -364,20 +367,19 @@ public class CLInterface extends ClientView implements InputReceiver {
     @Override
     public void login(Nickname message) {
         synchronized (this) {
-            String nickname = message.getNickname();
             if (status != CLIStatus.LOGIN) {
                 printWrongStatus();
                 System.out.flush();
                 return;
             }
 
-            if (isNicknameValid(nickname)) {
+            if (isNicknameValid(message.getNickname())) {
                 printIncorrectNickname();
                 System.out.flush();
                 return;
             }
 
-            this.nickname = nickname;
+            this.nickname = message.getNickname();
         }
         super.login(new Nickname(nickname));
     }

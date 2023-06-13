@@ -339,18 +339,9 @@ public class Controller implements ActionListener {
                 !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
-            // Action failed.
             action.getView().onSelectedItems(new SelectedItems(null));
-            System.out.println("ended " + ended);
-            System.out.println("action by " + action.getView().getNickname());
-            System.out.println("current player " + game.getCurrentPlayer());
-            System.out.println(turnPhase);
-            System.out.println("can i take ? " + game.canTakeItemTiles(action.getSelectedPositions()));
-            System.out.println("positions selected " + action.getSelectedPositions());
             return;
         }
-
-        System.out.println("positions selected " + action.getSelectedPositions());
 
         List<Item> items = game.selectItemTiles(action.getSelectedPositions());
 
@@ -376,7 +367,6 @@ public class Controller implements ActionListener {
                 !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            // Action failed.
             action.getView().onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }

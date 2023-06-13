@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.client;
 
-import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.network.client.rmi.ClientConnectionRMI;
 import it.polimi.ingsw.network.client.socket.ClientConnectionTCP;
@@ -16,20 +15,11 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class ClientView implements ClientUpdateViewInterface, InputViewInterface {
     protected String nickname;
-    protected String currentPlayer;
-    protected String winner;
-    protected int numberPlayers;
-    protected int bookshelvesRows;
-    protected int bookshelvesColumns;
-    protected int numberCommonGoalCards;
-    protected List<Item> chosenItems;
-    protected Item[][] livingRoom;
     protected ClientConnection clientConnection;
 
     /**
@@ -150,9 +140,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
 
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
-        System.out.println("prima della send: " + message.getPositions());
         clientConnection.send(message);
-        System.out.println("dopo la send: " + message.getPositions());
     }
 
     @Override

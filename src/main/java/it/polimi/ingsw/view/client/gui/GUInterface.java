@@ -1,7 +1,5 @@
 package it.polimi.ingsw.view.client.gui;
 
-import it.polimi.ingsw.utils.game.Item;
-import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
@@ -10,7 +8,6 @@ import javafx.application.Platform;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
 import static it.polimi.ingsw.view.client.gui.controllers.ChatController.startChatController;
@@ -41,12 +38,11 @@ public class GUInterface extends ClientView {
     @Override
     public void login(Nickname message) {
         synchronized (this) {
-            String nickname = message.getNickname();
-            if (isNicknameValid(nickname)) {
+            if (isNicknameValid(message.getNickname())) {
                 Platform.runLater(() -> loginController.invalidNickname());
                 return;
             }
-            this.nickname = nickname;
+            this.nickname = message.getNickname();
         }
         super.login(new Nickname(nickname));
     }
@@ -62,7 +58,6 @@ public class GUInterface extends ClientView {
         }
 
         Platform.runLater(() -> loginController.successfulLogin());
-
         Platform.runLater(() -> lobbyController.listOfGames(games));
     }
 
@@ -80,29 +75,22 @@ public class GUInterface extends ClientView {
 
         Platform.runLater(() -> lobbyController.successfulCreateOrSelectGame());
 
-        numberPlayers = message.getNumberPlayers();
         for (String player : message.getConnectedPlayers()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(player));
             nicknames.add(player);
         }
-        livingRoom = new Item[message.getLivingRoomRows()][message.getLivingRoomColumns()];
-        numberCommonGoalCards = message.getNumberCommonGoalCards();
-        bookshelvesColumns = message.getBookshelvesColumns();
-        bookshelvesRows = message.getBookshelvesRows();
     }
 
     @Override
     public synchronized void onSelectedItems(SelectedItems message) {
-        chosenItems = message.getItems();
-        if (chosenItems == null){
+        if (message.getItems() == null){
             Platform.runLater(() -> gameController.resetOpacity());
             Platform.runLater(() -> gameController.clearSelectedItems());
             Platform.runLater(() -> gameController.failedSelection());
             return;
         }
-        System.out.println("lato server accettato");
         Platform.runLater(() -> gameController.clearTilesList());
-        Platform.runLater(() -> gameController.setChosenItems(chosenItems));
+        Platform.runLater(() -> gameController.setChosenItems(message.getItems()));
     }
 
     @Override
@@ -122,11 +110,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public synchronized void onLivingRoomUpdate(LivingRoomUpdate update) {
-        Map<Position, Item> ups = update.getLivingRoomUpdate();
-        for (Position p : ups.keySet()) {
-            livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
-        }
-        Platform.runLater(() -> gameController.setLivingRoomGridPane(livingRoom));
+        Platform.runLater(() -> gameController.setLivingRoomGridPane(update.getLivingRoomUpdate()));
     }
 
     @Override
@@ -150,7 +134,7 @@ public class GUInterface extends ClientView {
             inGame = true;
             inLauncher = false;
             Platform.runLater(() -> gameController.setNickname(nickname));
-            Platform.runLater(() -> gameController.initializeBookshelves(nicknames, bookshelvesRows));
+            Platform.runLater(() -> gameController.initializeBookshelves(nicknames));
             Platform.runLater(() -> lobbyController.endWindow());
         }
     }
@@ -176,29 +160,27 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onChatUpdate(ChatUpdate update) {
+    public synchronized void onChatUpdate(ChatUpdate update) {
         Platform.runLater(() -> gameController.enterChat());
         Platform.runLater(() -> chatController.receiveMessage(update));
     }
 
     @Override
     public synchronized void onStartTurnUpdate(StartTurnUpdate update) {
-        currentPlayer = update.getCurrentPlayer();
         Platform.runLater(() -> gameController.setCurrentPlayer(update.getCurrentPlayer()));
     }
 
     @Override
-    public void onEndGameUpdate(EndGameUpdate update) {
-        winner = update.getWinner();
-        if(winner==null){
+    public synchronized void onEndGameUpdate(EndGameUpdate update) {
+        if(update.getWinner() == null){
             Platform.runLater(() -> gameController.playerDisconnectionInGame());
         }else{
-            Platform.runLater(() -> gameController.endGame(winner));
+            Platform.runLater(() -> gameController.endGame(update.getWinner()));
         }
     }
 
     @Override
-    public void onDisconnection() {
+    public synchronized void onDisconnection() {
         if (inLauncher)
             Platform.runLater(() -> loginController.disconnectionInLauncher());
         if (inGame)
