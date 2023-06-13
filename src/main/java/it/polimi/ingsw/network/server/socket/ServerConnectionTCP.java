@@ -5,7 +5,6 @@ import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
-import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 import java.io.IOException;
@@ -152,139 +151,9 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
     @Override
-    public void send(LivingRoomUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(BookshelfUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(WaitingUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(ScoresUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(EndingTokenUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(CommonGoalCardsUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(PersonalGoalCardUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(ChatUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(StartTurnUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param update the update to send.
-     */
-    @Override
-    public void send(EndGameUpdate update) {
-        sendPrivate(update);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param gamesList the message to send.
-     */
-    @Override
-    public void send(GamesList gamesList) {
-        sendPrivate(gamesList);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param selectedItems the message to send.
-     */
-    @Override
-    public void send(SelectedItems selectedItems) {
-        sendPrivate(selectedItems);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param chatAccepted the message to send.
-     */
-    @Override
-    public void send(ChatAccepted chatAccepted) {
-        sendPrivate(chatAccepted);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param gameData the message to send.
-     */
-    @Override
-    public void send(GameData gameData) {
-        sendPrivate(gameData);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param acceptedInsertion the message to send.
-     */
-    @Override
-    public void send(AcceptedInsertion acceptedInsertion) {
-        sendPrivate(acceptedInsertion);
+    public void send(Message message) {
+        sendPrivate(message);
     }
 
     /**

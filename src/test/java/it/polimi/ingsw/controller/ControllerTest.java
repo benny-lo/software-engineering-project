@@ -6,7 +6,6 @@ import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
-import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
 
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.server.*;

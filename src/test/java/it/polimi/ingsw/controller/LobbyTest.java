@@ -2,8 +2,6 @@ package it.polimi.ingsw.controller;
 
 
 
-import it.polimi.ingsw.utils.classesOnlyForTesting.MockServerConnection;
-
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.VirtualView;
