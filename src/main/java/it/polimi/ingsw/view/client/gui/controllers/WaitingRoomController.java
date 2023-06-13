@@ -9,11 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 import static it.polimi.ingsw.utils.gui.CloseWindow.logout;
@@ -54,6 +56,7 @@ public class WaitingRoomController implements Initializable {
             stage.setTitle("MyShelfie");
             stage.show();
             stage.setResizable(false);
+            stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
 
             stage.setOnCloseRequest(event -> {event.consume();
                                                 logout(stage);});

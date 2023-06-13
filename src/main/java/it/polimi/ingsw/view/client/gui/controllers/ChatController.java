@@ -86,4 +86,11 @@ public class ChatController implements Initializable {
 
         return new Label(sender + " sent to " + receiver + ": " + text);
     }
+
+    public void rejectedMessage() {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setHeaderText("Warning!");
+        alert.setContentText("Your message has been rejected!");
+        alert.showAndWait();
+    }
 }

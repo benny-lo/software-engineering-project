@@ -3,15 +3,13 @@ package it.polimi.ingsw.view.client.gui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Screen;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Objects;
 
 import static it.polimi.ingsw.utils.gui.CloseWindow.logout;
 
@@ -30,6 +28,7 @@ public class GUILauncher extends Application{
         primaryStage.setTitle("MyShelfieLauncher");
         primaryStage.show();
         primaryStage.setResizable(false);
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
 
         primaryStage.setOnCloseRequest(event -> {event.consume();
                                                 logout(primaryStage);});

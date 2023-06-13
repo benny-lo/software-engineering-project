@@ -106,7 +106,7 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onChatAccepted(ChatAccepted message) {
-        if (!message.isAccepted()){
+        if (!message.isAccepted()) {
             printDeniedAction();
         }
         System.out.flush();
@@ -357,7 +357,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         status = CLIStatus.ERROR;
         printLostConnection();
         System.out.flush();
-        System.exit(0);
+        System.exit(1);
     }
 
     /**
@@ -499,6 +499,11 @@ public class CLInterface extends ClientView implements InputReceiver {
         System.out.flush();
     }
 
+    @Override
+    public synchronized void exit() { //TODO: this doesn't work
+        System.exit(0);
+    }
+
     /**
      * This method prints the text interface representation of the whole game.
      */
@@ -515,9 +520,4 @@ public class CLInterface extends ClientView implements InputReceiver {
 
         System.out.flush();
     }
-
-    public synchronized void getStatus() {
-        System.out.println(status);
-        System.out.flush();
-    } // this method will be deleted probably
 }

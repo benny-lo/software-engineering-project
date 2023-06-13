@@ -54,7 +54,9 @@ class CLInterfacePrinter {
                 \t /living_room [positions]\s
                 \t /bookshelf [column] [permutation]\s
                 \t /enter_chat\s
-                \t /exit_chat""");
+                \t /dm [other_player_name]
+                \t /exit_chat\s
+                \t /exit""");
     }
 
     /**

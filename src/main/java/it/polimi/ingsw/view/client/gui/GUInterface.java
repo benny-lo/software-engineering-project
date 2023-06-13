@@ -104,8 +104,9 @@ public class GUInterface extends ClientView {
     }
 
     @Override
-    public void onChatAccepted(ChatAccepted message) {
-        // TODO:
+    public synchronized void onChatAccepted(ChatAccepted message) {
+        if (message.isAccepted()) return;
+        Platform.runLater(() -> chatController.rejectedMessage());
     }
 
     @Override
@@ -209,7 +210,6 @@ public class GUInterface extends ClientView {
     public synchronized void receiveController(WaitingRoomController controller){
         waitingRoomController = controller;
     }
-
     public synchronized void receiveController(GameController controller){
         gameController = controller;
     }
