@@ -1,6 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.view.server.VirtualView;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMI;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
@@ -19,6 +18,8 @@ import java.util.List;
 
 public class Server {
     private static final ConnectionEstablishmentRMI remoteObject = new ConnectionEstablishmentRMI();
+    private static final int DEFAULT_RMI_PORT = 1099;
+    private static final int DEFAULT_SOCKET_PORT = 1234;
     /**
      * Parameters: [hostname] [RMI_port_number] [TCP_port_number]
      * @param args cli parameters (except for the first one which was server).
@@ -29,8 +30,8 @@ public class Server {
                 startConnectionRMI(args.get(0), Integer.parseInt(args.get(1)));
                 startConnectionTCP(Integer.parseInt(args.get(2)));
             } else if (args.size() == 0) {
-                startConnectionRMI(ServerSettings.getRmiPort());
-                startConnectionTCP(ServerSettings.getSocketPort());
+                startConnectionRMI(DEFAULT_RMI_PORT);
+                startConnectionTCP(DEFAULT_SOCKET_PORT);
             } else {
                 System.exit(1);
             }
