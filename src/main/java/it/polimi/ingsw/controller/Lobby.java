@@ -6,7 +6,6 @@ import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 
 import java.util.*;
 
-// TODO: propagate exceptions in Model and (add methods get dimensions --> where?).
 
 /**
  * Class containing all {@code Controller}s of all games currently being played. It uses the Singleton

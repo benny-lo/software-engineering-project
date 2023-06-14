@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -17,7 +18,12 @@ public class GameTest {
      */
     @Test
     public void testGameConstructor() {
-        Game game = new Game(List.of("nick", "rick"), 2);
+        Game game = null;
+        try {
+            game = new Game(List.of("nick", "rick"), 2);
+        } catch (IOException e) {
+            fail();
+        }
 
         assertNotNull(game);
         assertEquals(2, game.getNumberPlayers());
@@ -30,7 +36,12 @@ public class GameTest {
      */
     @Test
     public void testSetup() {
-        Game game = new Game(List.of("nick", "rick"), 2);
+        Game game = null;
+        try {
+            game = new Game(List.of("nick", "rick"), 2);
+        } catch (IOException e) {
+            fail();
+        }
 
         assertNotNull(game.getCommonGoalCardManager());
         assertNotNull(game.getBoardManager());
@@ -41,7 +52,12 @@ public class GameTest {
      */
     @Test
     public void testSetCurrentPlayer(){
-        Game game = new Game(List.of("nick", "rick"), 2);
+        Game game = null;
+        try {
+            game = new Game(List.of("nick", "rick"), 2);
+        } catch (IOException e) {
+            fail();
+        }
 
         game.setCurrentPlayer("nickname");
 
@@ -53,7 +69,12 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesOnWrongTile(){
-        Game game = new Game(List.of("nick", "rick"), 2);
+        Game game = null;
+        try {
+            game = new Game(List.of("nick", "rick"), 2);
+        } catch (IOException e) {
+            fail();
+        }
 
         assertFalse(game.canTakeItemTiles(List.of(new Position(0, 0))));
     }
@@ -63,7 +84,12 @@ public class GameTest {
      */
     @Test
     public void testCanTakeItemTilesWithoutEnoughSpace(){
-        Game game = new Game(List.of("nick", "rick"), 2);
+        Game game = null;
+        try {
+            game = new Game(List.of("nick", "rick"), 2);
+        } catch (IOException e) {
+            fail();
+        }
 
         game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 0);
 

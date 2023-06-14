@@ -4,6 +4,7 @@ import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameInterface;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -144,7 +145,13 @@ public class GameBuilder {
             if (!players.contains(listener.getOwner())) return null;
         }
 
-        Game game = new Game(players, numberCommonGoalCards);
+        Game game;
+        try {
+            game = new Game(players, numberCommonGoalCards);
+        } catch (IOException e) {
+            return null;
+        }
+
         for(BookshelfListener bookshelfListener : bookshelfListeners) {
             game.setBookshelfListener(bookshelfListener);
         }

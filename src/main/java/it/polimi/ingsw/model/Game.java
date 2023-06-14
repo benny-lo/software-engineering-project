@@ -32,8 +32,9 @@ public class Game implements GameInterface {
      * Game's Constructor: it initializes {@code Game}.
      * @param nicknames list containing the nicknames of the players.
      * @param numberCommonGoalCards It can be initialised to '1' or '2'.
+     * @throws IOException error occurred with I/O for JSON configuration files.
      */
-    public Game(List<String> nicknames, int numberCommonGoalCards) {
+    public Game(List<String> nicknames, int numberCommonGoalCards) throws IOException {
         this.numberPlayers = nicknames.size();
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.currentPlayer = null;
@@ -90,7 +91,7 @@ public class Game implements GameInterface {
      * This method  initializes a {@code PersonalGoalCard} for each {@code Player}, the {@code BoardManager}, the
      * {@code CommonGoalCardManager}, and fills the {@code LivingRoom}.
      */
-    private void setup(){
+    private void setup() throws IOException {
         this.commonGoalCardManager = new CommonGoalCardManager(numberCommonGoalCards, numberPlayers);
         this.boardManager = new BoardManager(numberPlayers);
         this.distributePersonalCards();
