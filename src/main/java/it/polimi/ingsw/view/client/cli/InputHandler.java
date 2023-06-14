@@ -120,14 +120,18 @@ public class InputHandler implements Runnable {
                         }
                     }
                     case "/dm" -> {
-                        if (tokenizer.countTokens() != 2) return;
-                        String receiver = tokenizer.nextToken();
-                        String text = tokenizer.nextToken();
-                        inputReceiver.writeChat(new ChatMessage(text, receiver));
+                        if (tokenizer.countTokens() == 2) {
+                            String receiver = tokenizer.nextToken();
+                            String text = tokenizer.nextToken();
+                            inputReceiver.writeChat(new ChatMessage(text, receiver));
+                        } else
+                            CLInterfacePrinter.printIncorrectCommand();
                     }
                     case "/exit" -> {
-                        if (tokenizer.countTokens() != 1) return;
-                        inputReceiver.exit();
+                        if (tokenizer.countTokens() == 0)
+                            inputReceiver.exit();
+                        else
+                            CLInterfacePrinter.printIncorrectCommand();
                     }
                     default -> CLInterfacePrinter.printWrongCommand();
                 }

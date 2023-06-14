@@ -32,7 +32,6 @@ public class CLInterface extends ClientView implements InputReceiver {
     private final List<ChatUpdate> chat;
     private List<Item> chosenItems;
     private String currentPlayer;
-    private String winner;
     private int bookshelvesRows;
     private int bookshelvesColumns;
 
@@ -307,13 +306,13 @@ public class CLInterface extends ClientView implements InputReceiver {
     @Override
     public synchronized void onEndGameUpdate(EndGameUpdate update) {
         endGame = true;
-        winner = update.getWinner();
         if (status == CLIStatus.CHAT) {
             exitChat();
         }
         status = CLIStatus.ENDED_GAME;
         clearScreen();
-        printEndGame(nickname, winner, scores);
+        printEndGame(nickname, update.getWinner(), scores);
+        printExit();
 
         System.out.flush();
     }
@@ -356,8 +355,8 @@ public class CLInterface extends ClientView implements InputReceiver {
         clearScreen();
         status = CLIStatus.ERROR;
         printLostConnection();
+        printExit();
         System.out.flush();
-        System.exit(1);
     }
 
     /**
@@ -494,13 +493,12 @@ public class CLInterface extends ClientView implements InputReceiver {
         status = CLIStatus.GAME;
         clearScreen();
         printExitChat();
-        if (endGame) printEndGame(nickname, winner, scores);
-        else printGameRep();
+        if (!endGame) printGameRep();
         System.out.flush();
     }
 
     @Override
-    public synchronized void exit() { //TODO: this doesn't work
+    public synchronized void exit() {
         System.exit(0);
     }
 

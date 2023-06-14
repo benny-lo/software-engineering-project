@@ -336,7 +336,7 @@ class CLInterfacePrinter {
      */
     static void printEndGame(String nickname, String winner, Map<String, Integer> scores) {
         if (winner == null){
-            System.out.println("The game terminated, as somebody disconnected.");
+            System.out.println("The game has terminated, as somebody disconnected.");
         } else if (scores == null) {
             return;
         } else if (winner.equals(nickname)) {
@@ -354,7 +354,7 @@ class CLInterfacePrinter {
      * This method prints the lost connection error message.
      */
     static void printLostConnection() {
-        System.out.println("Lost connection to server. Shutting down ...");
+        System.out.println("Lost connection to server.");
     }
 
     /**
@@ -397,5 +397,8 @@ class CLInterfacePrinter {
 
     static void printStartGame(){
         System.out.println("Game starts!");
+    }
+    static void printExit(){
+        System.out.println("Digit '/exit' to close the launcher.");
     }
 }
