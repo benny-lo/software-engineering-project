@@ -7,6 +7,7 @@ import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.model.board.BoardManager;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,8 +19,14 @@ public class BoardManagerTest {
      * Test {@code BoardManager}'s constructor.
      */
     @Test
-    public void testBoardManagerConstructor(){
-        BoardManager boardManager = new BoardManager(2);
+    public void testBoardManagerConstructor() {
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         assertTrue(boardManager.isEndingToken());
     }
 
@@ -28,7 +35,12 @@ public class BoardManagerTest {
      */
     @Test
     public void testFillOnNull(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
 
         assertNull(boardManager.getLivingRoom().tileAt(5, 5));
 
@@ -43,7 +55,12 @@ public class BoardManagerTest {
      */
     @Test
     public void testFillOnLockedTile(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
 
         assertEquals(Item.LOCKED, boardManager.getLivingRoom().tileAt(0, 0));
 
@@ -58,7 +75,13 @@ public class BoardManagerTest {
      */
     @Test
     public void testFillOnOccupiedTile(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         boardManager.fill();
 
         assertNotEquals(Item.LOCKED, boardManager.getLivingRoom().tileAt(5, 5));
@@ -76,7 +99,13 @@ public class BoardManagerTest {
      */
     @Test
     public void testCanTakeItemTilesBoardWithoutItems(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         boardManager.fill();
 
         assertFalse(boardManager.canTakeItemTilesBoard(new ArrayList<>()));
@@ -87,7 +116,13 @@ public class BoardManagerTest {
      */
     @Test
     public void testCanTakeItemTilesBoardWith4Items(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         boardManager.fill();
 
         assertFalse(boardManager.canTakeItemTilesBoard(new ArrayList<>(List.of(new Position(3, 2), new Position(3, 3), new Position(3, 4), new Position(3, 5)))));
@@ -98,7 +133,13 @@ public class BoardManagerTest {
      */
     @Test
     public void testCanTakeItemTilesBoardWith3NotSelectableItems(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         boardManager.fill();
 
         assertFalse(boardManager.canTakeItemTilesBoard(new ArrayList<>(List.of(new Position(3, 2), new Position(3, 3), new Position(3, 4)))));
@@ -109,7 +150,13 @@ public class BoardManagerTest {
      */
     @Test
     public void testCanTakeItemTilesBoardDiagonal(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         boardManager.fill();
 
         assertFalse(boardManager.canTakeItemTilesBoard(new ArrayList<>(List.of(new Position(3, 2), new Position(2, 3)))));
@@ -120,7 +167,13 @@ public class BoardManagerTest {
      */
     @Test
     public void testCanTakeItemTilesBoardHorizontal(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         boardManager.fill();
 
         assertTrue(boardManager.getLivingRoom().selectable(new Position(1, 3)));
@@ -134,7 +187,13 @@ public class BoardManagerTest {
      */
     @Test
     public void testCanTakeItemTilesBoardVertical(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
+
         boardManager.fill();
 
         assertTrue(boardManager.getLivingRoom().selectable(new Position(1, 3)));
@@ -148,7 +207,12 @@ public class BoardManagerTest {
      */
     @Test
     public void testSelectItemTilesOneItem(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
 
         boardManager.getLivingRoom().setTile(Item.CAT, new Position(2, 3));
         assertTrue(boardManager.getLivingRoom().selectable(2, 3));
@@ -166,7 +230,12 @@ public class BoardManagerTest {
      */
     @Test
     public void testEndingToken(){
-        BoardManager boardManager = new BoardManager(2);
+        BoardManager boardManager = null;
+        try {
+            boardManager = new BoardManager(2);
+        } catch (IOException e) {
+            fail();
+        }
 
         boardManager.takeEndingToken();
         assertFalse(boardManager.isEndingToken());

@@ -16,6 +16,12 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Class representing a RMI connection to (and from) a client.
+ * The send methods guarantee thread-safety.
+ * Usage: construct an instance of the class by passing to the constructor the listener. Moreover, call the
+ * {@code start} method to start listening for {@code Beep}s from the client and to start sending messages.
+ */
 public class ServerConnectionRMI extends UnicastRemoteObject implements ServerConnection, ServerConnectionRMIInterface {
     /**
      * Estimate of the Round-Trip-Time for the connection between server and client.

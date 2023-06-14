@@ -1,6 +1,5 @@
 package it.polimi.ingsw;
 
-import it.polimi.ingsw.network.ServerSettings;
 import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.cli.CLInterface;
 import it.polimi.ingsw.view.client.gui.GUInterface;
@@ -10,6 +9,9 @@ import java.util.List;
 import static java.lang.Integer.parseInt;
 
 public class Client {
+    private static final String DEFAULT_SERVER_ADDRESS = "localhost";
+    private static final int DEFAULT_RMI_PORT = 1099;
+    private static final int DEFAULT_SOCKET_PORT = 1234;
     public static void launch(List<String> args) {
         ClientView view = null;
         if (args.size() == 0) System.exit(1);
@@ -18,9 +20,9 @@ public class Client {
                 view = new CLInterface();
                 if (args.size() == 2) {
                     if (args.get(1).equalsIgnoreCase("rmi")) {
-                        view.startRMI(ServerSettings.getHostName(), ServerSettings.getRmiPort());
+                        view.startRMI(DEFAULT_SERVER_ADDRESS, DEFAULT_RMI_PORT);
                     } else if (args.get(1).equalsIgnoreCase("tcp")) {
-                        view.startTCP(ServerSettings.getHostName(), ServerSettings.getSocketPort());
+                        view.startTCP(DEFAULT_SERVER_ADDRESS, DEFAULT_SOCKET_PORT);
                     }
                 }
                 else if (args.size() == 4) {
@@ -37,9 +39,9 @@ public class Client {
                 view = new GUInterface();
                 if (args.size() == 2) {
                     if (args.get(1).equalsIgnoreCase("rmi")) {
-                        view.startRMI(ServerSettings.getHostName(), ServerSettings.getRmiPort());
+                        view.startRMI(DEFAULT_SERVER_ADDRESS, DEFAULT_RMI_PORT);
                     } else if (args.get(1).equalsIgnoreCase("tcp")) {
-                        view.startTCP(ServerSettings.getHostName(), ServerSettings.getSocketPort());
+                        view.startTCP(DEFAULT_SERVER_ADDRESS, DEFAULT_SOCKET_PORT);
                     }
                 }
                 else if (args.size() == 4) {

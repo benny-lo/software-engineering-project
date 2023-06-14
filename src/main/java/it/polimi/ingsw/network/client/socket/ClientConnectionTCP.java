@@ -15,93 +15,178 @@ import java.net.Socket;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Class representing a TCP (with sockets) connection to and from the server.
+ * The send methods guarantee thread-safety.
+ */
 public class ClientConnectionTCP implements ClientConnection, Runnable {
+    /**
+     * Estimate of the Round-Trip-Time of the connection.
+     */
     private static final int RTT = 5000;
+
+    /**
+     * The {@code Socket} used to communicate with the server.
+     */
     private final Socket socket;
-    private final ClientUpdateViewInterface receiver;
+
+    /**
+     * The listener for messages coming from the server.
+     */
+    private final ClientUpdateViewInterface listener;
+
+    /**
+     * The output stream used to send messages to the server.
+     */
     private final ObjectOutputStream out;
+
+    /**
+     * Timer scheduling a task to check for {@code Beep} from the server.
+     */
     private final Timer serverTimer;
+
+    /**
+     * Timer scheduling a task to send constantly {@code Beep}s to the server.
+     */
     private final Timer clientTimer;
-    private final Object beepLock;
+
+    /**
+     * Object used for synchronization purposes. The lock on this object is required to
+     * access {@code toDisconnect} and {@code serverBeep} and to send messages.
+     */
+    private final Object disconnectLock;
+
+    /**
+     * Flag indicating whether the connection is set to disconnect.
+     */
+    private boolean toDisconnect;
+
+    /**
+     * The last {@code Beep} got from the server.
+     */
     private Beep serverBeep;
 
-    public ClientConnectionTCP(Socket socket, ClientUpdateViewInterface receiver) throws IOException {
+    /**
+     * Constructs a {@code ClientConnectionTCP} from a {@code Socket} object. It initializes the
+     * output stream of objects, moreover it initializes {@code toDisconnect} to {@code false}. Finally,
+     * it also sets the {@code listener}.
+     * @param socket the socket to use.
+     * @param listener the listener of the connection.
+     * @throws IOException exception relayed from the opening of a {@code ObjectOutputStream} from
+     * the output stream of the {@code socket}.
+     */
+    public ClientConnectionTCP(Socket socket, ClientUpdateViewInterface listener) throws IOException {
         this.socket = socket;
-        this.receiver = receiver;
+        this.listener = listener;
         this.serverTimer = new Timer();
         this.clientTimer = new Timer();
-        this.beepLock = new Object();
+        this.disconnectLock = new Object();
         this.out = new ObjectOutputStream(socket.getOutputStream());
+        this.toDisconnect = false;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(Nickname message) {
         sendPrivate(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(GameInitialization message) {
         sendPrivate(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(GameSelection message) {
         sendPrivate(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(LivingRoomSelection message) {
         sendPrivate(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(BookshelfInsertion message) {
         sendPrivate(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(ChatMessage message) {
         sendPrivate(message);
     }
 
-    private void receive(Object object) {
-        if (object instanceof GamesList) {
-            receiver.onGamesList((GamesList) object);
-        } else if (object instanceof SelectedItems) {
-            receiver.onSelectedItems((SelectedItems) object);
-        } else if (object instanceof LivingRoomUpdate) {
-            receiver.onLivingRoomUpdate((LivingRoomUpdate) object);
-        } else if (object instanceof BookshelfUpdate) {
-            receiver.onBookshelfUpdate((BookshelfUpdate) object);
-        } else if (object instanceof EndingTokenUpdate) {
-            receiver.onEndingTokenUpdate((EndingTokenUpdate) object);
-        } else if (object instanceof WaitingUpdate) {
-            receiver.onWaitingUpdate((WaitingUpdate) object);
-        } else if (object instanceof ScoresUpdate) {
-            receiver.onScoresUpdate((ScoresUpdate) object);
-        } else if (object instanceof CommonGoalCardsUpdate) {
-            receiver.onCommonGoalCardsUpdate((CommonGoalCardsUpdate) object);
-        } else if (object instanceof PersonalGoalCardUpdate) {
-            receiver.onPersonalGoalCardUpdate((PersonalGoalCardUpdate) object);
-        } else if (object instanceof ChatUpdate) {
-            receiver.onChatUpdate((ChatUpdate) object);
-        } else if (object instanceof StartTurnUpdate) {
-            receiver.onStartTurnUpdate((StartTurnUpdate) object);
-        } else if (object instanceof EndGameUpdate) {
-            receiver.onEndGameUpdate((EndGameUpdate) object);
-        } else if (object instanceof GameData) {
-            receiver.onGameData((GameData) object);
-        } else if (object instanceof AcceptedInsertion) {
-            receiver.onAcceptedInsertion((AcceptedInsertion) object);
-        } else if (object instanceof ChatAccepted) {
-            receiver.onChatAccepted((ChatAccepted) object);
-        } else if (object instanceof Beep) {
-            synchronized (beepLock) {
-                serverBeep = (Beep) object;
+    /**
+     * Analyzes the runtime type of {@code input} and acts appropriately:
+     * either the appropriate method of the listener is called, or the {@code Beep}
+     * from client is stored in {@code this}.
+     * @param input the object to analyze (received from the server).
+     */
+    private void receive(Object input) {
+        if (input instanceof GamesList) {
+            listener.onGamesList((GamesList) input);
+        } else if (input instanceof SelectedItems) {
+            listener.onSelectedItems((SelectedItems) input);
+        } else if (input instanceof LivingRoomUpdate) {
+            listener.onLivingRoomUpdate((LivingRoomUpdate) input);
+        } else if (input instanceof BookshelfUpdate) {
+            listener.onBookshelfUpdate((BookshelfUpdate) input);
+        } else if (input instanceof EndingTokenUpdate) {
+            listener.onEndingTokenUpdate((EndingTokenUpdate) input);
+        } else if (input instanceof WaitingUpdate) {
+            listener.onWaitingUpdate((WaitingUpdate) input);
+        } else if (input instanceof ScoresUpdate) {
+            listener.onScoresUpdate((ScoresUpdate) input);
+        } else if (input instanceof CommonGoalCardsUpdate) {
+            listener.onCommonGoalCardsUpdate((CommonGoalCardsUpdate) input);
+        } else if (input instanceof PersonalGoalCardUpdate) {
+            listener.onPersonalGoalCardUpdate((PersonalGoalCardUpdate) input);
+        } else if (input instanceof ChatUpdate) {
+            listener.onChatUpdate((ChatUpdate) input);
+        } else if (input instanceof StartTurnUpdate) {
+            listener.onStartTurnUpdate((StartTurnUpdate) input);
+        } else if (input instanceof EndGameUpdate) {
+            listener.onEndGameUpdate((EndGameUpdate) input);
+        } else if (input instanceof GameData) {
+            listener.onGameData((GameData) input);
+        } else if (input instanceof AcceptedInsertion) {
+            listener.onAcceptedInsertion((AcceptedInsertion) input);
+        } else if (input instanceof ChatAccepted) {
+            listener.onChatAccepted((ChatAccepted) input);
+        } else if (input instanceof Beep) {
+            synchronized (disconnectLock) {
+                serverBeep = (Beep) input;
             }
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * Gets input stream from the {@code socket} and keeps listening for incoming messages.
+     */
     @Override
     public void run() {
         try {
@@ -115,44 +200,54 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
                 receive(input);
             }
         } catch (IOException | ClassNotFoundException ignored) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
+            synchronized (disconnectLock) {
+                toDisconnect = true;
+            }
         }
     }
 
-    private synchronized void sendPrivate(Message message) {
-        try {
-            out.writeObject(message);
-            out.flush();
-        } catch (IOException ignored) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            receiver.onDisconnection();
+    /**
+     * Sends a generic {@code Message} to the server.
+     * It locks on {@code disconnectLock}.
+     * @param message the message to send to the server.
+     */
+    private void sendPrivate(Message message) {
+        synchronized (disconnectLock) {
+            try {
+                out.writeObject(message);
+                out.flush();
+            } catch (IOException ignored) {
+                toDisconnect = true;
+            }
         }
     }
 
+    /**
+     * Schedules the {@code serverTimer} to check constantly whether a {@code Beep} was received.
+     * Schedules the {@code clientTimer} to send {@code Beep}s to the server.
+     */
     private void scheduleTimers() {
         serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                synchronized (beepLock) {
-                    if (serverBeep != null) {
+                synchronized (disconnectLock) {
+                    if (serverBeep != null && !toDisconnect) {
                         serverBeep = null;
                         return;
                     }
-                }
 
-                synchronized (socket) {
+                    toDisconnect = true;
+
                     try {
+                        socket.shutdownInput();
+                        socket.shutdownOutput();
                         socket.close();
-                    } catch (IOException ignored) {
-                    }
+                    } catch (IOException ignored) {}
                 }
 
                 serverTimer.cancel();
                 clientTimer.cancel();
-                receiver.onDisconnection();
+                listener.onDisconnection();
             }
         }, RTT, 2*RTT);
         clientTimer.scheduleAtFixedRate(new TimerTask() {

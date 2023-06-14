@@ -28,10 +28,10 @@ public class Player {
 
     /**
      * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
+     * @throws IOException error occurred with I/O for JSON configuration files.
      */
-    public Player() {
+    public Player() throws IOException {
         String filename;
-        Bookshelf b;
         Gson gson = new GsonBuilder().serializeNulls()
                 .setPrettyPrinting()
                 .disableJdkUnsafe()
@@ -40,19 +40,19 @@ public class Player {
         filename = "/configuration/bookshelf/bookshelf.json";
 
         try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
-            b = gson.fromJson(reader,new TypeToken<Bookshelf>(){}.getType());
+            this.bookshelf = gson.fromJson(reader,new TypeToken<Bookshelf>(){}.getType());
         } catch(IOException e){
-            b = null;
             System.err.println("""
                     Configuration file for bookshelf not found.
                     The configuration file should be in configuration/bookshelf""");
+            throw new IOException();
         }
 
         this.itemsTakenFromLivingRoom = null;
-        this.bookshelf = b;
         this.personalGoalCard = null;
         this.scoringTokens = new ArrayList<>();
         this.endingToken = false;
+        this.bookshelfListener = null;
     }
 
     /**

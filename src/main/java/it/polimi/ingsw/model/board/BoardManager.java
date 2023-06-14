@@ -22,29 +22,28 @@ public class BoardManager {
     /**
      * BoardManager's Constructor: it initializes the {@code Bag} and the {@code LivingRoom}.
      * @param numberPlayers It's the number of players in the game.
+     * @throws IOException error occurred with I/O for JSON configuration files.
      */
-    public BoardManager(int numberPlayers) {
-        this.endingToken = true;
-        this.bag = new Bag(22);
-
+    public BoardManager(int numberPlayers) throws IOException {
         Gson gson = new GsonBuilder().serializeNulls()
                 .disableJdkUnsafe()
                 .create();
 
         String filename = "/configuration/livingRoom/living_room_" + numberPlayers + ".json";
 
-        LivingRoom tmp;
         try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))){
-            tmp = gson.fromJson(reader, LivingRoom.class);
+            this.livingRoom = gson.fromJson(reader, LivingRoom.class);
         } catch(IOException e) {
-            tmp = new LivingRoom();
             System.err.println("""
                     Configuration file for livingRoom not found.
                     The configuration file should be in configuration/livingRoom
                     with name living_room_{numberPlayers}""");
+            throw new IOException();
         }
 
-        this.livingRoom = tmp;
+        this.endingToken = true;
+        this.bag = new Bag(22);
+        this.livingRoomListener = null;
     }
 
     /**

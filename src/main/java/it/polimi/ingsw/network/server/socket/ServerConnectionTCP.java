@@ -16,7 +16,7 @@ import java.util.TimerTask;
 
 /**
  * Class representing a TCP connection (with sockets) to (and from) a client.
- * The send methods guarantee thread-safety.
+ * The send method guarantee thread-safety.
  * Usage: after constructing an instance of the class, set the listener and start thread with {@code this}
  * to listen for messages from the client.
  */
@@ -52,7 +52,8 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     private final ObjectOutputStream out;
 
     /**
-     * Flag indicating whether the server needs to disconnect from the client.
+     * Flag indicating whether the server needs to disconnect from the client. The lock on this object
+     * is needed to access {@code toDisconnect} and {@code clientBeep} and to send messages.
      */
     private boolean toDisconnect;
 
@@ -78,7 +79,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
 
     /**
      * {@inheritDoc}
-     * Get input stream from the {@code socket} and keep listening for incoming messages.
+     * Gets input stream from the {@code socket} and keeps listening for incoming messages.
      */
     @Override
     public void run() {
@@ -108,10 +109,10 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     /**
-     * Analyzes the runtime type of {@code} and acts appropriately:
+     * Analyzes the runtime type of {@code input} and acts appropriately:
      * either the appropriate method of the listener is called, or the {@code Beep}
      * from client is stored in {@code this} and one is sent to the client by {@code this}.
-     * @param input the object to analyze (received from client).
+     * @param input the object to analyze (received from the client).
      */
     private void receive(Object input) {
         if (input instanceof Nickname) {
@@ -135,9 +136,9 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     /**
-     * Sends a generic {@code Message} to client or sets {@code toDisconnect}.
+     * Sends a generic {@code Message} to the client or sets {@code toDisconnect}.
      * It locks on {@code disconnectLock}.
-     * @param message the message to send to client.
+     * @param message the message to send to the client.
      */
     private void sendPrivate(Message message) {
         synchronized (disconnectLock) {

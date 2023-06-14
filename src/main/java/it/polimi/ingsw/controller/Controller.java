@@ -189,6 +189,16 @@ public class Controller implements ActionListener {
     }
 
     /**
+     * Notifies the players that the game has ended.
+     * @param winner the winner; {@code null} if the game terminated due to an error.
+     */
+    private void notifyEndGame(String winner) {
+        for (ServerUpdateViewInterface v : views) {
+            v.onEndGameUpdate(new EndGameUpdate(winner));
+        }
+    }
+
+    /**
      * Helper method to initialize the game: it shuffles the players, constructs the model, sets the turn and
      * sends all start-game updates.
      */
@@ -203,6 +213,10 @@ public class Controller implements ActionListener {
         firstPlayer = playerQueue.peek();
 
         game = gameBuilder.startGame();
+        if (game == null) {
+            notifyEndGame(null);
+            return;
+        }
 
         // Setting the first player in game and
         // setting the current turn phase.
@@ -248,9 +262,7 @@ public class Controller implements ActionListener {
                 }
             }
 
-            for(ServerUpdateViewInterface view : views) {
-                view.onEndGameUpdate(new EndGameUpdate(winner));
-            }
+            notifyEndGame(winner);
         } else {
             // Game continues.
             for(ServerUpdateViewInterface v : views) {
