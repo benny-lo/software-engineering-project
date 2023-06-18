@@ -5,12 +5,14 @@ import it.polimi.ingsw.network.client.rmi.ClientConnectionRMI;
 import it.polimi.ingsw.network.client.socket.ClientConnectionTCP;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.view.InputViewInterface;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.rmi.AccessException;
+import java.rmi.ConnectException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -32,46 +34,43 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         try {
             registry = LocateRegistry.getRegistry(hostName, rmiPort);
         } catch (RemoteException e) {
-            System.out.println("Registry not found.");
+            Logger.clientError("registry not found");
             System.exit(0);
         }
-        System.out.println("got the registry");
 
         ConnectionEstablishmentRMIInterface stub = null;
         try {
             stub = (ConnectionEstablishmentRMIInterface) registry.lookup("ConnectionEstablishmentRMIInterface");
         } catch (AccessException e) {
-            System.out.println("Wrong access privileges for RMI.");
+            Logger.clientError("wrong access privileges for RMI");
             System.exit(0);
         } catch (NotBoundException e) {
-            System.out.println("Name not found for RMI.");
+            Logger.clientError("name not found for RMI");
+            System.exit(0);
+        } catch (ConnectException e) {
+            Logger.clientError("server has not been started yet");
             System.exit(0);
         } catch (RemoteException e) {
-            System.out.println("Something went wrong with RMI.");
+            Logger.clientError("something went wrong with RMI");
             System.exit(0);
         }
-        System.out.println("get the ConnectionEstablishmentRMIInterface stub");
 
         ClientConnectionRMI clientConnectionRMI = null;
         try {
             clientConnectionRMI = new ClientConnectionRMI(this);
         } catch (RemoteException e) {
-            System.out.println("Failed to instantiate RMI client.");
+            Logger.clientError("failed to instantiate RMI client");
             System.exit(0);
         }
-
-        System.out.println("created client connection RMI object");
 
         ServerConnectionRMIInterface serverConnection = null;
         try {
             serverConnection = stub.init(clientConnectionRMI);
         } catch (RemoteException e) {
-            System.out.println("Failed to get RMI server.");
+            Logger.clientError("failed to get RMI server");
             e.printStackTrace();
             System.exit(0);
         }
-
-        System.out.println("got the connection rmi");
 
         clientConnectionRMI.setServerConnectionRMIInterface(serverConnection);
         this.clientConnection = clientConnectionRMI;
@@ -88,7 +87,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         try {
             socket = new Socket(hostName, socketPort);
         } catch (IOException e) {
-            System.out.println("Server has not been started yet.");
+            Logger.clientError("server has not been started yet");
             System.exit(0);
         }
 
@@ -96,7 +95,7 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         try {
             sender = new ClientConnectionTCP(socket, this);
         } catch (IOException e) {
-            System.out.println("Failed to get socket streams from server.");
+            Logger.clientError("failed to get socket streams from server");
             System.exit(0);
         }
         this.clientConnection = sender;

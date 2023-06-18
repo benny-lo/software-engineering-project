@@ -1,5 +1,6 @@
 package it.polimi.ingsw.controller;
 
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
@@ -124,7 +125,7 @@ public class Lobby {
         }
 
         synchronized (System.out) {
-            System.out.println(nickname + " is connected");
+            Logger.login(nickname);
         }
 
         views.add(view);

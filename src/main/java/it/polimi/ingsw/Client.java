@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.view.client.ClientView;
 import it.polimi.ingsw.view.client.cli.CLInterface;
 import it.polimi.ingsw.view.client.gui.GUInterface;
@@ -32,7 +33,7 @@ public class Client {
                         view.startTCP(args.get(2), parseInt(args.get(3)));
                     }
                 } else {
-                    System.err.println("wrong cli arguments : [client] [cli] [hostName] [numberPort]");
+                    Logger.clientError("wrong cli arguments : [client] [cli] [hostName] [numberPort]");
                     System.exit(1);
                 }
             } else if (args.get(0).equalsIgnoreCase("gui")) {
@@ -51,7 +52,7 @@ public class Client {
                         view.startTCP(args.get(2), parseInt(args.get(3)));
                     }
                 } else {
-                    System.err.println("wrong gui arguments : [client] [gui] [hostName] [numberPort]");
+                    Logger.clientError("wrong gui arguments : [client] [gui] [hostName] [numberPort]");
                     System.exit(1);
                 }
             } else {

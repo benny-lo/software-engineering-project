@@ -3,6 +3,7 @@ package it.polimi.ingsw.view.server;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.ServerConnection;
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.action.ChatMessageAction;
 import it.polimi.ingsw.utils.action.DisconnectionAction;
 import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
@@ -180,9 +181,9 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
 
         synchronized (nicknameLock) {
             if (nickname != null) {
-                System.out.println(nickname + " is disconnected.");
+                Logger.logout(nickname);
             } else {
-                System.out.println("a client without nickname disconnected.");
+                Logger.logout();
             }
         }
 

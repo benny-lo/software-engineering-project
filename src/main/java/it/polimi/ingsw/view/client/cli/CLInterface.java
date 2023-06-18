@@ -19,6 +19,10 @@ import java.util.*;
 
 import static it.polimi.ingsw.view.client.cli.CLInterfacePrinter.*;
 
+/**
+ * This class receives the messages from the server and updates the text interface. It also sends the client's input to the server.
+ */
+
 public class CLInterface extends ClientView implements InputReceiver {
     private CLIStatus status;
     private Collection<String> connectedPlayers;

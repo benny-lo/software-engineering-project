@@ -1,5 +1,6 @@
 package it.polimi.ingsw;
 
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.view.server.VirtualView;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMI;
 import it.polimi.ingsw.network.server.rmi.ConnectionEstablishmentRMIInterface;
@@ -40,7 +41,7 @@ public class Server {
         }
 
 
-        System.out.println("server is ready ...");
+        Logger.serverMessage("server is ready ...");
     }
 
     private static void startConnectionRMI(String hostname, int port) {
@@ -55,7 +56,7 @@ public class Server {
             stub = (ConnectionEstablishmentRMIInterface)
                     UnicastRemoteObject.exportObject(remoteObject, port);
         } catch (RemoteException e) {
-            System.out.println("Failed to export serverRMI.");
+            Logger.serverError("failed to export serverRMI");
             System.exit(0);
         }
 
@@ -63,20 +64,20 @@ public class Server {
         try {
             registry = LocateRegistry.createRegistry(port);
         } catch (RemoteException e) {
-            System.out.println("Failed to create registry.");
+            Logger.serverError("failed to create registry");
             System.exit(0);
         }
 
         try {
             registry.bind("ConnectionEstablishmentRMIInterface", stub);
         } catch (AccessException e) {
-            System.out.println("No permission to bind.");
+            Logger.serverError("no permission to bind");
             System.exit(0);
         } catch (AlreadyBoundException e) {
-            System.err.println("Name ConnectionEstablishmentRMIInterface already bound to registry.");
+            Logger.serverError("name ConnectionEstablishmentRMIInterface already bound to registry");
             System.exit(0);
         } catch (RemoteException e) {
-            System.err.println("Binding failed.");
+            Logger.serverError("binding failed");
             System.exit(0);
         }
     }
@@ -97,12 +98,12 @@ public class Server {
                         serverConnectionTCP.setServerInputViewInterface(view);
                         (new Thread(serverConnectionTCP)).start();
                     } catch (IOException e) {
-                        System.out.println("Server closed.");
+                        Logger.serverError("server closed");
                         System.exit(0);
                     }
                 }
             } catch (IOException e) {
-                System.out.println("Failed to start server socket");
+                Logger.serverError("failed to start server socket");
                 System.exit(0);
             }
         })).start();
