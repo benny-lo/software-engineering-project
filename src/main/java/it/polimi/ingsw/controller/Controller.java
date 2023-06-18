@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.GameInterface;
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.GameConfig;
@@ -26,6 +27,11 @@ public class Controller implements ActionListener {
      * The model of the game.
      */
     private GameInterface game;
+
+    /**
+     * The controller id.
+     */
+    private final int id;
 
     /**
      * Builder of the game model.
@@ -94,8 +100,9 @@ public class Controller implements ActionListener {
      * @param numberPlayers - the number of players that need to join the game to make it start.
      * @param numberCommonGoalCards - the number of common goal cards of the game.
      */
-    public Controller(int numberPlayers, int numberCommonGoalCards) {
+    public Controller(int numberPlayers, int numberCommonGoalCards, int id) {
         this.numberPlayers = numberPlayers;
+        this.id = id;
         this.game = null;
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.gameBuilder = new GameBuilder(numberCommonGoalCards);
@@ -193,6 +200,7 @@ public class Controller implements ActionListener {
      * @param winner the winner; {@code null} if the game terminated due to an error.
      */
     private void notifyEndGame(String winner) {
+        Logger.endGame(id);
         for (ServerUpdateViewInterface v : views) {
             v.onEndGameUpdate(new EndGameUpdate(winner));
         }
@@ -336,6 +344,7 @@ public class Controller implements ActionListener {
 
         if (gameBuilder.getCurrentPlayers() == this.numberPlayers) {
             // All players joined.
+            Logger.startGame(id);
             setup();
         }
     }
@@ -354,6 +363,8 @@ public class Controller implements ActionListener {
             action.getView().onSelectedItems(new SelectedItems(null));
             return;
         }
+
+        Logger.selectItems(action.getSelectedPositions().size(), action.getView().getNickname(), id);
 
         List<Item> items = game.selectItemTiles(action.getSelectedPositions());
 
@@ -382,6 +393,8 @@ public class Controller implements ActionListener {
             action.getView().onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
+
+        Logger.selectColumn(action.getColumn(), action.getOrder(), action.getView().getNickname(), id);
 
         game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
 
@@ -421,6 +434,8 @@ public class Controller implements ActionListener {
             // Broadcast chat message.
             action.getView().onChatAccepted(new ChatAccepted(true));
 
+            Logger.sendMessage(action.getView().getNickname(), "all", id);
+
             for (ServerUpdateViewInterface v : views) {
                 v.onChatUpdate(update);
             }
@@ -438,6 +453,8 @@ public class Controller implements ActionListener {
                 action.getView().onChatAccepted(new ChatAccepted(false));
                 return;
             }
+
+            Logger.sendMessage(action.getView().getNickname(), action.getReceiver(), id);
 
             action.getView().onChatUpdate(update);
             view.onChatUpdate(update);
@@ -462,6 +479,7 @@ public class Controller implements ActionListener {
             for (ServerUpdateViewInterface v : views) {
                 v.onEndGameUpdate(new EndGameUpdate(null));
             }
+            Logger.endGame(id);
             return;
         }
 
