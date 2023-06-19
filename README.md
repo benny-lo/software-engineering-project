@@ -1,6 +1,6 @@
 # MyShelfie
 The project assigned was to implement the board game **"MyShelfie"** in Java with a Model-View-Controller pattern.  
-![Image][src/main/resources/gui/myShelfieImages/publisher_material/Display_1.jpg]
+![](src/main/resources/gui/myShelfieImages/publisher_material/Display_1.jpg)
 ## Development
 The software was developed using:
 - Oracle OpenJDK version 17.0.6
