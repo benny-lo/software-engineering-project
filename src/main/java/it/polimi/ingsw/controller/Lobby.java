@@ -156,9 +156,16 @@ public class Lobby {
             return;
         }
 
-        // create controller + join operation in controller + set controller in view.
+        // create controller + join operation in controller
         Controller controller = new Controller(numberPlayers, numberCommonGoals, availableId);
         controller.perform(new JoinAction(view));
+
+        // check if the JoinAction worked
+        if (controller.getNumberActualPlayers() == 0) {
+            return;
+        }
+
+        // set controller in view.
         addController(controller);
 
         Logger.createGame(numberPlayers, numberCommonGoals, availableId - 1, view.getNickname());

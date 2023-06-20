@@ -31,10 +31,8 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     private Controller controller;
     private ServerConnection serverConnection;
-    private boolean disconnected;
     private final Object nicknameLock;
     private final Object controllerLock;
-    private final Object disconnectedLock;
 
     /**
      * The constructor of VirtualView. It only sets the {@code ServerConnection} and
@@ -44,8 +42,6 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         this.serverConnection = serverConnection;
         this.nicknameLock = new Object();
         this.controllerLock = new Object();
-        this.disconnectedLock = new Object();
-
     }
 
     /**
@@ -54,7 +50,6 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     public VirtualView() {
         this.nicknameLock = new Object();
         this.controllerLock = new Object();
-        this.disconnectedLock = new Object();
     }
 
     /**
@@ -171,14 +166,6 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
 
     @Override
     public synchronized void disconnect() {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-            disconnected = true;
-        }
-
-        // only one thread can get here, since disconnected = false initially, and when it is set
-        // to true, it will never become false again.
-
         synchronized (nicknameLock) {
             if (nickname != null) {
                 Logger.logout(nickname);
@@ -201,121 +188,76 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
 
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onBookshelfUpdate(BookshelfUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
        serverConnection.send(update);
     }
 
     @Override
     public void onWaitingUpdate(WaitingUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onChatUpdate(ChatUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onStartTurnUpdate(StartTurnUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(update);
     }
 
     @Override
     public void onGamesList(GamesList gamesList) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(gamesList);
     }
 
     @Override
     public void onSelectedItems(SelectedItems selectedItems) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(selectedItems);
     }
 
     @Override
     public void onAcceptedInsertion(AcceptedInsertion message) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(message);
     }
 
     @Override
     public void onGameData(GameData message){
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(message);
     }
 
     @Override
     public void onChatAccepted(ChatAccepted message) {
-        synchronized (disconnectedLock) {
-            if (disconnected) return;
-        }
         serverConnection.send(message);
     }
 }

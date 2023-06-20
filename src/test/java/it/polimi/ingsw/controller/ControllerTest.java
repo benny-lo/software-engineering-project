@@ -440,7 +440,7 @@ public class ControllerTest {
                 }
 
                 if (message instanceof WaitingUpdate waitingUpdate) {
-                    assertTrue(waitingUpdate.isTypeOfAction());
+                    assertTrue(waitingUpdate.isConnected());
 
                     assertTrue(view0.getNickname().equals(waitingUpdate.getNickname()) || view1.getNickname().equals(waitingUpdate.getNickname()));
 
@@ -845,7 +845,7 @@ public class ControllerTest {
         WaitingUpdate waitingUpdate1 = (WaitingUpdate) mockServerConnection2.list.get(mockServerConnection2.list.size()-1);
         assertTrue(waitingUpdate0.getNickname().equals("nick") && waitingUpdate1.getNickname().equals("nick"));
         assertTrue(waitingUpdate0.getMissing() == 2 && waitingUpdate1.getMissing() == 2);
-        assertFalse(waitingUpdate0.isTypeOfAction() && waitingUpdate1.isTypeOfAction());
+        assertFalse(waitingUpdate0.isConnected() && waitingUpdate1.isConnected());
     }
 
 

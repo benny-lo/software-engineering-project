@@ -308,7 +308,7 @@ public class Controller implements ActionListener {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param action information passed to {@code Controller} as a {@code JoinAction}.
+     * @param action information passed to {@code Controller} as a {@code JoinActionon}.
      */
     @Override
     public synchronized void perform(JoinAction action) {

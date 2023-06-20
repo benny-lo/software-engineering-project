@@ -121,7 +121,7 @@ public class GUInterface extends ClientView {
 
     @Override
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
-        if (update.isTypeOfAction()) {
+        if (update.isConnected()) {
             Platform.runLater(() -> waitingRoomController.playerConnected(update.getNickname()));
             nicknames.add(update.getNickname());
         } else {

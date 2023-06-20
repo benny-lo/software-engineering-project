@@ -6,18 +6,18 @@ public class WaitingUpdate extends Message {
     private final String nickname;
     private final int missing;
 
-    private final boolean typeOfAction;
+    private final boolean isConnected;
 
     /**
      * Constructor for the class
      * @param nickname - the nickname of the player
-     * @param typeOfAction - if the player has just connected it's true, else if the playes has disconnected it's false
+     * @param isConnected - if the player has just connected it's true, else if the player has disconnected it's false
      * @param missing - how many players are missing
      */
-    public WaitingUpdate(String nickname, int missing, boolean typeOfAction) {
+    public WaitingUpdate(String nickname, int missing, boolean isConnected) {
         this.nickname = nickname;
         this.missing = missing;
-        this.typeOfAction = typeOfAction;
+        this.isConnected = isConnected;
     }
     /**
      * Getter for the just connected message
@@ -39,7 +39,7 @@ public class WaitingUpdate extends Message {
      * Getter for the type of the player's action
      * @return a boolean, true iff the player has connected otherwise false iff the player has disconnected
      */
-    public boolean isTypeOfAction() {
-        return typeOfAction;
+    public boolean isConnected() {
+        return isConnected;
     }
 }

@@ -170,7 +170,7 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
-        if (update.isTypeOfAction()){
+        if (update.isConnected()){
             printPlayerJustConnected(update.getNickname());
             connectedPlayers.add(update.getNickname());
         } else {
