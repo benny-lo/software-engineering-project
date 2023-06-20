@@ -16,7 +16,7 @@ public class CommonGoalCardPattern6Test {
      * Testing pattern on empty bookshelf
      */
     @Test
-    public void emptyBookshelf()
+    public void testEmptyBookshelf()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf();
@@ -27,7 +27,7 @@ public class CommonGoalCardPattern6Test {
      * Testing pattern on two rows of 4 different kinds
      */
     @Test
-    public void fourKinds()
+    public void testFourKinds()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf();
@@ -50,7 +50,7 @@ public class CommonGoalCardPattern6Test {
      * Testing pattern on 1 row with 5 kinds
      */
     @Test
-    public void oneRow()
+    public void testOneRow()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf();
@@ -68,7 +68,7 @@ public class CommonGoalCardPattern6Test {
      * Testing pattern on 3 row with 5 kinds
      */
     @Test
-    public void threeRows()
+    public void testThreeRows()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf();

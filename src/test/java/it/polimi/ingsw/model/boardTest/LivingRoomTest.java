@@ -79,7 +79,7 @@ public class LivingRoomTest {
      * Check if refill is needed on empty living room.
      */
     @Test
-    public void checkRefillOnEmptyLivingRoom() {
+    public void testCheckRefillOnEmptyLivingRoom() {
         LivingRoom livingRoom = new LivingRoom(2);
         assertTrue(livingRoom.isRefillNeeded());
     }
@@ -88,7 +88,7 @@ public class LivingRoomTest {
      * Check if refill is needed on full living room for 2 players.
      */
     @Test
-    public void checkRefillOnFullLivingRoom2Players() {
+    public void testCheckRefillOnFullLivingRoom2Players() {
         LivingRoom livingRoom = new LivingRoom(2);
         fill(new Bag(22), livingRoom);
         assertFalse(livingRoom.isRefillNeeded());

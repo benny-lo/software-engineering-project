@@ -561,10 +561,6 @@ public class Controller implements ActionListener {
         ended = true;
     }
 
-    public void setTurnPhase(TurnPhase turnPhase) {
-        this.turnPhase = turnPhase;
-    }
-
     public void setCurrentPlayer(String nickname){
         if (nickname == null) return;
         String p;

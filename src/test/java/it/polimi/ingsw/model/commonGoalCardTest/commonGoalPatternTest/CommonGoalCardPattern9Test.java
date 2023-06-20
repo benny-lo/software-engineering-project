@@ -29,7 +29,7 @@ public class CommonGoalCardPattern9Test {
      * test if given a 6x5 Bookshelf with the first two columns full of CATs and the rest is full of BOOKs, 2 correct groups
      */
     @Test
-    public void testDoublecorrect6x5(){
+    public void testDoubleCorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i<2; i++){
@@ -48,7 +48,7 @@ public class CommonGoalCardPattern9Test {
      * test if given a 6x5 Bookshelf with each row a different item
      */
     @Test
-    public void testNonecorrect6x5(){
+    public void testNoneCorrect6x5(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
         Bookshelf bookshelf=new Bookshelf();
         for(int j=0; j< bookshelf.getColumns(); j++){

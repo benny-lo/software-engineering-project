@@ -166,7 +166,6 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.setEnded();
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>()));
 
@@ -189,7 +188,6 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view1, new LinkedList<>()));
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
@@ -209,8 +207,14 @@ public class ControllerTest {
         view1.setNickname("rick");
         controller.perform(new JoinAction(view1));
 
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
+        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>()));
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
@@ -231,7 +235,6 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(0,0)))));
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
@@ -252,7 +255,6 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(1,3)))));
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
@@ -272,8 +274,14 @@ public class ControllerTest {
         view1.setNickname("rick");
         controller.perform(new JoinAction(view1));
 
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
+        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
         controller.setEnded();
         controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>()));
 
@@ -294,8 +302,14 @@ public class ControllerTest {
         view1.setNickname("rick");
         controller.perform(new JoinAction(view1));
 
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
+        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
         controller.perform(new SelectionColumnAndOrderAction(view1,0, new LinkedList<>()));
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
@@ -316,7 +330,6 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionColumnAndOrderAction(view0,0, new LinkedList<>()));
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
@@ -337,37 +350,29 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(1,3), new Position(2, 3)))));
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(0, 1))));
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(4,7), new Position(3, 7)))));
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(1, 0))));
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(4,1), new Position(5, 1)))));
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(1, 0))));
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(3,2)))));
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(0))));
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
@@ -388,10 +393,8 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(1,3), new Position(2, 3)))));
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(0, 1))));
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
@@ -512,7 +515,13 @@ public class ControllerTest {
         view1.setNickname("rick");
         controller.perform(new JoinAction(view1));
 
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+
         List<Position> pos = new ArrayList<>();
         List<Message> list1 = new ArrayList<>(mockServerConnection0.list);
         controller.perform(new SelectionFromLivingRoomAction(view0,pos));
@@ -546,7 +555,6 @@ public class ControllerTest {
         view1.setNickname("rick");
         controller.perform(new JoinAction(view1));
 
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         List<Position> pos = new ArrayList<>();
         pos.add(new Position(1, 3));
         controller.setCurrentPlayer(view0.getNickname());
@@ -597,7 +605,6 @@ public class ControllerTest {
         controller.perform(new JoinAction(view1));
 
         List<Integer> order = new ArrayList<>();
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionColumnAndOrderAction(view0,0,order));
 
         AcceptedInsertion acceptedInsertion = (AcceptedInsertion) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
@@ -626,9 +633,7 @@ public class ControllerTest {
         List<Integer> order = new ArrayList<>();
         order.add(0);
         controller.setCurrentPlayer(view0.getNickname());
-        controller.setTurnPhase(TurnPhase.LIVING_ROOM);
         controller.perform(new SelectionFromLivingRoomAction(view0,pos));
-        controller.setTurnPhase(TurnPhase.BOOKSHELF);
         controller.perform(new SelectionColumnAndOrderAction(view0,0,order));
         AcceptedInsertion acceptedInsertion;
         for(Message message : mockServerConnection0.list)
@@ -847,9 +852,4 @@ public class ControllerTest {
         assertTrue(waitingUpdate0.getMissing() == 2 && waitingUpdate1.getMissing() == 2);
         assertFalse(waitingUpdate0.isConnected() && waitingUpdate1.isConnected());
     }
-
-
 }
-
-
-
