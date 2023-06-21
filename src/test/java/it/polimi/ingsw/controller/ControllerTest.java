@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 
 
 import it.polimi.ingsw.controller.modelListener.BookshelfListener;
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
@@ -28,6 +29,7 @@ public class ControllerTest {
      */
     @Test
     public void testControllerConstructor(){
+        Logger.setTestMode(true);
         Controller controller = new Controller(4, 2, 0);
         assertEquals(4, controller.getNumberPlayers());
         assertEquals(2, controller.getNumberCommonGoalCards());
@@ -38,6 +40,7 @@ public class ControllerTest {
      */
     @Test
     public void testSuccessfulJoinAction(){
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -67,6 +70,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulJoinAction1() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -112,6 +116,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulJoinAction2() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -157,6 +162,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction1() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -178,6 +184,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction2() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -198,6 +205,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction3() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -225,6 +233,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionFromLivingRoomAction4() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -245,6 +254,7 @@ public class ControllerTest {
      */
     @Test
     public void testSuccessfulSelectionFromLivingRoomAction() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -265,6 +275,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder1() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -293,6 +304,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder2() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -320,6 +332,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder3() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -340,6 +353,7 @@ public class ControllerTest {
      */
     @Test
     public void testUnsuccessfulSelectionColumnAndOrder4() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -382,7 +396,8 @@ public class ControllerTest {
      * Test {@code perform(SelectionColumnAndOrder action)}'s method choosing a right column.
      */
     @Test
-    public void testSuccessfulSelectionColumnAndOrder(){
+    public void testSuccessfulSelectionColumnAndOrder() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
@@ -406,6 +421,7 @@ public class ControllerTest {
      */
     @Test
     public void testContentJoinAction() {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
@@ -504,6 +520,7 @@ public class ControllerTest {
     @Test
     public void testContentUnsuccessfulSelectionFromLivingRoom()
     {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
@@ -543,6 +560,7 @@ public class ControllerTest {
     @Test
     public void testContentSuccessfulSelectionFromLivingRoom()
     {
+        Logger.setTestMode(true);
         int index = 0;
         Controller controller = new Controller(2, 2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -593,6 +611,7 @@ public class ControllerTest {
     @Test
     public void testContentUnsuccessfulSelectionColumnAndOrder()
     {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2,2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
@@ -617,6 +636,7 @@ public class ControllerTest {
     @Test
     public void testContentSuccessfulSelectionColumnAndOrder()
     {
+        Logger.setTestMode(true);
         int index = 0;
         Controller controller = new Controller(2,2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -696,6 +716,7 @@ public class ControllerTest {
     @Test
     public void testContentUnsuccessfulChatMessage()
     {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2,2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
@@ -719,6 +740,7 @@ public class ControllerTest {
     @Test
     public void testContentSuccessfulAllChatMessage()
     {
+        Logger.setTestMode(true);
         int index0 = 0;
         int index1 = 0;
         Controller controller = new Controller(2,2, 0);
@@ -762,6 +784,7 @@ public class ControllerTest {
     @Test
     public void testContentSuccessfulChatMessage()
     {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2,2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
@@ -790,6 +813,7 @@ public class ControllerTest {
     @Test
     public void testBeforeDisconnectionAction()
     {
+        Logger.setTestMode(true);
         Controller controller = new Controller(2,2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
@@ -817,6 +841,7 @@ public class ControllerTest {
     @Test
     public void testAfterDisconnectionAction()
     {
+        Logger.setTestMode(true);
         Controller controller = new Controller(4,2, 0);
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);

@@ -2,6 +2,7 @@ package it.polimi.ingsw.controller;
 
 
 
+import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.VirtualView;
@@ -20,6 +21,7 @@ public class LobbyTest {
     @Test
     public void testLoginFailedChosen()
     {
+        Logger.setTestMode(true);
         Lobby.setNull();
         Lobby lobby = Lobby.getInstance();
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -40,6 +42,7 @@ public class LobbyTest {
     @Test
     public void testLoginFailedLogged()
     {
+        Logger.setTestMode(true);
         Lobby.setNull();
         Lobby lobby = Lobby.getInstance();
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -58,6 +61,7 @@ public class LobbyTest {
     @Test
     public void testCreateGameNotLogged()
     {
+        Logger.setTestMode(true);
         Lobby.setNull();
         Lobby lobby = Lobby.getInstance();
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -92,6 +96,7 @@ public class LobbyTest {
     @Test
     public void testCreateGame()
     {
+        Logger.setTestMode(true);
         Lobby.setNull();
         Lobby lobby = Lobby.getInstance();
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -117,6 +122,7 @@ public class LobbyTest {
     @Test
     public void testSelectGameFail()
     {
+        Logger.setTestMode(true);
         Lobby.setNull();
         Lobby lobby = Lobby.getInstance();
         MockServerConnection mockServerConnection0 = new MockServerConnection();
@@ -149,6 +155,7 @@ public class LobbyTest {
     @Test
     public void testSelectGame()
     {
+        Logger.setTestMode(true);
         int gameList=0;
         int gameData=0;
         int waiting=0;
@@ -279,6 +286,7 @@ public class LobbyTest {
     @Test
     public void testRemoveView()
     {
+        Logger.setTestMode(true);
         int numGamesList = 0;
         Lobby.setNull();
         Lobby lobby = Lobby.getInstance();
