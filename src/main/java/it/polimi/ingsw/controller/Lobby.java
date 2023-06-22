@@ -161,9 +161,7 @@ public class Lobby {
         controller.perform(new JoinAction(view));
 
         // check if the JoinAction worked
-        if (controller.getNumberActualPlayers() == 0) {
-            return;
-        }
+        if (!view.isInGame()) return;
 
         // set controller in view.
         addController(controller);

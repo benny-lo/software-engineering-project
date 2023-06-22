@@ -59,6 +59,13 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     private Beep clientBeep;
 
     /**
+     * Flag that is set to {@code true} if the rmi connection to the client was lost.
+     */
+    private boolean disconnected;
+
+    private final Object disconnectedLock;
+
+    /**
      * Constructs a new {@code ServerConnectionRMI}. It sets the clientRMI interface.
      * @param client the clientRMI interface.
      * @throws RemoteException rmi exception. It is the one thrown by the no-args constructor
@@ -70,6 +77,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         this.client = client;
         this.clientTimer = new Timer();
         this.beepLock = new Object();
+        this.disconnected = false;
+        this.disconnectedLock = new Object();
     }
 
     /**
@@ -82,9 +91,12 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
             @Override
             public void run() {
                 synchronized (beepLock) {
-                    if (clientBeep != null) {
-                        clientBeep = null;
-                        return;
+                    synchronized (disconnectedLock) {
+                        if (clientBeep != null && !disconnected) {
+                            clientBeep = null;
+                            return;
+                        }
+                        disconnected = true;
                     }
                 }
 
@@ -103,6 +115,10 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                         } catch (InterruptedException ignored) {}
                     }
                     message = sendingQueue.poll();
+                }
+
+                synchronized (disconnectedLock) {
+                    if (disconnected) return;
                 }
 
                 try {
@@ -138,8 +154,9 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                         client.receive((ChatAccepted) message);
                     }
                 } catch (RemoteException e) {
-                    clientTimer.cancel();
-                    listener.disconnect();
+                    synchronized (disconnectedLock) {
+                        disconnected = true;
+                    }
                 }
             }
         })).start();
@@ -224,11 +241,13 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
         synchronized (beepLock) {
             this.clientBeep = beep;
         }
+
         try {
             client.receive(new Beep());
         } catch (RemoteException e) {
-            clientTimer.cancel();
-            listener.disconnect();
+            synchronized (disconnectedLock) {
+                disconnected = true;
+            }
         }
     }
 

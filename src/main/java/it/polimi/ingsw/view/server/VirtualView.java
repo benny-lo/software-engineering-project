@@ -30,7 +30,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      * Reference to the Controller, this VirtualView is logged in. Initially, it set to {@code null}.
      */
     private Controller controller;
-    private ServerConnection serverConnection;
+    private final ServerConnection serverConnection;
     private final Object nicknameLock;
     private final Object controllerLock;
 
@@ -40,14 +40,6 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     public VirtualView(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
-        this.nicknameLock = new Object();
-        this.controllerLock = new Object();
-    }
-
-    /**
-     * The constructor of VirtualView, exclusively used for testing.
-     */
-    public VirtualView() {
         this.nicknameLock = new Object();
         this.controllerLock = new Object();
     }

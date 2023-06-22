@@ -314,6 +314,7 @@ public class Controller implements ActionListener {
     public synchronized void perform(JoinAction action) {
         if (turnPhase != null || ended) {
             // Game already started or already ended.
+            action.getView().setController(null);
             action.getView().onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
             return;
         }
