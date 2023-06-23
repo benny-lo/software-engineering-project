@@ -268,6 +268,7 @@ public class Controller implements ControllerInterface {
                 }
             }
 
+            notifyScoresToEverybody();
             notifyEndGame(winner);
         } else {
             // Game continues.
