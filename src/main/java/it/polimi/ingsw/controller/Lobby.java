@@ -16,7 +16,7 @@ public class Lobby {
     /**
      * Map of id -> games (the controller of that game).
      */
-    private final Map<Integer, Controller> controllers;
+    private final Map<Integer, ControllerInterface> controllers;
 
     /**
      * Set of all logged in (with a nickname) {@code ServerUpdateViewInterface}s,
@@ -78,7 +78,7 @@ public class Lobby {
      * Adds a new controller to {@code Lobby}.
      * @param controller the controller to add.
      */
-    private void addController(Controller controller) {
+    private void addController(ControllerInterface controller) {
         controllers.put(availableId, controller);
         availableId++;
     }
@@ -88,7 +88,7 @@ public class Lobby {
      * asynchronously all players still waiting to join a match.
      * @param controller the controller to remove.
      */
-    public synchronized void removeController(Controller controller) {
+    public synchronized void removeController(ControllerInterface controller) {
         Integer id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
 
         if (id != -1) controllers.remove(id);

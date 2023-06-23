@@ -1,6 +1,6 @@
 package it.polimi.ingsw.view.server;
 
-import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.controller.ControllerInterface;
 import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.ServerConnection;
 import it.polimi.ingsw.utils.Logger;
@@ -29,7 +29,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     /**
      * Reference to the Controller, this VirtualView is logged in. Initially, it set to {@code null}.
      */
-    private Controller controller;
+    private ControllerInterface controller;
     private final ServerConnection serverConnection;
     private final Object nicknameLock;
     private final Object controllerLock;
@@ -71,7 +71,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      * @param controller the controller to set.
      */
     @Override
-    public void setController(Controller controller) {
+    public void setController(ControllerInterface controller) {
         synchronized (controllerLock) {
             this.controller = controller;
         }

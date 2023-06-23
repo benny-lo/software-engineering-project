@@ -22,7 +22,7 @@ import java.util.*;
  * Controller of a single game. Its purpose is to construct the model, manage request from clients and
  * appropriately send updates to clients. Some methods synchronize on {@code this}.
  */
-public class Controller implements ActionListener {
+public class Controller implements ControllerInterface {
     /**
      * The model of the game.
      */
@@ -54,9 +54,11 @@ public class Controller implements ActionListener {
     private String firstPlayer;
 
     /**
-     * Queue containing the players, the first one is the current player.
+     * List containing the players in the order of the turns.
      */
-    private Queue<String> playerQueue;
+    private final List<String> playerList;
+
+    private int playerIndex;
 
     /**
      * Set of {@code ServerUpdateViewInterface}s connected to the {@code Game}
@@ -107,7 +109,8 @@ public class Controller implements ActionListener {
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.gameBuilder = new GameBuilder(numberCommonGoalCards);
         this.firstPlayer = null;
-        this.playerQueue = new ArrayDeque<>();
+        this.playerList = new ArrayList<>();
+        this.playerIndex = -1;
         this.views = new HashSet<>();
         this.turnPhase = null;
         this.ended = false;
@@ -211,14 +214,9 @@ public class Controller implements ActionListener {
      * sends all start-game updates.
      */
     private void setup() {
-        // Choosing a random order for the players.
-        List<String> players = new ArrayList<>(playerQueue);
-        Collections.shuffle(players);
-
-        // Initializing the queue with the chosen order,
-        // and setting the first player.
-        playerQueue = new ArrayDeque<>(players);
-        firstPlayer = playerQueue.peek();
+        Collections.shuffle(playerList);
+        firstPlayer = playerList.get(0);
+        playerIndex = 0;
 
         game = gameBuilder.startGame();
         if (game == null) {
@@ -251,19 +249,19 @@ public class Controller implements ActionListener {
      */
     private void nextTurn() {
 
-        // Move the queue forward.
-        String justPlayed = playerQueue.poll();
-        playerQueue.add(justPlayed);
-        game.setCurrentPlayer(playerQueue.peek());
+        // Move the index forward.
+        playerIndex++;
+        playerIndex %= playerList.size();
+
+        game.setCurrentPlayer(playerList.get(playerIndex));
 
         if (firstPlayer.equals(game.getCurrentPlayer()) && game.IsEndingTokenAssigned()) {
             // Game ended -> Find the winner.
             ended = true;
 
-            List<String> nicknames = playerQueue.stream().toList();
             int bestScore = -1;
             String winner = null;
-            for(String nickname : nicknames) {
+            for(String nickname : playerList) {
                 if (game.getPublicScore(nickname) + game.getPersonalScore(nickname)
                         > bestScore) {
                     winner = nickname;
@@ -324,7 +322,7 @@ public class Controller implements ActionListener {
         action.getView().onGameData(new GameData(numberPlayers, getConnectedPlayers(), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
 
         // Add player to queue and to list of views.
-        playerQueue.add(action.getView().getNickname());
+        playerList.add(action.getView().getNickname());
         views.add(action.getView());
 
         // Update builder with player and listener for their bookshelf.
@@ -338,7 +336,7 @@ public class Controller implements ActionListener {
         for(ServerUpdateViewInterface v : views) {
             v.onWaitingUpdate(new WaitingUpdate(
                     action.getView().getNickname(),
-                    numberPlayers - playerQueue.size(),
+                    numberPlayers - playerList.size(),
                     true
             ));
         }
@@ -489,21 +487,11 @@ public class Controller implements ActionListener {
         views.remove(action.getView());
         gameBuilder.removePlayer(action.getView().getNickname());
         gameBuilder.removeBookshelfListener(action.getView().getNickname());
-
-        String player = playerQueue.poll(), tmp;
-        if (player == null) return;
-        playerQueue.add(player);
-        do {
-            tmp = playerQueue.poll();
-            if (action.getView().getNickname().equals(tmp)) {
-                break;
-            }
-            playerQueue.add(tmp);
-        } while(!player.equals(tmp));
+        playerList.remove(action.getView().getNickname());
 
         for(ServerUpdateViewInterface v : views) {
             v.onWaitingUpdate(new WaitingUpdate(action.getView().getNickname(),
-                    numberPlayers - playerQueue.size(),
+                    numberPlayers - playerList.size(),
                     false));
         }
     }
@@ -513,16 +501,17 @@ public class Controller implements ActionListener {
      * It synchronizes on {@code this}.
      * @return {@code true} iff the game is started.
      */
+    @Override
     public synchronized boolean isStarted() {
         return turnPhase != null;
     }
 
     /**
      * Getter for the number of players.
-     * It synchronizes on {@code this}.
      * @return the number of players.
      */
-    public synchronized int getNumberPlayers() {
+    @Override
+    public int getNumberPlayers() {
         return numberPlayers;
     }
 
@@ -530,6 +519,7 @@ public class Controller implements ActionListener {
      * Getter for the number of Common Goal cards.
      * @return the number of common goal cards.
      */
+    @Override
     public int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
     }
@@ -539,8 +529,9 @@ public class Controller implements ActionListener {
      * It synchronizes on {@code this}.
      * @return the number of players connected.
      */
+    @Override
     public synchronized int getNumberActualPlayers(){
-        return playerQueue.size();
+        return playerList.size();
     }
 
     /**
@@ -548,8 +539,8 @@ public class Controller implements ActionListener {
      * It synchronizes on {@code this}.
      * @return an {@code List} of nicknames ({@code String}s).
      */
-    public synchronized List<String> getConnectedPlayers(){
-        return new ArrayList<>(playerQueue);
+    public List<String> getConnectedPlayers(){
+        return new ArrayList<>(playerList);
     }
 
     // EXCLUSIVELY FOR TESTING
@@ -564,12 +555,7 @@ public class Controller implements ActionListener {
 
     public void setCurrentPlayer(String nickname){
         if (nickname == null) return;
-        String p;
-        while(!nickname.equals(playerQueue.peek())){
-            p = playerQueue.poll();
-            playerQueue.add(p);
-        }
-
+        playerIndex = playerList.indexOf(nickname);
         game.setCurrentPlayer(nickname);
     }
 
