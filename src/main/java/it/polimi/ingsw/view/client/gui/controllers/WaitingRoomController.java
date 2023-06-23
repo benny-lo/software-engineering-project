@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.utils.gui.CloseWindow.logout;
+import static it.polimi.ingsw.utils.gui.WindowManager.closeWindow;
 
 public class WaitingRoomController implements Initializable {
     private static GUInterface guInterface;
@@ -59,7 +59,7 @@ public class WaitingRoomController implements Initializable {
             stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
 
             stage.setOnCloseRequest(event -> {event.consume();
-                                                logout(stage);});
+                                                closeWindow(stage);});
         } catch (IOException e) {
             e.printStackTrace();
         }

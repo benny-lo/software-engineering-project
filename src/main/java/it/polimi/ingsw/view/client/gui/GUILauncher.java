@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-import static it.polimi.ingsw.utils.gui.CloseWindow.logout;
+import static it.polimi.ingsw.utils.gui.WindowManager.closeWindow;
 
 
 public class GUILauncher extends Application{
@@ -31,7 +31,7 @@ public class GUILauncher extends Application{
         primaryStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
 
         primaryStage.setOnCloseRequest(event -> {event.consume();
-                                                logout(primaryStage);});
+                                                closeWindow(primaryStage);});
     }
 
 }

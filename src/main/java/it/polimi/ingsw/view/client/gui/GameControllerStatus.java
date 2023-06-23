@@ -1,4 +1,4 @@
-package it.polimi.ingsw.view.client.gui.controllers;
+package it.polimi.ingsw.view.client.gui;
 
 public enum GameControllerStatus {
     LivingRoom,

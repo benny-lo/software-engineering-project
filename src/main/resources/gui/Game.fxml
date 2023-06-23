@@ -79,26 +79,6 @@
          <Font size="20.0" />
       </font>
    </Label>
-   <Label fx:id="firstCommonGoalCardId" layoutX="343.0" layoutY="567.0" prefHeight="14.0" prefWidth="223.0">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="secondCommonGoalCardId" layoutX="564.0" layoutY="567.6666666666666" prefHeight="27.0" prefWidth="223.0">
-      <font>
-         <Font size="18.0" />
-      </font>
-   </Label>
-   <Label fx:id="firstCommonGoalCardTop" layoutX="343.0" layoutY="598.0" prefHeight="25.0" prefWidth="223.0">
-      <font>
-         <Font size="17.0" />
-      </font>
-   </Label>
-   <Label fx:id="secondCommonGoalCardTop" layoutX="564.0" layoutY="598.0" prefHeight="26.0" prefWidth="223.0">
-      <font>
-         <Font size="17.0" />
-      </font>
-   </Label>
    <Label layoutX="65.0" layoutY="29.0" prefHeight="30.0" prefWidth="253.0" text="Other Players' Bookshelves">
       <font>
          <Font size="20.0" />
@@ -234,6 +214,8 @@
          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
    </GridPane>
-   <ImageView fx:id="secondCommonGoalCardImageView" fitHeight="80.0" fitWidth="121.0" layoutX="564.0" layoutY="634.0" pickOnBounds="true" preserveRatio="true" />
-   <ImageView fx:id="firstCommonGoalCardImageView" fitHeight="84.0" fitWidth="121.0" layoutX="343.0" layoutY="635.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="secondCommonGoalCardImageView" fitHeight="80.0" fitWidth="121.0" layoutX="562.0" layoutY="569.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="firstCommonGoalCardImageView" fitHeight="84.0" fitWidth="121.0" layoutX="362.0" layoutY="569.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="firstCommonGoalCardTopImageView" fitHeight="56.0" fitWidth="56.0" layoutX="395.0" layoutY="656.0" pickOnBounds="true" preserveRatio="true" />
+   <ImageView fx:id="secondCommonGoalCardTopImageView" fitHeight="56.0" fitWidth="56.0" layoutX="595.0" layoutY="656.0" pickOnBounds="true" preserveRatio="true" />
 </AnchorPane>

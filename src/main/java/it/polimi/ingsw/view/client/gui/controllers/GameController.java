@@ -5,6 +5,7 @@ import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.BookshelfInsertion;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;
+import it.polimi.ingsw.view.client.gui.GameControllerStatus;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,8 +22,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
-
-import static it.polimi.ingsw.utils.gui.CloseWindow.exitChat;
 
 
 public class GameController implements Initializable {
@@ -56,6 +55,8 @@ public class GameController implements Initializable {
     private final Map <String, Integer> scores = new HashMap<>();
     private GameControllerStatus status = GameControllerStatus.Waiting;
     Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+    private Label firstCommonGoalCardDescriptionLabel = new Label("primo Text");
+    private Label secondCommonGoalCardDescriptionLabel = new Label("secondoasdasd Text");
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -87,13 +88,9 @@ public class GameController implements Initializable {
     @FXML
     private GridPane thirdBookshelfGridPane;
     @FXML
-    private Label firstCommonGoalCardId;
+    private ImageView firstCommonGoalCardTopImageView;
     @FXML
-    private Label secondCommonGoalCardId;
-    @FXML
-    private Label firstCommonGoalCardTop;
-    @FXML
-    private Label secondCommonGoalCardTop;
+    private ImageView secondCommonGoalCardTopImageView;
     @FXML
     private ImageView firstCommonGoalCardImageView;
     @FXML
@@ -497,19 +494,19 @@ public class GameController implements Initializable {
     //COMMON GOAL CARDS
 
     public void updateCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
-        String filename;
         if (commonGoalCards == null) return;
+        String filename;
+        String topName;
         boolean first = true;
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
             filename = "/gui/myShelfieImages/common_goal_cards/common_goal_card_" + card.getKey() + ".jpg";
+            topName = "/gui/myShelfieImages/scoring_tokens/scoring_" + card.getValue() + ".jpg";
             if (first) {
-                firstCommonGoalCardId.setText("Id: " + card.getKey());
-                firstCommonGoalCardTop.setText("Top token value: " + card.getValue());
+                firstCommonGoalCardTopImageView.setImage(new Image(topName));
                 firstCommonGoalCardImageView.setImage(new Image(filename));
                 first = false;
             } else {
-                secondCommonGoalCardId.setText("Id: " + card.getKey());
-                secondCommonGoalCardTop.setText("Top token value: " + card.getValue());
+                secondCommonGoalCardTopImageView.setImage(new Image(topName));
                 secondCommonGoalCardImageView.setImage(new Image(filename));
             }
         }
@@ -551,7 +548,7 @@ public class GameController implements Initializable {
 
         chatStage.setOnCloseRequest(event -> {
             event.consume();
-            exitChat(chatStage);
+            chatStage.hide();
         });
     }
     public void enterChat() {
@@ -576,6 +573,10 @@ public class GameController implements Initializable {
         insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));
         insertColumn3Button.setOnMouseClicked(mouseEvent -> selectColumn(3));
         insertColumn4Button.setOnMouseClicked(mouseEvent -> selectColumn(4));
+        firstCommonGoalCardImageView.setOnMouseEntered(event -> firstCommonGoalCardDescriptionLabel.setVisible(true)); //TODO: fix this, when the user hover the image the description is displayed
+        firstCommonGoalCardImageView.setOnMouseExited(event -> firstCommonGoalCardDescriptionLabel.setVisible(false));
+        secondCommonGoalCardImageView.setOnMouseEntered(event -> secondCommonGoalCardDescriptionLabel.setVisible(true));
+        secondCommonGoalCardImageView.setOnMouseExited(event -> secondCommonGoalCardDescriptionLabel.setVisible(false));
         try {
             createChat();
         } catch (IOException e) {
