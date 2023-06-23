@@ -158,6 +158,8 @@ public class Lobby {
 
         // create controller + join operation in controller
         Controller controller = new Controller(numberPlayers, numberCommonGoals, availableId);
+        view.setController(controller);
+
         controller.perform(new JoinAction(view));
 
         // check if the JoinAction worked
@@ -167,9 +169,6 @@ public class Lobby {
         addController(controller);
 
         Logger.createGame(numberPlayers, numberCommonGoals, availableId - 1, view.getNickname());
-
-        // the controller is sending the player the game dimensions.
-        view.setController(controller);
 
         // send to client without game
         (new Thread(() -> {
