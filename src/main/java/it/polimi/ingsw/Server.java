@@ -28,8 +28,11 @@ public class Server {
     public static void launch(List<String> args) {
         try {
             if (args.size() == 3) {
-                startConnectionRMI(args.get(0), Integer.parseInt(args.get(1)));
-                startConnectionTCP(Integer.parseInt(args.get(2)));
+                int rmiPort = Integer.parseInt(args.get(1));
+                int tcpPort = Integer.parseInt(args.get(2));
+
+                startConnectionRMI(args.get(0), rmiPort);
+                startConnectionTCP(tcpPort);
             } else if (args.size() == 0) {
                 startConnectionRMI(DEFAULT_RMI_PORT);
                 startConnectionTCP(DEFAULT_SOCKET_PORT);
