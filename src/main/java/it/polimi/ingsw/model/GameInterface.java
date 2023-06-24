@@ -12,7 +12,7 @@ import java.util.List;
 public interface GameInterface {
     /**
      * Getter for the number of players.
-     * @return the number of players of {@code this}.
+     * @return The number of players of {@code this}.
      */
     int getNumberPlayers();
 
@@ -32,22 +32,22 @@ public interface GameInterface {
     /**
      * This method extracts a list of {@code Item}, chosen by a player, from the {@code LivingRoom}.
      * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
-     * @return the items selected from the LivingRoom.
+     * @return The items selected from the LivingRoom.
      */
     List<Item> selectItemTiles(List<Position> positions);
 
     /**
      * Check if we can insert the chosen elements in {@code column} and in the given {@code order}.
-     * @param column the column of the bookshelf.
-     * @param order a permutation representing the order to insert the elements in.
+     * @param column The column of the bookshelf.
+     * @param order A permutation representing the order to insert the elements in.
      * @return {@code true} iff the move is valid.
      */
     boolean canInsertItemTilesInBookshelf(int column, List<Integer> order);
 
     /**
      * This method inserts the items selected by the current player in its bookshelf.
-     * @param column the column to insert in.
-     * @param order the list representing a permutation of the items.
+     * @param column The column to insert in.
+     * @param order The list representing a permutation of the items.
      */
     void insertItemTilesInBookshelf(int column, List<Integer> order);
 
@@ -66,8 +66,8 @@ public interface GameInterface {
 
     /**
      * This method gets the {@code Player}'s personal score(personal goal).
-     * @param nickname the {@code Player}'s name.
-     * @return the personal score of a {@code Player}.
+     * @param nickname The {@code Player}'s name.
+     * @return The personal score of a {@code Player}.
      */
     int getPersonalScore(String nickname);
 
@@ -79,8 +79,8 @@ public interface GameInterface {
 
     /**
      * This method returns the id of the {@code PersonalGoalCard} assigned to a {@code Player}.
-     * @param nickname the nickname of the player.
-     * @return the id of the {@code PersonalGoalCard} of the player with nickname {@code nickname}.
+     * @param nickname The nickname of the player.
+     * @return The id of the {@code PersonalGoalCard} of the player with nickname {@code nickname}.
      */
     int getPersonalID(String nickname);
 }

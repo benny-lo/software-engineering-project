@@ -13,8 +13,8 @@ public class PersonalGoalCard {
     private final int id;
 
     /**
-     * Construct of the class.
-     * @param pattern interface representing the pattern used by {@code this}.
+     * Constructor for {@code this} class.
+     * @param pattern Interface representing the pattern used by {@code this}.
      */
     public PersonalGoalCard(int id, PersonalGoalPatternInterface pattern) {
         this.pattern = pattern;
@@ -24,7 +24,7 @@ public class PersonalGoalCard {
     /**
      * Compute the personal score achieved by the bookshelf.
      * @param bookshelf Bookshelf object to compute the personal score of.
-     * @return the personal score of {@code bookshelf}.
+     * @return The personal score of {@code bookshelf}.
      */
     public int getPersonalScore(Bookshelf bookshelf) {
         int matches = pattern.check(bookshelf);
@@ -33,8 +33,8 @@ public class PersonalGoalCard {
 
     /**
      * Translate matching into the corresponding personal score.
-     * @param matches number of matches.
-     * @return score corresponding to {@code matching}.
+     * @param matches Number of matches.
+     * @return Score corresponding to {@code matching}.
      */
     private int matchingToScore(int matches) {
         if (matches == 0) return 0;
@@ -49,7 +49,7 @@ public class PersonalGoalCard {
 
     /**
      * Getter of id for {@code this}
-     * @return - returns id of the PersonalGoalCard
+     * @return Returns id of the PersonalGoalCard
      */
     public int getId() {
         return id;

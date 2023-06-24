@@ -57,7 +57,7 @@ public class Player {
 
     /**
      * Add to {@code this} the items taken from the living room.
-     * @param items list of the items taken from the living room.
+     * @param items List of the items taken from the living room.
      */
     public void takeItems(List<Item> items) {
         itemsTakenFromLivingRoom = items;
@@ -65,7 +65,7 @@ public class Player {
 
     /**
      * Setter for the personal goal card.
-     * @param card the card to set.
+     * @param card The card to set.
      */
     public void setPersonalGoalCard(PersonalGoalCard card) {
         this.personalGoalCard = card;
@@ -88,7 +88,7 @@ public class Player {
 
     /**
      * Get the types of the scoring tokens already taken.
-     * @return list containing types of scoring tokens taken by {@code this}.
+     * @return List containing types of scoring tokens taken by {@code this}.
      */
     public List<Integer> cannotTake() {
         return scoringTokens.stream().map(ScoringToken::getType).toList();
@@ -96,8 +96,8 @@ public class Player {
 
     /**
      * Check if {@code this} can insert the items it owns in {@code column} and in {@code order}.
-     * @param column the column of the bookshelf to insert into.
-     * @param order the permutation representing the order.
+     * @param column The column of the bookshelf to insert into.
+     * @param order The permutation representing the order.
      * @return {@code true} iff the move is valid.
      */
     public boolean canInsertTiles(int column, List<Integer> order) {
@@ -118,7 +118,7 @@ public class Player {
     /**
      * Insert a list of {@code Item}s in the {@code Bookshelf} of {@code this} in the {@code column}.
      * @param column a {@code column} selected by the Player.
-     * @param order  the order to give to the items.
+     * @param order  The order to give to the items.
      */
     public void insertTiles(int column, List<Integer> order) {
         List<Item> permutedItems = new ArrayList<>();
@@ -144,7 +144,7 @@ public class Player {
 
     /**
      * Get the public score of {@code this}.
-     * @return sum of {@code ScoringToken}s.
+     * @return Sum of {@code ScoringToken}s.
      */
     public int getPublicScore() {
         return (endingToken ? 1 : 0) +
@@ -154,7 +154,7 @@ public class Player {
 
     /**
      * Get the total score of {@code this}.
-     * @return sum of {@code ScoringToken}s, {@code personalScore} and {@code bookshelfScore}.
+     * @return Sum of {@code ScoringToken}s, {@code personalScore} and {@code bookshelfScore}.
      */
     public int getTotalScore() {
         return getPublicScore() + getPersonalScore();
@@ -187,7 +187,7 @@ public class Player {
 
     /**
      * This method sets the given bookshelfListener, by updating the state of every tile in the bookshelf.
-     * @param bookshelfListener - bookshelfListener that needs to be set
+     * @param bookshelfListener BookshelfListener that needs to be set
      */
     public void setBookshelvesListener(BookshelfListener bookshelfListener) {
         this.bookshelfListener = bookshelfListener;
@@ -200,7 +200,7 @@ public class Player {
 
     /**
      * Getter for the id of the PersonalGoalCard of {@code this}
-     * @return - the id of the PersonalGoalCard associated to the player
+     * @return The id of the PersonalGoalCard associated to the player
      */
     public int getPersonalID() {
         return personalGoalCard.getId();

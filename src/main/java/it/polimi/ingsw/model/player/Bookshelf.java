@@ -17,7 +17,7 @@ public class Bookshelf{
     private final Item[][] bookshelf;
 
     /**
-     * Construct of the class. It initializes {@code this} with all positions free ({@code null}).
+     * Constructor for {@code this} class. It initializes {@code this} with all positions free ({@code null}).
      */
     public Bookshelf() {
         this.bookshelf = new Item[6][5];
@@ -25,8 +25,8 @@ public class Bookshelf{
 
     /**
      * Constructor of this class, exclusively for testing.
-     * @param rows number of rows.
-     * @param columns number of columns.
+     * @param rows Number of rows.
+     * @param columns Number of columns.
      */
     public Bookshelf(int rows, int columns){
         this.bookshelf = new Item[rows][columns];
@@ -39,8 +39,8 @@ public class Bookshelf{
 
     /**
      * Check if items can be inserted in a column of {@code this}.
-     * @param itemsSize number of {@code Item}s to insert.
-     * @param column column of {@code this} where the items need to be inserted (0-indexed).
+     * @param itemsSize Number of {@code Item}s to insert.
+     * @param column Column of {@code this} where the items need to be inserted (0-indexed).
      * @return {@code true} iff {@code itemsSize} items can be inserted in {@code column}.
      */
     public boolean canInsert(int itemsSize, int column) {
@@ -57,7 +57,7 @@ public class Bookshelf{
     /**
      * Insert an {@code Item} in the first available position in {@code column} in {@code this}.
      * @param item {@code Item} to insert.
-     * @param column column where to insert {@code item}.
+     * @param column Column where to insert {@code item}.
      */
     public void insert(Item item, int column) {
         for(int i = 0; i < getRows(); i++) {
@@ -71,7 +71,7 @@ public class Bookshelf{
     /**
      * Insert some {@code Item}s in {@code column} of {@code this}.
      * @param items {@code List<Item>} to insert in {@code this} in order from first to last.
-     * @param column column where to insert the {@code Item}s from {@code List<Item>}.
+     * @param column Column where to insert the {@code Item}s from {@code List<Item>}.
      */
     public void insert(List<Item> items, int column) {
         for(Item item : items) {
@@ -81,8 +81,8 @@ public class Bookshelf{
 
     /**
      * Get {@code Item} in a position of {@code this}.
-     * @param row row where to look for.
-     * @param column column where to look for.
+     * @param row Row where to look for.
+     * @param column Column where to look for.
      * @return {@code Item} in position {@code row} and {@code column} of {@code this}. If the position is free, it
      * returns {@code null}.
      */
@@ -133,7 +133,7 @@ public class Bookshelf{
 
     /**
      * Get the score given by islands of like {@code Item}s in {@code this}.
-     * @return total score achieved by all islands of like {@code Item}s in {@code this}.
+     * @return Total score achieved by all islands of like {@code Item}s in {@code this}.
      */
     public int getBookshelfScore() {
         boolean[][] visited = new boolean[6][5];
@@ -179,8 +179,8 @@ public class Bookshelf{
 
     /**
      * Convert the size of an island into a score.
-     * @param islandSize the size of an island.
-     * @return score corresponding to {@code IslandSize}.
+     * @param islandSize The size of an island.
+     * @return Score corresponding to {@code IslandSize}.
      */
     private int getIslandScore(int islandSize) {
         if (islandSize >= 6) return 8;
@@ -192,7 +192,7 @@ public class Bookshelf{
 
     /**
      * Getter for the number of rows of {@code this}.
-     * @return number of rows of {@code this}.
+     * @return Number of rows of {@code this}.
      */
     public int getRows() {
         return bookshelf.length;
@@ -200,7 +200,7 @@ public class Bookshelf{
 
     /**
      * Getter for number of columns of {@code this}.
-     * @return number of columns of {@code this}.
+     * @return Number of columns of {@code this}.
      */
     public int getColumns() {
         if (bookshelf.length == 0) return 0;

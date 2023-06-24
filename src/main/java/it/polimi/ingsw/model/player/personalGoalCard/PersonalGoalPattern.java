@@ -16,8 +16,8 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     private final Map<Position, Item> maskPositions;
 
     /**
-     * Constructor of the class.
-     * @param maskPositions map to assign to private attribute {@code maskPositions}.
+     * Constructor for {@code this} class.
+     * @param maskPositions Map to assign to private attribute {@code maskPositions}.
      */
     public PersonalGoalPattern(Map<Position, Item> maskPositions) {
         this.maskPositions = maskPositions;
@@ -34,7 +34,7 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     /**
      * Check pattern on {@code Bookshelf} object.
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return the number of positions of the bookshelf that match with the personal pattern.
+     * @return The number of positions of the bookshelf that match with the personal pattern.
      */
     @Override
     public int check(Bookshelf bookshelf) {
@@ -47,7 +47,7 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
 
     /**
      * Getter for the map of {@code Position} to {@code Item} contained in {@code this}.
-     * @return the map that is a private attribute of {@code this}.
+     * @return The map that is a private attribute of {@code this}.
      */
     public Map<Position, Item> getMaskPositions() {
         return maskPositions;

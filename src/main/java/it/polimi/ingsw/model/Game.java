@@ -110,7 +110,7 @@ public class Game implements GameInterface {
     /**
      * This method checks if the positions in the list are available to be taken by a player.
      * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
-     * @return - true if the column is available, false if otherwise.
+     * @return True if the column is available, false if otherwise.
      */
     @Override
     public boolean canTakeItemTiles(List<Position> positions){
@@ -126,7 +126,7 @@ public class Game implements GameInterface {
     /**
      * This method selects the Items present at the positions saved in the list.
      * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
-     * @return - returns the list of selected Items.
+     * @return Returns the list of selected Items.
      */
     @Override
     public List<Item> selectItemTiles(List<Position> positions){
@@ -137,9 +137,9 @@ public class Game implements GameInterface {
 
     /**
      * This method checks if the player can insert certain items , in a certain column
-     * @param column the column of the bookshelf.
-     * @param order a permutation representing the order to insert the elements in.
-     * @return - true if the player can, false if the player can't.
+     * @param column The column of the bookshelf.
+     * @param order A permutation representing the order to insert the elements in.
+     * @return True if the player can, false if the player can't.
      */
     @Override
     public boolean canInsertItemTilesInBookshelf(int column, List<Integer> order) {
@@ -148,8 +148,8 @@ public class Game implements GameInterface {
 
     /**
      * This method inserts the items in the list in the bookshelf, and ends the player's turn.
-     * @param column the column to insert in.
-     * @param order the list representing a permutation of the items.
+     * @param column The column to insert in.
+     * @param order The list representing a permutation of the items.
      */
     @Override
     public void insertItemTilesInBookshelf(int column, List<Integer> order) {
@@ -180,7 +180,7 @@ public class Game implements GameInterface {
 
     /**
      * This method checks if the EndingToken has been assigned to any player.
-     * @return - true if it has been assigned, false otherwise.
+     * @return True if it has been assigned, false otherwise.
      */
     @Override
     public boolean IsEndingTokenAssigned() {
@@ -192,7 +192,7 @@ public class Game implements GameInterface {
 
     /**
      * This method sets the Bookshelf listener of the player, in case it is not set.
-     * @param bookshelfListener - the bookshelf listener of the player.
+     * @param bookshelfListener The bookshelf listener of the player.
      */
     public void setBookshelfListener(BookshelfListener bookshelfListener) {
         Player player = players.get(bookshelfListener.getOwner());
@@ -203,7 +203,7 @@ public class Game implements GameInterface {
 
     /**
      * This method sets the CommonGoalCards listener, in case it is not set.
-     * @param commonGoalCardsListener - the common goal cards listener
+     * @param commonGoalCardsListener The common goal cards listener
      */
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         if (commonGoalCardManager == null) return;
@@ -212,7 +212,7 @@ public class Game implements GameInterface {
 
     /**
      * This method sets the EndingToken listener, updating the state of it for every player.
-     * @param endingTokenListener - the ending token listener
+     * @param endingTokenListener The ending token listener
      */
     public void setEndingTokenListener(EndingTokenListener endingTokenListener) {
         this.endingTokenListener = endingTokenListener;
@@ -228,7 +228,7 @@ public class Game implements GameInterface {
 
     /**
      * This method sets the LivingRoom listener, in case it is not set.
-     * @param livingRoomListener - the living room listener.
+     * @param livingRoomListener The living room listener.
      */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         if (boardManager == null) return;
@@ -238,7 +238,7 @@ public class Game implements GameInterface {
     /**
      * Getter for the PublicScore of a Player
      * @param nickname It's the {@code Players}'s name.
-     * @return - the public score of a player.
+     * @return The public score of a player.
      */
     @Override
     public int getPublicScore(String nickname) {
@@ -248,7 +248,7 @@ public class Game implements GameInterface {
     /**
      * Getter for the PersonalScore of a Player.
      * @param nickname the {@code Player}'s name.
-     * @return - the private score of a player.
+     * @return The private score of a player.
      */
     @Override
     public int getPersonalScore(String nickname) {
@@ -257,7 +257,7 @@ public class Game implements GameInterface {
 
     /**
      * Getter for the CurrentPlayer
-     * @return - the current player.
+     * @return The current player.
      */
     @Override
     public String getCurrentPlayer() {
@@ -267,7 +267,7 @@ public class Game implements GameInterface {
     /**
      * Getter for the PersonalID of a player, using the nickname.
      * @param nickname the nickname of the player.
-     * @return - the personal ID of a player.
+     * @return The personal ID of a player.
      */
     @Override
     public int getPersonalID(String nickname) {
@@ -276,7 +276,7 @@ public class Game implements GameInterface {
 
     /**
      * Getter for the number of players.
-     * @return - the number of players.
+     * @return The number of players.
      */
     @Override
     public int getNumberPlayers() {
@@ -287,7 +287,7 @@ public class Game implements GameInterface {
 
     /**
      * Getter for the players
-     * @return - a map of the players.
+     * @return A map of the players.
      */
     public Map<String, Player> getPlayers() {
         return players;
@@ -295,7 +295,7 @@ public class Game implements GameInterface {
 
     /**
      * Getter for the boardManager
-     * @return - the board manager
+     * @return The board manager
      */
     public BoardManager getBoardManager() {
         return boardManager;
@@ -303,7 +303,7 @@ public class Game implements GameInterface {
 
     /**
      * Getter for the CommonGoalCardManager
-     * @return - the common goal card manager.
+     * @return The common goal card manager.
      */
     public CommonGoalCardManager getCommonGoalCardManager() {
         return commonGoalCardManager;
