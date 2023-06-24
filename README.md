@@ -15,7 +15,7 @@ The application requires at least Java 8 or later versions to run.
 ## How to run it
 
 ### Server
-` java -jar MyShelfie.jar server {rmiPort} {socketPort} `
+` java -jar MyShelfie.jar server [{hostName} {rmiPort} {socketPort}] `
 
 If the user omits the RMI and the Socket port the default ports will be automatically used.
 
