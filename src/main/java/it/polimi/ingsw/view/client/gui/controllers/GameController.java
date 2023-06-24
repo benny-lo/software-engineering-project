@@ -554,7 +554,6 @@ public class GameController implements Initializable {
         chatStage.hide();
         chatStage.setResizable(false);
         chatStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
-        chatStage.setAlwaysOnTop(true);
 
         chatStage.setOnCloseRequest(event -> {
             event.consume();
