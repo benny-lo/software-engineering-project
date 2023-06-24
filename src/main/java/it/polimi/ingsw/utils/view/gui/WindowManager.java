@@ -1,4 +1,4 @@
-package it.polimi.ingsw.utils.gui;
+package it.polimi.ingsw.utils.view.gui;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

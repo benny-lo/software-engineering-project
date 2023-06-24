@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.client.gui.controllers;
 
+import it.polimi.ingsw.utils.view.CommonGoalCardDescription;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.message.client.BookshelfInsertion;
@@ -54,9 +55,9 @@ public class GameController implements Initializable {
     private final Stage chatStage = new Stage();
     private final Map <String, Integer> scores = new HashMap<>();
     private GameControllerStatus status = GameControllerStatus.Waiting;
-    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-    private Label firstCommonGoalCardDescriptionLabel = new Label("primo Text");
-    private Label secondCommonGoalCardDescriptionLabel = new Label("secondoasdasd Text");
+    private final Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+    private int firstCommonGoalCardId;
+    private int secondCommonGoalCardId;
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -193,7 +194,7 @@ public class GameController implements Initializable {
         alert.setHeaderText("The Game has ended!");
         alert.setContentText("The winner is: " + winner + ".\nRanking: ");
         for (Map.Entry<String, Integer> e : scores.entrySet()) {
-            alert.setContentText(alert.getContentText() + "\n" + e.getKey() + ": " + e.getValue());
+            alert.setContentText(alert.getContentText() + "\n" + e.getKey() + ": " + e.getValue() + " points");
         }
         alert.showAndWait();
         System.exit(0);
@@ -504,12 +505,21 @@ public class GameController implements Initializable {
             if (first) {
                 firstCommonGoalCardTopImageView.setImage(new Image(topName));
                 firstCommonGoalCardImageView.setImage(new Image(filename));
+                firstCommonGoalCardId = card.getKey();
                 first = false;
             } else {
                 secondCommonGoalCardTopImageView.setImage(new Image(topName));
                 secondCommonGoalCardImageView.setImage(new Image(filename));
+                secondCommonGoalCardId = card.getKey();
             }
         }
+    }
+
+    private void showCommonGoalCardDescription(int id) {
+        Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
+        infoAlert.setHeaderText("Common Goal Card Description");
+        infoAlert.setContentText(CommonGoalCardDescription.getDescription(id));
+        infoAlert.showAndWait();
     }
 
     //ENDING TOKEN
@@ -573,10 +583,8 @@ public class GameController implements Initializable {
         insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));
         insertColumn3Button.setOnMouseClicked(mouseEvent -> selectColumn(3));
         insertColumn4Button.setOnMouseClicked(mouseEvent -> selectColumn(4));
-        firstCommonGoalCardImageView.setOnMouseEntered(event -> firstCommonGoalCardDescriptionLabel.setVisible(true)); //TODO: fix this, when the user hover the image the description is displayed
-        firstCommonGoalCardImageView.setOnMouseExited(event -> firstCommonGoalCardDescriptionLabel.setVisible(false));
-        secondCommonGoalCardImageView.setOnMouseEntered(event -> secondCommonGoalCardDescriptionLabel.setVisible(true));
-        secondCommonGoalCardImageView.setOnMouseExited(event -> secondCommonGoalCardDescriptionLabel.setVisible(false));
+        firstCommonGoalCardImageView.setOnMouseClicked(mouseEvent -> showCommonGoalCardDescription(firstCommonGoalCardId));
+        secondCommonGoalCardImageView.setOnMouseClicked(mouseEvent -> showCommonGoalCardDescription(secondCommonGoalCardId));
         try {
             createChat();
         } catch (IOException e) {

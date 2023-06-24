@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.client.cli;
 
+import it.polimi.ingsw.utils.view.CommonGoalCardDescription;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import it.polimi.ingsw.utils.message.server.GameInfo;
@@ -242,8 +243,7 @@ class CLInterfacePrinter {
      * @param personalGoalCard - the personal goal card that needs to be printed
      */
     static void printPersonalGoalCard(Item[][] personalGoalCard) {
-        if (personalGoalCard == null)
-            return;
+        if (personalGoalCard == null) return;
         System.out.println("Your personal goal card is: ");
         printBookshelfOrPersonalGoalCard(personalGoalCard);
     }
@@ -253,25 +253,11 @@ class CLInterfacePrinter {
      * @param commonGoalCards - the common goal cards that need to be printed.
      */
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
-        if (commonGoalCards == null)
-            return;
-        String description = "";
+        if (commonGoalCards == null) return;
+        String description;
         System.out.println("Your common goal cards are: ");
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
-            switch (card.getKey()){
-                case 0 -> description="\nTwo groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different from those of the other square.\n";
-                case 1 -> description="\nTwo columns each formed by 6 different types of tiles.\n";
-                case 2 -> description="\nFour groups each containing at least 4 tiles of the same type.\nThe tiles of one group can be different from those of another group.\n";
-                case 3 -> description="\nSix groups each containing at least 2 tiles of the same type\nThe tiles of one group can be different from those of another group.\n";
-                case 4 -> description="\nThree columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different combination of another column\n";
-                case 5 -> description="\nTwo lines each formed by 5 different types of tiles. One line can\nshow the same or a different combination of the other line.\n";
-                case 6 -> description="\nFour lines each formed by 5 tiles of maximum three different types. One \nline can show the same or a different combination of another line.\n";
-                case 7 -> description="\nFour tiles of the same type in the four corners of the bookshelf.\n";
-                case 8 -> description="\nEight or more tiles of the same type with no restrictions about the position of these tiles.\n";
-                case 9 -> description="\nFive tiles of the same type forming an X.\n";
-                case 10 -> description="\nFive tiles of the same type forming a diagonal\n";
-                case 11 -> description="\nFive columns of increasing or decreasing height.\nStarting from the first column on the left or on the right,\neach next column must be made of exactly one more tile. Tiles can be of any type.\n";
-            }
+            description = CommonGoalCardDescription.getDescription(card.getKey());
             System.out.println("Id: " + card.getKey() + ", Top token value: " + card.getValue() + description);
         }
     }

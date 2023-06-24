@@ -18,7 +18,7 @@ import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static it.polimi.ingsw.utils.gui.WindowManager.closeWindow;
+import static it.polimi.ingsw.utils.view.gui.WindowManager.closeWindow;
 
 public class WaitingRoomController implements Initializable {
     private static GUInterface guInterface;
