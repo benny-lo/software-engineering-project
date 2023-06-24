@@ -24,8 +24,8 @@ public class CommonGoalCard {
     private final int id;
 
     /**
-     * Constructor of the class.
-     * @param pattern interface representing the pattern used by {@code this}.
+     * Constructor for {@code this} class.
+     * @param pattern Interface representing the pattern used by {@code this}.
      */
     public CommonGoalCard(int id, int numPlayers, CommonGoalPatternInterface pattern) {
         this.pattern = pattern;
@@ -51,7 +51,7 @@ public class CommonGoalCard {
 
     /**
      * Check if a {@code Bookshelf} object satisfies the pattern.
-     * @param bookshelf the {@code Bookshelf} object to check the pattern on.
+     * @param bookshelf The {@code Bookshelf} object to check the pattern on.
      * @return {@code true} iff the pattern of {@code this} is on {@code bookshelf}.
      */
     public boolean checkPattern(Bookshelf bookshelf) {
@@ -60,7 +60,7 @@ public class CommonGoalCard {
 
     /**
      * Getter of score of the tokens' stack
-     * @return the score of the first token without removing it. Throw exception if the stack is Empty.
+     * @return The score of the first token without removing it. Throw exception if the stack is Empty.
      */
     public int getTopStack() {
         try {
@@ -72,7 +72,7 @@ public class CommonGoalCard {
 
     /**
      * Getter of id of {@code this}
-     * @return id of the CommonGoalCard
+     * @return Id of the CommonGoalCard
      */
     public int getId() {
         return id;

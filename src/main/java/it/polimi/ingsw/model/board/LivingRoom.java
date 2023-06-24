@@ -14,8 +14,8 @@ public class LivingRoom {
     private final Item[][] grid;
 
     /**
-     * Class constructor: it sets the prohibited squares and fills the rest of the squares with items.
-     * @param numberPlayers number of players in the game.
+     * Constructor for {@code this} class. It sets the prohibited squares and fills the rest of the squares with items.
+     * @param numberPlayers Number of players in the game.
      */
     public LivingRoom(int numberPlayers) {
         this.grid = new Item[9][9];
@@ -66,7 +66,7 @@ public class LivingRoom {
 
     /**
      * Getter for rows.
-     * @return private field rows.
+     * @return Private field rows.
      */
     public int getRows() {
         return grid.length;
@@ -74,7 +74,7 @@ public class LivingRoom {
 
     /**
      * Getter for columns.
-     * @return private field columns.
+     * @return Private field columns.
      */
     public int getColumns() {
         if (grid.length == 0) return 0;
@@ -106,7 +106,7 @@ public class LivingRoom {
 
     /**
      * Check if a position has at least a non-empty neighbour.
-     * @param position the position to check on.
+     * @param position The position to check on.
      * @return {@code true} iff {@code position} has a non-empty neighbour.
      */
     private boolean isAlone(Position position) {
@@ -118,9 +118,9 @@ public class LivingRoom {
 
     /**
      * Get the item in a position of {@code this}.
-     * @param row the row.
-     * @param column the column.
-     * @return the item in position ({@code row}, {@code column}).
+     * @param row The row.
+     * @param column The column.
+     * @return The item in position ({@code row}, {@code column}).
      */
     public Item tileAt(int row, int column) {
         return this.grid[row][column];
@@ -128,8 +128,8 @@ public class LivingRoom {
 
     /**
      * Check if a square of {@code this} in a specific position contains an item.
-     * @param row the row.
-     * @param column the column.
+     * @param row The row.
+     * @param column The column.
      * @return {@code true} iff an item is NOT found at position ({@code row}, {@code column}).
      */
     private boolean isEmpty(int row, int column) {
@@ -138,8 +138,8 @@ public class LivingRoom {
 
     /**
      * Check if the content of square of {@code this} in a specific position contains a selectable item.
-     * @param row the row.
-     * @param column the column.
+     * @param row The row.
+     * @param column The column.
      * @return {@code true} iff the content of the square in position ({@code row}, {@code column}) can be selected.
      */
     public boolean selectable(int row, int column) {
@@ -163,8 +163,8 @@ public class LivingRoom {
 
     /**
      * Selection of items from {@code this}.
-     * @param positions the positions to select the items from.
-     * @return list of selected items.
+     * @param positions The positions to select the items from.
+     * @return List of selected items.
      */
     public List<Item> selectTiles(List<Position> positions) {
         List<Item> selection = new ArrayList<>();

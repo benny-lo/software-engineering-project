@@ -18,11 +18,11 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
     private final int maxTypes;
 
     /**
-     * Class constructor: it initializes all private fields of this.
-     * @param numLines the number of rows/columns required by the pattern.
+     * Constructor for {@code this} class. It initializes all private fields of this.
+     * @param numLines The number of rows/columns required by the pattern.
      * @param rowOrColumn {@code true} if the pattern regards rows, else {@code false} if patterns regards columns.
-     * @param minTypes the minimum number of distinct types per line.
-     * @param maxTypes the maximum number of distinct types per line.
+     * @param minTypes The minimum number of distinct types per line.
+     * @param maxTypes The maximum number of distinct types per line.
      */
     public CommonGoalPatternDistinctItems(int numLines, boolean rowOrColumn, int minTypes, int maxTypes) {
         this.numLines = numLines;
@@ -34,7 +34,7 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
     /**
      * Check pattern on {@code Bookshelf} object.
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return - true if the pattern is found, false if it isn't
+     * @return True if the pattern is found, false if it isn't
      */
     @Override
     public boolean check(Bookshelf bookshelf) {
@@ -44,7 +44,7 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
 
     /**
      * Method to check if pattern is satisfied on the rows.
-     * @param bookshelf the bookshelf to check the pattern on.
+     * @param bookshelf The bookshelf to check the pattern on.
      * @return {@code true} iff the pattern is satisfied by {@code bookshelf} on the rows.
      */
     private boolean checkRow(Bookshelf bookshelf) {
@@ -64,7 +64,7 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
 
     /**
      * Method to check if the pattern is satisfied on the columns.
-     * @param bookshelf the bookshelf to check the pattern on.
+     * @param bookshelf The bookshelf to check the pattern on.
      * @return {@code true} iff the pattern is satisfied by {@code bookshelf} on the columns.
      */
     private boolean checkColumn(Bookshelf bookshelf) {

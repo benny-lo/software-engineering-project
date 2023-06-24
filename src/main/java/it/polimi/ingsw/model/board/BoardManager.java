@@ -22,7 +22,7 @@ public class BoardManager {
     /**
      * BoardManager's Constructor: it initializes the {@code Bag} and the {@code LivingRoom}.
      * @param numberPlayers It's the number of players in the game.
-     * @throws IOException error occurred with I/O for JSON configuration files.
+     * @throws IOException Error occurred with I/O for JSON configuration files.
      */
     public BoardManager(int numberPlayers) throws IOException {
         Gson gson = new GsonBuilder().serializeNulls()
@@ -142,7 +142,7 @@ public class BoardManager {
 
     /**
      * This method sets the given LivingRoomListener, by updating the state of every tile.
-     * @param livingRoomListener - livingRoomListener that needs to be set
+     * @param livingRoomListener LivingRoomListener that needs to be set
      */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         this.livingRoomListener = livingRoomListener;

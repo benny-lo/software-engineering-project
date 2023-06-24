@@ -15,8 +15,8 @@ public class Bag {
     private final Stack<Item> elements;
 
     /**
-     * Constructor of the class: fills {@code this} and randomly shuffles it.
-     * @param numberPerType number of {@code Item}s of each type to put in {@code this}.
+     * Constructor for {@code this} class. Fills {@code this} and randomly shuffles it.
+     * @param numberPerType Number of {@code Item}s of each type to put in {@code this}.
      */
     public Bag(int numberPerType) {
         this.elements = new Stack<>();
@@ -37,7 +37,7 @@ public class Bag {
 
     /**
      * Extract an {@code Item} from {@code this}.
-     * @return the {@code Item} extracted if {@code this} was not empty, else null.
+     * @return The {@code Item} extracted if {@code this} was not empty, else null.
      */
     public Item extract() {
         if (!this.isEmpty()) return elements.pop();

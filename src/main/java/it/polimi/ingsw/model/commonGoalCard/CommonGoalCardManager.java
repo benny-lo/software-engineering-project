@@ -16,9 +16,9 @@ public class CommonGoalCardManager {
     private CommonGoalCardsListener commonGoalCardsListener;
 
     /**
-     * Class constructor: it initializes the common goal cards of the game.
-     * @param numCommonGoalCards number of common goal cards in the game. (1/2)
-     * @param numPlayers number of players in the game.
+     * Constructor for {@code this} class. It initializes the common goal cards of the game.
+     * @param numCommonGoalCards Number of common goal cards in the game. (1/2)
+     * @param numPlayers Number of players in the game.
      */
     public CommonGoalCardManager(int numCommonGoalCards, int numPlayers) {
         List<CommonGoalPatternInterface> commonGoals = commonGoals();
@@ -35,7 +35,7 @@ public class CommonGoalCardManager {
 
     /**
      * Class constructor exclusively used for testing: it initializes the common goal cards of the game.
-     * @param numPlayers number of players in the game.
+     * @param numPlayers Number of players in the game.
      */
     public CommonGoalCardManager(int numPlayers) {
         cards = new ArrayList<>();
@@ -45,7 +45,7 @@ public class CommonGoalCardManager {
 
     /**
      * All possible common goals.
-     * @return list containing all common goals of the game.
+     * @return List containing all common goals of the game.
      */
     private List<CommonGoalPatternInterface> commonGoals() {
         List<CommonGoalPatternInterface> pattern = new ArrayList<>();
@@ -90,9 +90,9 @@ public class CommonGoalCardManager {
 
     /**
      * Perform check on all not yet achieved common goal cards and gets the scoring tokens.
-     * @param bookshelf the bookshelf.
-     * @param cannotTake list of indices of common goal cards not to consider.
-     * @return the scoring token from the common goal cards achieved.
+     * @param bookshelf The bookshelf.
+     * @param cannotTake List of indices of common goal cards not to consider.
+     * @return The scoring token from the common goal cards achieved.
      */
     public List<ScoringToken> check(Bookshelf bookshelf, List<Integer> cannotTake) {
         List<ScoringToken> tokens = new ArrayList<>();
@@ -110,7 +110,7 @@ public class CommonGoalCardManager {
 
     /**
      * This method sets the given CommonGoalCardsListener, by updating the state of every CommonGoalCard.
-     * @param commonGoalCardsListener - commonGoalCardsListener that needs to be set
+     * @param commonGoalCardsListener CommonGoalCardsListener that needs to be set
      */
     public void setCommonGoalCardsRep(CommonGoalCardsListener commonGoalCardsListener) {
         this.commonGoalCardsListener = commonGoalCardsListener;
