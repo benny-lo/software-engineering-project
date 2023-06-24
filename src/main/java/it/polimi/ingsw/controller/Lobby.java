@@ -52,7 +52,7 @@ public class Lobby {
 
     /**
      * Getter for the instance of {@code Lobby}. If no instance exists, it creates a new one.
-     * @return the instance of the lobby, either already existing or newly created.
+     * @return The instance of the lobby, either already existing or newly created.
      */
     public static Lobby getInstance() {
         synchronized (lock) {
@@ -63,7 +63,7 @@ public class Lobby {
 
     /**
      * Getter for the list of games information for every match in pre-game phase.
-     * @return a list containing the game's info.
+     * @return A list containing the game's info.
      */
     private List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
@@ -76,7 +76,7 @@ public class Lobby {
 
     /**
      * Adds a new controller to {@code Lobby}.
-     * @param controller the controller to add.
+     * @param controller The controller to add.
      */
     private void addController(ControllerInterface controller) {
         controllers.put(availableId, controller);
@@ -86,7 +86,7 @@ public class Lobby {
     /**
      * Removes a controller from {@code Lobby}. It synchronizes on {@code this}. Moreover, it notifies
      * asynchronously all players still waiting to join a match.
-     * @param controller the controller to remove.
+     * @param controller The controller to remove.
      */
     public synchronized void removeController(ControllerInterface controller) {
         Integer id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
@@ -97,7 +97,7 @@ public class Lobby {
     /**
      * Unsubscribes a {@code ServerUpdateViewInterface} from updates sent by {@code this}.
      * It synchronizes on {@code this}.
-     * @param view - the view to be removed
+     * @param view The view to be removed
      */
     public synchronized void removeServerUpdateViewInterface(ServerUpdateViewInterface view) {
         views.remove(view);
@@ -106,8 +106,8 @@ public class Lobby {
     /**
      * Processes a login request from a {@code ServerUpdateViewInterface} and registers that view.
      * It synchronizes on {@code this}.
-     * @param nickname the nickname chosen by the {@code ServerUpdateViewInterface}.
-     * @param view the {@code ServerUpdateViewInterface} performing the request.
+     * @param nickname The nickname chosen by the {@code ServerUpdateViewInterface}.
+     * @param view The {@code ServerUpdateViewInterface} performing the request.
      */
     public synchronized void login(String nickname, ServerUpdateViewInterface view) {
         if(views.contains(view)) {
@@ -139,9 +139,9 @@ public class Lobby {
      * Moreover, all clients that have not joined in a match yet are notified of the creation of the
      * match.
      * It synchronizes on {@code this}.
-     * @param numberPlayers the number of players in the game to create.
-     * @param numberCommonGoals the number of common goal cards in the game to create.
-     * @param view the {@code ServerUpdateViewInterface} that performed the request.
+     * @param numberPlayers The number of players in the game to create.
+     * @param numberCommonGoals The number of common goal cards in the game to create.
+     * @param view The {@code ServerUpdateViewInterface} that performed the request.
      */
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, ServerUpdateViewInterface view) {
         // not yet registered or already playing.
@@ -187,8 +187,8 @@ public class Lobby {
 
     /**
      * Joins the {@code ServerUpdateViewInterface} that performed the request in the selected math (by id).
-     * @param id the id of the selected game.
-     * @param view the {@code ServerUpdateViewInterface} that performed the request.
+     * @param id The id of the selected game.
+     * @param view The {@code ServerUpdateViewInterface} that performed the request.
      */
     public synchronized void selectGame(int id, ServerUpdateViewInterface view) {
         // not yet registered or already in a match.
@@ -212,6 +212,10 @@ public class Lobby {
     }
 
     //FOR TESTING ONLY
+
+    /**
+     * This method sets the Singleton instance to null, allowing us to instance it again, used only for testing.
+     */
     public static void setNull()
     {
         instance = null;

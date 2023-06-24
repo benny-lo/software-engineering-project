@@ -98,7 +98,7 @@ public class Controller implements ControllerInterface {
     private final LivingRoomListener livingRoomListener;
 
     /**
-     * Constructor for the class. It creates a {@code Controller} for a not yet started (and constructed) game.
+     * Constructor for {@code this} class. It creates a {@code Controller} for a not yet started (and constructed) game.
      * @param numberPlayers - the number of players that need to join the game to make it start.
      * @param numberCommonGoalCards - the number of common goal cards of the game.
      */
@@ -307,7 +307,7 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param action information passed to {@code Controller} as a {@code JoinActionon}.
+     * @param action information passed to {@code Controller} as a {@code JoinAction}.
      */
     @Override
     public synchronized void perform(JoinAction action) {
@@ -545,41 +545,77 @@ public class Controller implements ControllerInterface {
     }
 
     // EXCLUSIVELY FOR TESTING
+
+    /**
+     * Getter for the ended value, used only for testing
+     * @return True if the game has ended , false otherwise.
+     */
     public boolean getEnded()
     {
         return this.ended;
     }
 
+    /**
+     * Setter for the ended value, used only for testing. Sets the value of ended to true.
+     */
     public void setEnded() {
         ended = true;
     }
 
+    /**
+     * Setter for the CurrentPlayer, used only for testing.
+     * @param nickname The nickname of the player you want to set as the Current.
+     */
     public void setCurrentPlayer(String nickname){
         if (nickname == null) return;
         playerIndex = playerList.indexOf(nickname);
         game.setCurrentPlayer(nickname);
     }
 
+    /**
+     * Getter for the game model, used only for testing.
+     * @return A GameInterface of the game model.
+     */
     public GameInterface getGame(){
         return game;
     }
 
+    /**
+     * Getter for the TurnPhase, used only for testing.
+     * @return The current turnPhase.
+     */
     public TurnPhase getTurnPhase(){
         return turnPhase;
     }
 
+    /**
+     * Getter for the gameBuilder, used only for testing.
+     * @return The gameBuilder of the game.
+     */
     public GameBuilder getGameBuilder() {
         return gameBuilder;
     }
 
+    /**
+     * Getter for the views of the associated with {@code this}, used only for testing.
+     * @return A set of the views that have been added.
+     */
     public Set<ServerUpdateViewInterface> getViews() {
         return views;
     }
 
+    /**
+     * Getter for the BookshelfListeners associated with {@code this}, used only for testing.
+     * @return A list of the BookshelfListeners added to the controller.
+     */
     public List<BookshelfListener> getBookshelfListeners() {
         return bookshelfListeners;
     }
 
+    /**
+     * Getter for the owner of the BookshelfListeners associated with {@code this}, used only for testing.
+     * @return A list of the owner of the BookshelfListeners added to the controller.
+     */
     public List<String> getBookshelfListenersOwners(){
         return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
     }

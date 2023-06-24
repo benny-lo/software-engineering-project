@@ -4,7 +4,7 @@ public class EndingTokenListener extends ModelListener {
     private String owner;
 
     /**
-     * Constructor for the class
+     * Constructor for {@code this} class.
      */
     public EndingTokenListener() {
         super();
@@ -12,7 +12,7 @@ public class EndingTokenListener extends ModelListener {
 
     /**
      * Getter for the owner of the ending token
-     * @return - the owner
+     * @return The owner
      */
     public String getEndingToken() {
         changed = false;
@@ -24,7 +24,7 @@ public class EndingTokenListener extends ModelListener {
 
     /**
      * This method changes the owner of the ending token
-     * @param owner - owner of the ending token.
+     * @param owner Owner of the ending token.
      */
     public void updateState(String owner) {
         changed = true;

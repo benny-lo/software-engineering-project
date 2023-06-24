@@ -4,7 +4,7 @@ public abstract class ModelListener {
     protected boolean changed;
 
     /**
-     * Constructor for the class.
+     * Constructor for {@code this} class.
      */
     public ModelListener() {
         changed = false;
@@ -12,7 +12,7 @@ public abstract class ModelListener {
 
     /**
      * Getter for the changed value
-     * @return - the changed value.
+     * @return The changed value.
      */
     public boolean hasChanged() {
         return changed;

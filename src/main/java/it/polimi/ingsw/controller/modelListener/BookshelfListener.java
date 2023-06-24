@@ -12,7 +12,7 @@ public class BookshelfListener extends ModelListener {
 
     /**
      * Constructor for the class
-     * @param owner - the owner of the Bookshelf
+     * @param owner The owner of the Bookshelf
      */
     public BookshelfListener(String owner) {
         super();
@@ -22,7 +22,7 @@ public class BookshelfListener extends ModelListener {
 
     /**
      * Getter for the bookshelf
-     * @return - a Map composed of positions and items that compose the bookshelf.
+     * @return A Map composed of positions and items that compose the bookshelf.
      */
     public Map<Position, Item> getBookshelf() {
         changed = false;
@@ -34,7 +34,7 @@ public class BookshelfListener extends ModelListener {
 
     /**
      * Getter for the owner
-     * @return - the owner of the bookshelf.
+     * @return The owner of the bookshelf.
      */
     public String getOwner() {
         return owner;
@@ -42,8 +42,8 @@ public class BookshelfListener extends ModelListener {
 
     /**
      * This method updates the state of the bookshelf.
-     * @param position - the position in which the item is supposed to be put
-     * @param item - the item to be put.
+     * @param position The position in which the item is supposed to be put
+     * @param item The item to be put.
      */
     public void updateState(Position position, Item item) {
         changed = true;

@@ -55,8 +55,8 @@ public class GameBuilder {
     private LivingRoomListener livingRoomListener;
 
     /**
-     * Constructor for the class. It only sets the number of common goal cards.
-     * @param numberCommonGoalCards number of common goal cards.
+     * Constructor for {@code this} class. It only sets the number of common goal cards.
+     * @param numberCommonGoalCards Number of common goal cards.
      */
     public GameBuilder(int numberCommonGoalCards) {
         this.numberCommonGoalCards = numberCommonGoalCards;
@@ -66,7 +66,7 @@ public class GameBuilder {
 
     /**
      * Adds a player. It assumes the nickname is not already logged in.
-     * @param nickname the nickname of the player that is added.
+     * @param nickname The nickname of the player that is added.
      */
     public void addPlayer(String nickname){
         players.add(nickname);
@@ -74,13 +74,13 @@ public class GameBuilder {
 
     /**
      * Removes a player.
-     * @param nickname the nickname of the player that to remove.
+     * @param nickname The nickname of the player that to remove.
      */
     public void removePlayer(String nickname) {players.remove(nickname);}
 
     /**
      * Adds a bookshelf listener.
-     * @param bookshelfListener the bookshelf listener to add.
+     * @param bookshelfListener The bookshelf listener to add.
      */
     public void setBookshelfListener(BookshelfListener bookshelfListener) {
         bookshelfListeners.add(bookshelfListener);
@@ -88,7 +88,7 @@ public class GameBuilder {
 
     /**
      * Removes a bookshelf listener.
-     * @param nickname owner of the listener to remove.
+     * @param nickname Owner of the listener to remove.
      */
     public void removeBookshelfListener(String nickname) {
         bookshelfListeners.removeIf(bookshelfL -> bookshelfL.getOwner().equals(nickname));
@@ -96,7 +96,7 @@ public class GameBuilder {
 
     /**
      * Setter for {@code CommonGoalCardsListener}.
-     * @param commonGoalCardsListener the listener to set.
+     * @param commonGoalCardsListener The listener to set.
      */
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         this.commonGoalCardsListener = commonGoalCardsListener;
@@ -104,7 +104,7 @@ public class GameBuilder {
 
     /**
      * Setter for {@code EndingTokenListener}.
-     * @param endingTokenListener the listener to set.
+     * @param endingTokenListener The listener to set.
      */
     public void setEndingTokenListener(EndingTokenListener endingTokenListener) {
         this.endingTokenListener = endingTokenListener;
@@ -112,7 +112,7 @@ public class GameBuilder {
 
     /**
      * Setter for {@code LivingRoomListener}.
-     * @param livingRoomListener the listener to set.
+     * @param livingRoomListener The listener to set.
      */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         this.livingRoomListener = livingRoomListener;
@@ -120,7 +120,7 @@ public class GameBuilder {
 
     /**
      * Getter for the number of players.
-     * @return the number of players.
+     * @return The number of players.
      */
     public int getCurrentPlayers() {
         return players.size();
@@ -128,7 +128,7 @@ public class GameBuilder {
 
     /**
      * Creates a {@code Game} object and returns as a {@code GameInterface}.
-     * @return the {@code Game} object created, hidden as a {@code GameInterface} if {@code this} has all
+     * @return The {@code Game} object created, hidden as a {@code GameInterface} if {@code this} has all
      * listeners and the list of players set in a consistent way, else {@code null}.
      */
     public GameInterface startGame() {
@@ -166,7 +166,7 @@ public class GameBuilder {
 
     /**
      * Getter for the players
-     * @return - a list formed by string of players
+     * @return A list formed by string of players
      */
     public List<String> getPlayers() {
         return players;
@@ -174,7 +174,7 @@ public class GameBuilder {
 
     /**
      * Getter for the bookshelves listeners
-     * @return - a list formed by the Bookshelf listeners
+     * @return A list formed by the Bookshelf listeners
      */
     public List<BookshelfListener> getBookshelfListeners() {
         return bookshelfListeners;
@@ -182,14 +182,14 @@ public class GameBuilder {
 
     /**
      * Getter for the owners of the bookshelves
-     * @return - a list of the owners of the bookshelves.
+     * @return A list of the owners of the bookshelves.
      */
     public List<String> getBookshelfListenersOwners(){
         return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
     }
     /**
      * Getter for the number of common goal cards
-     * @return - number of CommonGoalCards
+     * @return Number of CommonGoalCards
      */
     public int getNumberCommonGoalCards()
     {
@@ -197,7 +197,7 @@ public class GameBuilder {
     }
     /**
      * Getter for Common Goal Cards Listener
-     * @return - the common Goal Cards Listener
+     * @return The common Goal Cards Listener
      */
     public CommonGoalCardsListener getCommonGoalCardsListener()
     {
@@ -205,7 +205,7 @@ public class GameBuilder {
     }
     /**
      * Getter for Ending Token Listener
-     * @return - the Ending Token Listener
+     * @return The Ending Token Listener
      */
     public EndingTokenListener getEndingTokenListener()
     {
@@ -213,7 +213,7 @@ public class GameBuilder {
     }
     /**
      * Getter for Living Room Listener
-     * @return - the Living Room Listener
+     * @return The Living Room Listener
      */
     public LivingRoomListener getLivingRoomListener()
     {
