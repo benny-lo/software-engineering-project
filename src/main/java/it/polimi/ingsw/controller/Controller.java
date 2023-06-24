@@ -265,6 +265,7 @@ public class Controller implements ControllerInterface {
                 if (game.getPublicScore(nickname) + game.getPersonalScore(nickname)
                         > bestScore) {
                     winner = nickname;
+                    bestScore = game.getPublicScore(nickname) + game.getPersonalScore(nickname);
                 }
             }
 
