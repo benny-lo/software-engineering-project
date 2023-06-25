@@ -11,12 +11,6 @@ import java.util.List;
 
 public interface GameInterface {
     /**
-     * Getter for the number of players.
-     * @return The number of players of {@code this}.
-     */
-    int getNumberPlayers();
-
-    /**
      * It sets the {@code currentPlayer}.
      * @param nickname {@code nickname} is the {@code currentPlayer}'s name.
      */
@@ -70,12 +64,6 @@ public interface GameInterface {
      * @return The personal score of a {@code Player}.
      */
     int getPersonalScore(String nickname);
-
-    /**
-     * This method returns the nickname of the current {@code Player}.
-     * @return It returns the nickname of {@code currentPlayer}.
-     */
-    String getCurrentPlayer();
 
     /**
      * This method returns the id of the {@code PersonalGoalCard} assigned to a {@code Player}.

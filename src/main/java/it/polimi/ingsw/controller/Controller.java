@@ -239,7 +239,7 @@ public class Controller implements ControllerInterface {
 
         //
         for(ServerUpdateViewInterface v : views) {
-            v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
         }
     }
 
@@ -255,7 +255,7 @@ public class Controller implements ControllerInterface {
 
         game.setCurrentPlayer(playerList.get(playerIndex));
 
-        if (firstPlayer.equals(game.getCurrentPlayer()) && game.IsEndingTokenAssigned()) {
+        if (firstPlayer.equals(playerList.get(playerIndex)) && game.IsEndingTokenAssigned()) {
             // Game ended -> Find the winner.
             ended = true;
 
@@ -274,7 +274,7 @@ public class Controller implements ControllerInterface {
         } else {
             // Game continues.
             for(ServerUpdateViewInterface v : views) {
-                v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+                v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
             }
         }
     }
@@ -358,7 +358,7 @@ public class Controller implements ControllerInterface {
     @Override
     public synchronized void perform(SelectionFromLivingRoomAction action) {
         if (ended ||
-                !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
+                !action.getView().getNickname().equals(playerList.get(playerIndex)) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
                 !game.canTakeItemTiles(action.getSelectedPositions())) {
             action.getView().onSelectedItems(new SelectedItems(null));
@@ -388,7 +388,7 @@ public class Controller implements ControllerInterface {
     @Override
     public synchronized void perform(SelectionColumnAndOrderAction action) {
         if (ended ||
-                !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
+                !action.getView().getNickname().equals(playerList.get(playerIndex)) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
                 !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
             action.getView().onAcceptedInsertion(new AcceptedInsertion(false));
@@ -421,7 +421,7 @@ public class Controller implements ControllerInterface {
      */
     @Override
     public synchronized void perform(ChatMessageAction action) {
-        if (ended || game.getCurrentPlayer() == null || action.getReceiver().equals(action.getView().getNickname())) {
+        if (ended || playerIndex == -1 || action.getReceiver().equals(action.getView().getNickname())) {
             action.getView().onChatAccepted(new ChatAccepted(false));
             // Action failed.
             return;
