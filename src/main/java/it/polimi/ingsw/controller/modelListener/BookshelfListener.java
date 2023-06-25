@@ -11,8 +11,8 @@ public class BookshelfListener extends ModelListener {
     private final Map<Position, Item> bookshelf;
 
     /**
-     * Constructor for the class
-     * @param owner The owner of the Bookshelf
+     * Constructor for the class. It initializes {@code this} with an empty state.
+     * @param owner The owner of the Bookshelf to listen to.
      */
     public BookshelfListener(String owner) {
         super();
@@ -21,8 +21,9 @@ public class BookshelfListener extends ModelListener {
     }
 
     /**
-     * Getter for the bookshelf
-     * @return A Map composed of positions and items that compose the bookshelf.
+     * Getter for the latest updates to the listened {@code Bookshelf}. The state of {@code this}
+     * is set to empty.
+     * @return {@code Map} of the portion of the {@code Bookshelf} that changed.
      */
     public Map<Position, Item> getBookshelf() {
         changed = false;
@@ -33,17 +34,18 @@ public class BookshelfListener extends ModelListener {
     }
 
     /**
-     * Getter for the owner
-     * @return The owner of the bookshelf.
+     * Getter for the owner of the listened {@code Bookshelf}.
+     * @return The owner of the {@code Bookshelf}.
      */
     public String getOwner() {
         return owner;
     }
 
     /**
-     * This method updates the state of the bookshelf.
-     * @param position The position in which the item is supposed to be put
-     * @param item The item to be put.
+     * Registers a change in the listened {@code Bookshelf}. The state of {@code this} is set to
+     * non-empty.
+     * @param position The {@code Position} that changed.
+     * @param item The {@code Item} at {@code position}.
      */
     public void updateState(Position position, Item item) {
         changed = true;

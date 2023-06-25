@@ -4,15 +4,15 @@ public class EndingTokenListener extends ModelListener {
     private String owner;
 
     /**
-     * Constructor for {@code this} class.
+     * Constructor for the class. It initializes {@code this} with an empty state.
      */
     public EndingTokenListener() {
         super();
     }
 
     /**
-     * Getter for the owner of the ending token
-     * @return The owner
+     * Getter for the current owner of the ending token. The state of {@code this} is set to empty.
+     * @return The nickname of the owner of the ending token.
      */
     public String getEndingToken() {
         changed = false;
@@ -23,8 +23,9 @@ public class EndingTokenListener extends ModelListener {
     }
 
     /**
-     * This method changes the owner of the ending token
-     * @param owner Owner of the ending token.
+     * Registers a new owner of the ending token.
+     * The state of {@code this} is set to non-empty.
+     * @param owner The new owner of the ending token.
      */
     public void updateState(String owner) {
         changed = true;

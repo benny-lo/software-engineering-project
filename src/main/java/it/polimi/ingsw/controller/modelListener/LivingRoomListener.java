@@ -10,7 +10,7 @@ public class LivingRoomListener extends ModelListener {
     private final Map<Position, Item> livingRoomChanges;
 
     /**
-     * Constructor for {@code this} class.
+     * Constructor for the class. It initializes {@code this} with an empty state.
      */
     public LivingRoomListener() {
         super();
@@ -18,8 +18,8 @@ public class LivingRoomListener extends ModelListener {
     }
 
     /**
-     * Getter for the Living Room
-     * @return A map of the living room, with positions and items.
+     * Getter for the changes to the {@code LivingRoom}. The state of {@code this} is set to empty.
+     * @return {@code Map} of the portion of the {@code LivingRoom} that changed.
      */
     public Map<Position, Item> getLivingRoom() {
         changed = false;
@@ -30,9 +30,9 @@ public class LivingRoomListener extends ModelListener {
     }
 
     /**
-     * This method updates the state of the living room, putting an item into a certain position
-     * @param position The position where the item needs to be put
-     * @param item The item that needs to be put.
+     * Registers a change in the {@code LivingRoom}. The state of {@code this} is set to non-empty.
+     * @param position The {@code Position} at which the changed occurred.
+     * @param item The new {@code Item} that is now at {@code position} in the {@code LivingRoom}.
      */
     public void updateState(Position position, Item item) {
         changed = true;
