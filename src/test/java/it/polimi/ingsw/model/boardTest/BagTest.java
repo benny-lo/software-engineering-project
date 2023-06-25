@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  */
 public class BagTest {
     /**
-     * Test a new non-empty {@code  Bag} is non-empty.
+     * Test a new non-empty {@code Bag} is non-empty.
      */
     @Test
     public void testNonEmptyBag() {
@@ -51,7 +51,7 @@ public class BagTest {
     }
 
     /**
-     * Test a {@code Bag} is becomes after all {@code Item}s have been extracted.
+     * Test a {@code Bag} that becomes empty after all {@code Item}s have been extracted.
      */
     @Test
     public void testBagIsEmptiedByExtract() {

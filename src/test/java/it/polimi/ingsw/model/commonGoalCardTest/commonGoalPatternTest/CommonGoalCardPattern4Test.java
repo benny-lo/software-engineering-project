@@ -12,10 +12,10 @@ import org.junit.jupiter.api.Test;
 
 public class CommonGoalCardPattern4Test {
     /**
-     * Test of pattern on exactly 6 adjacent couples
+     * Test of pattern on exactly 6 adjacent couples.
      */
     @Test
-    public void testExactlySix()
+    public void testExactlySixItemsCouples()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf(2,6);
@@ -41,10 +41,10 @@ public class CommonGoalCardPattern4Test {
     }
 
     /**
-     * Test of pattern on a bookshelf with less than 6 adjacent couples
+     * Test of pattern on a bookshelf with less than 6 adjacent couples.
      */
     @Test
-    public void testLessThanSix()
+    public void testLessThanSixItemsCouples()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf();
@@ -55,7 +55,7 @@ public class CommonGoalCardPattern4Test {
     }
 
     /**
-     * Test of pattern on a bookshelf with 6 groups with items in common
+     * Test of pattern on a bookshelf with 6 groups with items in common.
      */
     @Test
     public void testCommonItems()
@@ -77,7 +77,7 @@ public class CommonGoalCardPattern4Test {
      * Test of pattern on a bookshelf with 12 not adjacent items of the same kind
      */
     @Test
-    public void testTwelveNotAdjacent()
+    public void testTwelveNotAdjacentItems()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternCountGroups(2,6, (s) -> s.size() == 2);
         Bookshelf bookshelf = new Bookshelf();

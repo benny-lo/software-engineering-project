@@ -28,30 +28,46 @@ public class CommonGoalCardTest {
     }
 
     /**
-     * Test {@code CommonGoalCard}'s method {@code popToken} with 4 players popping every {@code ScoringToken} out.
+     * Test {@code CommonGoalCard}'s methods {@code popToken} and {@code getTopStack} with 4 players popping out every {@code ScoringToken}.
      */
     @Test
     public void testPopTokenWith4Players(){
         CommonGoalPatternInterface commonGoalPatternInterface = new CommonGoalPattern8();
         CommonGoalCard commonGoalCard = new CommonGoalCard(1, 4, commonGoalPatternInterface);
 
+        int value = commonGoalCard.getTopStack();
+        assertEquals(8, value);
+
         ScoringToken scoringToken = commonGoalCard.popToken();
         assertEquals(8, scoringToken.getScore());
         assertEquals(1, scoringToken.getType());
+
+        value = commonGoalCard.getTopStack();
+        assertEquals(6, value);
 
         scoringToken = commonGoalCard.popToken();
         assertEquals(6, scoringToken.getScore());
         assertEquals(1, scoringToken.getType());
 
+        value = commonGoalCard.getTopStack();
+        assertEquals(4, value);
+
         scoringToken = commonGoalCard.popToken();
         assertEquals(4, scoringToken.getScore());
         assertEquals(1, scoringToken.getType());
+
+        value = commonGoalCard.getTopStack();
+        assertEquals(2, value);
 
         scoringToken = commonGoalCard.popToken();
         assertEquals(2, scoringToken.getScore());
         assertEquals(1, scoringToken.getType());
 
-        assertThrows(EmptyStackException.class, commonGoalCard::popToken);
+        value = commonGoalCard.getTopStack();
+        assertEquals(0, value);
+
+        scoringToken = commonGoalCard.popToken();
+        assertNull(scoringToken);
     }
 
     /**
@@ -72,7 +88,7 @@ public class CommonGoalCardTest {
      * Test {@code CommonGoalCard}'s method {@code checkPattern} without a corresponding bookshelf pattern.
      */
     @Test
-    public void testCheckPatternNotAMatch(){
+    public void testCheckPatternWithoutAMatch(){
         CommonGoalPatternInterface commonGoalPatternInterface = new CommonGoalPattern8();
         CommonGoalCard commonGoalCard = new CommonGoalCard(1, 3, commonGoalPatternInterface);
         Bookshelf bookshelf = new Bookshelf();

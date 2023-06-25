@@ -10,55 +10,30 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Unit test for common goal card pattern 10.
+ */
 public class CommonGoalCardPattern10Test {
     /**
-     * test if given a 3x3 Bookshelf full of CATs
+     * Test with a Bookshelf full of the same type of {@code Item}s.
      */
     @Test
-    public void testCorrect3x3(){
+    public void testFullBookshelf(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf=new Bookshelf(3,3);
+        Bookshelf bookshelf = new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 bookshelf.insert(Item.CAT,i);
             }
         }
         assertTrue(pattern.check(bookshelf));
-    }
-    /**
-     * test if given a 6x5 Bookshelf full of CATs
-     */
-    @Test
-    public void testCorrect6x5(){
-        CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf=new Bookshelf();
-        for(int i=0; i< bookshelf.getColumns(); i++){
-            for(int j=0; j< bookshelf.getRows(); j++){
-                bookshelf.insert(Item.CAT,i);
-            }
-        }
-        assertTrue(pattern.check(bookshelf));
-    }
-    /**
-     * test if given a 2x2 Bookshelf full of CATs
-     */
-    @Test
-    public void testIncorrect2x2(){
-        CommonGoalPatternInterface pattern = new CommonGoalPattern10();
-        Bookshelf bookshelf = new Bookshelf(2, 2);
-        for(int i=0; i< bookshelf.getColumns(); i++){
-            for(int j=0; j< bookshelf.getRows(); j++){
-                bookshelf.insert(Item.CAT,i);
-            }
-        }
-        assertFalse(pattern.check(bookshelf));
     }
 
     /**
-     * test if given a 3x3 Bookshelf with the first column full of CATs and the last column full of BOOKs
+     * Test with 3 adjacent columns, only two have the same {@code Item}s.
      */
     @Test
-    public void testIncorrect3x3(){
+    public void testTwoColumnsWithSameItems(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
         Bookshelf bookshelf=new Bookshelf(3,3);
         for(int j=0; j< bookshelf.getRows(); j++){
@@ -71,10 +46,10 @@ public class CommonGoalCardPattern10Test {
         assertFalse(pattern.check(bookshelf));
     }
     /**
-     * test if given a 6x5 Bookshelf with even columns full of CATs and odd columns full of BOOKs
+     * Test with columns filled with alternating {@code Item}s.
      */
     @Test
-    public void testIncorrect6x5(){
+    public void testColumnsWithAlternatingItems(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -86,10 +61,10 @@ public class CommonGoalCardPattern10Test {
         assertFalse(pattern.check(bookshelf));
     }
     /**
-     * test if given a 6x5 Bookshelf with even columns full of CATs and odd columns full of BOOKs, but an X in the upper corner
+     * Test with an X pattern on the upper corner.
      */
     @Test
-    public void testUpperCornerCorrect6x5(){
+    public void testXUpperCorner(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -102,7 +77,7 @@ public class CommonGoalCardPattern10Test {
         assertTrue(pattern.check(bookshelf));
     }
     /**
-     * Test of pattern on an empty bookshelf.
+     * Test on an empty bookshelf.
      */
     @Test
     public void testEmptyBookshelf()

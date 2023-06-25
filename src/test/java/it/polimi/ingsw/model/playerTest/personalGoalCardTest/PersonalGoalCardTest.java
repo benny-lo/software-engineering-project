@@ -80,7 +80,7 @@ public class PersonalGoalCardTest {
     }
 
     /**
-     * Test {@code PersonalGoalCard} with 7 matches.
+     * Test {@code PersonalGoalCard} with 7 matches, this case isn't achievable because a {@code PersonalGoalPattern} has at most 6 possible matches.
      */
     @Test
     public void testGetPersonalScore7Matches(){

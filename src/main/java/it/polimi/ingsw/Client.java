@@ -33,7 +33,7 @@ public class Client {
                         view.startTCP(args.get(2), parseInt(args.get(3)));
                     }
                 } else {
-                    Logger.clientError("wrong cli arguments : [client] [cli] [hostName] [numberPort]");
+                    Logger.clientError("wrong arguments : client {cli | gui} {tcp | rmi} [{hostName} {numberPort}]");
                     System.exit(1);
                 }
             } else if (args.get(0).equalsIgnoreCase("gui")) {
@@ -52,7 +52,7 @@ public class Client {
                         view.startTCP(args.get(2), parseInt(args.get(3)));
                     }
                 } else {
-                    Logger.clientError("wrong gui arguments : [client] [gui] [hostName] [numberPort]");
+                    Logger.clientError("wrong arguments : client {cli | gui} {tcp | rmi} [{hostName} {numberPort}]");
                     System.exit(1);
                 }
             } else {

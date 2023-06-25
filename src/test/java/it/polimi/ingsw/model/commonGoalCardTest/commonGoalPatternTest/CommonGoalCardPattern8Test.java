@@ -8,14 +8,17 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit test for common goal card pattern 8.
+ */
 public class CommonGoalCardPattern8Test {
     /**
-     * test if given a 3x3 Bookshelf full of CATs
+     * Test with a full Bookshelf with all the same {@code Item}s.
      */
     @Test
-    public void testCorrect3x3(){
+    public void testFullBookshelf(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
-        Bookshelf bookshelf=new Bookshelf();
+        Bookshelf bookshelf = new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
             for(int j=0; j< bookshelf.getRows(); j++){
                 bookshelf.insert(Item.CAT,i);
@@ -25,12 +28,12 @@ public class CommonGoalCardPattern8Test {
     }
 
     /**
-     * test if given a 6x5 Bookshelf with the first and the last column full of CATs
+     * Test with a Bookshelf with all the same {@code Item}s in the corners.
      */
     @Test
-    public void testCorrect6x5(){
+    public void testEqualItems(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
-        Bookshelf bookshelf=new Bookshelf();
+        Bookshelf bookshelf = new Bookshelf();
         for(int i=0; i< bookshelf.getRows(); i++){
                 bookshelf.insert(Item.CAT,0);
         }
@@ -41,12 +44,12 @@ public class CommonGoalCardPattern8Test {
     }
 
     /**
-     * test if given a 3x3 Bookshelf with the first column full of CATs and the last column full of BOOKs
+     * Test with a Bookshelf with two different {@code Item}s in the corners.
      */
     @Test
-    public void testIncorrect3x3(){
+    public void testTwoDifferentItems(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
-        Bookshelf bookshelf=new Bookshelf();
+        Bookshelf bookshelf = new Bookshelf();
         for(int j=0; j< bookshelf.getRows(); j++){
             bookshelf.insert(Item.CAT,0);
         }
@@ -58,13 +61,12 @@ public class CommonGoalCardPattern8Test {
     }
 
     /**
-     * test if a 6x5 Bookshelf with the first column full of CATs and the last column with the first tile a CAT
-     * and the rests are BOOKs
+     * Test with a Bookshelf with a different {@code Item} in one corner.
      */
     @Test
-    public void testIncorrect6x5(){
+    public void testOneDifferentItem(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern8();
-        Bookshelf bookshelf=new Bookshelf();
+        Bookshelf bookshelf = new Bookshelf();
         for(int j=0; j< bookshelf.getRows(); j++){
             bookshelf.insert(Item.CAT,0);
         }
@@ -78,7 +80,7 @@ public class CommonGoalCardPattern8Test {
     }
 
     /**
-     * Test of pattern on an empty bookshelf.
+     * Test on an empty bookshelf.
      */
     @Test
     public void testEmptyBookshelf()

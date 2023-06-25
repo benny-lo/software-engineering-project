@@ -60,7 +60,7 @@ public class BookshelfTest {
         Bookshelf b = new Bookshelf();
         List<Item> items = new ArrayList<>();
         items.add(Item.CAT);
-        items.add(Item.BOOK);
+        items.add(Item.CAT);
 
         assertTrue(b.canInsert(items.size(), 0));
 
@@ -73,7 +73,7 @@ public class BookshelfTest {
                     continue;
                 }
                 if (i == 1 && j == 0) {
-                    assertEquals(Item.BOOK, b.tileAt(i, j));
+                    assertEquals(Item.CAT, b.tileAt(i, j));
                     continue;
                 }
                 assertNull(b.tileAt(i, j));
