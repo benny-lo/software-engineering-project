@@ -259,7 +259,6 @@ public class Game implements GameInterface {
      * Getter for the CurrentPlayer
      * @return The current player.
      */
-    @Override
     public String getCurrentPlayer() {
         return currentPlayer;
     }
@@ -278,7 +277,6 @@ public class Game implements GameInterface {
      * Getter for the number of players.
      * @return The number of players.
      */
-    @Override
     public int getNumberPlayers() {
         return numberPlayers;
     }

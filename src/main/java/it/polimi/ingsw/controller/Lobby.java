@@ -1,7 +1,6 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.utils.Logger;
-import it.polimi.ingsw.utils.action.JoinAction;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 
@@ -160,7 +159,7 @@ public class Lobby {
         Controller controller = new Controller(numberPlayers, numberCommonGoals, availableId);
         view.setController(controller);
 
-        controller.perform(new JoinAction(view));
+        controller.join(view);
 
         // check if the JoinAction worked
         if (!view.isInGame()) return;
@@ -207,7 +206,7 @@ public class Lobby {
 
         Logger.selectGame(id, view.getNickname());
 
-        controllers.get(id).perform(new JoinAction(view));
+        controllers.get(id).join(view);
         // the controller is sending the player the game dimensions.
     }
 

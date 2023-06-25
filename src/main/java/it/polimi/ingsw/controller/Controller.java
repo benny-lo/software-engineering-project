@@ -9,7 +9,6 @@ import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
 import it.polimi.ingsw.utils.GameConfig;
-import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 import it.polimi.ingsw.utils.message.server.*;
 
@@ -239,7 +238,7 @@ public class Controller implements ControllerInterface {
 
         //
         for(ServerUpdateViewInterface v : views) {
-            v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+            v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
         }
     }
 
@@ -255,7 +254,7 @@ public class Controller implements ControllerInterface {
 
         game.setCurrentPlayer(playerList.get(playerIndex));
 
-        if (firstPlayer.equals(game.getCurrentPlayer()) && game.IsEndingTokenAssigned()) {
+        if (firstPlayer.equals(playerList.get(playerIndex)) && game.IsEndingTokenAssigned()) {
             // Game ended -> Find the winner.
             ended = true;
 
@@ -274,7 +273,7 @@ public class Controller implements ControllerInterface {
         } else {
             // Game continues.
             for(ServerUpdateViewInterface v : views) {
-                v.onStartTurnUpdate(new StartTurnUpdate(game.getCurrentPlayer()));
+                v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
             }
         }
     }
@@ -308,36 +307,36 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param action information passed to {@code Controller} as a {@code JoinAction}.
+     * @param view The view of the client that is joining.
      */
     @Override
-    public synchronized void perform(JoinAction action) {
+    public synchronized void join(ServerUpdateViewInterface view) {
         if (turnPhase != null || ended) {
             // Game already started or already ended.
-            action.getView().setController(null);
-            action.getView().onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+            view.setController(null);
+            view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
             return;
         }
 
         // Get the GameConfig and send them to player.
         GameConfig gameConfig = getGameConfig();
-        action.getView().onGameData(new GameData(numberPlayers, getConnectedPlayers(), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
+        view.onGameData(new GameData(numberPlayers, getConnectedPlayers(), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
 
         // Add player to queue and to list of views.
-        playerList.add(action.getView().getNickname());
-        views.add(action.getView());
+        playerList.add(view.getNickname());
+        views.add(view);
 
         // Update builder with player and listener for their bookshelf.
-        gameBuilder.addPlayer(action.getView().getNickname());
+        gameBuilder.addPlayer(view.getNickname());
 
-        BookshelfListener bookshelfListener = new BookshelfListener(action.getView().getNickname());
+        BookshelfListener bookshelfListener = new BookshelfListener(view.getNickname());
         bookshelfListeners.add(bookshelfListener);
         gameBuilder.setBookshelfListener(bookshelfListener);
 
         // Update all waiting players that a new one just connected.
         for(ServerUpdateViewInterface v : views) {
             v.onWaitingUpdate(new WaitingUpdate(
-                    action.getView().getNickname(),
+                    view.getNickname(),
                     numberPlayers - playerList.size(),
                     true
             ));
@@ -353,21 +352,22 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param action information passed to {@code Controller} as a {@code SelectionFromLivingRoomAction}.
+     * @param positions List of {@code Position}s chosen by the client.
+     * @param view The view of the client performing the action.
      */
     @Override
-    public synchronized void perform(SelectionFromLivingRoomAction action) {
+    public synchronized void livingRoom(List<Position> positions, ServerUpdateViewInterface view) {
         if (ended ||
-                !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
+                !view.getNickname().equals(playerList.get(playerIndex)) ||
                 turnPhase != TurnPhase.LIVING_ROOM ||
-                !game.canTakeItemTiles(action.getSelectedPositions())) {
-            action.getView().onSelectedItems(new SelectedItems(null));
+                !game.canTakeItemTiles(positions)) {
+            view.onSelectedItems(new SelectedItems(null));
             return;
         }
 
-        Logger.selectItems(action.getSelectedPositions().size(), action.getView().getNickname(), id);
+        Logger.selectItems(positions.size(), view.getNickname(), id);
 
-        List<Item> items = game.selectItemTiles(action.getSelectedPositions());
+        List<Item> items = game.selectItemTiles(positions);
 
         notifyLivingRoomToEverybody();
 
@@ -383,23 +383,25 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param action information passed to {@code Controller} as a {@code SelectionColumnAndOrderAction}.
+     * @param column The index of the client's {@code Bookshelf} where to insert the selected {@code Item}s.
+     * @param permutation List of {@code Integer}s representing the order in which to insert in the {@code Bookshelf}.
+     * @param view The client's view performing the action.
      */
     @Override
-    public synchronized void perform(SelectionColumnAndOrderAction action) {
+    public synchronized void bookshelf(int column, List<Integer> permutation, ServerUpdateViewInterface view) {
         if (ended ||
-                !action.getView().getNickname().equals(game.getCurrentPlayer()) ||
+                !view.getNickname().equals(playerList.get(playerIndex)) ||
                 turnPhase != TurnPhase.BOOKSHELF ||
-                !game.canInsertItemTilesInBookshelf(action.getColumn(), action.getOrder())) {
-            action.getView().onAcceptedInsertion(new AcceptedInsertion(false));
+                !game.canInsertItemTilesInBookshelf(column, permutation)) {
+            view.onAcceptedInsertion(new AcceptedInsertion(false));
             return;
         }
 
-        Logger.selectColumn(action.getColumn(), action.getOrder(), action.getView().getNickname(), id);
+        Logger.selectColumn(column, permutation, view.getNickname(), id);
 
-        game.insertItemTilesInBookshelf(action.getColumn(), action.getOrder());
+        game.insertItemTilesInBookshelf(column, permutation);
 
-        action.getView().onAcceptedInsertion(new AcceptedInsertion(true));
+        view.onAcceptedInsertion(new AcceptedInsertion(true));
 
         notifyLivingRoomToEverybody();
         notifyBookshelvesToEverybody();
@@ -417,58 +419,60 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param action information passed to {@code Controller} as a {@code ChatMessageAction}.
+     * @param text The text send as message by the client.
+     * @param receiver The nickname of the receiver of the message ("all" if the message is broadcast).
+     * @param view The client's view performing the action.
      */
     @Override
-    public synchronized void perform(ChatMessageAction action) {
-        if (ended || game.getCurrentPlayer() == null || action.getReceiver().equals(action.getView().getNickname())) {
-            action.getView().onChatAccepted(new ChatAccepted(false));
+    public synchronized void chat(String text, String receiver, ServerUpdateViewInterface view) {
+        if (ended || playerIndex == -1 || receiver.equals(view.getNickname())) {
+            view.onChatAccepted(new ChatAccepted(false));
             // Action failed.
             return;
         }
 
-        ChatUpdate update = new ChatUpdate(action.getView().getNickname(),
-                action.getText(),
-                action.getReceiver());
+        ChatUpdate update = new ChatUpdate(view.getNickname(),
+                text,
+                receiver);
 
-        if (action.getReceiver().equals("all")) {
+        if (receiver.equals("all")) {
             // Broadcast chat message.
-            action.getView().onChatAccepted(new ChatAccepted(true));
+            view.onChatAccepted(new ChatAccepted(true));
 
-            Logger.sendMessage(action.getView().getNickname(), "all", id);
+            Logger.sendMessage(view.getNickname(), "all", id);
 
             for (ServerUpdateViewInterface v : views) {
                 v.onChatUpdate(update);
             }
         } else {
             // Unicast chat message.
-            ServerUpdateViewInterface view = null;
+            ServerUpdateViewInterface tmp = null;
             for(ServerUpdateViewInterface v : views) {
-                if (v.getNickname().equals(action.getReceiver())) {
-                    view = v;
+                if (v.getNickname().equals(receiver)) {
+                    tmp = v;
                     break;
                 }
             }
 
-            if (view == null) {
-                action.getView().onChatAccepted(new ChatAccepted(false));
+            if (tmp == null) {
+                view.onChatAccepted(new ChatAccepted(false));
                 return;
             }
 
-            Logger.sendMessage(action.getView().getNickname(), action.getReceiver(), id);
+            Logger.sendMessage(view.getNickname(), receiver, id);
 
-            action.getView().onChatUpdate(update);
             view.onChatUpdate(update);
+            tmp.onChatUpdate(update);
         }
     }
 
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param action information passed to {@code Controller} as a {@code DisconnectionAction}.
+     * @param view The client's view performing the action.
      */
     @Override
-    public synchronized void perform(DisconnectionAction action) {
+    public synchronized void disconnection(ServerUpdateViewInterface view) {
         // Game already finished.
         if (ended) return;
 
@@ -476,7 +480,7 @@ public class Controller implements ControllerInterface {
             // Disconnection during game-phase.
             // The game is killed.
             ended = true;
-            views.remove(action.getView());
+            views.remove(view);
             for (ServerUpdateViewInterface v : views) {
                 v.onEndGameUpdate(new EndGameUpdate(null));
             }
@@ -486,13 +490,13 @@ public class Controller implements ControllerInterface {
 
         // Disconnection during pre-game phase.
         // The game is not killed.
-        views.remove(action.getView());
-        gameBuilder.removePlayer(action.getView().getNickname());
-        gameBuilder.removeBookshelfListener(action.getView().getNickname());
-        playerList.remove(action.getView().getNickname());
+        views.remove(view);
+        gameBuilder.removePlayer(view.getNickname());
+        gameBuilder.removeBookshelfListener(view.getNickname());
+        playerList.remove(view.getNickname());
 
         for(ServerUpdateViewInterface v : views) {
-            v.onWaitingUpdate(new WaitingUpdate(action.getView().getNickname(),
+            v.onWaitingUpdate(new WaitingUpdate(view.getNickname(),
                     numberPlayers - playerList.size(),
                     false));
         }

@@ -4,10 +4,6 @@ import it.polimi.ingsw.controller.ControllerInterface;
 import it.polimi.ingsw.controller.Lobby;
 import it.polimi.ingsw.network.server.ServerConnection;
 import it.polimi.ingsw.utils.Logger;
-import it.polimi.ingsw.utils.action.ChatMessageAction;
-import it.polimi.ingsw.utils.action.DisconnectionAction;
-import it.polimi.ingsw.utils.action.SelectionColumnAndOrderAction;
-import it.polimi.ingsw.utils.action.SelectionFromLivingRoomAction;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
@@ -130,7 +126,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
                 return;
             }
         }
-        controller.perform(new SelectionFromLivingRoomAction(this, message.getPositions()));
+        controller.livingRoom(message.getPositions(), this);
     }
 
     @Override
@@ -141,7 +137,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
                 return;
             }
         }
-        controller.perform(new SelectionColumnAndOrderAction(this, message.getColumn(), message.getPermutation()));
+        controller.bookshelf(message.getColumn(), message.getPermutation(), this);
     }
 
     @Override
@@ -153,7 +149,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
             }
         }
 
-        controller.perform(new ChatMessageAction(this, message.getText(), message.getReceiver()));
+        controller.chat(message.getText(), message.getReceiver(), this);
     }
 
     @Override
@@ -172,7 +168,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
             flag = (controller != null);
         }
         if (flag) {
-            controller.perform(new DisconnectionAction(this));
+            controller.disconnection(this);
             if (controller.getNumberActualPlayers() < 1) Lobby.getInstance().removeController(controller);
         }
 

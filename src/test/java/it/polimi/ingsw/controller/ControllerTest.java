@@ -4,7 +4,6 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 import it.polimi.ingsw.utils.Logger;
-import it.polimi.ingsw.utils.action.*;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
 
@@ -44,10 +43,10 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
         assertTrue(controller.getConnectedPlayers().contains(view0.getNickname()));
         assertTrue(controller.getConnectedPlayers().contains(view1.getNickname()));
 
@@ -74,15 +73,15 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         VirtualView view2 = new VirtualView(new MockServerConnection());
         view2.setNickname("tick");
-        controller.perform(new JoinAction(view2));
+        controller.join(view2);
 
         assertTrue(controller.isStarted());
 
@@ -120,17 +119,17 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setEnded();
 
         VirtualView view2 = new VirtualView(new MockServerConnection());
         view2.setNickname("tick");
-        controller.perform(new JoinAction(view2));
+        controller.join(view2);
 
         assertTrue(controller.getViews().contains(view0));
         assertTrue(controller.getViews().contains(view1));
@@ -166,14 +165,14 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setEnded();
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>()));
+        controller.livingRoom(new ArrayList<>(), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
@@ -188,14 +187,14 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view1, new LinkedList<>()));
+        controller.livingRoom(new ArrayList<>(), view1); 
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
@@ -209,21 +208,21 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0); 
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>()));
+        controller.livingRoom(new ArrayList<>(), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
@@ -237,14 +236,14 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(0,0)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(0,0))), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
@@ -258,14 +257,14 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(1,3)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3))), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
@@ -279,22 +278,22 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setEnded();
-        controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>()));
+        controller.bookshelf(0, new ArrayList<>(), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
@@ -308,21 +307,21 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionColumnAndOrderAction(view1,0, new LinkedList<>()));
+        controller.bookshelf(0, new ArrayList<>(), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
@@ -336,14 +335,14 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionColumnAndOrderAction(view0,0, new LinkedList<>()));
+        controller.bookshelf(0, new ArrayList<>(), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
@@ -357,37 +356,37 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(1,3), new Position(2, 3)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3), new Position(2, 3))), view0);
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(0, 1))));
-
-        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(4,7), new Position(3, 7)))));
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(1, 0))));
+        controller.bookshelf(0, new ArrayList<>(List.of(0, 1)), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(4,1), new Position(5, 1)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(4,7), new Position(3, 7))), view0);
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(1, 0))));
+        controller.bookshelf(0, new ArrayList<>(List.of(1, 0)), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(3,2)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(4,1), new Position(5, 1))), view0);
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(0))));
+        controller.bookshelf(0, new ArrayList<>(List.of(1, 0)), view0);
+
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(3,2))), view0);
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.bookshelf(0, new ArrayList<>(List.of(0)), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
@@ -401,16 +400,16 @@ public class ControllerTest {
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         VirtualView view1 = new VirtualView(new MockServerConnection());
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new LinkedList<>(List.of(new Position(1,3), new Position(2, 3)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3), new Position(2, 3))), view0);
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionColumnAndOrderAction(view0, 0, new ArrayList<>(List.of(0, 1))));
+        controller.bookshelf(0, new ArrayList<>(List.of(0, 1)), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
@@ -426,17 +425,17 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         MockServerConnection mockServerConnection2 = new MockServerConnection();
         VirtualView view2 = new VirtualView(mockServerConnection2);
         view2.setNickname("tick");
-        controller.perform(new JoinAction(view2));
+        controller.join(view2);
 
         GameData failedJoin = (GameData) mockServerConnection2.list.get(0);
         assertEquals(-1,failedJoin.getNumberPlayers());
@@ -525,23 +524,23 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0, new ArrayList<>(List.of(new Position(2,3)))));
+        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
 
         List<Position> pos = new ArrayList<>();
         List<Message> list1 = new ArrayList<>(mockServerConnection0.list);
-        controller.perform(new SelectionFromLivingRoomAction(view0,pos));
+        controller.livingRoom(pos, view0);
         assertEquals(list1.size(),mockServerConnection0.list.size()-1);
         for(Message message : mockServerConnection0.list)
         {
@@ -566,12 +565,12 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         List<Position> pos = new ArrayList<>();
         pos.add(new Position(1, 3));
@@ -584,7 +583,7 @@ public class ControllerTest {
         }
         oldLivingRoom = (LivingRoomUpdate) mockServerConnection0.list.get(index);
 
-        controller.perform(new SelectionFromLivingRoomAction(view0, pos));
+        controller.livingRoom(pos, view0);
         SelectedItems selectedItems = (SelectedItems) mockServerConnection0.list.get(mockServerConnection0.list.size() - 1);
         LivingRoomUpdate adjournedLivingRoom = (LivingRoomUpdate) mockServerConnection0.list.get(mockServerConnection0.list.size() - 2);
         assertNull(adjournedLivingRoom.getLivingRoomUpdate().get(new Position(1, 3)));
@@ -616,15 +615,15 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         List<Integer> order = new ArrayList<>();
-        controller.perform(new SelectionColumnAndOrderAction(view0,0,order));
+        controller.bookshelf(0, order, view0);
 
         AcceptedInsertion acceptedInsertion = (AcceptedInsertion) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
         assertFalse(acceptedInsertion.isAccepted());
@@ -642,19 +641,19 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
         List<Position> pos = new ArrayList<>();
         pos.add(new Position(1,3));
         List<Integer> order = new ArrayList<>();
         order.add(0);
         controller.setCurrentPlayer(view0.getNickname());
-        controller.perform(new SelectionFromLivingRoomAction(view0,pos));
-        controller.perform(new SelectionColumnAndOrderAction(view0,0,order));
+        controller.livingRoom(pos, view0);
+        controller.bookshelf(0, order, view0);
         AcceptedInsertion acceptedInsertion;
         for(Message message : mockServerConnection0.list)
         {
@@ -721,15 +720,15 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         controller.setEnded();
-        controller.perform(new ChatMessageAction(view0,"Good Game","all"));
+        controller.chat("Good Game", "all", view0);
         ChatAccepted chatAccepted = (ChatAccepted) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
         assertFalse(chatAccepted.isAccepted());
     }
@@ -747,14 +746,14 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
-        controller.perform(new ChatMessageAction(view0,"Hello","all"));
+        controller.chat("Hello", "all", view0);
         ChatAccepted chatAccepted = (ChatAccepted) mockServerConnection0.list.get(mockServerConnection0.list.size()-2);
         assertTrue(chatAccepted.isAccepted());
         for(Message message : mockServerConnection0.list)
@@ -789,17 +788,17 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
-        controller.perform(new ChatMessageAction(view0,"Hello","john"));
+        controller.join(view1);
+        controller.chat("Hello", "john", view0);
         ChatAccepted chatAccepted = (ChatAccepted) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
         assertFalse(chatAccepted.isAccepted());
 
-        controller.perform(new ChatMessageAction(view0,"Hello", "rick"));
+        controller.chat("Hello", "rick", view0);
         ChatUpdate chatUpdate0 = (ChatUpdate) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
         ChatUpdate chatUpdate1 = (ChatUpdate) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
         assertTrue(chatUpdate0.getSender().equals("nick") && chatUpdate1.getSender().equals("nick"));
@@ -818,14 +817,14 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("rick");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
-        controller.perform(new DisconnectionAction(view0));
+        controller.disconnection(view0);
         assertTrue(controller.getEnded());
         for(ServerUpdateViewInterface v : controller.getViews())
         {
@@ -846,19 +845,19 @@ public class ControllerTest {
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
         view0.setNickname("nick");
-        controller.perform(new JoinAction(view0));
+        controller.join(view0);
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
         view1.setNickname("john");
-        controller.perform(new JoinAction(view1));
+        controller.join(view1);
 
         MockServerConnection mockServerConnection2 = new MockServerConnection();
         VirtualView view2 = new VirtualView(mockServerConnection2);
         view2.setNickname("rick");
-        controller.perform(new JoinAction(view2));
+        controller.join(view2);
 
-        controller.perform(new DisconnectionAction(view0));
+        controller.disconnection(view0);
         for(ServerUpdateViewInterface v : controller.getViews())
         {
             assertNotEquals(v,view0);
