@@ -8,12 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.ingsw.utils.game.Item;
 
 /**
- * Unit test for common goal card pattern 6
+ * Unit test for common goal card pattern 6.
  */
 
 public class CommonGoalCardPattern6Test {
     /**
-     * Testing pattern on empty bookshelf
+     * Testing pattern on empty bookshelf.
      */
     @Test
     public void testEmptyBookshelf()
@@ -24,10 +24,10 @@ public class CommonGoalCardPattern6Test {
     }
 
     /**
-     * Testing pattern on two rows of 4 different kinds
+     * Testing pattern on two rows of 4 different kinds.
      */
     @Test
-    public void testFourKinds()
+    public void testFourKindsOnTwoRows()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf();
@@ -47,10 +47,10 @@ public class CommonGoalCardPattern6Test {
     }
 
     /**
-     * Testing pattern on 1 row with 5 kinds
+     * Testing pattern on 1 row with 5 kinds.
      */
     @Test
-    public void testOneRow()
+    public void testFiveKindsOnOneRow()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf();
@@ -65,10 +65,10 @@ public class CommonGoalCardPattern6Test {
     }
 
     /**
-     * Testing pattern on 3 row with 5 kinds
+     * Testing pattern on 3 rows with 5 kinds.
      */
     @Test
-    public void testThreeRows()
+    public void testFiveKindsOnThreeRows()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(2, true, 5, 5);
         Bookshelf bookshelf = new Bookshelf();

@@ -9,11 +9,11 @@ import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 
 /**
- * Unit test for common goal card pattern 5
+ * Unit test for common goal card pattern 5.
  */
 public class CommonGoalCardPattern5Test {
     /**
-     * Test of pattern on an empty bookshelf
+     * Test of pattern on an empty bookshelf.
      */
     @Test
     public void testEmptyBookshelf()
@@ -24,10 +24,10 @@ public class CommonGoalCardPattern5Test {
     }
 
     /**
-     * Test of pattern with four different kinds in three columns
+     * Test of pattern with four different kinds in three columns.
      */
     @Test
-    public void testFourKinds()
+    public void testFourKindsInThreeColumns()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf();
@@ -42,10 +42,10 @@ public class CommonGoalCardPattern5Test {
         assertFalse(pattern.check(bookshelf));
     }
     /**
-     * Test of pattern with three different kinds in three columns
+     * Test of pattern with three different kinds in three columns.
      */
     @Test
-    public void testThreeKinds()
+    public void testThreeKindsInThreeColumns()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf(3,3);
@@ -60,10 +60,10 @@ public class CommonGoalCardPattern5Test {
         assertTrue(pattern.check(bookshelf));
     }
     /**
-     * Test of pattern with three different kinds in two columns
+     * Test of pattern with three different kinds in two columns.
      */
     @Test
-    public void testTwoColumns()
+    public void testThreeKindsInTwoColumns()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf();
@@ -79,10 +79,10 @@ public class CommonGoalCardPattern5Test {
     }
 
     /**
-     * Test of pattern with three not full column
+     * Test of pattern with three different kinds in a not full column.
      */
     @Test
-    public void testNotFull()
+    public void testThreeKindsNotFullColumn()
     {
         CommonGoalPatternInterface pattern = new CommonGoalPatternDistinctItems(3, false, 1, 3);
         Bookshelf bookshelf = new Bookshelf();

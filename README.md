@@ -17,10 +17,10 @@ The application requires at least Java 8 or later versions to run.
 ### Server
 ` java -jar MyShelfie.jar server [{hostName} {rmiPort} {socketPort}] `
 
-If the user omits the RMI and the Socket port the default ports will be automatically used.
+If the user omits the hostname, the RMI and the Socket port the default hostname and ports will be automatically used.
 
 ### Client
-` java -jar MyShelfie.jar client [{cli | gui} {tcp | rmi} {hostName} {numberPort}] ` 
+` java -jar MyShelfie.jar client {cli | gui} {tcp | rmi} [{hostName} {numberPort}] ` 
 
 If the user omits the hostname and the number port the default settings will be automatically used.
 

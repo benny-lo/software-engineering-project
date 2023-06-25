@@ -9,13 +9,16 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Unit test for common goal card pattern 9.
+ */
 public class CommonGoalCardPattern9Test {
 
     /**
-     * test if given a 3x3 Bookshelf full of CATs
+     * Test with a Bookshelf full of the same type of {@code Item}s.
      */
     @Test
-    public void testCorrect3x3(){
+    public void testFullBookshelf(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -26,10 +29,10 @@ public class CommonGoalCardPattern9Test {
         assertTrue(pattern.check(bookshelf));
     }
     /**
-     * test if given a 6x5 Bookshelf with the first two columns full of CATs and the rest is full of BOOKs, 2 correct groups
+     * Test with 2 different groups of {@code Item}s, both correct.
      */
     @Test
-    public void testDoubleCorrect6x5(){
+    public void testDoubleCorrect(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i<2; i++){
@@ -45,10 +48,10 @@ public class CommonGoalCardPattern9Test {
         assertTrue(pattern.check(bookshelf));
     }
     /**
-     * test if given a 6x5 Bookshelf with each row a different item
+     * Test with a Bookshelf with each row composed of a different {@code Item}.
      */
     @Test
-    public void testNoneCorrect6x5(){
+    public void testDifferentRows(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern9();
         Bookshelf bookshelf=new Bookshelf();
         for(int j=0; j< bookshelf.getColumns(); j++){
@@ -69,7 +72,7 @@ public class CommonGoalCardPattern9Test {
         assertFalse(pattern.check(bookshelf));
     }
     /**
-     * Test of pattern on an empty bookshelf.
+     * Test on an empty bookshelf.
      */
     @Test
     public void testEmptyBookshelf()

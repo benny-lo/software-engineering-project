@@ -9,12 +9,15 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+/**
+ * Unit test for common goal card pattern 12.
+ */
 public class CommonGoalCardPattern12Test {
     /**
-     * test given a 6x5 Bookshelf with 6 tiles in the first column and every column they decrease by 1
+     * Test with 6 {@code Item}s in the first column and every column's height decreases by 1.
      */
     @Test
-    public void testCorrect6x5rightToLeft(){
+    public void testLeftToRightDecreasedBy1(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=bookshelf.getColumns()-1; i>=0; i--){
@@ -25,10 +28,10 @@ public class CommonGoalCardPattern12Test {
         assertTrue(pattern.check(bookshelf));
     }
     /**
-     * test given a 6x5 Bookshelf with 1 tile in the first column and every column they increase by 1
+     * Test with 1 {@code Item} in the first column and every column's height increases by 1.
      */
     @Test
-    public void testCorrect6x5leftToRight(){
+    public void testLeftToRightIncreasedBy1(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -39,11 +42,10 @@ public class CommonGoalCardPattern12Test {
         assertTrue(pattern.check(bookshelf));
     }
     /**
-     * test given a 6x5 Bookshelf with 1 tile in the first column and every column they increase by 1,
-     * but one more tile in the fourth column
+     * Test with 1 {@code Item} in the first column and every column's height increases by 1, but the fourth column has too many {@code Item}s.
      */
     @Test
-    public void testIncorrect6x5leftToRight(){
+    public void testLeftToRightIncreasedBy1WithMistake(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int i=0; i< bookshelf.getColumns(); i++){
@@ -55,10 +57,10 @@ public class CommonGoalCardPattern12Test {
         assertFalse(pattern.check(bookshelf));
     }
     /**
-     * test given a 3x3 Bookshelf full of CATs
+     * Test on a full Bookshelf.
      */
     @Test
-    public void testIncorrect3x3(){
+    public void testFullBookshelf(){
         CommonGoalPatternInterface pattern = new CommonGoalPattern12();
         Bookshelf bookshelf=new Bookshelf();
         for(int j=0; j< bookshelf.getColumns(); j++){
@@ -67,7 +69,7 @@ public class CommonGoalCardPattern12Test {
         assertFalse(pattern.check(bookshelf));
     }
     /**
-     * Test of pattern on an empty bookshelf.
+     * Test on an empty bookshelf.
      */
     @Test
     public void testEmptyBookshelf()

@@ -31,7 +31,7 @@ public class BoardManagerTest {
     }
 
     /**
-     *  Test {@code BoardManager}'s method {@code fill} on a null.
+     *  Test {@code BoardManager}'s method {@code fill} on a null tile.
      */
     @Test
     public void testFillOnNull(){

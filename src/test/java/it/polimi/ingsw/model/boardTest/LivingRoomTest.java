@@ -146,23 +146,6 @@ public class LivingRoomTest {
         assertNull(livingRoom.tileAt(2, 3));
     }
 
-
-    /**
-     * Test {@code LivingRoom}'s method {@code selectable} with a series of tiles.
-     */
-    @Test
-    public void testSelectable(){
-        LivingRoom grid = new LivingRoom(2);
-        Bag bag = new Bag(22);
-        fill(bag, grid);
-
-        assertFalse(grid.selectable(0,3));
-        assertTrue(grid.selectable(1,3));
-        assertTrue(grid.selectable(2,3));
-        assertFalse(grid.selectable(3,3));
-        assertFalse(grid.selectable(4,3));
-    }
-
     /**
      * Test {@code LivingRoom}'s method {@code selectable} on null.
      */

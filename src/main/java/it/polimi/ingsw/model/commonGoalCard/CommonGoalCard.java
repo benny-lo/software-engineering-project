@@ -46,7 +46,11 @@ public class CommonGoalCard {
      * @return the {@code ScoringToken} taken.
      */
     public ScoringToken popToken() {
-        return tokens.pop();
+        try {
+            return tokens.pop();
+        } catch (EmptyStackException e) {
+            return null;
+        }
     }
 
     /**
@@ -72,7 +76,7 @@ public class CommonGoalCard {
 
     /**
      * Getter of id of {@code this}
-     * @return Id of the CommonGoalCard
+     * @return id of the CommonGoalCard
      */
     public int getId() {
         return id;
