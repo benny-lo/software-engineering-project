@@ -16,20 +16,29 @@ import java.util.TimerTask;
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
     private static final int RTT = 5000;
     private ServerConnectionRMIInterface serverConnectionRMIInterface;
-    private final ClientUpdateViewInterface receiver;
+    private final ClientUpdateViewInterface listener;
     private final Timer serverTimer;
     private final Timer clientTimer;
     private final Object beepLock;
     private Beep serverBeep;
 
-    public ClientConnectionRMI(ClientUpdateViewInterface receiver) throws RemoteException {
+    /**
+     * Constructs a new {@code ClientConnectionRMI}. It sets the listener of the network.
+     * @param listener The listener of the network.
+     * @throws RemoteException Rmi exception. It is the one thrown by the no-args constructor
+     * of {@code UnicastRemoteObject}.
+     */
+    public ClientConnectionRMI(ClientUpdateViewInterface listener) throws RemoteException {
         super();
-        this.receiver = receiver;
+        this.listener = listener;
         this.serverTimer = new Timer();
         this.clientTimer = new Timer();
         beepLock = new Object();
     }
 
+    /**
+     * Schedules the timers to send and check for {@code Beep}s (heartbeats) periodically.
+     */
     public void scheduleTimers() {
         serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -43,7 +52,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
 
                 serverTimer.cancel();
                 clientTimer.cancel();
-                receiver.onDisconnection();
+                listener.onDisconnection();
             }
         }, RTT, 2*RTT);
 
@@ -55,16 +64,24 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                 } catch (RemoteException e) {
                     serverTimer.cancel();
                     clientTimer.cancel();
-                    receiver.onDisconnection();
+                    listener.onDisconnection();
                 }
             }
         }, 0, 2*RTT);
     }
 
+    /**
+     * Sets the server RMI interface.
+     * @param serverConnectionRMIInterface The server RMI interface.
+     */
     public void setServerConnectionRMIInterface(ServerConnectionRMIInterface serverConnectionRMIInterface) {
         this.serverConnectionRMIInterface = serverConnectionRMIInterface;
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(Nickname message) {
         try {
@@ -72,10 +89,14 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            receiver.onDisconnection();
+            listener.onDisconnection();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(GameInitialization message) {
         try {
@@ -83,10 +104,14 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            receiver.onDisconnection();
+            listener.onDisconnection();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(GameSelection message) {
         try {
@@ -94,10 +119,14 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            receiver.onDisconnection();
+            listener.onDisconnection();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(LivingRoomSelection message) {
         try {
@@ -105,10 +134,14 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            receiver.onDisconnection();
+            listener.onDisconnection();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(BookshelfInsertion message) {
         try {
@@ -116,10 +149,14 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            receiver.onDisconnection();
+            listener.onDisconnection();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message the message to send.
+     */
     @Override
     public void send(ChatMessage message) {
         try {
@@ -127,85 +164,165 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         } catch (RemoteException e) {
             serverTimer.cancel();
             clientTimer.cancel();
-            receiver.onDisconnection();
+            listener.onDisconnection();
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(LivingRoomUpdate update) throws RemoteException {
-        receiver.onLivingRoomUpdate(update);
+        listener.onLivingRoomUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(BookshelfUpdate update) throws RemoteException {
-        receiver.onBookshelfUpdate(update);
+        listener.onBookshelfUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(WaitingUpdate update) throws RemoteException {
-        receiver.onWaitingUpdate(update);
+        listener.onWaitingUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(ScoresUpdate update) throws RemoteException {
-        receiver.onScoresUpdate(update);
+        listener.onScoresUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(EndingTokenUpdate update) throws RemoteException {
-        receiver.onEndingTokenUpdate(update);
+        listener.onEndingTokenUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(CommonGoalCardsUpdate update) throws RemoteException {
-        receiver.onCommonGoalCardsUpdate(update);
+        listener.onCommonGoalCardsUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(PersonalGoalCardUpdate update) throws RemoteException {
-        receiver.onPersonalGoalCardUpdate(update);
+        listener.onPersonalGoalCardUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(ChatUpdate update) throws RemoteException {
-        receiver.onChatUpdate(update);
+        listener.onChatUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(StartTurnUpdate update) throws RemoteException {
-        receiver.onStartTurnUpdate(update);
+        listener.onStartTurnUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(EndGameUpdate update) throws RemoteException {
-        receiver.onEndGameUpdate(update);
+        listener.onEndGameUpdate(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param list The {@code GamesList} to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(GamesList list) throws RemoteException {
-        receiver.onGamesList(list);
+        listener.onGamesList(list);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param selected The {@code SelectedItems} object to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(SelectedItems selected) throws RemoteException {
-        receiver.onSelectedItems(selected);
+        listener.onSelectedItems(selected);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param gameData The {@code GameData} object to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(GameData gameData) throws RemoteException {
-        receiver.onGameData(gameData);
+        listener.onGameData(gameData);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param acceptedInsertion The {@code AcceptedInsertion} object to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(AcceptedInsertion acceptedInsertion) throws RemoteException {
-        receiver.onAcceptedInsertion(acceptedInsertion);
+        listener.onAcceptedInsertion(acceptedInsertion);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param chatAccepted The {@code ChatAccepted} object to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(ChatAccepted chatAccepted) throws RemoteException {
-        receiver.onChatAccepted(chatAccepted);
+        listener.onChatAccepted(chatAccepted);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param beep The {@code Beep} object to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     @Override
     public void receive(Beep beep) throws RemoteException {
         synchronized (beepLock) {
