@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.board;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.utils.game.Item;
-import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.Item;
+import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
 
 import java.io.*;
@@ -113,7 +113,7 @@ public class BoardManager {
     public List<Item> selectItemTiles(List<Position> positions) {
         if (livingRoomListener != null) {
             for (Position p : positions) {
-                livingRoomListener.updateState(new Position(p), null);
+                livingRoomListener.updateState(p, null);
             }
         }
         return livingRoom.selectTiles(positions);

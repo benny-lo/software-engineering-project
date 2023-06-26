@@ -1,7 +1,7 @@
 package it.polimi.ingsw.controller.modelListener;
 
-import it.polimi.ingsw.utils.game.Item;
-import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.Item;
+import it.polimi.ingsw.utils.Position;
 
 import java.util.HashMap;
 import java.util.Map;

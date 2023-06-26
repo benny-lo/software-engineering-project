@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.board;
 
-import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.Item;
 
 import java.util.Collections;
 import java.util.Stack;

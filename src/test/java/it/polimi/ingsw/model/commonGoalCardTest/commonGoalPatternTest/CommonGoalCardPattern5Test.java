@@ -1,5 +1,5 @@
 package it.polimi.ingsw.model.commonGoalCardTest.commonGoalPatternTest;
-import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.Item;
 
 import static org.junit.jupiter.api.Assertions.*;
 

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.commonGoalCard.commonGoalPattern;
 
-import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.player.Bookshelf;
 
 import java.util.ArrayList;

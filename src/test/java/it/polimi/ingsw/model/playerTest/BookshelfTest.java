@@ -2,7 +2,7 @@ package it.polimi.ingsw.model.playerTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 

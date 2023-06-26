@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.boardTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.utils.game.Item;
-import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.Item;
+import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.board.Bag;
 import it.polimi.ingsw.model.board.LivingRoom;
 import org.junit.jupiter.api.Test;

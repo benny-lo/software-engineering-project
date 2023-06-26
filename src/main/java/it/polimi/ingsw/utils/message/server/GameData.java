@@ -4,6 +4,9 @@ import it.polimi.ingsw.utils.message.Message;
 
 import java.util.Collection;
 
+/**
+ * Message sent by the server when a client enters a {@code Game}.
+ */
 public class GameData extends Message {
     private final int numberPlayers;
     private final Collection<String> connectedPlayers;
@@ -14,14 +17,14 @@ public class GameData extends Message {
     private final int bookshelvesColumns;
 
     /**
-     * Constructor for the class
-     * @param numberPlayers - the number of players
-     * @param connectedPlayers - collection of connected players
-     * @param numberCommonGoalCards - the number of common goal cards
-     * @param livingRoomRows - the number of the rows of the living room
-     * @param livingRoomColumns - the number of the columns of the living room
-     * @param bookshelvesRows - the number of the rows of the bookshelves
-     * @param bookshelvesColumns - the number of the columns of the bookshelves
+     * Constructor for the class. It sets all {@code Game} parameters.
+     * @param numberPlayers The number of players.
+     * @param connectedPlayers Collection of connected players so far in the joined {@code Game}.
+     * @param numberCommonGoalCards The number of common goal cards.
+     * @param livingRoomRows The number of the rows of the living room.
+     * @param livingRoomColumns The number of the columns of the living room.
+     * @param bookshelvesRows The number of the rows of the bookshelves.
+     * @param bookshelvesColumns The number of the columns of the bookshelves.
      */
     public GameData(int numberPlayers, Collection<String> connectedPlayers, int numberCommonGoalCards, int livingRoomRows, int livingRoomColumns, int bookshelvesRows, int bookshelvesColumns) {
         this.numberPlayers = numberPlayers;
@@ -32,53 +35,57 @@ public class GameData extends Message {
         this.bookshelvesRows = bookshelvesRows;
         this.bookshelvesColumns = bookshelvesColumns;
     }
+
     /**
-     * Getter for the number of players
-     * @return - the number of players
+     * Getter for the number of players.
+     * @return The number of players.
      */
     public int getNumberPlayers() {
         return numberPlayers;
     }
 
     /**
-     * Getter for the players connected in this game
-     * @return - a collection of the connected players
+     * Getter for the players connected in this game.
+     * @return {@code Collection} of the connected players.
      */
     public Collection<String> getConnectedPlayers() {
         return connectedPlayers;
     }
 
     /**
-     * Getter for number of common goal cards
-     * @return - the number of common goal cards
+     * Getter for number of {@code CommonGoalCard}s.
+     * @return The number of {@code CommonGoalCard}s
      */
     public int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
     }
+
     /**
-     * Getter for the Living Room rows
-     * @return - the number of living room rows
+     * Getter for the number of {@code LivingRoom} rows.
+     * @return The number of {@code LivingRoom} rows.
      */
     public int getLivingRoomRows() {
         return livingRoomRows;
     }
+
     /**
-     * Getter for the Living Room columns
-     * @return - the number of living room columns
+     * Getter for the number of {@code LivingRoom} columns.
+     * @return The number of {@code LivingRoom} columns.
      */
     public int getLivingRoomColumns() {
         return livingRoomColumns;
     }
+
     /**
-     * Getter for the Bookshelves rows
-     * @return - the number of Bookshelves columns
+     * Getter for the {@code Bookshelf}s rows.
+     * @return The number of {@code Bookshelf}s rows.
      */
     public int getBookshelvesRows() {
         return bookshelvesRows;
     }
     /**
-     * Getter for the Bookshelves Columns
-     * @return - the number of Bookshelves rows
+     * Getter for the {@code Bookshelf}s columns.
+     * @return The number of {@code Bookshelf}s columns.
      */
     public int getBookshelvesColumns() {
         return bookshelvesColumns;
