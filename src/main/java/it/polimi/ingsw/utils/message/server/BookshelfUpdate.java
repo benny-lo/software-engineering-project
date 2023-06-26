@@ -6,14 +6,17 @@ import it.polimi.ingsw.utils.message.Message;
 
 import java.util.Map;
 
+/**
+ * Message sent by the server when updates to the {@code Bookshelf} happen.
+ */
 public class BookshelfUpdate extends Message {
     private final String owner;
     private final Map<Position, Item> bookshelf;
 
     /**
-     * Constructor for the class
-     * @param owner - the player that owns the bookshelf
-     * @param bookshelf - a map of the items on the bookshelf.
+     * Constructor for the class. It sets the owner and bookshelf.
+     * @param owner The player that owns the bookshelf.
+     * @param bookshelf A {@code Map} of {@code Position} -> {@code Item} that changed.
      */
     public BookshelfUpdate(String owner, Map<Position, Item> bookshelf) {
         this.owner = owner;
@@ -21,16 +24,16 @@ public class BookshelfUpdate extends Message {
     }
 
     /**
-     * Getter for the owner of the bookshelf
-     * @return - the player that owns the bookshelf
+     * Getter for the owner of the bookshelf.
+     * @return The player that owns the bookshelf.
      */
     public String getOwner() {
         return owner;
     }
 
     /**
-     * Getter for the map of the bookshelf
-     * @return - the map of the items on the bookshelf.
+     * Getter for the updates to the {@code Bookshelf}.
+     * @return The {@code Map} of updates.
      */
     public Map<Position, Item> getBookshelf() {
         return bookshelf;

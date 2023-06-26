@@ -2,14 +2,17 @@ package it.polimi.ingsw.utils.message.client;
 
 import it.polimi.ingsw.utils.message.Message;
 
+/**
+ * Message sent by the client representing the chosen parameters for the game.
+ */
 public class GameInitialization extends Message {
     private final int numberPlayers;
     private final int numberCommonGoalCards;
 
     /**
-     * Constructor for the class
-     * @param numberPlayers - number of players that start the game
-     * @param numberCommonGoalCards - number of common goal cards needed
+     * Constructor for the class. It sets the number of players and the number of common goal cards.
+     * @param numberPlayers number of players that start the game
+     * @param numberCommonGoalCards number of common goal cards needed
      */
     public GameInitialization(int numberPlayers, int numberCommonGoalCards) {
         super();
@@ -19,7 +22,7 @@ public class GameInitialization extends Message {
 
     /**
      * Getter for the number of players
-     * @return - the number of players
+     * @return the number of players
      */
     public int getNumberPlayers() {
         return numberPlayers;
@@ -27,7 +30,7 @@ public class GameInitialization extends Message {
 
     /**
      * Getter for the number of common goal cards
-     * @return - the number of common goal cards
+     * @return the number of common goal cards
      */
     public int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
