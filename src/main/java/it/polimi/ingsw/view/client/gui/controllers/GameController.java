@@ -54,7 +54,7 @@ public class GameController implements Initializable {
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     private final Stage chatStage = new Stage();
     private final Map <String, Integer> scores = new HashMap<>();
-    private GameControllerStatus status = GameControllerStatus.Waiting;
+    private GameControllerStatus status = GameControllerStatus.WAITING;
     private final Alert errorAlert = new Alert(Alert.AlertType.ERROR);
     private int firstCommonGoalCardId;
     private int secondCommonGoalCardId;
@@ -138,7 +138,7 @@ public class GameController implements Initializable {
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;
         if (currentPlayer.equals(nickname)) {
-            status = GameControllerStatus.LivingRoom;
+            status = GameControllerStatus.LIVING_ROOM;
             currentPlayerLabel.setText("It's your turn!");
         }
         else
@@ -226,7 +226,7 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-        if (!status.equals(GameControllerStatus.LivingRoom)) {
+        if (!status.equals(GameControllerStatus.LIVING_ROOM)) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You cannot do this now!");
             warningAlert.showAndWait();
@@ -254,7 +254,7 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-        if (!status.equals(GameControllerStatus.LivingRoom)) {
+        if (!status.equals(GameControllerStatus.LIVING_ROOM)) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You cannot do this now!");
             warningAlert.showAndWait();
@@ -271,7 +271,7 @@ public class GameController implements Initializable {
 
     public void setChosenItems(List<Item> chosenItems){
         if (!currentPlayer.equals(nickname)) return;
-        status = GameControllerStatus.Bookshelf;
+        status = GameControllerStatus.BOOKSHELF;
         this.chosenItems = chosenItems;
         updateChosenItemsImageView();
     }
@@ -318,7 +318,7 @@ public class GameController implements Initializable {
 
     public void selectOrder(ImageView selected) {
         if (!guInterface.getNickname().equals(currentPlayer)) return;
-        if (!status.equals(GameControllerStatus.Bookshelf)) {
+        if (!status.equals(GameControllerStatus.BOOKSHELF)) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You cannot do this now!");
             warningAlert.showAndWait();
@@ -373,7 +373,7 @@ public class GameController implements Initializable {
             warningAlert.showAndWait();
             return;
         }
-        if (!status.equals(GameControllerStatus.Bookshelf)) {
+        if (!status.equals(GameControllerStatus.BOOKSHELF)) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You cannot do this now!");
             warningAlert.showAndWait();
@@ -405,7 +405,7 @@ public class GameController implements Initializable {
             clearChosenItemLabels();
         }
         endTurnClear();
-        status = GameControllerStatus.Waiting;
+        status = GameControllerStatus.WAITING;
     }
 
     private int findFreeRowBookshelf(GridPane bookshelfGridPane, int column) {
