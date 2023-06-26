@@ -326,6 +326,7 @@ public class Controller implements ControllerInterface {
         playerList.add(view.getNickname());
         views.add(view);
 
+
         // Update builder with player and listener for their bookshelf.
         gameBuilder.addPlayer(view.getNickname());
 
@@ -541,14 +542,6 @@ public class Controller implements ControllerInterface {
     }
 
     // EXCLUSIVELY FOR TESTING
-    /**
-     * Getter for the ended value, used only for testing
-     * @return True if the game has ended , false otherwise.
-     */
-    public boolean getEnded()
-    {
-        return this.ended;
-    }
 
     /**
      * Setter for the ended value, used only for testing. Sets the value of ended to true.
@@ -565,21 +558,5 @@ public class Controller implements ControllerInterface {
         if (nickname == null) return;
         playerIndex = playerList.indexOf(nickname);
         game.setCurrentPlayer(nickname);
-    }
-
-    /**
-     * Getter for the game model, used only for testing.
-     * @return A GameInterface of the game model.
-     */
-    public GameInterface getGame(){
-        return game;
-    }
-
-    /**
-     * Getter for the TurnPhase, used only for testing.
-     * @return The current turnPhase.
-     */
-    public TurnPhase getTurnPhase(){
-        return turnPhase;
     }
 }

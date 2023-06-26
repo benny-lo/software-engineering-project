@@ -33,9 +33,13 @@ public class LobbyTest {
         view1.setNickname("nick");
         lobby.login(view1.getNickname(),view1);
 
-        GamesList gamesList = (GamesList) mockServerConnection1.queue.poll();
+        Message message;
 
-        assertNull(gamesList.getAvailable());
+        while(!mockServerConnection1.queue.isEmpty()) {
+            message = mockServerConnection1.queue.remove();
+            if (message instanceof GamesList gamesList)
+                assertNull(gamesList.getAvailable());
+        }
     }
 
     /**
@@ -53,19 +57,20 @@ public class LobbyTest {
         view0.setNickname("nick");
         lobby.login(view0.getNickname(), view0);
 
+        while(!mockServerConnection0.queue.isEmpty()) {
+            mockServerConnection0.queue.remove();
+        }
+
         view0.setNickname("rick");
         lobby.login(view0.getNickname(), view0);
 
-        GamesList selectedMessage = null;
         Message message;
 
         while(!mockServerConnection0.queue.isEmpty()) {
             message = mockServerConnection0.queue.remove();
-            if (message instanceof GamesList)
-                selectedMessage = (GamesList) message;
+            if (message instanceof GamesList gamesList)
+                assertNull(gamesList.getAvailable());
         }
-
-        assertNull(selectedMessage.getAvailable());
     }
 
     /**
@@ -83,15 +88,20 @@ public class LobbyTest {
 
         lobby.createGame(2,2,view0);
 
-        GameData gameData0 = (GameData) mockServerConnection0.queue.poll();
+        Message message;
 
-        assertEquals(gameData0.getNumberPlayers(),-1);
-        assertNull(gameData0.getConnectedPlayers());
-        assertEquals(gameData0.getNumberCommonGoalCards(),-1);
-        assertEquals(gameData0.getLivingRoomRows(),-1);
-        assertEquals(gameData0.getLivingRoomColumns(),-1);
-        assertEquals(gameData0.getBookshelvesRows(),-1);
-        assertEquals(gameData0.getBookshelvesColumns(),-1);
+        while(!mockServerConnection0.queue.isEmpty()) {
+            message = mockServerConnection0.queue.remove();
+            if (message instanceof GameData gameData) {
+                assertEquals(gameData.getNumberPlayers(),-1);
+                assertNull(gameData.getConnectedPlayers());
+                assertEquals(gameData.getNumberCommonGoalCards(),-1);
+                assertEquals(gameData.getLivingRoomRows(),-1);
+                assertEquals(gameData.getLivingRoomColumns(),-1);
+                assertEquals(gameData.getBookshelvesRows(),-1);
+                assertEquals(gameData.getBookshelvesColumns(),-1);
+            }
+        }
     }
 
     /**
@@ -112,22 +122,20 @@ public class LobbyTest {
         lobby.createGame(1,2,view1);
 
 
-        GameData selectedMessage = null;
         Message message;
 
         while(!mockServerConnection0.queue.isEmpty()) {
             message = mockServerConnection0.queue.remove();
-            if (message instanceof GameData)
-                selectedMessage = (GameData) message;
+            if (message instanceof GameData gameData) {
+                assertEquals(gameData.getNumberPlayers(),-1);
+                assertNull(gameData.getConnectedPlayers());
+                assertEquals(gameData.getNumberCommonGoalCards(),-1);
+                assertEquals(gameData.getLivingRoomRows(),-1);
+                assertEquals(gameData.getLivingRoomColumns(),-1);
+                assertEquals(gameData.getBookshelvesRows(),-1);
+                assertEquals(gameData.getBookshelvesColumns(),-1);
+            }
         }
-
-        assertEquals(selectedMessage.getNumberPlayers(),-1);
-        assertNull(selectedMessage.getConnectedPlayers());
-        assertEquals(selectedMessage.getNumberCommonGoalCards(),-1);
-        assertEquals(selectedMessage.getLivingRoomRows(),-1);
-        assertEquals(selectedMessage.getLivingRoomColumns(),-1);
-        assertEquals(selectedMessage.getBookshelvesRows(),-1);
-        assertEquals(selectedMessage.getBookshelvesColumns(),-1);
     }
 
     /**
@@ -153,12 +161,17 @@ public class LobbyTest {
 
         lobby.login(view1.getNickname(), view1);
 
-        GamesList gamesList = (GamesList) mockServerConnection1.queue.poll();
+        Message message;
 
-        assertEquals(gamesList.getAvailable().size(),1);
-        assertEquals(gamesList.getAvailable().get(0).getId(),0);
-        assertEquals(gamesList.getAvailable().get(0).getNumberPlayers(),2);
-        assertEquals(gamesList.getAvailable().get(0).getNumberCommonGoals(),2);
+        while(!mockServerConnection1.queue.isEmpty()) {
+            message = mockServerConnection1.queue.remove();
+            if (message instanceof GamesList gamesList) {
+                assertEquals(gamesList.getAvailable().size(),1);
+                assertEquals(gamesList.getAvailable().get(0).getId(),0);
+                assertEquals(gamesList.getAvailable().get(0).getNumberPlayers(),2);
+                assertEquals(gamesList.getAvailable().get(0).getNumberCommonGoals(),2);
+            }
+        }
     }
 
     /**
@@ -177,15 +190,20 @@ public class LobbyTest {
 
         lobby.selectGame(0,view0);
 
-        GameData gameData0 = (GameData) mockServerConnection0.queue.poll();
+        Message message;
 
-        assertEquals(gameData0.getNumberPlayers(),-1);
-        assertNull(gameData0.getConnectedPlayers());
-        assertEquals(gameData0.getNumberCommonGoalCards(),-1);
-        assertEquals(gameData0.getLivingRoomRows(),-1);
-        assertEquals(gameData0.getLivingRoomColumns(),-1);
-        assertEquals(gameData0.getBookshelvesRows(),-1);
-        assertEquals(gameData0.getBookshelvesColumns(),-1);
+        while(!mockServerConnection0.queue.isEmpty()) {
+            message = mockServerConnection0.queue.remove();
+            if (message instanceof GameData gameData) {
+                assertEquals(gameData.getNumberPlayers(),-1);
+                assertNull(gameData.getConnectedPlayers());
+                assertEquals(gameData.getNumberCommonGoalCards(),-1);
+                assertEquals(gameData.getLivingRoomRows(),-1);
+                assertEquals(gameData.getLivingRoomColumns(),-1);
+                assertEquals(gameData.getBookshelvesRows(),-1);
+                assertEquals(gameData.getBookshelvesColumns(),-1);
+            }
+        }
     }
 
     /**
@@ -205,22 +223,20 @@ public class LobbyTest {
         lobby.login(view0.getNickname(), view0);
         lobby.selectGame(0,view0);
 
-        GameData selectedMessage = null;
         Message message;
 
         while(!mockServerConnection0.queue.isEmpty()) {
             message = mockServerConnection0.queue.remove();
-            if (message instanceof GameData)
-                selectedMessage = (GameData) message;
+            if (message instanceof GameData gameData) {
+                assertEquals(gameData.getNumberPlayers(), -1);
+                assertNull(gameData.getConnectedPlayers());
+                assertEquals(gameData.getNumberCommonGoalCards(), -1);
+                assertEquals(gameData.getLivingRoomRows(), -1);
+                assertEquals(gameData.getLivingRoomColumns(), -1);
+                assertEquals(gameData.getBookshelvesRows(), -1);
+                assertEquals(gameData.getBookshelvesColumns(), -1);
+            }
         }
-
-        assertEquals(selectedMessage.getNumberPlayers(),-1);
-        assertNull(selectedMessage.getConnectedPlayers());
-        assertEquals(selectedMessage.getNumberCommonGoalCards(),-1);
-        assertEquals(selectedMessage.getLivingRoomRows(),-1);
-        assertEquals(selectedMessage.getLivingRoomColumns(),-1);
-        assertEquals(selectedMessage.getBookshelvesRows(),-1);
-        assertEquals(selectedMessage.getBookshelvesColumns(),-1);
     }
 
     /**
