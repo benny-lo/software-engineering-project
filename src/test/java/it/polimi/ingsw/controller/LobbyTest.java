@@ -1,7 +1,5 @@
 package it.polimi.ingsw.controller;
 
-
-
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.server.*;
@@ -35,7 +33,7 @@ public class LobbyTest {
         view1.setNickname("nick");
         lobby.login(view1.getNickname(),view1);
 
-        GamesList gamesList = (GamesList) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
+        GamesList gamesList = (GamesList) mockServerConnection1.queue.poll();
 
         assertNull(gamesList.getAvailable());
     }
@@ -58,9 +56,16 @@ public class LobbyTest {
         view0.setNickname("rick");
         lobby.login(view0.getNickname(), view0);
 
-        GamesList gamesList = (GamesList) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        GamesList selectedMessage = null;
+        Message message;
 
-        assertNull(gamesList.getAvailable());
+        while(!mockServerConnection0.queue.isEmpty()) {
+            message = mockServerConnection0.queue.remove();
+            if (message instanceof GamesList)
+                selectedMessage = (GamesList) message;
+        }
+
+        assertNull(selectedMessage.getAvailable());
     }
 
     /**
@@ -78,7 +83,7 @@ public class LobbyTest {
 
         lobby.createGame(2,2,view0);
 
-        GameData gameData0 = (GameData) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        GameData gameData0 = (GameData) mockServerConnection0.queue.poll();
 
         assertEquals(gameData0.getNumberPlayers(),-1);
         assertNull(gameData0.getConnectedPlayers());
@@ -99,22 +104,30 @@ public class LobbyTest {
         Lobby.setNull();
         Lobby lobby = Lobby.getInstance();
 
-        MockServerConnection mockServerConnection1 = new MockServerConnection();
-        VirtualView view1 = new VirtualView(mockServerConnection1);
+        MockServerConnection mockServerConnection0 = new MockServerConnection();
+        VirtualView view1 = new VirtualView(mockServerConnection0);
         view1.setNickname("rick");
 
         lobby.login(view1.getNickname(), view1);
         lobby.createGame(1,2,view1);
 
-        GameData gameData1 = (GameData) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
 
-        assertEquals(gameData1.getNumberPlayers(),-1);
-        assertNull(gameData1.getConnectedPlayers());
-        assertEquals(gameData1.getNumberCommonGoalCards(),-1);
-        assertEquals(gameData1.getLivingRoomRows(),-1);
-        assertEquals(gameData1.getLivingRoomColumns(),-1);
-        assertEquals(gameData1.getBookshelvesRows(),-1);
-        assertEquals(gameData1.getBookshelvesColumns(),-1);
+        GameData selectedMessage = null;
+        Message message;
+
+        while(!mockServerConnection0.queue.isEmpty()) {
+            message = mockServerConnection0.queue.remove();
+            if (message instanceof GameData)
+                selectedMessage = (GameData) message;
+        }
+
+        assertEquals(selectedMessage.getNumberPlayers(),-1);
+        assertNull(selectedMessage.getConnectedPlayers());
+        assertEquals(selectedMessage.getNumberCommonGoalCards(),-1);
+        assertEquals(selectedMessage.getLivingRoomRows(),-1);
+        assertEquals(selectedMessage.getLivingRoomColumns(),-1);
+        assertEquals(selectedMessage.getBookshelvesRows(),-1);
+        assertEquals(selectedMessage.getBookshelvesColumns(),-1);
     }
 
     /**
@@ -140,7 +153,7 @@ public class LobbyTest {
 
         lobby.login(view1.getNickname(), view1);
 
-        GamesList gamesList = (GamesList) mockServerConnection1.list.get(mockServerConnection1.list.size()-1);
+        GamesList gamesList = (GamesList) mockServerConnection1.queue.poll();
 
         assertEquals(gamesList.getAvailable().size(),1);
         assertEquals(gamesList.getAvailable().get(0).getId(),0);
@@ -164,7 +177,7 @@ public class LobbyTest {
 
         lobby.selectGame(0,view0);
 
-        GameData gameData0 = (GameData) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        GameData gameData0 = (GameData) mockServerConnection0.queue.poll();
 
         assertEquals(gameData0.getNumberPlayers(),-1);
         assertNull(gameData0.getConnectedPlayers());
@@ -192,15 +205,22 @@ public class LobbyTest {
         lobby.login(view0.getNickname(), view0);
         lobby.selectGame(0,view0);
 
-        GameData gameData1 = (GameData) mockServerConnection0.list.get(mockServerConnection0.list.size()-1);
+        GameData selectedMessage = null;
+        Message message;
 
-        assertEquals(gameData1.getNumberPlayers(),-1);
-        assertNull(gameData1.getConnectedPlayers());
-        assertEquals(gameData1.getNumberCommonGoalCards(),-1);
-        assertEquals(gameData1.getLivingRoomRows(),-1);
-        assertEquals(gameData1.getLivingRoomColumns(),-1);
-        assertEquals(gameData1.getBookshelvesRows(),-1);
-        assertEquals(gameData1.getBookshelvesColumns(),-1);
+        while(!mockServerConnection0.queue.isEmpty()) {
+            message = mockServerConnection0.queue.remove();
+            if (message instanceof GameData)
+                selectedMessage = (GameData) message;
+        }
+
+        assertEquals(selectedMessage.getNumberPlayers(),-1);
+        assertNull(selectedMessage.getConnectedPlayers());
+        assertEquals(selectedMessage.getNumberCommonGoalCards(),-1);
+        assertEquals(selectedMessage.getLivingRoomRows(),-1);
+        assertEquals(selectedMessage.getLivingRoomColumns(),-1);
+        assertEquals(selectedMessage.getBookshelvesRows(),-1);
+        assertEquals(selectedMessage.getBookshelvesColumns(),-1);
     }
 
     /**
@@ -238,7 +258,7 @@ public class LobbyTest {
         lobby.login(view1.getNickname(), view1);
         lobby.selectGame(0,view1);
 
-        for(Message message :mockServerConnection0.list) {
+        for(Message message :mockServerConnection0.queue) {
             if(message instanceof GamesList) {
                 gameList++;
             }
@@ -271,7 +291,7 @@ public class LobbyTest {
             }
         }
 
-        for(Message message :mockServerConnection1.list) {
+        for(Message message :mockServerConnection1.queue) {
             if(message instanceof GamesList) {
                 gameList++;
             }

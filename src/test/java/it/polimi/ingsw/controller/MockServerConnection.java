@@ -5,23 +5,21 @@ import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.view.server.ServerInputViewInterface;
 
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.Queue;
 
 public class MockServerConnection implements ServerConnection {
 
-    public List<Message> list;
+    public Queue<Message> queue;
     public MockServerConnection() {
-        list = new ArrayList<>();
+        queue = new ArrayDeque<>();
     }
 
     @Override
-    public void setServerInputViewInterface(ServerInputViewInterface serverInputViewInterface) {
-
-    }
+    public void setServerInputViewInterface(ServerInputViewInterface serverInputViewInterface) {}
 
     @Override
     public void send(Message message) {
-        list.add(message);
+        queue.add(message);
     }
 }

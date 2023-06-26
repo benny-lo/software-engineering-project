@@ -541,16 +541,6 @@ public class Controller implements ControllerInterface {
     }
 
     // EXCLUSIVELY FOR TESTING
-
-    /**
-     * Getter for the list of nicknames of the players connected so far.
-     * It synchronizes on {@code this}.
-     * @return an {@code List} of nicknames ({@code String}s).
-     */
-    public List<String> getConnectedPlayers(){
-        return new ArrayList<>(playerList);
-    }
-
     /**
      * Getter for the ended value, used only for testing
      * @return True if the game has ended , false otherwise.
@@ -591,37 +581,5 @@ public class Controller implements ControllerInterface {
      */
     public TurnPhase getTurnPhase(){
         return turnPhase;
-    }
-
-    /**
-     * Getter for the gameBuilder, used only for testing.
-     * @return The gameBuilder of the game.
-     */
-    public GameBuilder getGameBuilder() {
-        return gameBuilder;
-    }
-
-    /**
-     * Getter for the views of the associated with {@code this}, used only for testing.
-     * @return A set of the views that have been added.
-     */
-    public Set<ServerUpdateViewInterface> getViews() {
-        return views;
-    }
-
-    /**
-     * Getter for the BookshelfListeners associated with {@code this}, used only for testing.
-     * @return A list of the BookshelfListeners added to the controller.
-     */
-    public List<BookshelfListener> getBookshelfListeners() {
-        return bookshelfListeners;
-    }
-
-    /**
-     * Getter for the owner of the BookshelfListeners associated with {@code this}, used only for testing.
-     * @return A list of the owner of the BookshelfListeners added to the controller.
-     */
-    public List<String> getBookshelfListenersOwners(){
-        return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
     }
 }
