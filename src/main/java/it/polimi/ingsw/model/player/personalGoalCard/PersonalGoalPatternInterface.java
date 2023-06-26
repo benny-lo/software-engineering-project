@@ -10,7 +10,7 @@ public interface PersonalGoalPatternInterface {
     /**
      * Check pattern on a {@code Bookshelf} object.
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return Number of matchings between {@code bookshelf} and the pattern.
+     * @return Number of matches found on {@code bookshelf} with the pattern.
      */
     int check(Bookshelf bookshelf);
 }

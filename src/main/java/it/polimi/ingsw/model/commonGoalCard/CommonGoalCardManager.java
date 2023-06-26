@@ -8,6 +8,9 @@ import it.polimi.ingsw.controller.modelListener.CommonGoalCardsListener;
 
 import java.util.*;
 
+/**
+ * Class managing all {@code CommonGoalCard}s of a game.
+ */
 public class CommonGoalCardManager {
     /**
      * List with all the cards.
@@ -16,7 +19,7 @@ public class CommonGoalCardManager {
     private CommonGoalCardsListener commonGoalCardsListener;
 
     /**
-     * Constructor for {@code this} class. It initializes the common goal cards of the game.
+     * Constructor for the class. It initializes the {@code CommonGoalCard}s of the game.
      * @param numCommonGoalCards Number of common goal cards in the game. (1/2)
      * @param numPlayers Number of players in the game.
      */
@@ -34,7 +37,7 @@ public class CommonGoalCardManager {
     }
 
     /**
-     * Class constructor exclusively used for testing: it initializes the common goal cards of the game.
+     * Constructor of the class exclusively used for testing: it initializes the common goal cards of the game.
      * @param numPlayers Number of players in the game.
      */
     public CommonGoalCardManager(int numPlayers) {
@@ -44,8 +47,8 @@ public class CommonGoalCardManager {
     }
 
     /**
-     * All possible common goals.
-     * @return List containing all common goals of the game.
+     * Generates all possible {@code CommonGoalPatternInterface}s.
+     * @return {@code List} containing all possible {@code CommonGoalPatternInterface}s.
      */
     private List<CommonGoalPatternInterface> commonGoals() {
         List<CommonGoalPatternInterface> pattern = new ArrayList<>();
@@ -89,8 +92,8 @@ public class CommonGoalCardManager {
     }
 
     /**
-     * Perform check on all not yet achieved common goal cards and gets the scoring tokens.
-     * @param bookshelf The bookshelf.
+     * Checks all not yet achieved common goals and gets the {@code ScoringToken}s.
+     * @param bookshelf The {@code Bookshelf} to check the patterns on.
      * @param cannotTake List of indices of common goal cards not to consider.
      * @return The scoring token from the common goal cards achieved.
      */
@@ -109,8 +112,8 @@ public class CommonGoalCardManager {
     }
 
     /**
-     * This method sets the given CommonGoalCardsListener, by updating the state of every CommonGoalCard.
-     * @param commonGoalCardsListener CommonGoalCardsListener that needs to be set
+     * Sets the given CommonGoalCardsListener and updates with the current state of the {@code CommonGoalCard}s.
+     * @param commonGoalCardsListener {@code CommonGoalCardListener} to set.
      */
     public void setCommonGoalCardsRep(CommonGoalCardsListener commonGoalCardsListener) {
         this.commonGoalCardsListener = commonGoalCardsListener;

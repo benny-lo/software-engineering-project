@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class representing the LivingRoom of the game. The top row and leftmost column have index 0.
- * The unavailable squares are filled with {@code Item.LOCKED}.
+ * Class representing the {@code LivingRoom} of the game. The top row and leftmost column have index 0.
+ * The unavailable squares are filled with {@code Item.LOCKED} and the empty squares are set to {@code null}.
  */
 public class LivingRoom {
     private final Item[][] grid;
 
     /**
-     * Constructor for {@code this} class. It sets the prohibited squares and fills the rest of the squares with items.
+     * Constructor for the class. It sets the prohibited squares and fills the rest of the squares with items.
      * @param numberPlayers Number of players in the game.
      */
     public LivingRoom(int numberPlayers) {
@@ -58,23 +58,23 @@ public class LivingRoom {
     }
 
     /**
-     * Constructor of the class, used for json.
+     * No-args constructor, it initializes the {@code LivingRoom} as 9x9 and completely empty.
      */
     public LivingRoom() {
         this.grid = new Item[9][9];
     }
 
     /**
-     * Getter for rows.
-     * @return Private field rows.
+     * Getter for the number of rows.
+     * @return The number of rows.
      */
     public int getRows() {
         return grid.length;
     }
 
     /**
-     * Getter for columns.
-     * @return Private field columns.
+     * Getter for the number of columns.
+     * @return The number of columns.
      */
     public int getColumns() {
         if (grid.length == 0) return 0;
@@ -82,9 +82,9 @@ public class LivingRoom {
     }
 
     /**
-     * This method sets the {@code Item} in an empty position.
-     * @param item Item is placed in the grid.
-     * @param position The coordinates where the {@code Item} is placed.
+     * Sets the {@code Item} in an empty position.
+     * @param item {@code Item} to place in the grid.
+     * @param position The {@code Position} where the {@code Item} is placed.
      */
     public void setTile(Item item, Position position){
         if(grid[position.getRow()][position.getColumn()] == null)
@@ -92,7 +92,7 @@ public class LivingRoom {
     }
 
     /**
-     * Check if there are only isolated tiles in {@code this}.
+     * Checks if there are only isolated tiles in {@code this}.
      * @return {@code true} iff only isolated tiles.
      */
     public boolean isRefillNeeded() {
@@ -105,8 +105,8 @@ public class LivingRoom {
     }
 
     /**
-     * Check if a position has at least a non-empty neighbour.
-     * @param position The position to check on.
+     * Checks if a position has at least a non-empty neighbour.
+     * @param position The {@code Position} to check on.
      * @return {@code true} iff {@code position} has a non-empty neighbour.
      */
     private boolean isAlone(Position position) {
@@ -117,7 +117,7 @@ public class LivingRoom {
     }
 
     /**
-     * Get the item in a position of {@code this}.
+     * Gets the {@code Item} in a position of {@code this}.
      * @param row The row.
      * @param column The column.
      * @return The item in position ({@code row}, {@code column}).
@@ -127,7 +127,7 @@ public class LivingRoom {
     }
 
     /**
-     * Check if a square of {@code this} in a specific position contains an item.
+     * Checks if there is an {@code Item} at a position of {@code this}.
      * @param row The row.
      * @param column The column.
      * @return {@code true} iff an item is NOT found at position ({@code row}, {@code column}).
@@ -137,7 +137,7 @@ public class LivingRoom {
     }
 
     /**
-     * Check if the content of square of {@code this} in a specific position contains a selectable item.
+     * Check if the {@code Item} at a position in the grid is selectable.
      * @param row The row.
      * @param column The column.
      * @return {@code true} iff the content of the square in position ({@code row}, {@code column}) can be selected.
@@ -153,8 +153,8 @@ public class LivingRoom {
     }
 
     /**
-     * Check if the content of square of {@code this} in a specific position contains a selectable item.
-     * @param position It's the position of the {@code Item}.
+     * Checks if the {@code Item} at a {@code Position} in the grid is selectable.
+     * @param position The {@code Position} of the {@code Item}.
      * @return {@code true} iff the content of the square in {@code Position} can be selected.
      */
     public boolean selectable(Position position){
@@ -162,9 +162,9 @@ public class LivingRoom {
     }
 
     /**
-     * Selection of items from {@code this}.
-     * @param positions The positions to select the items from.
-     * @return List of selected items.
+     * Selects of items from the grid at {@code positions}.
+     * @param positions {@code List} of {@code Position}s to select the items from.
+     * @return {@code List} of selected {@code Item}s.
      */
     public List<Item> selectTiles(List<Position> positions) {
         List<Item> selection = new ArrayList<>();

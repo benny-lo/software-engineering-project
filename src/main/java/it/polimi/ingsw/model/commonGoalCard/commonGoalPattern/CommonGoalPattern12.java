@@ -6,14 +6,13 @@ import it.polimi.ingsw.model.player.Bookshelf;
  * Class representing the following pattern:
  * five columns of increasing or decreasing height. starting from the
  * first column on the left or on the right, each next column
- * must be made of exactly one more tile. tiles can be of any type
+ * must be made of exactly one more tile. tiles can be of any type.
  */
-
 public class CommonGoalPattern12 implements CommonGoalPatternInterface{
     /**
-     * Check pattern on {@code Bookshelf} object.
+     * {@inheritDoc}
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return True if the pattern is found, false if it isn't
+     * @return {@code true} iff the pattern is present in {@code bookshelf}.
      */
     @Override
     public boolean check(Bookshelf bookshelf) {

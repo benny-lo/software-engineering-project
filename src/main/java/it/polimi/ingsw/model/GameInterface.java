@@ -6,32 +6,33 @@ import it.polimi.ingsw.utils.game.Position;
 import java.util.List;
 
 /**
- * Interface representing a {@code Game}.
+ * Interface representing a {@code Game}. It allows to set the current player and perform moves.
  */
 
 public interface GameInterface {
     /**
-     * It sets the {@code currentPlayer}.
-     * @param nickname {@code nickname} is the {@code currentPlayer}'s name.
+     * Sets the current player.
+     * @param nickname The nickname of the new current player.
      */
     void setCurrentPlayer(String nickname);
 
     /**
-     * This method says if a player can take a list of {@code Item}s.
-     * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
-     * @return It returns a boolean, true iff the player is allowed to take the list of {@code Item}, else false.
+     * Checks if the list of {@code Position}s can be selected from the {@code LivingRoom} by the current player.
+     * @param positions {@code List} of {@code Position}s chosen by a player.
+     * @return {@code true} iff the column is available, {@code false} if otherwise.
      */
     boolean canTakeItemTiles(List<Position> positions);
 
     /**
-     * This method extracts a list of {@code Item}, chosen by a player, from the {@code LivingRoom}.
-     * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
-     * @return The items selected from the LivingRoom.
+     * Extracts a list of {@code Item}, chosen by the current player, from the {@code LivingRoom}, and assigns to the
+     * current player.
+     * @param positions {@code List} of {@code Position}s chosen by the current player.
+     * @return The {@code Item}s selected from the {@code LivingRoom}.
      */
     List<Item> selectItemTiles(List<Position> positions);
 
     /**
-     * Check if we can insert the chosen elements in {@code column} and in the given {@code order}.
+     * Checks if we can insert the chosen elements in {@code column} and in the given {@code order}.
      * @param column The column of the bookshelf.
      * @param order A permutation representing the order to insert the elements in.
      * @return {@code true} iff the move is valid.
@@ -39,34 +40,34 @@ public interface GameInterface {
     boolean canInsertItemTilesInBookshelf(int column, List<Integer> order);
 
     /**
-     * This method inserts the items selected by the current player in its bookshelf.
+     * Inserts the items selected by the current player in their {@code Bookshelf}.
      * @param column The column to insert in.
-     * @param order The list representing a permutation of the items.
+     * @param order {@code List} representing the order of the {@code Item}s to insert in {@code Bookshelf}.
      */
     void insertItemTilesInBookshelf(int column, List<Integer> order);
 
     /**
-     * Method to check if the ending token was assigned to any of the players.
+     * Checks if the ending token was assigned to any of the players.
      * @return {@code true} iff there is a player that owns the ending token.
      */
     boolean IsEndingTokenAssigned();
 
     /**
-     * This method gets the {@code Player}'s public score(bookshelf, common goals and ending token).
-     * @param nickname It's the {@code Players}'s name.
-     * @return It returns the public score of a {@code Player}.
+     * Gets the {@code Player}'s public score (bookshelf, common goals and ending token).
+     * @param nickname The {@code Players}'s nickname.
+     * @return The public score of the {@code Player}.
      */
     int getPublicScore(String nickname);
 
     /**
-     * This method gets the {@code Player}'s personal score(personal goal).
+     * Gets the {@code Player}'s personal score(personal goal).
      * @param nickname The {@code Player}'s name.
      * @return The personal score of a {@code Player}.
      */
     int getPersonalScore(String nickname);
 
     /**
-     * This method returns the id of the {@code PersonalGoalCard} assigned to a {@code Player}.
+     * Gets the id of the {@code PersonalGoalCard} assigned to a {@code Player}.
      * @param nickname The nickname of the player.
      * @return The id of the {@code PersonalGoalCard} of the player with nickname {@code nickname}.
      */

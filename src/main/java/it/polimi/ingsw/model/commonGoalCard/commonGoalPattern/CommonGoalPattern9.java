@@ -6,15 +6,15 @@ import it.polimi.ingsw.model.player.Bookshelf;
 /**
  * Class representing the following pattern:
  * eight or more tiles of the same type with no restrictions about the
- * position of these tiles
+ * position of these tiles.
  */
 public class CommonGoalPattern9 implements CommonGoalPatternInterface {
     private static final int MINIMUM = 8;
 
     /**
-     * Check pattern on {@code Bookshelf} object.
+     * {@inheritDoc}
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return True if the pattern is found, false if it isn't
+     * @return {@code true} iff the pattern is present in {@code bookshelf}.
      */
     @Override
     public boolean check(Bookshelf bookshelf) {

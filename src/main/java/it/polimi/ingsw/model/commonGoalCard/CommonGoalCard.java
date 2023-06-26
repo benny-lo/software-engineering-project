@@ -24,7 +24,9 @@ public class CommonGoalCard {
     private final int id;
 
     /**
-     * Constructor for {@code this} class.
+     * Constructor for the class. It sets {@code id}, {@code numPlayers} and {@code pattern}.
+     * @param id int representing the ID of {@code this}.
+     * @param numPlayers The number of players in the game (used to determine the stack of {@code ScoringToken}s).
      * @param pattern Interface representing the pattern used by {@code this}.
      */
     public CommonGoalCard(int id, int numPlayers, CommonGoalPatternInterface pattern) {
