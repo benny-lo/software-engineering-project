@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.board;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import it.polimi.ingsw.utils.game.Item;
-import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.Item;
+import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
 
 import java.io.*;

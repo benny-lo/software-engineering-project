@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.commonGoalCard.commonGoalPattern;
 
-import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.model.player.Bookshelf;
 
 import java.util.HashSet;

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.view.client.cli;
 
 import it.polimi.ingsw.utils.view.CommonGoalCardDescription;
-import it.polimi.ingsw.utils.game.Item;
+import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import it.polimi.ingsw.utils.message.server.GameInfo;
 

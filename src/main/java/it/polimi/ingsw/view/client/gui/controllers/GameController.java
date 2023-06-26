@@ -1,8 +1,8 @@
 package it.polimi.ingsw.view.client.gui.controllers;
 
 import it.polimi.ingsw.utils.view.CommonGoalCardDescription;
-import it.polimi.ingsw.utils.game.Item;
-import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.Item;
+import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.client.BookshelfInsertion;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
 import it.polimi.ingsw.view.client.gui.GUInterface;

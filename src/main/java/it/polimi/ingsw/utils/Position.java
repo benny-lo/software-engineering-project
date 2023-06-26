@@ -1,4 +1,4 @@
-package it.polimi.ingsw.utils.game;
+package it.polimi.ingsw.utils;
 
 import java.io.Serializable;
 import java.util.Objects;

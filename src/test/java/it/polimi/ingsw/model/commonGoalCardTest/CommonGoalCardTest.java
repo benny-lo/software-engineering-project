@@ -2,8 +2,8 @@ package it.polimi.ingsw.model.commonGoalCardTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import it.polimi.ingsw.utils.game.Item;
-import it.polimi.ingsw.utils.game.ScoringToken;
+import it.polimi.ingsw.utils.Item;
+import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.commonGoalCard.CommonGoalCard;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPattern8;
 import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternInterface;

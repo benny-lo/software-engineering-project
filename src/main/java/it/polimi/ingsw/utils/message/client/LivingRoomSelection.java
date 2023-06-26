@@ -1,6 +1,6 @@
 package it.polimi.ingsw.utils.message.client;
 
-import it.polimi.ingsw.utils.game.Position;
+import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.Message;
 
 import java.util.ArrayList;
