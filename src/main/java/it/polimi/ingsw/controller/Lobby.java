@@ -161,7 +161,7 @@ public class Lobby {
 
         controller.join(view);
 
-        // check if the JoinAction worked
+        // check if the Join worked
         if (!view.isInGame()) return;
 
         // set controller in view.
@@ -210,7 +210,7 @@ public class Lobby {
         // the controller is sending the player the game dimensions.
     }
 
-    //FOR TESTING ONLY
+    //METHODS EXCLUSIVELY FOR TESTING
 
     /**
      * This method sets the Singleton instance to null, allowing us to instance it again, used only for testing.

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.controller;
 
-
-
-import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.game.Item;
 import it.polimi.ingsw.utils.game.Position;
@@ -29,18 +26,23 @@ public class ControllerTest {
     @Test
     public void testControllerConstructor(){
         Logger.setTestMode(true);
+
         Controller controller = new Controller(4, 2, 0);
+
         assertEquals(4, controller.getNumberPlayers());
         assertEquals(2, controller.getNumberCommonGoalCards());
         assertFalse(controller.isStarted());
+        assertNotNull(controller);
     }
     /**
-     * Test {@code perform(JoinAction action)}'s method with only 2 players.
+     * Test {@code join} method with only 2 players, that log in successfully.
      */
     @Test
-    public void testSuccessfulJoinAction(){
+    public void testJoinSuccessfully(){
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -52,25 +54,17 @@ public class ControllerTest {
 
         assertTrue(controller.getViews().contains(view0));
         assertTrue(controller.getViews().contains(view1));
-
-        /*assertTrue(controller.getGameBuilder().getPlayers().contains(view0.getNickname()));
-        assertTrue(controller.getGameBuilder().getPlayers().contains(view1.getNickname()));
-
-        assertTrue(controller.getBookshelfListenersOwners().contains(view0.getNickname()));
-        assertTrue(controller.getBookshelfListenersOwners().contains(view1.getNickname()));
-
-        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
-        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));*/
-
     }
 
     /**
-     * Test {@code perform(JoinAction action)}'s method trying to join while the game is already started.
+     * Test {@code login} method trying to join while the game has already started.
      */
     @Test
-    public void testUnsuccessfulJoinAction1() {
+    public void testJoinGameAlreadyStarted() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -88,35 +82,22 @@ public class ControllerTest {
         assertTrue(controller.getViews().contains(view0));
         assertTrue(controller.getViews().contains(view1));
 
-        /*assertTrue(controller.getGameBuilder().getPlayers().contains(view0.getNickname()));
-        assertTrue(controller.getGameBuilder().getPlayers().contains(view1.getNickname()));
-
-        assertTrue(controller.getBookshelfListenersOwners().contains(view0.getNickname()));
-        assertTrue(controller.getBookshelfListenersOwners().contains(view1.getNickname()));
-
-        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
-        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));
-
         for(String player : controller.getConnectedPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
 
         assertFalse(controller.getViews().contains(view2));
-
-        assertFalse(controller.getGameBuilder().getPlayers().contains(view2.getNickname()));
-
-        assertFalse(controller.getBookshelfListenersOwners().contains(view2.getNickname()));
-
-        assertFalse(controller.getGameBuilder().getBookshelfListenersOwners().contains(view2.getNickname()));*/
     }
 
     /**
-     * Test {@code perform(JoinAction action)}'s method trying to join but the game is ended.
+     * Test {@code join} method trying to join but the game has ended.
      */
     @Test
-    public void testUnsuccessfulJoinAction2() {
+    public void testJoinGameAlreadyEnded() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -134,35 +115,22 @@ public class ControllerTest {
         assertTrue(controller.getViews().contains(view0));
         assertTrue(controller.getViews().contains(view1));
 
-        /*assertTrue(controller.getGameBuilder().getPlayers().contains(view0.getNickname()));
-        assertTrue(controller.getGameBuilder().getPlayers().contains(view1.getNickname()));
-
-        assertTrue(controller.getBookshelfListenersOwners().contains(view0.getNickname()));
-        assertTrue(controller.getBookshelfListenersOwners().contains(view1.getNickname()));
-
-        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view0.getNickname()));
-        assertTrue(controller.getGameBuilder().getBookshelfListenersOwners().contains(view1.getNickname()));
-
         for(String player : controller.getConnectedPlayers()) {
             assertNotEquals(player, view2.getNickname());
         }
 
         assertFalse(controller.getViews().contains(view2));
-
-        assertFalse(controller.getGameBuilder().getPlayers().contains(view2.getNickname()));
-
-        assertFalse(controller.getBookshelfListenersOwners().contains(view2.getNickname()));
-
-        assertFalse(controller.getGameBuilder().getBookshelfListenersOwners().contains(view2.getNickname()));*/
     }
 
     /**
-     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method but the game is ended.
+     * Test {@code livingRoom} method but the game is ended.
      */
     @Test
-    public void testUnsuccessfulSelectionFromLivingRoomAction1() {
+    public void testLivingRoomGameAlreadyEnded() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -172,19 +140,20 @@ public class ControllerTest {
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.setEnded();
-        controller.livingRoom(new ArrayList<>(), view0);
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1, 3))), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
-
     }
 
     /**
-     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method when the sender is not the current player.
+     * Test {@code livingRoom} method when the sender is not the current player.
      */
     @Test
-    public void testUnsuccessfulSelectionFromLivingRoomAction2() {
+    public void testLivingRoomWrongCurrentPlayer() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -194,18 +163,20 @@ public class ControllerTest {
         controller.join(view1);
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(), view1); 
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1, 3))), view1);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
     }
 
     /**
-     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method when it's not the right game phase.
+     * Test {@code livingRoom} method when it's not the right game phase.
      */
     @Test
-    public void testUnsuccessfulSelectionFromLivingRoomAction3() {
+    public void testLivingRoomWrongGamePhase() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -217,23 +188,24 @@ public class ControllerTest {
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0); 
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1, 3))), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
 
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(), view0);
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1, 3))), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
 
     /**
-     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method but the item tiles aren't selectable.
+     * Test {@code livingRoom} method but the item tiles aren't selectable.
      */
     @Test
-    public void testUnsuccessfulSelectionFromLivingRoomAction4() {
+    public void testLivingRoomWrongTiles() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -249,12 +221,14 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code perform(SelectionFromLivingRoomAction action)}'s method picking a selectable tile.
+     * Test {@code livingRoom} method picking a selectable tile.
      */
     @Test
-    public void testSuccessfulSelectionFromLivingRoomAction() {
+    public void testLivingRoomSuccessfully() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -270,12 +244,14 @@ public class ControllerTest {
     }
 
     /**
-     * Test {@code perform(SelectionColumnAndOrder1 action)}'s method but the game is ended.
+     * Test {@code bookshelf} method but the game has already ended.
      */
     @Test
-    public void testUnsuccessfulSelectionColumnAndOrder1() {
+    public void testBookshelfGameAlreadyEnded() {
         Logger.setTestMode(true);
+
         Controller controller = new Controller(2, 2, 0);
+
         VirtualView view0 = new VirtualView(new MockServerConnection());
         view0.setNickname("nick");
         controller.join(view0);
@@ -287,115 +263,161 @@ public class ControllerTest {
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
 
         controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0);
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3))), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
-
-        controller.setCurrentPlayer(view0.getNickname());
         controller.setEnded();
-        controller.bookshelf(0, new ArrayList<>(), view0);
-
-        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
-    }
-
-    /**
-     * Test {@code perform(SelectionColumnAndOrder action)}'s method when the sender is not the current player.
-     */
-    @Test
-    public void testUnsuccessfulSelectionColumnAndOrder2() {
-        Logger.setTestMode(true);
-        Controller controller = new Controller(2, 2, 0);
-        VirtualView view0 = new VirtualView(new MockServerConnection());
-        view0.setNickname("nick");
-        controller.join(view0);
-
-        VirtualView view1 = new VirtualView(new MockServerConnection());
-        view1.setNickname("rick");
-        controller.join(view1);
-
-        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0);
-
-        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.bookshelf(0, new ArrayList<>(), view0);
-
-        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
-    }
-
-    /**
-     * Test {@code perform(SelectionColumnAndOrder action)}'s method when it's not the right game phase.
-     */
-    @Test
-    public void testUnsuccessfulSelectionColumnAndOrder3() {
-        Logger.setTestMode(true);
-        Controller controller = new Controller(2, 2, 0);
-        VirtualView view0 = new VirtualView(new MockServerConnection());
-        view0.setNickname("nick");
-        controller.join(view0);
-
-        VirtualView view1 = new VirtualView(new MockServerConnection());
-        view1.setNickname("rick");
-        controller.join(view1);
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.bookshelf(0, new ArrayList<>(), view0);
-
-        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
-    }
-
-    /**
-     * Test {@code perform(SelectionColumnAndOrder action)}'s method but the column isn't selectable.
-     */
-    @Test
-    public void testUnsuccessfulSelectionColumnAndOrder4() {
-        Logger.setTestMode(true);
-        Controller controller = new Controller(2, 2, 0);
-        VirtualView view0 = new VirtualView(new MockServerConnection());
-        view0.setNickname("nick");
-        controller.join(view0);
-
-        VirtualView view1 = new VirtualView(new MockServerConnection());
-        view1.setNickname("rick");
-        controller.join(view1);
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3), new Position(2, 3))), view0);
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.bookshelf(0, new ArrayList<>(List.of(0, 1)), view0);
-
-        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(List.of(new Position(4,7), new Position(3, 7))), view0);
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.bookshelf(0, new ArrayList<>(List.of(1, 0)), view0);
-
-        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(List.of(new Position(4,1), new Position(5, 1))), view0);
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.bookshelf(0, new ArrayList<>(List.of(1, 0)), view0);
-
-        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
-
-        controller.setCurrentPlayer(view0.getNickname());
-        controller.livingRoom(new ArrayList<>(List.of(new Position(3,2))), view0);
-        controller.setCurrentPlayer(view0.getNickname());
         controller.bookshelf(0, new ArrayList<>(List.of(0)), view0);
 
         assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
     }
 
     /**
-     * Test {@code perform(SelectionColumnAndOrder action)}'s method choosing a right column.
+     * Test {@code bookshelf} method when the sender is not the current player.
      */
     @Test
-    public void testSuccessfulSelectionColumnAndOrder() {
+    public void testBookshelfWrongCurrentPlayer() {
+        Logger.setTestMode(true);
+
+        Controller controller = new Controller(2, 2, 0);
+
+        VirtualView view0 = new VirtualView(new MockServerConnection());
+        view0.setNickname("nick");
+        controller.join(view0);
+
+        VirtualView view1 = new VirtualView(new MockServerConnection());
+        view1.setNickname("rick");
+        controller.join(view1);
+
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3))), view0);
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+
+        controller.bookshelf(0, new ArrayList<>(List.of(0)), view1);
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+    }
+
+    /**
+     * Test {@code bookshelf} method when it's not the right game phase.
+     */
+    @Test
+    public void testBookshelfWrongGamePhase() {
+        Logger.setTestMode(true);
+
+        Controller controller = new Controller(2, 2, 0);
+
+        VirtualView view0 = new VirtualView(new MockServerConnection());
+        view0.setNickname("nick");
+        controller.join(view0);
+
+        VirtualView view1 = new VirtualView(new MockServerConnection());
+        view1.setNickname("rick");
+        controller.join(view1);
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.bookshelf(0, new ArrayList<>(List.of(0)), view0);
+
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+    }
+
+    /**
+     * Test {@code bookshelf} method but the column is already full.
+     */
+    @Test
+    public void testBookshelfFullColumn() {
+        Logger.setTestMode(true);
+
+        Controller controller = new Controller(2, 2, 0);
+
+        VirtualView view0 = new VirtualView(new MockServerConnection());
+        view0.setNickname("nick");
+        controller.join(view0);
+
+        VirtualView view1 = new VirtualView(new MockServerConnection());
+        view1.setNickname("rick");
+        controller.join(view1);
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3), new Position(1, 4))), view0);
+        controller.bookshelf(0, new ArrayList<>(List.of(0, 1)), view0);
+
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(4,7), new Position(3, 7))), view0);
+        controller.bookshelf(0, new ArrayList<>(List.of(1, 0)), view0);
+
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(4,1), new Position(5, 1))), view0);
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+        controller.bookshelf(0, new ArrayList<>(List.of(1, 0)), view0);
+
+        assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(2,3))), view0);
+        controller.bookshelf(0, new ArrayList<>(List.of(0)), view0);
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+    }
+
+    /**
+     * Test {@code bookshelf} method but the column is wrong.
+     */
+    @Test
+    public void testBookshelfWrongColumn() {
+        Logger.setTestMode(true);
+
+        Controller controller = new Controller(2, 2, 0);
+
+        VirtualView view0 = new VirtualView(new MockServerConnection());
+        view0.setNickname("nick");
+        controller.join(view0);
+
+        VirtualView view1 = new VirtualView(new MockServerConnection());
+        view1.setNickname("rick");
+        controller.join(view1);
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(1,3))), view0);
+        controller.bookshelf(6, new ArrayList<>(List.of(0)), view0);
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+    }
+
+    /**
+     * Test {@code bookshelf} method but the order is wrong.
+     */
+    @Test
+    public void testBookshelfWrongOrder() {
+        Logger.setTestMode(true);
+        Controller controller = new Controller(2, 2, 0);
+        VirtualView view0 = new VirtualView(new MockServerConnection());
+        view0.setNickname("nick");
+        controller.join(view0);
+
+        VirtualView view1 = new VirtualView(new MockServerConnection());
+        view1.setNickname("rick");
+        controller.join(view1);
+
+        controller.setCurrentPlayer(view0.getNickname());
+        controller.livingRoom(new ArrayList<>(List.of(new Position(3,2))), view0);
+        controller.bookshelf(0, new ArrayList<>(List.of(0, 1)), view0);
+
+        assertEquals(TurnPhase.BOOKSHELF, controller.getTurnPhase());
+    }
+
+    /**
+     * Test {@code bookshelf} method choosing a right column and order.
+     */
+    @Test
+    public void testBookshelfSuccessfully() {
         Logger.setTestMode(true);
         Controller controller = new Controller(2, 2, 0);
         VirtualView view0 = new VirtualView(new MockServerConnection());
@@ -408,7 +430,6 @@ public class ControllerTest {
 
         controller.setCurrentPlayer(view0.getNickname());
         controller.livingRoom(new ArrayList<>(List.of(new Position(1,3), new Position(2, 3))), view0);
-        controller.setCurrentPlayer(view0.getNickname());
         controller.bookshelf(0, new ArrayList<>(List.of(0, 1)), view0);
 
         assertEquals(TurnPhase.LIVING_ROOM, controller.getTurnPhase());
