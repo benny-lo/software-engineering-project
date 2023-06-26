@@ -8,10 +8,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
- * Class implementing the Builder pattern to construct a {@code Game} instance
- * returned as a {@code GameInterface}.
+ * Class implementing the Builder pattern. It builds a {@code GameInterface}.
  */
 public class GameBuilder {
     /**
@@ -55,8 +55,8 @@ public class GameBuilder {
     private LivingRoomListener livingRoomListener;
 
     /**
-     * Constructor for {@code this} class. It only sets the number of common goal cards.
-     * @param numberCommonGoalCards Number of common goal cards.
+     * Constructor for the class. It only sets the number of {@code CommonGoalCard}s.
+     * @param numberCommonGoalCards The number of common goal cards.
      */
     public GameBuilder(int numberCommonGoalCards) {
         this.numberCommonGoalCards = numberCommonGoalCards;
@@ -65,8 +65,8 @@ public class GameBuilder {
     }
 
     /**
-     * Adds a player. It assumes the nickname is not already logged in.
-     * @param nickname The nickname of the player that is added.
+     * Adds a player.
+     * @param nickname The nickname of the player to add.
      */
     public void addPlayer(String nickname){
         players.add(nickname);
@@ -74,12 +74,12 @@ public class GameBuilder {
 
     /**
      * Removes a player.
-     * @param nickname The nickname of the player that to remove.
+     * @param nickname The nickname of the player to remove.
      */
     public void removePlayer(String nickname) {players.remove(nickname);}
 
     /**
-     * Adds a bookshelf listener.
+     * Adds a {@code BookshelfListener}.
      * @param bookshelfListener The bookshelf listener to add.
      */
     public void setBookshelfListener(BookshelfListener bookshelfListener) {
@@ -87,7 +87,7 @@ public class GameBuilder {
     }
 
     /**
-     * Removes a bookshelf listener.
+     * Removes a {@code BookshelfListener}.
      * @param nickname Owner of the listener to remove.
      */
     public void removeBookshelfListener(String nickname) {
@@ -119,16 +119,8 @@ public class GameBuilder {
     }
 
     /**
-     * Getter for the number of players.
-     * @return The number of players.
-     */
-    public int getCurrentPlayers() {
-        return players.size();
-    }
-
-    /**
-     * Creates a {@code Game} object and returns as a {@code GameInterface}.
-     * @return The {@code Game} object created, hidden as a {@code GameInterface} if {@code this} has all
+     * Creates a {@code Game} object using the provided players' nicknames and listeners.
+     * @return The {@code Game} object created, hidden as a {@code GameInterface}, if {@code this} has all
      * listeners and the list of players set in a consistent way, else {@code null}.
      */
     public GameInterface startGame() {
@@ -143,6 +135,13 @@ public class GameBuilder {
 
         for (BookshelfListener listener : bookshelfListeners) {
             if (!players.contains(listener.getOwner())) return null;
+        }
+
+        for(String nickname : players) {
+            List<String> tmp = bookshelfListeners.stream().
+                    map(BookshelfListener::getOwner).
+                    filter((bl) -> nickname.equals(bl)).toList();
+            if (tmp.size() != 1) return null;
         }
 
         Game game;
@@ -161,63 +160,4 @@ public class GameBuilder {
 
         return game;
     }
-
-    //METHODS EXCLUSIVELY FOR TESTING
-
-    /**
-     * Getter for the players
-     * @return A list formed by string of players
-     */
-    public List<String> getPlayers() {
-        return players;
-    }
-
-    /**
-     * Getter for the bookshelves listeners
-     * @return A list formed by the Bookshelf listeners
-     */
-    public List<BookshelfListener> getBookshelfListeners() {
-        return bookshelfListeners;
-    }
-
-    /**
-     * Getter for the owners of the bookshelves
-     * @return A list of the owners of the bookshelves.
-     */
-    public List<String> getBookshelfListenersOwners(){
-        return getBookshelfListeners().stream().map(BookshelfListener::getOwner).toList();
-    }
-    /**
-     * Getter for the number of common goal cards
-     * @return Number of CommonGoalCards
-     */
-    public int getNumberCommonGoalCards()
-    {
-        return this.numberCommonGoalCards;
-    }
-    /**
-     * Getter for Common Goal Cards Listener
-     * @return The common Goal Cards Listener
-     */
-    public CommonGoalCardsListener getCommonGoalCardsListener()
-    {
-        return this.commonGoalCardsListener;
-    }
-    /**
-     * Getter for Ending Token Listener
-     * @return The Ending Token Listener
-     */
-    public EndingTokenListener getEndingTokenListener()
-    {
-        return this.endingTokenListener;
-    }
-    /**
-     * Getter for Living Room Listener
-     * @return The Living Room Listener
-     */
-    public LivingRoomListener getLivingRoomListener()
-    {
-        return this.livingRoomListener;
-    }
-
 }

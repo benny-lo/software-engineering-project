@@ -6,6 +6,9 @@ import it.polimi.ingsw.utils.game.Position;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class representing a listener to a player's {@code Bookshelf} in a {@code Game}.
+ */
 public class BookshelfListener extends ModelListener {
     private final String owner;
     private final Map<Position, Item> bookshelf;

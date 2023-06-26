@@ -3,6 +3,9 @@ package it.polimi.ingsw.controller.modelListener;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class representing a listener to the top of the stacks of the {@code CommonGoalCard}s in a {@code Game}.
+ */
 public class CommonGoalCardsListener extends ModelListener {
     private final Map<Integer, Integer> cards;
 

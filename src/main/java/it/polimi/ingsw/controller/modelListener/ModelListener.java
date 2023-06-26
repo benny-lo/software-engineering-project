@@ -1,5 +1,8 @@
 package it.polimi.ingsw.controller.modelListener;
 
+/**
+ * Abstract class representing a generic listener to something in a {@code Game}.
+ */
 public abstract class ModelListener {
     /**
      * Boolean flag. It is set only if {@code this} has updates registered.

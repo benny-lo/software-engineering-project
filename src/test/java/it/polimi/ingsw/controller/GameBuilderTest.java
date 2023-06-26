@@ -4,100 +4,121 @@ import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 import it.polimi.ingsw.controller.modelListener.CommonGoalCardsListener;
 import it.polimi.ingsw.controller.modelListener.EndingTokenListener;
 import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
-import it.polimi.ingsw.model.GameInterface;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameBuilderTest {
-
     /**
-     * Testing for the class constructor
+     * Testing {@code GameBuilder} with no listener set.
      */
     @Test
-    public void testConstructor()
-    {
-        GameBuilder gameBuilder = new GameBuilder(2);
-        assertEquals(gameBuilder.getNumberCommonGoalCards(),2);
-        assertNotNull(gameBuilder.getPlayers());
-        assertNotNull(gameBuilder.getBookshelfListeners());
-    }
-    /**
-     * Testing for adding and removing players
-     */
-    @Test
-    public void testPlayer()
-    {
+    public void testNoListenerSet() {
         GameBuilder gameBuilder = new GameBuilder(2);
         gameBuilder.addPlayer("nick");
         gameBuilder.addPlayer("rick");
-        gameBuilder.removePlayer("nick");
-        gameBuilder.removePlayer("john");
+
+        assertNull(gameBuilder.startGame());
+    }
+
+    /**
+     * Testing {@code GameBuilder} with only the listeners set.
+     */
+    @Test
+    public void testOnlyListenersSet() {
+        GameBuilder gameBuilder = new GameBuilder(2);
+        setup(gameBuilder, new ArrayList<>());
+
+        assertNull(gameBuilder.startGame());
+    }
+
+    /**
+     * Testing {@code GameBuilder} with players and listeners set but the number of players is incorrect.
+     */
+    @Test
+    public void testGetCurrentPlayers() {
+        GameBuilder gameBuilder = new GameBuilder(2);
+        setup(gameBuilder, List.of("nick", "rick"));
         gameBuilder.addPlayer("john");
-        List<String> list = gameBuilder.getPlayers();
-        assertEquals(list.get(0),"rick");
-        assertEquals(list.get(1),"john");
 
+        assertNull(gameBuilder.startGame());
     }
 
     /**
-     * Testing for the listeners methods. Firstly we test if adding and removing a bookshelf listener works as intended.
-     * Then we add and test if adding a common goal card listener, an ending token listener and living room listener works
+     * Testing {@code GameBuilder} with two players with same nickname.
      */
     @Test
-    public void testListeners()
-    {
+    public void testSameNickname() {
         GameBuilder gameBuilder = new GameBuilder(2);
-        gameBuilder.addPlayer("rick");
-        gameBuilder.addPlayer("nick");
-        gameBuilder.setBookshelfListener(new BookshelfListener(gameBuilder.getPlayers().get(0)));
-        gameBuilder.removeBookshelfListener(gameBuilder.getPlayers().get(0));
-        gameBuilder.setBookshelfListener(new BookshelfListener(gameBuilder.getPlayers().get(1)));
-        gameBuilder.setCommonGoalCardsListener(new CommonGoalCardsListener());
-        gameBuilder.setEndingTokenListener(new EndingTokenListener());
-        gameBuilder.setLivingRoomListener(new LivingRoomListener());
-        assertNotNull(gameBuilder.getCommonGoalCardsListener());
-        assertNotNull(gameBuilder.getEndingTokenListener());
-        assertNotNull(gameBuilder.getLivingRoomListener());
-        assertEquals(gameBuilder.getBookshelfListenersOwners().get(0),gameBuilder.getPlayers().get(1));
+        setup(gameBuilder, List.of("nick", "nick"));
 
+        assertNull(gameBuilder.startGame());
     }
+
     /**
-     * Testing for the getter for the number of current players
+     * Test creating a {@code Game} with 5 players.
      */
     @Test
-    public void testGetCurrentPlayers()
-    {
+    public void testTooManyPlayers() {
         GameBuilder gameBuilder = new GameBuilder(2);
-        gameBuilder.addPlayer("nick");
-        gameBuilder.addPlayer("rick");
-        gameBuilder.addPlayer("john");
-        int num = gameBuilder.getCurrentPlayers();
-        assertEquals(3,num);
-        gameBuilder.removePlayer("john");
-        num = gameBuilder.getCurrentPlayers();
-        assertEquals(2,num);
+        setup(gameBuilder, List.of("alice", "bob", "nick", "rick", "joe"));
+
+        assertNull(gameBuilder.startGame());
     }
+
     /**
-     * Testing for the startGame method
+     * Test with {@code BookshelfListener} not backed by any of the players.
      */
     @Test
-    public void testStartGame()
-    {
+    public void testBookshelfListenerNotMatching() {
         GameBuilder gameBuilder = new GameBuilder(2);
-        gameBuilder.addPlayer("nick");
-        gameBuilder.addPlayer("rick");
-        setup(gameBuilder);
-        GameInterface game = gameBuilder.startGame();
-        assertNotNull(game);
+        setup(gameBuilder, List.of("alice"));
+        gameBuilder.addPlayer("bob");
+        gameBuilder.setBookshelfListener(new BookshelfListener("nick"));
+
+        assertNull(gameBuilder.startGame());
     }
-    //FOR TESTING
-    public void setup(GameBuilder gameBuilder)
-    {
-        for(String nickname : gameBuilder.getPlayers())
-        {
+
+    /**
+     * Test creating a {@code Game} with repeated {@code BookshelfListener}s for one player.
+     */
+    @Test
+    public void testMoreBookshelfListeners() {
+        GameBuilder gameBuilder = new GameBuilder(2);
+        setup(gameBuilder, List.of("alice", "bob"));
+        gameBuilder.setBookshelfListener(new BookshelfListener("bob"));
+
+        assertNull(gameBuilder.startGame());
+    }
+
+    /**
+     * Test creating a {@code Game} with two players with same nickname.
+     */
+    @Test
+    public void testRepeatedPlayers() {
+        GameBuilder gameBuilder = new GameBuilder(2);
+        setup(gameBuilder, List.of("alice", "alice"));
+
+        assertNull(gameBuilder.startGame());
+    }
+
+    /**
+     * Test creating a {@code Game} with two players is correctly created.
+     */
+    @Test
+    public void testCorrectGameCreation() {
+        GameBuilder gameBuilder = new GameBuilder(2);
+        setup(gameBuilder, List.of("alice", "bob"));
+
+        assertNotNull(gameBuilder.startGame());
+    }
+
+    private void setup(GameBuilder gameBuilder, List<String> nicknames) {
+        for(String nickname : nicknames) {
+            gameBuilder.addPlayer(nickname);
             gameBuilder.setBookshelfListener(new BookshelfListener(nickname));
         }
         gameBuilder.setCommonGoalCardsListener(new CommonGoalCardsListener());

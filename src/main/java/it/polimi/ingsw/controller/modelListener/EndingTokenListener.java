@@ -1,5 +1,8 @@
 package it.polimi.ingsw.controller.modelListener;
 
+/**
+ * Class representing a listener to the owner of ending token in a {@code Game}.
+ */
 public class EndingTokenListener extends ModelListener {
     private String owner;
 

@@ -342,7 +342,7 @@ public class Controller implements ControllerInterface {
             ));
         }
 
-        if (gameBuilder.getCurrentPlayers() == this.numberPlayers) {
+        if (playerList.size() == this.numberPlayers) {
             // All players joined.
             Logger.startGame(id);
             setup();
