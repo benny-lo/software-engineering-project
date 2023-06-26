@@ -205,4 +205,9 @@ public class Player {
     public int getPersonalID() {
         return personalGoalCard.getId();
     }
+
+    //METHODS EXCLUSIVELY FOR TESTING
+    public List<Item> getItemsTakenFromLivingRoom() {
+        return itemsTakenFromLivingRoom;
+    }
 }

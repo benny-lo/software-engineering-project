@@ -51,7 +51,7 @@ public class GameTest {
      * Test {@code Game}'s method {@code setCurrentPlayer}.
      */
     @Test
-    public void testSetCurrentPlayer(){
+    public void testSetCurrentPlayer() {
         Game game = null;
         try {
             game = new Game(List.of("nick", "rick"), 2);
@@ -68,13 +68,15 @@ public class GameTest {
      * Test {@code Game}'s method {@code canTakeItemTiles} on a wrong tile.
      */
     @Test
-    public void testCanTakeItemTilesOnWrongTile(){
+    public void testCanTakeItemTilesOnWrongTile() {
         Game game = null;
         try {
             game = new Game(List.of("nick", "rick"), 2);
         } catch (IOException e) {
             fail();
         }
+
+        game.setCurrentPlayer("nick");
 
         assertFalse(game.canTakeItemTiles(List.of(new Position(0, 0))));
     }
@@ -83,7 +85,7 @@ public class GameTest {
      * Test {@code Game}'s method {@code canTakeItemTiles} without enough space in the bookshelf.
      */
     @Test
-    public void testCanTakeItemTilesWithoutEnoughSpace(){
+    public void testCanTakeItemTilesWithoutEnoughSpace() {
         Game game = null;
         try {
             game = new Game(List.of("nick", "rick"), 2);
@@ -91,8 +93,57 @@ public class GameTest {
             fail();
         }
 
-        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 0);
+        game.setCurrentPlayer("nick");
 
-        assertFalse(game.canTakeItemTiles(List.of(new Position(5, 5))));
+        assertTrue(game.canTakeItemTiles(List.of(new Position(1, 3))));
+
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 0);
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 1);
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 2);
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 3);
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 4);
+
+        assertFalse(game.canTakeItemTiles(List.of(new Position(1, 3))));
+    }
+
+    /**
+     * Test {@code Game}'s method {@code canTakeItemTiles} choosing a selectable {@code Item} and having enough space in the Player's Bookshelf.
+     */
+    @Test
+    public void testSuccessfulCanTakeItemTiles() {
+        Game game = null;
+        try {
+            game = new Game(List.of("nick", "rick"), 2);
+        } catch (IOException e) {
+            fail();
+        }
+
+        game.setCurrentPlayer("nick");
+
+        assertTrue(game.canTakeItemTiles(List.of(new Position(1, 3))));
+
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 0);
+        game.getPlayers().get("nick").getBookshelf().insert(List.of(Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT, Item.CAT), 1);
+
+        assertTrue(game.canTakeItemTiles(List.of(new Position(1, 3))));
+    }
+
+    /**
+     * Test {@code Game}'s method {@code selectItemTiles} checking that {@code Player}'s personal list of {@code Item}s is equal to the selected {@code Item}s.
+     */
+    @Test
+    public void testSelectItemTiles() {
+        Game game = null;
+        try {
+            game = new Game(List.of("nick", "rick"), 2);
+        } catch (IOException e) {
+            fail();
+        }
+
+        game.setCurrentPlayer("nick");
+
+        List<Item> items = game.selectItemTiles(List.of(new Position(1,3)));
+
+        assertEquals(items, game.getPlayers().get("nick").getItemsTakenFromLivingRoom());
     }
 }

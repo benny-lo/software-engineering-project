@@ -108,7 +108,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method checks if the positions in the list are available to be taken by a player.
+     * This method checks if the positions in the list are available to be taken by a player, and if there is enough space to put those {@code Item}s in the player's bookshelf.
      * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
      * @return True if the column is available, false if otherwise.
      */
@@ -124,7 +124,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method selects the Items present at the positions saved in the list.
+     * This method return the {@code Item}s in the positions selected, and it saves them in the {@code Player}'s personal list.
      * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
      * @return Returns the list of selected Items.
      */
@@ -136,7 +136,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method checks if the player can insert certain items , in a certain column
+     * This method checks if the player can insert certain items, in a certain column.
      * @param column The column of the bookshelf.
      * @param order A permutation representing the order to insert the elements in.
      * @return True if the player can, false if the player can't.
@@ -147,7 +147,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method inserts the items in the list in the bookshelf, and ends the player's turn.
+     * This method inserts the items in the column selected and with the chosen order in the bookshelf, and it ends the player's turn.
      * @param column The column to insert in.
      * @param order The list representing a permutation of the items.
      */
