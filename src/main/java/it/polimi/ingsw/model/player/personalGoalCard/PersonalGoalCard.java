@@ -3,7 +3,7 @@ package it.polimi.ingsw.model.player.personalGoalCard;
 import it.polimi.ingsw.model.player.Bookshelf;
 
 /**
- * Class representing a Personal Goal Card of a player.
+ * Class representing the Personal Goal Card of a player.
  */
 public class PersonalGoalCard {
     /**
@@ -13,7 +13,8 @@ public class PersonalGoalCard {
     private final int id;
 
     /**
-     * Constructor for {@code this} class.
+     * Constructor for the class. It sets the {@code id} and the {@code pattern}
+     * @param id int representing the id of the constructed {@code PersonalGoalCard}.
      * @param pattern Interface representing the pattern used by {@code this}.
      */
     public PersonalGoalCard(int id, PersonalGoalPatternInterface pattern) {
@@ -22,21 +23,21 @@ public class PersonalGoalCard {
     }
 
     /**
-     * Compute the personal score achieved by the bookshelf.
-     * @param bookshelf Bookshelf object to compute the personal score of.
+     * Computes the personal score achieved by the {@code Bookshelf}.
+     * @param bookshelf {@code Bookshelf} object to compute the personal score of.
      * @return The personal score of {@code bookshelf}.
      */
     public int getPersonalScore(Bookshelf bookshelf) {
         int matches = pattern.check(bookshelf);
-        return matchingToScore(matches);
+        return matchesToScore(matches);
     }
 
     /**
-     * Translate matching into the corresponding personal score.
+     * Translate matches into the corresponding personal score.
      * @param matches Number of matches.
-     * @return Score corresponding to {@code matching}.
+     * @return int representing the score corresponding to {@code matches}.
      */
-    private int matchingToScore(int matches) {
+    private int matchesToScore(int matches) {
         if (matches == 0) return 0;
         else if (matches == 1) return 1;
         else if (matches == 2) return 2;
@@ -48,8 +49,8 @@ public class PersonalGoalCard {
     }
 
     /**
-     * Getter of id for {@code this}
-     * @return Returns id of the PersonalGoalCard
+     * Getter of the id.
+     * @return The id of {@code this}.
      */
     public int getId() {
         return id;

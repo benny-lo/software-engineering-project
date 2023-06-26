@@ -16,15 +16,15 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     private final Map<Position, Item> maskPositions;
 
     /**
-     * Constructor for {@code this} class.
-     * @param maskPositions Map to assign to private attribute {@code maskPositions}.
+     * Constructor for the class. It sets the pattern corresponding to the provided {@code Map}.
+     * @param maskPositions {@code Map} to set.
      */
     public PersonalGoalPattern(Map<Position, Item> maskPositions) {
         this.maskPositions = maskPositions;
     }
 
     /**
-     * Constructor of the class used for json.
+     * No-args constructor used for json. It creates an empty pattern.
      */
     public PersonalGoalPattern(){
         maskPositions = new HashMap<>();
@@ -32,9 +32,9 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
 
 
     /**
-     * Check pattern on {@code Bookshelf} object.
+     * {@inheritDoc}
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return The number of positions of the bookshelf that match with the personal pattern.
+     * @return Number of matches found on {@code bookshelf} with the pattern.
      */
     @Override
     public int check(Bookshelf bookshelf) {
@@ -46,8 +46,8 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
     }
 
     /**
-     * Getter for the map of {@code Position} to {@code Item} contained in {@code this}.
-     * @return The map that is a private attribute of {@code this}.
+     * Getter for the map of {@code Position} to {@code Item} representing the mask of the pattern.
+     * @return The {@code Map} representing the mask of the pattern.
      */
     public Map<Position, Item> getMaskPositions() {
         return maskPositions;

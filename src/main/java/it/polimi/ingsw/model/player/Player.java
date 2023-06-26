@@ -15,9 +15,8 @@ import java.io.Reader;
 import java.util.*;
 
 /**
- * Class representing a Player.
+ * Class representing a player of a game. It manages their {@code Bookshelf} and {@code PersonalGoalCard}.
  */
-
 public class Player {
     private List<Item> itemsTakenFromLivingRoom;
     private final Bookshelf bookshelf;
@@ -27,7 +26,7 @@ public class Player {
     private BookshelfListener bookshelfListener;
 
     /**
-     * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a Bookshelf and a PersonalGoalCard.
+     * Player's Constructor: it initializes scores to zero, tokens to null, and it creates a {@code Bookshelf} and a {@code PersonalGoalCard}.
      * @throws IOException error occurred with I/O for JSON configuration files.
      */
     public Player() throws IOException {
@@ -56,7 +55,7 @@ public class Player {
     }
 
     /**
-     * Add to {@code this} the items taken from the living room.
+     * Assigns to {@code this} the items taken from the living room.
      * @param items List of the items taken from the living room.
      */
     public void takeItems(List<Item> items) {
@@ -64,7 +63,7 @@ public class Player {
     }
 
     /**
-     * Setter for the personal goal card.
+     * Setter for the {@code PersonalGoalCard}.
      * @param card The card to set.
      */
     public void setPersonalGoalCard(PersonalGoalCard card) {
@@ -72,32 +71,32 @@ public class Player {
     }
 
     /**
-     * Add a {@code ScoringToken} to {@code this} checking token's type.
-     * @param token {@code ScoringToken} obtained completing a {@code CommonGoalCard}.
+     * Gives a {@code ScoringToken} to {@code this}.
+     * @param token {@code ScoringToken} obtained by completing a {@code CommonGoalCard}.
      */
     public void addScoringToken(ScoringToken token) {
         scoringTokens.add(token);
     }
 
     /**
-     * Add the ending token to {@code this}.
+     * Gives the ending token to {@code this}.
      */
     public void addEndingToken() {
         endingToken = true;
     }
 
     /**
-     * Get the types of the scoring tokens already taken.
-     * @return List containing types of scoring tokens taken by {@code this}.
+     * Gets the types of the scoring tokens already taken.
+     * @return {@code List} containing types of {@code ScoringToken}s already taken by {@code this}.
      */
     public List<Integer> cannotTake() {
         return scoringTokens.stream().map(ScoringToken::getType).toList();
     }
 
     /**
-     * Check if {@code this} can insert the items it owns in {@code column} and in {@code order}.
+     * Checks if {@code this} can insert the items it owns in {@code column} and in {@code order}.
      * @param column The column of the bookshelf to insert into.
-     * @param order The permutation representing the order.
+     * @param order The permutation representing the order of insertion.
      * @return {@code true} iff the move is valid.
      */
     public boolean canInsertTiles(int column, List<Integer> order) {
@@ -116,9 +115,9 @@ public class Player {
     }
 
     /**
-     * Insert a list of {@code Item}s in the {@code Bookshelf} of {@code this} in the {@code column}.
-     * @param column a {@code column} selected by the Player.
-     * @param order  The order to give to the items.
+     * Inserts a list of {@code Item}s in the {@code column} of the {@code Bookshelf} of {@code this}.
+     * @param column The selected column index.
+     * @param order  The order of insertion as a permutation.
      */
     public void insertTiles(int column, List<Integer> order) {
         List<Item> permutedItems = new ArrayList<>();
@@ -143,8 +142,8 @@ public class Player {
     }
 
     /**
-     * Get the public score of {@code this}.
-     * @return Sum of {@code ScoringToken}s.
+     * Gets the public score of {@code this}.
+     * @return Sum of {@code ScoringToken}s, {@code Bookshelf} score and ending token.
      */
     public int getPublicScore() {
         return (endingToken ? 1 : 0) +
@@ -153,7 +152,7 @@ public class Player {
     }
 
     /**
-     * Get the total score of {@code this}.
+     * Gets the total score of {@code this}.
      * @return Sum of {@code ScoringToken}s, {@code personalScore} and {@code bookshelfScore}.
      */
     public int getTotalScore() {
@@ -161,7 +160,7 @@ public class Player {
     }
 
     /**
-     * Get the {@code Bookshelf} of {@code this}.
+     * Gets the {@code Bookshelf} of {@code this}.
      * @return {@code Bookshelf} of {@code this}.
      */
     public Bookshelf getBookshelf() {
@@ -169,7 +168,7 @@ public class Player {
     }
 
     /**
-     * Get the {@code personalScore} of {@code this}.
+     * Gets the {@code personalScore} of {@code this}.
      * @return {@code personalScore} of {@code this}.
      */
     public int getPersonalScore() {
@@ -178,16 +177,16 @@ public class Player {
     }
 
     /**
-     * This method tells if the {@code this} is the first to fill their {@code Bookshelf}.
-     * @return It returns a boolean, true iff {@code Player} has the {@code endingToken}, else false.
+     * Checks if the {@code this} is the first to fill their {@code Bookshelf}, i.e. {@code this} has the ending token.
+     * @return {@code true} iff {@code Player} has the {@code endingToken}, else false.
      */
     public boolean firstToFinish() {
         return this.endingToken;
     }
 
     /**
-     * This method sets the given bookshelfListener, by updating the state of every tile in the bookshelf.
-     * @param bookshelfListener BookshelfListener that needs to be set
+     * Sets the given bookshelfListener and updates it with current state of {@code this}' {@code Bookshelf}.
+     * @param bookshelfListener {@code BookshelfListener} to set.
      */
     public void setBookshelvesListener(BookshelfListener bookshelfListener) {
         this.bookshelfListener = bookshelfListener;
@@ -199,8 +198,8 @@ public class Player {
     }
 
     /**
-     * Getter for the id of the PersonalGoalCard of {@code this}
-     * @return The id of the PersonalGoalCard associated to the player
+     * Getter for the id of the PersonalGoalCard of {@code this}.
+     * @return The id of the PersonalGoalCard associated to the player.
      */
     public int getPersonalID() {
         return personalGoalCard.getId();

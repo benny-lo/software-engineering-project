@@ -17,7 +17,7 @@ import java.io.*;
 import java.util.*;
 
 /**
- * Class representing the Game.
+ * Class representing a game. It contains all managers and the nicknames of all players.
  */
 public class Game implements GameInterface {
     private final int numberPlayers;
@@ -29,9 +29,10 @@ public class Game implements GameInterface {
     private EndingTokenListener endingTokenListener;
 
     /**
-     * Game's Constructor: it initializes {@code Game}.
-     * @param nicknames list containing the nicknames of the players.
-     * @param numberCommonGoalCards It can be initialised to '1' or '2'.
+     * Game's Constructor: it initializes {@code this} with a {@code List} of nicknames and a number of common goal
+     * cards.
+     * @param nicknames {@code List} containing the nicknames of the players.
+     * @param numberCommonGoalCards Number of common goal cards. (It can be either to '1' or '2').
      * @throws IOException error occurred with I/O for JSON configuration files.
      */
     public Game(List<String> nicknames, int numberCommonGoalCards) throws IOException {
@@ -46,7 +47,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This private method creates a {@code PersonalGoalCard} for each {@code Player}.
+     * Creates and assigns a {@code PersonalGoalCard} for each {@code Player}.
      */
     private void distributePersonalCards(){
         Random random = new Random();
@@ -88,7 +89,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method  initializes a {@code PersonalGoalCard} for each {@code Player}, the {@code BoardManager}, the
+     * Initializes a {@code PersonalGoalCard} for each {@code Player}, the {@code BoardManager}, the
      * {@code CommonGoalCardManager}, and fills the {@code LivingRoom}.
      */
     private void setup() throws IOException {
@@ -99,8 +100,8 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method sets the currentPlayer, given the nickname.
-     * @param nickname {@code nickname} is the {@code currentPlayer}'s name.
+     * {@inheritDoc}
+     * @param nickname The nickname of the new current player.
      */
     @Override
     public void setCurrentPlayer(String nickname){
@@ -108,9 +109,9 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method checks if the positions in the list are available to be taken by a player.
-     * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
-     * @return True if the column is available, false if otherwise.
+     * {@inheritDoc}
+     * @param positions {@code List} of {@code Position}s chosen by a player.
+     * @return {@code true} iff the column is available, {@code false} if otherwise.
      */
     @Override
     public boolean canTakeItemTiles(List<Position> positions){
@@ -124,9 +125,9 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method selects the Items present at the positions saved in the list.
-     * @param positions {@code positions} is a list of {@code Position}s chosen by a player.
-     * @return Returns the list of selected Items.
+     * {@inheritDoc}
+     * @param positions {@code List} of {@code Position}s chosen by the current player.
+     * @return The {@code Item}s selected from the {@code LivingRoom}.
      */
     @Override
     public List<Item> selectItemTiles(List<Position> positions){
@@ -136,10 +137,10 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method checks if the player can insert certain items , in a certain column
+     * {@inheritDoc}
      * @param column The column of the bookshelf.
      * @param order A permutation representing the order to insert the elements in.
-     * @return True if the player can, false if the player can't.
+     * @return {@code true} iff the move is valid.
      */
     @Override
     public boolean canInsertItemTilesInBookshelf(int column, List<Integer> order) {
@@ -147,9 +148,9 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method inserts the items in the list in the bookshelf, and ends the player's turn.
+     * {@inheritDoc}
      * @param column The column to insert in.
-     * @param order The list representing a permutation of the items.
+     * @param order {@code List} representing the order of the {@code Item}s to insert in {@code Bookshelf}.
      */
     @Override
     public void insertItemTilesInBookshelf(int column, List<Integer> order) {
@@ -158,8 +159,8 @@ public class Game implements GameInterface {
     }
 
     /**
-     * Take ending token if bookshelf is full, and it is available;
-     * Refill board if needed and bag is non-empty;
+     * Takes the ending token if bookshelf is full, and it is available;
+     * Refills board if needed and bag is non-empty;
      * Check common goals.
      */
     private void endTurn() {
@@ -179,8 +180,8 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method checks if the EndingToken has been assigned to any player.
-     * @return True if it has been assigned, false otherwise.
+     * {@inheritDoc}
+     * @return {@code true} iff there is a player that owns the ending token.
      */
     @Override
     public boolean IsEndingTokenAssigned() {
@@ -191,8 +192,8 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method sets the Bookshelf listener of the player, in case it is not set.
-     * @param bookshelfListener The bookshelf listener of the player.
+     * Sets the {@code BookshelfListener} for a player.
+     * @param bookshelfListener The {@code BookshelfListener} of the player to set.
      */
     public void setBookshelfListener(BookshelfListener bookshelfListener) {
         Player player = players.get(bookshelfListener.getOwner());
@@ -202,8 +203,8 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method sets the CommonGoalCards listener, in case it is not set.
-     * @param commonGoalCardsListener The common goal cards listener
+     * Sets the {@code CommonGoalCardsListener}.
+     * @param commonGoalCardsListener The {@code CommonGoalCardsListener} to set.
      */
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         if (commonGoalCardManager == null) return;
@@ -211,8 +212,8 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method sets the EndingToken listener, updating the state of it for every player.
-     * @param endingTokenListener The ending token listener
+     * Sets the {@code EndingTokenListener} and updates it with the current state.
+     * @param endingTokenListener The {@code EndingTokenListener} to set.
      */
     public void setEndingTokenListener(EndingTokenListener endingTokenListener) {
         this.endingTokenListener = endingTokenListener;
@@ -227,8 +228,8 @@ public class Game implements GameInterface {
     }
 
     /**
-     * This method sets the LivingRoom listener, in case it is not set.
-     * @param livingRoomListener The living room listener.
+     * Sets the {@code LivingRoomListener}.
+     * @param livingRoomListener The {@code LivingRoomListener} to set.
      */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
         if (boardManager == null) return;
@@ -236,9 +237,9 @@ public class Game implements GameInterface {
     }
 
     /**
-     * Getter for the PublicScore of a Player
-     * @param nickname It's the {@code Players}'s name.
-     * @return The public score of a player.
+     * {@inheritDoc}
+     * @param nickname The {@code Players}'s nickname.
+     * @return The public score of the {@code Player}.
      */
     @Override
     public int getPublicScore(String nickname) {
@@ -246,9 +247,9 @@ public class Game implements GameInterface {
     }
 
     /**
-     * Getter for the PersonalScore of a Player.
-     * @param nickname the {@code Player}'s name.
-     * @return The private score of a player.
+     * {@inheritDoc}
+     * @param nickname The {@code Player}'s name.
+     * @return The personal score of a {@code Player}.
      */
     @Override
     public int getPersonalScore(String nickname) {
@@ -256,7 +257,7 @@ public class Game implements GameInterface {
     }
 
     /**
-     * Getter for the CurrentPlayer
+     * Getter for the current player.
      * @return The current player.
      */
     public String getCurrentPlayer() {
@@ -264,9 +265,9 @@ public class Game implements GameInterface {
     }
 
     /**
-     * Getter for the PersonalID of a player, using the nickname.
-     * @param nickname the nickname of the player.
-     * @return The personal ID of a player.
+     * {@inheritDoc}
+     * @param nickname The nickname of the player.
+     * @return The id of the {@code PersonalGoalCard} of the player with nickname {@code nickname}.
      */
     @Override
     public int getPersonalID(String nickname) {
@@ -284,24 +285,24 @@ public class Game implements GameInterface {
     //METHODS EXCLUSIVELY FOR TESTING
 
     /**
-     * Getter for the players
-     * @return A map of the players.
+     * Getter for the players.
+     * @return A {@code Map} of the nickname -> players.
      */
     public Map<String, Player> getPlayers() {
         return players;
     }
 
     /**
-     * Getter for the boardManager
-     * @return The board manager
+     * Getter for the {@code BoardManager}.
+     * @return The {@code BoardManager}.
      */
     public BoardManager getBoardManager() {
         return boardManager;
     }
 
     /**
-     * Getter for the CommonGoalCardManager
-     * @return The common goal card manager.
+     * Getter for the {@code CommonGoalCardManager}.
+     * @return The {@code CommonGoalCardManager}.
      */
     public CommonGoalCardManager getCommonGoalCardManager() {
         return commonGoalCardManager;

@@ -15,7 +15,7 @@ public class Bag {
     private final Stack<Item> elements;
 
     /**
-     * Constructor for {@code this} class. Fills {@code this} and randomly shuffles it.
+     * Constructor for the class. Fills {@code this} and randomly shuffles it.
      * @param numberPerType Number of {@code Item}s of each type to put in {@code this}.
      */
     public Bag(int numberPerType) {
@@ -28,7 +28,7 @@ public class Bag {
     }
 
     /**
-     * Check if {@code this} is empty.
+     * Checks if {@code this} is empty.
      * @return {@code true} iff {@code this} is empty.
      */
     public boolean isEmpty() {
@@ -36,7 +36,7 @@ public class Bag {
     }
 
     /**
-     * Extract an {@code Item} from {@code this}.
+     * Extracts an {@code Item} from {@code this}.
      * @return The {@code Item} extracted if {@code this} was not empty, else null.
      */
     public Item extract() {

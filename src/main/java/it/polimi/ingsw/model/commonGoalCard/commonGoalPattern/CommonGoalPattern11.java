@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.player.Bookshelf;
 
 /**
  * Class representing the following pattern:
- * five tiles of the same type forming a diagonal
+ * five tiles of the same type forming a diagonal.
  */
 
 public class CommonGoalPattern11 implements CommonGoalPatternInterface{
@@ -12,9 +12,9 @@ public class CommonGoalPattern11 implements CommonGoalPatternInterface{
     private static final int END = 4;
 
     /**
-     * Check pattern on {@code Bookshelf} object.
+     * {@inheritDoc}
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return True if the pattern is found, false if it isn't
+     * @return {@code true} iff the pattern is present in {@code bookshelf}.
      */
     @Override
     public boolean check(Bookshelf bookshelf) {

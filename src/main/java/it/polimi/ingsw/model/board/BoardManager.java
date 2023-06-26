@@ -11,17 +11,18 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Class representing a BoardManager.
+ * Class managing the {@code Bag} and the {@code LivingRoom}.
  */
 public class BoardManager {
+    private static final int ITEMS_PER_TYPE = 22;
     private boolean endingToken;
     private final LivingRoom livingRoom;
     private final Bag bag;
     private LivingRoomListener livingRoomListener;
 
     /**
-     * BoardManager's Constructor: it initializes the {@code Bag} and the {@code LivingRoom}.
-     * @param numberPlayers It's the number of players in the game.
+     * Constructor for the class: it initializes the {@code Bag} and the {@code LivingRoom}.
+     * @param numberPlayers The number of players in the game.
      * @throws IOException Error occurred with I/O for JSON configuration files.
      */
     public BoardManager(int numberPlayers) throws IOException {
@@ -42,19 +43,20 @@ public class BoardManager {
         }
 
         this.endingToken = true;
-        this.bag = new Bag(22);
+        this.bag = new Bag(ITEMS_PER_TYPE);
         this.livingRoomListener = null;
     }
 
     /**
-     * This method fills the free squares of the {@code LivingRoom} with {@code Item}s, if needed.
+     * Fills the free squares of the {@code LivingRoom} with {@code Item}s, if needed.
      */
     public void fill(){
-        if (livingRoom.isRefillNeeded()){
-            for(int i = 0; i < livingRoom.getRows(); i++){
-                for(int j = 0; j < livingRoom.getColumns(); j++){
+        if (livingRoom.isRefillNeeded()) {
+            for(int i = 0; i < livingRoom.getRows(); i++) {
+                for(int j = 0; j < livingRoom.getColumns(); j++) {
                     if (bag.isEmpty()) return;
-                    if(livingRoom.tileAt(i, j) == null){
+
+                    if(livingRoom.tileAt(i, j) == null) {
                         Position p = new Position(i, j);
                         livingRoom.setTile(bag.extract(), p);
                         if (livingRoomListener != null) {
@@ -67,9 +69,9 @@ public class BoardManager {
     }
 
     /**
-     * This method verifies if the player can take a list of {@code Item}s.
-     * @param positions It's a list of {@code Item}'s {@code Position}s.
-     * @return It returns a boolean, true iff all the {@code Item} can be taken, else false.
+     * Verifies if the player can take a list of {@code Position}s.
+     * @param positions {@code List} of {@code Position}s chosen.
+     * @return {@code true} iff all the {@code Item}s at the selected {@code position} can be taken, else false.
      */
     public boolean canTakeItemTilesBoard(List<Position> positions){
         if (positions.size() == 0 || positions.size() > 3) return false;
@@ -80,7 +82,7 @@ public class BoardManager {
     }
 
     /**
-     * Check if a list is made of positions all in a row or column.
+     * Checks if a list is made of positions all in a row or column.
      * @param positions the list of positions.
      * @return {@code true} iff the positions are all in the same row/column.
      */
@@ -104,9 +106,9 @@ public class BoardManager {
     }
 
     /**
-     * This method extract a list of {@code Item}s from {@code LivingRoom}.
-     * @param positions The positions to select the {@code Item} from.
-     * @return The list of selected {@code Item}s.
+     * Extracts a list of {@code Item}s from {@code LivingRoom}.
+     * @param positions {@code List} of {@code Position}s to select the {@code Item}s from.
+     * @return {@code List} of selected {@code Item}s.
      */
     public List<Item> selectItemTiles(List<Position> positions) {
         if (livingRoomListener != null) {
@@ -118,30 +120,22 @@ public class BoardManager {
     }
 
     /**
-     * This method checks if someone has taken the {@code endingToken}.
-     * @return It returns a boolean, true iff the {@code endingToken} hasn't been taken yet, else false.
+     * Checks if someone has taken the {@code endingToken}.
+     * @return {@code true} iff the {@code endingToken} hasn't been taken yet, else false.
      */
     public boolean isEndingToken(){
         return endingToken;
     }
 
     /**
-     * This method gives the {@code endingToken} to the first player that has filled their {@code Bookshelf}.
+     * Makes the {@code endingToken} unavailable.
      */
     public void takeEndingToken(){
         endingToken = false;
     }
 
     /**
-     * This method gives the {@code livingRoom}.
-     * @return It returns the {@code livingRoom}.
-     */
-    public LivingRoom getLivingRoom() {
-        return livingRoom;
-    }
-
-    /**
-     * This method sets the given LivingRoomListener, by updating the state of every tile.
+     * Sets the given LivingRoomListener and updates with the current state of the {@code LivingRoom}.
      * @param livingRoomListener LivingRoomListener that needs to be set
      */
     public void setLivingRoomListener(LivingRoomListener livingRoomListener) {
@@ -151,5 +145,13 @@ public class BoardManager {
                 livingRoomListener.updateState(new Position(i, j), livingRoom.tileAt(i, j));
             }
         }
+    }
+
+    /**
+     * Getter for the {@code LivingRoom}.
+     * @return The {@code LivingRoom}.
+     */
+    public LivingRoom getLivingRoom() {
+        return livingRoom;
     }
 }

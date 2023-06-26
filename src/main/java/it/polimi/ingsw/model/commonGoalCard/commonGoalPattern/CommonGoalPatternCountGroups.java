@@ -20,10 +20,10 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
     private final Predicate<Set<Position>> goodTile;
 
     /**
-     * Constructor for {@code this} class. It initializes the private fields {@code matches} and {@code goodTile} of {@code this}.
+     * Constructor for the class. It sets the {@code matches}, {@code goodTile} and {@code maxDimension} of {@code this}.
+     * @param maxDimension The maximum dimension of group of {@code Position}s.
      * @param matches The minimum number of matches required.
-     * @param goodTile The predicate defining what groups to consider.
-     * @param maxDimension The maximum dimension of group of tiles.
+     * @param goodTile The {@code Predicate} defining what groups to consider.
      */
     public CommonGoalPatternCountGroups(int maxDimension, int matches, Predicate<Set<Position>> goodTile) {
         this.maxDimension = maxDimension;
@@ -33,9 +33,9 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
     }
 
     /**
-     * Check pattern on {@code Bookshelf} object.
+     * {@inheritDoc}
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return True if the pattern is found, false if it isn't
+     * @return {@code true} iff the pattern is present in {@code bookshelf}.
      */
     @Override
     public boolean check(Bookshelf bookshelf) {
@@ -46,9 +46,9 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
     }
 
     /**
-     * Method to generate all good groups of adjacent tiles.
-     * @param bookshelf The bookshelf.
-     * @return List of all good groups found in bookshelf.
+     * Generates all good groups of adjacent tiles from a {@code Bookshelf}.
+     * @param bookshelf The {@code Bookshelf}.
+     * @return {@code List} of all good groups found in {@code bookshelf}.
      */
     private List<Set<Position>> generateGroups(Bookshelf bookshelf) {
         Set<Set<Position>> allGroups = new HashSet<>();
@@ -66,7 +66,7 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
     }
 
     /**
-     * Helper method for {@code generateGroups}. It is used to generate all groups starting from a single position.
+     * Recursive helper method for {@code generateGroups}. It is used to generate all groups starting from a single position.
      * @param allGroups The set representing all groups currently found. It is augmented every time a new groups is found.
      * @param bookshelf The bookshelf.
      * @param curr The current set of positions being considered.
@@ -100,8 +100,8 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
     }
 
     /**
-     * Method generating all possible non-overlapping coverings of the bookshelf and finding the size of the largest.
-     * @param groups All valid groups of tiles.
+     * Generates all possible non-overlapping coverings of the bookshelf and finds the size of the largest.
+     * @param groups All good groups of tiles.
      * @param curr The current subset considered.
      * @param idx The index to decide whether to insert or exclude.
      */
@@ -118,7 +118,7 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
     }
 
     /**
-     * Method testing whether two groups of tiles share a position.
+     * Checks whether two groups of tiles share a {@code Position}.
      * @param group1 The first group.
      * @param group2 The second group.
      * @return {@code true} iff the two groups share a position, i.e. they overlap.
@@ -131,7 +131,7 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
     }
 
     /**
-     * Method testing whether a list of groups forms a valid non-overlapping covering.
+     * Checks whether a {@code List} of groups forms a valid non-overlapping covering.
      * @param groupTiles The candidate covering.
      * @return {@code true} iff the covering is valid.
      */

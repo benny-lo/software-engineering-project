@@ -18,9 +18,9 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
     private final int maxTypes;
 
     /**
-     * Constructor for {@code this} class. It initializes all private fields of this.
+     * Constructor for {@code this} class. It sets all private fields of {@code this}.
      * @param numLines The number of rows/columns required by the pattern.
-     * @param rowOrColumn {@code true} if the pattern regards rows, else {@code false} if patterns regards columns.
+     * @param rowOrColumn {@code true} if the pattern considers rows, else {@code false} if patterns considers columns.
      * @param minTypes The minimum number of distinct types per line.
      * @param maxTypes The maximum number of distinct types per line.
      */
@@ -32,9 +32,9 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
     }
 
     /**
-     * Check pattern on {@code Bookshelf} object.
+     * {@inheritDoc}
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
-     * @return True if the pattern is found, false if it isn't
+     * @return {@code true} iff the pattern is present in {@code bookshelf}.
      */
     @Override
     public boolean check(Bookshelf bookshelf) {
@@ -43,7 +43,7 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
     }
 
     /**
-     * Method to check if pattern is satisfied on the rows.
+     * Checks if pattern is satisfied on the rows.
      * @param bookshelf The bookshelf to check the pattern on.
      * @return {@code true} iff the pattern is satisfied by {@code bookshelf} on the rows.
      */
@@ -63,7 +63,7 @@ public class CommonGoalPatternDistinctItems implements CommonGoalPatternInterfac
     }
 
     /**
-     * Method to check if the pattern is satisfied on the columns.
+     * Checks if the pattern is satisfied on the columns.
      * @param bookshelf The bookshelf to check the pattern on.
      * @return {@code true} iff the pattern is satisfied by {@code bookshelf} on the columns.
      */
