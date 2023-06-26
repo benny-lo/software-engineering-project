@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.client.gui;
 
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,7 +11,6 @@ import java.io.IOException;
 import java.util.Objects;
 
 import static it.polimi.ingsw.utils.view.gui.WindowManager.closeWindow;
-
 
 public class GUILauncher extends Application{
     public static void startGUI(){
