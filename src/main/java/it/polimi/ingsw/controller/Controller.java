@@ -18,7 +18,7 @@ import java.io.Reader;
 import java.util.*;
 
 /**
- * Controller of a single game. Its purpose is to construct the model, manage request from clients and
+ * Controller of a single game. Its purpose is to schedule the turns, manage request from clients and
  * appropriately send updates to clients. Some methods synchronize on {@code this}.
  */
 public class Controller implements ControllerInterface {
@@ -307,7 +307,7 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param view The view of the client that is joining.
+     * @param view The {@code ServerUpdateViewInterface} performing the action.
      */
     @Override
     public synchronized void join(ServerUpdateViewInterface view) {
@@ -320,7 +320,7 @@ public class Controller implements ControllerInterface {
 
         // Get the GameConfig and send them to player.
         GameConfig gameConfig = getGameConfig();
-        view.onGameData(new GameData(numberPlayers, getConnectedPlayers(), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
+        view.onGameData(new GameData(numberPlayers, new ArrayList<>(playerList), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
 
         // Add player to queue and to list of views.
         playerList.add(view.getNickname());
@@ -352,8 +352,8 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param positions List of {@code Position}s chosen by the client.
-     * @param view The view of the client performing the action.
+     * @param positions {@code List} of {@code Position}s that are chosen by the player.
+     * @param view The {@code ServerUpdateViewInterface} performing the action.
      */
     @Override
     public synchronized void livingRoom(List<Position> positions, ServerUpdateViewInterface view) {
@@ -383,9 +383,9 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param column The index of the client's {@code Bookshelf} where to insert the selected {@code Item}s.
-     * @param permutation List of {@code Integer}s representing the order in which to insert in the {@code Bookshelf}.
-     * @param view The client's view performing the action.
+     * @param column The column of the {@code Bookshelf} where to insert the previously chosen {@code Item}s
+     * @param permutation {@code List} of {@code Integer}s representing the order in which to insert the {@code Item}s in the {@code Bookshelf}.
+     * @param view The {@code ServerUpdateViewInterface} performing the action.
      */
     @Override
     public synchronized void bookshelf(int column, List<Integer> permutation, ServerUpdateViewInterface view) {
@@ -419,9 +419,9 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param text The text send as message by the client.
-     * @param receiver The nickname of the receiver of the message ("all" if the message is broadcast).
-     * @param view The client's view performing the action.
+     * @param text The content of the message.
+     * @param receiver The receiver of the message.
+     * @param view The {@code ServerUpdateViewInterface} performing the action.
      */
     @Override
     public synchronized void chat(String text, String receiver, ServerUpdateViewInterface view) {
@@ -469,7 +469,7 @@ public class Controller implements ControllerInterface {
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param view The client's view performing the action.
+     * @param view The {@code ServerUpdateViewInterface} that disconnected.
      */
     @Override
     public synchronized void disconnection(ServerUpdateViewInterface view) {
@@ -503,9 +503,9 @@ public class Controller implements ControllerInterface {
     }
 
     /**
-     * Returns whether the game is started.
+     * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @return {@code true} iff the game is started.
+     * @return {@code true} iff the game has already started.
      */
     @Override
     public synchronized boolean isStarted() {
@@ -513,8 +513,8 @@ public class Controller implements ControllerInterface {
     }
 
     /**
-     * Getter for the number of players.
-     * @return the number of players.
+     * {@inheritDoc}
+     * @return The number of players.
      */
     @Override
     public int getNumberPlayers() {
@@ -522,8 +522,8 @@ public class Controller implements ControllerInterface {
     }
 
     /**
-     * Getter for the number of Common Goal cards.
-     * @return the number of common goal cards.
+     * {@inheritDoc}
+     * @return The number of common goal cards.
      */
     @Override
     public int getNumberCommonGoalCards() {
@@ -531,14 +531,16 @@ public class Controller implements ControllerInterface {
     }
 
     /**
-     * Getter for the number of players currently connected.
+     * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @return the number of players connected.
+     * @return The number of currently connected players.
      */
     @Override
     public synchronized int getNumberActualPlayers(){
         return playerList.size();
     }
+
+    // EXCLUSIVELY FOR TESTING
 
     /**
      * Getter for the list of nicknames of the players connected so far.
@@ -548,8 +550,6 @@ public class Controller implements ControllerInterface {
     public List<String> getConnectedPlayers(){
         return new ArrayList<>(playerList);
     }
-
-    // EXCLUSIVELY FOR TESTING
 
     /**
      * Getter for the ended value, used only for testing

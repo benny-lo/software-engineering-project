@@ -8,8 +8,8 @@ import java.util.*;
 
 
 /**
- * Class containing all {@code Controller}s of all games currently being played. It uses the Singleton
- * Pattern. Some public methods take the lock on {@code this}.
+ * Class containing all {@code Controller}s of all games currently being played and all {@code ServerUpdateViewInterface}s.
+ * It uses the Singleton Pattern. Some public methods take the lock on {@code this}.
  */
 public class Lobby {
     /**
@@ -185,7 +185,7 @@ public class Lobby {
     }
 
     /**
-     * Joins the {@code ServerUpdateViewInterface} that performed the request in the selected math (by id).
+     * Joins the {@code ServerUpdateViewInterface} that performed the request in the selected match (by id).
      * @param id The id of the selected game.
      * @param view The {@code ServerUpdateViewInterface} that performed the request.
      */

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Class implementing the Builder pattern. It builds a {@code GameInterface}.
@@ -140,7 +139,7 @@ public class GameBuilder {
         for(String nickname : players) {
             List<String> tmp = bookshelfListeners.stream().
                     map(BookshelfListener::getOwner).
-                    filter((bl) -> nickname.equals(bl)).toList();
+                    filter(nickname::equals).toList();
             if (tmp.size() != 1) return null;
         }
 
