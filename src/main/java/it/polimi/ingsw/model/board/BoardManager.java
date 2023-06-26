@@ -113,7 +113,7 @@ public class BoardManager {
     public List<Item> selectItemTiles(List<Position> positions) {
         if (livingRoomListener != null) {
             for (Position p : positions) {
-                livingRoomListener.updateState(new Position(p), null);
+                livingRoomListener.updateState(p, null);
             }
         }
         return livingRoom.selectTiles(positions);

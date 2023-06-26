@@ -3,14 +3,17 @@ package it.polimi.ingsw.utils;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Class representing a pair of coordinates in a 2D space.
+ */
 public class Position implements Comparable<Position>, Serializable {
     private final int row;
     private final int column;
 
     /**
-     * Constructor for the class.
-     * @param row - the row of the position on the grid.
-     * @param column - the column of the position on the grid.
+     * Constructor for the class. It sets the row and the column.
+     * @param row The row (y-coordinate) of the position.
+     * @param column The column (x-coordinate) of the position.
      */
     public Position(int row, int column) {
         this.row = row;
@@ -18,16 +21,7 @@ public class Position implements Comparable<Position>, Serializable {
     }
 
     /**
-     * Constructor for the class.
-     * @param p - the position that we want to assign to the new postion.
-     */
-    public Position(Position p) {
-        this.row = p.row;
-        this.column = p.column;
-    }
-
-    /**
-     * Constructor for the class , for json.
+     * No-args constructor, used for JSON. It creates an invalid position: (-1, -1).
      */
     public Position(){
         row = -1;
@@ -35,25 +29,25 @@ public class Position implements Comparable<Position>, Serializable {
     }
 
     /**
-     * Getter for row
-     * @return - the row of the positon.
+     * Getter for row.
+     * @return The row of {@code this}.
      */
     public int getRow() {
         return this.row;
     }
 
     /**
-     * Getter for column
-     * @return - the column of the postion
+     * Getter for column.
+     * @return The column of {@code this}.
      */
     public int getColumn() {
         return this.column;
     }
 
     /**
-     * Override of the equals methods, checks if one position object indicates the same position of another object
-     * @param obj - the object that needs to be checked.
-     * @return - true if the object indicates the same position, false if otherwise
+     * Two {@code Position}s are equal if they share the same row and column.
+     * @param obj The object to check equality with.
+     * @return {@code true} iff {@code this} and {@code obj} are equal.
      */
     @Override
     public boolean equals(Object obj) {
@@ -64,8 +58,8 @@ public class Position implements Comparable<Position>, Serializable {
     }
 
     /**
-     * Returns the hash code for the position
-     * @return - the hashcode for the position.
+     * Returns the hash code of {@code this}.
+     * @return The hashcode for the position.
      */
     @Override
     public int hashCode() {
@@ -73,10 +67,13 @@ public class Position implements Comparable<Position>, Serializable {
     }
 
     /**
-     * This method compares the Position to another , calculating how far is it.
-     * @param other the object to be compared.
-     * @return - number of rows the other position is far from, or the number of columns the other position is far from
-     * or 0 in case it's the same position.
+     * Compares the {@code this} to another {@code Position}: {@code this} < {@code other} iff
+     * the row of {@code this} is smaller than the row of {@code other} or, in case of equality
+     * between the rows, if the column of {@code this} is smaller than the column of {@code other}.
+     * @param other The object to compare {@code this} with.
+     * @return int < 0 if {@code this} < {@code other},
+     * int = 0 if {@code this} = {@code other},
+     * else an int > 0.
      */
     @Override
     public int compareTo(Position other){
@@ -87,6 +84,10 @@ public class Position implements Comparable<Position>, Serializable {
         return 0;
     }
 
+    /**
+     * Converts {@code this} into a {@code String} for printing.
+     * @return The {@code String} corresponding to {@code this}.
+     */
     @Override
     public String toString() {
         return "\nrow: " + row + ", column: " + column;

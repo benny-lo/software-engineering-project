@@ -10,9 +10,9 @@ import it.polimi.ingsw.utils.message.server.*;
 
 
 /**
- * This class represents the connection to a client. VirtualViews are instantiated once per client.
- * It listens for message from the client and notifies the lobby/controller.
- * It is used by the lobby and the controller to send messages to client.
+ * This class represents a client on the server-side. {@code VirtualView}s are instantiated once per client.
+ * It listens for message from the client (coming from the network) and notifies the {@code Lobby}/{@code Controller}.
+ * It is used by the {@code Lobby} and the {@code Controller} to send messages to the client.
  * All methods inherited from {@code ServerInputViewInterface} take the lock on {@code this}.
  * All other methods are thread-safe and do not take the lock on {@code this}.
  */
@@ -31,7 +31,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     private final Object controllerLock;
 
     /**
-     * The constructor of VirtualView. It only sets the {@code ServerConnection} and
+     * The constructor of {@code VirtualView}. It only sets the {@code ServerConnection} and
      * leaves {@code nickname} and {@code controller} to {@code null}.
      */
     public VirtualView(ServerConnection serverConnection) {
@@ -41,8 +41,9 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     }
 
     /**
-     * Setter for the private attribute {@code nickname}.
-     * @param nickname the nickname to set.
+     * {@inheritDoc}
+     * THREAD-SAFE synchronizing privately.
+     * @param nickname The nickname to set.
      */
     @Override
     public void setNickname(String nickname) {
@@ -52,8 +53,9 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     }
 
     /**
-     * Getter for the private attribute {@code nickname}.
-     * @return a {@code String} corresponding to the nickname of {@code this}.
+     * {@inheritDoc}
+     * THREAD-SAFE synchronizing privately.
+     * @return {@code String} corresponding to the nickname of {@code this}.
      */
     @Override
     public String getNickname() {
@@ -63,8 +65,9 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     }
 
     /**
-     * Setter for the private attribute {@code controller}.
-     * @param controller the controller to set.
+     * {@inheritDoc}
+     * THREAD-SAFE synchronizing privately.
+     * @param controller The {@code Controller} joined.
      */
     @Override
     public void setController(ControllerInterface controller) {
@@ -74,8 +77,9 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     }
 
     /**
-     * Method to check whether {@code this} is logged in any game (has a controller).
-     * @return {@code true} iff the private attribute {@code controller} is not {@code null}.
+     * {@inheritDoc}
+     * THREAD-SAFE synchronizing privately.
+     * @return {@code true} iff the {@code Controller} of {@code this} is not {@code null}.
      */
     @Override
     public boolean isInGame() {
@@ -84,7 +88,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         }
     }
 
-
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}. Internally, it requires the lock on {@code Lobby}.
+     * @param message Message containing the chosen nickname.
+     */
     @Override
     public synchronized void login(Nickname message) {
         synchronized (controllerLock) {
@@ -96,6 +104,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         Lobby.getInstance().login(message.getNickname(), this);
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}. Internally, it requires the lock on {@code Lobby}.
+     * @param message Message containing the information about the game to create.
+     */
     @Override
     public synchronized void createGame(GameInitialization message) {
         synchronized (controllerLock) {
@@ -107,6 +120,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         Lobby.getInstance().createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}. Internally it requires the lock on {@code Lobby}.
+     * @param message Message containing the id of the game chosen.
+     */
     @Override
     public synchronized void selectGame(GameSelection message) {
         synchronized (controllerLock) {
@@ -118,6 +136,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         Lobby.getInstance().selectGame(message.getId(), this);
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}. Internally it requires the lock on the assigned {@code Controller}.
+     * @param message Message containing the chosen positions.
+     */
     @Override
     public synchronized void selectFromLivingRoom(LivingRoomSelection message) {
         synchronized (controllerLock) {
@@ -129,6 +152,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         controller.livingRoom(message.getPositions(), this);
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}. Internally it requires the lock on the assigned {@code Controller}.
+     * @param message Message containing the column and the order in which to insert the chosen tiles.
+     */
     @Override
     public synchronized void insertInBookshelf(BookshelfInsertion message) {
         synchronized (controllerLock) {
@@ -140,6 +168,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         controller.bookshelf(message.getColumn(), message.getPermutation(), this);
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}. Internally it requires the lock on the assigned {@code Controller}.
+     * @param message Message containing the text written.
+     */
     @Override
     public synchronized void writeChat(ChatMessage message) {
         synchronized (controllerLock) {
@@ -152,6 +185,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         controller.chat(message.getText(), message.getReceiver(), this);
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}. Internally it requires the lock on the assigned {@code Controller} and
+     * on {@code Lobby} in a non-nested way.
+     */
     @Override
     public synchronized void disconnect() {
         synchronized (nicknameLock) {
@@ -162,7 +200,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
             }
         }
 
-        Lobby.getInstance().removeServerUpdateViewInterface(this);
+
         boolean flag;
         synchronized (controllerLock) {
             flag = (controller != null);
@@ -171,79 +209,139 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
             controller.disconnection(this);
             if (controller.getNumberActualPlayers() < 1) Lobby.getInstance().removeController(controller);
         }
-
+        Lobby.getInstance().removeServerUpdateViewInterface(this);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onLivingRoomUpdate(LivingRoomUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onBookshelfUpdate(BookshelfUpdate update) {
        serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onWaitingUpdate(WaitingUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onScoresUpdate(ScoresUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onEndingTokenUpdate(EndingTokenUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onChatUpdate(ChatUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onStartTurnUpdate(StartTurnUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
         serverConnection.send(update);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param gamesList The message to process.
+     */
     @Override
     public void onGamesList(GamesList gamesList) {
         serverConnection.send(gamesList);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param selectedItems The message to process.
+     */
     @Override
     public void onSelectedItems(SelectedItems selectedItems) {
         serverConnection.send(selectedItems);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message The message to process.
+     */
     @Override
     public void onAcceptedInsertion(AcceptedInsertion message) {
         serverConnection.send(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message The message to process.
+     */
     @Override
     public void onGameData(GameData message){
         serverConnection.send(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message The message to process.
+     */
     @Override
     public void onChatAccepted(ChatAccepted message) {
         serverConnection.send(message);

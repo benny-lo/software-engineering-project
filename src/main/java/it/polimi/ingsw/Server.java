@@ -17,13 +17,17 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
+/**
+ * Class starting the server.
+ */
 public class Server {
     private static final ConnectionEstablishmentRMI remoteObject = new ConnectionEstablishmentRMI();
     private static final int DEFAULT_RMI_PORT = 1099;
     private static final int DEFAULT_SOCKET_PORT = 1234;
+
     /**
-     * Parameters: [hostname] [RMI_port_number] [TCP_port_number]
-     * @param args cli parameters (except for the first one which was server).
+     * Starts both the rmi connection and tcp connection.
+     * @param args Command Line arguments hostname, rmi port and tcp port.
      */
     public static void launch(List<String> args) {
         try {
