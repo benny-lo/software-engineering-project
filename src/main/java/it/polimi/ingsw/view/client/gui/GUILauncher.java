@@ -33,5 +33,4 @@ public class GUILauncher extends Application{
         primaryStage.setOnCloseRequest(event -> {event.consume();
                                                 closeWindow(primaryStage);});
     }
-
 }
