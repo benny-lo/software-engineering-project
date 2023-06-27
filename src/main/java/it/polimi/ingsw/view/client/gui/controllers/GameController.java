@@ -58,6 +58,7 @@ public class GameController implements Initializable {
     private final Alert errorAlert = new Alert(Alert.AlertType.ERROR);
     private int firstCommonGoalCardId;
     private int secondCommonGoalCardId;
+    private boolean firstCommonGoalCardUpdate = true;
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
@@ -239,7 +240,7 @@ public class GameController implements Initializable {
         }
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().forEach(n -> n.setOpacity(selectedOpacity));
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(selectedOpacity));
             return;
         }
         warningAlert.setHeaderText("Warning!");
@@ -287,7 +288,7 @@ public class GameController implements Initializable {
 
     public void resetOpacity() {
         for (Position position : selectedItems) {
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(notSelectedOpacity));
         }
     }
 
@@ -496,21 +497,33 @@ public class GameController implements Initializable {
 
     public void updateCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
         if (commonGoalCards == null) return;
+
         String filename;
         String topName;
         boolean first = true;
+
+        //setting commonGoalCards in a map only when the game starts
+        if (firstCommonGoalCardUpdate) {
+            firstCommonGoalCardUpdate = false;
+            for (Integer id : commonGoalCards.keySet()) {
+                if (first) {
+                    firstCommonGoalCardId = id;
+                    first = false;
+                }
+                else
+                    secondCommonGoalCardId = id;
+            }
+        }
+
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
             filename = "/gui/myShelfieImages/common_goal_cards/common_goal_card_" + card.getKey() + ".jpg";
             topName = "/gui/myShelfieImages/scoring_tokens/scoring_" + card.getValue() + ".jpg";
-            if (first) {
+            if (firstCommonGoalCardId == card.getKey()) {
                 firstCommonGoalCardTopImageView.setImage(new Image(topName));
                 firstCommonGoalCardImageView.setImage(new Image(filename));
-                firstCommonGoalCardId = card.getKey();
-                first = false;
-            } else {
+            } else if (secondCommonGoalCardId == card.getKey()) {
                 secondCommonGoalCardTopImageView.setImage(new Image(topName));
                 secondCommonGoalCardImageView.setImage(new Image(filename));
-                secondCommonGoalCardId = card.getKey();
             }
         }
     }

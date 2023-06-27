@@ -16,7 +16,7 @@ public class CommonGoalCardDescription {
                 return "\nSix groups each containing at least 2 tiles of the same type.\nThe tiles of one group can be different\nfrom those of another group.\n";
             }
             case 4 -> {
-                return "\nThree columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different\ncombination of another column\n";
+                return "\nThree columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different\ncombination of another column.\n";
             }
             case 5 -> {
                 return "\nTwo lines each formed by 5 different types of tiles.\nOne line can show the same or a different\ncombination of the other line.\n";
@@ -34,7 +34,7 @@ public class CommonGoalCardDescription {
                 return "\nFive tiles of the same type forming an X.\n";
             }
             case 10 -> {
-                return "\nFive tiles of the same type forming a diagonal\n";
+                return "\nFive tiles of the same type forming a diagonal.\n";
             }
             case 11 -> {
                 return "\nFive columns of increasing or decreasing height.\nStarting from the first column on the left or on the right,\neach next column must be made of exactly one more tile.\nTiles can be of any type.\n";
