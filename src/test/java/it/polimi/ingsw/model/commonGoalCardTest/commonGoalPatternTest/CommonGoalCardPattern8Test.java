@@ -6,6 +6,9 @@ import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternI
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -91,4 +94,18 @@ public class CommonGoalCardPattern8Test {
         assertFalse(pattern.check(bookshelf));
     }
 
+    /**
+     * Test on a single-column full bookshelf with {@code Item}s all of the same type.
+     */
+    @Test
+    public void testSingleColumnBookshelf() {
+        CommonGoalPatternInterface pattern = new CommonGoalPattern8();
+        Bookshelf bookshelf = new Bookshelf(8, 1);
+
+        List<Item> toInsert = new ArrayList<>();
+        for(int i = 0; i < 8; i++) toInsert.add(Item.CAT);
+
+        bookshelf.insert(toInsert, 0);
+        assertTrue(pattern.check(bookshelf)); // all corners are of the same type
+    }
 }

@@ -207,7 +207,7 @@ public class Game implements GameInterface {
      */
     public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         if (commonGoalCardManager == null) return;
-        commonGoalCardManager.setCommonGoalCardsRep(commonGoalCardsListener);
+        commonGoalCardManager.setCommonGoalCardsListener(commonGoalCardsListener);
     }
 
     /**
