@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static it.polimi.ingsw.utils.view.gui.WindowManager.closeWindow;
 
-public class GUILauncher extends Application{
+public class GUILauncher extends Application {
     public static void startGUI(){
         launch();
     }
