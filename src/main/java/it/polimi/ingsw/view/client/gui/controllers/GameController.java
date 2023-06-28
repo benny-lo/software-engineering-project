@@ -5,7 +5,6 @@ import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.client.BookshelfInsertion;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
-import it.polimi.ingsw.view.client.gui.GUInterface;
 import it.polimi.ingsw.view.client.gui.GameControllerStatus;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,8 +22,7 @@ import java.io.IOException;
 import java.util.*;
 
 
-public class GameController {
-    private static GUInterface guInterface;
+public class GameController extends AbstractController {
     final private static String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
     final private static String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
     final private static String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
@@ -129,10 +127,6 @@ public class GameController {
     private ImageView thirdEndingTokenImageView;
     @FXML
     private Label rankingLabel;
-
-    public static void startGameController(GUInterface guInterface){
-        GameController.guInterface=guInterface;
-    }
 
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;

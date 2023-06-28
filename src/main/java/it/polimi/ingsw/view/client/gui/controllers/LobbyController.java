@@ -3,7 +3,6 @@ package it.polimi.ingsw.view.client.gui.controllers;
 import it.polimi.ingsw.utils.message.client.GameInitialization;
 import it.polimi.ingsw.utils.message.client.GameSelection;
 import it.polimi.ingsw.utils.message.server.GameInfo;
-import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,8 +15,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 
-public class LobbyController {
-    private static GUInterface guInterface;
+public class LobbyController extends AbstractController {
     private Stage stage;
     private GameInfo currentSelectedGame;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
@@ -35,10 +33,6 @@ public class LobbyController {
     private ListView<GameInfo> gamesListView;
     @FXML
     private Label displayNicknameLabel;
-
-    public static void startLobbyController(GUInterface guInterface){
-        LobbyController.guInterface = guInterface;
-    }
 
     public void createGame(ActionEvent event) throws IOException {
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
@@ -79,7 +73,7 @@ public class LobbyController {
         warningAlert.showAndWait();
     }
 
-    public void successfulCreateOrSelectGame(){
+    public void successfulCreateOrSelectGame() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/WaitingRoom.fxml"));
             Parent root = fxmlLoader.load();
@@ -92,7 +86,7 @@ public class LobbyController {
         }
     }
 
-    public void endWindow(){
+    public void endWindow() {
         stage.close();
     }
 

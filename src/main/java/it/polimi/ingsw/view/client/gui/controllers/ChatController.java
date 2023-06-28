@@ -2,7 +2,6 @@ package it.polimi.ingsw.view.client.gui.controllers;
 
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
-import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
@@ -10,9 +9,8 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChatController {
+public class ChatController extends AbstractController {
     private final static String BROADCAST = "all";
-    private static GUInterface guInterface;
     @FXML
     private ComboBox<String> playerMenu;
     @FXML
@@ -21,10 +19,6 @@ public class ChatController {
     private TextField textToSend;
 
     private List<ChatUpdate> messages;
-
-    public static void startChatController(GUInterface guInterface) {
-        ChatController.guInterface = guInterface;
-    }
 
     @FXML
     public void initialize() {

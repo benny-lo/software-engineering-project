@@ -10,13 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
-import static it.polimi.ingsw.view.client.gui.controllers.ChatController.startChatController;
-import static it.polimi.ingsw.view.client.gui.controllers.GameController.startGameController;
-import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startLobbyController;
-import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
-import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
+import static it.polimi.ingsw.view.client.gui.controllers.AbstractController.setGUInterfaceInControllers;
 
-public class GUInterface extends ClientView {
+public class GUInterface extends ClientView implements GUIViewInterface{
     private LoginController loginController;
     private LobbyController lobbyController;
     private WaitingRoomController waitingRoomController;
@@ -28,11 +24,7 @@ public class GUInterface extends ClientView {
 
     public GUInterface() {
         super();
-        startLoginController(this);
-        startLobbyController(this);
-        startWaitingRoomController(this);
-        startGameController(this);
-        startChatController(this);
+        setGUInterfaceInControllers(this);
     }
 
     @Override
@@ -195,27 +187,27 @@ public class GUInterface extends ClientView {
         startGUI();
     }
 
+    @Override
     public synchronized String getNickname(){
         return nickname;
     }
 
+    @Override
     public synchronized List<String> getOthersNicknames() {
         return nicknames.stream().filter((n) -> !n.equals(nickname)).toList();
     }
 
-    public synchronized void receiveController(LoginController controller){
-        loginController = controller;
-    }
-    public synchronized void receiveController(LobbyController controller){
-        lobbyController = controller;
-    }
-    public synchronized void receiveController(WaitingRoomController controller){
-        waitingRoomController = controller;
-    }
-    public synchronized void receiveController(GameController controller){
-        gameController = controller;
-    }
-    public synchronized void receiveController(ChatController controller){
-        chatController = controller;
+    @Override
+    public synchronized void receiveController(AbstractController controller) {
+        if (controller instanceof LoginController)
+            loginController = (LoginController) controller;
+        else if (controller instanceof  LobbyController)
+            lobbyController = (LobbyController) controller;
+        else if (controller instanceof WaitingRoomController)
+            waitingRoomController = (WaitingRoomController) controller;
+        else if (controller instanceof GameController)
+            gameController = (GameController) controller;
+        else if (controller instanceof ChatController)
+            chatController = (ChatController) controller;
     }
 }

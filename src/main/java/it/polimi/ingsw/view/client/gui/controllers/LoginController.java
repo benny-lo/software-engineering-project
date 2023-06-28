@@ -1,7 +1,6 @@
 package it.polimi.ingsw.view.client.gui.controllers;
 
 import it.polimi.ingsw.utils.message.client.Nickname;
-import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,18 +15,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class LoginController {
-    private static GUInterface guInterface;
+public class LoginController extends AbstractController {
     private Stage stage;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     @FXML
     public Button loginButton;
     @FXML
     private TextField usernameField;
-
-    public static void startLoginController(GUInterface guInterface) {
-        LoginController.guInterface = guInterface;
-    }
 
     public void failedLogin() {
         warningAlert.setHeaderText("Warning!");

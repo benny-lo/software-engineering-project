@@ -1,6 +1,5 @@
 package it.polimi.ingsw.view.client.gui.controllers;
 
-import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,16 +16,11 @@ import java.util.Objects;
 
 import static it.polimi.ingsw.utils.view.gui.WindowManager.closeWindow;
 
-public class WaitingRoomController {
-    private static GUInterface guInterface;
+public class WaitingRoomController extends AbstractController {
     @FXML
     private Label waitingLabel;
     @FXML
     private ListView<String> playersListView;
-
-    public static void startWaitingRoomController(GUInterface guInterface) {
-        WaitingRoomController.guInterface = guInterface;
-    }
 
     public void playerConnected(String nickname) {
         playersListView.getItems().add(nickname);
