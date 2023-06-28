@@ -4,16 +4,13 @@ import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class ChatController implements Initializable {
+public class ChatController {
     private final static String BROADCAST = "all";
     private static GUInterface guInterface;
     @FXML
@@ -25,12 +22,12 @@ public class ChatController implements Initializable {
 
     private List<ChatUpdate> messages;
 
-    public static void startChatController(GUInterface guInterface){
+    public static void startChatController(GUInterface guInterface) {
         ChatController.guInterface = guInterface;
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @FXML
+    public void initialize() {
         guInterface.receiveController(this);
         messages = new ArrayList<>();
         playerMenu.getItems().add("all");

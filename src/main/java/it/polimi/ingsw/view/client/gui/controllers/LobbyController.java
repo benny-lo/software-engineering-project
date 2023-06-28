@@ -7,7 +7,6 @@ import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,11 +14,9 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class LobbyController implements Initializable {
+public class LobbyController {
     private static GUInterface guInterface;
     private Stage stage;
     private GameInfo currentSelectedGame;
@@ -98,8 +95,8 @@ public class LobbyController implements Initializable {
         stage.close();
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @FXML
+    public void initialize() {
         guInterface.receiveController(this);
 
         displayNicknameLabel.setText("Hi " + guInterface.getNickname() + "!");

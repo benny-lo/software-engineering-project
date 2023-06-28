@@ -9,7 +9,6 @@ import it.polimi.ingsw.view.client.gui.GUInterface;
 import it.polimi.ingsw.view.client.gui.GameControllerStatus;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -21,11 +20,10 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
 
-public class GameController implements Initializable {
+public class GameController {
     private static GUInterface guInterface;
     final private static String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
     final private static String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
@@ -577,8 +575,8 @@ public class GameController implements Initializable {
         chatStage.show();
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
+    @FXML
+    public void initialize() {
         guInterface.receiveController(this);
         livingRoomGridPane.setHgap(livingRoomGap);
         livingRoomGridPane.setVgap(livingRoomGap);
