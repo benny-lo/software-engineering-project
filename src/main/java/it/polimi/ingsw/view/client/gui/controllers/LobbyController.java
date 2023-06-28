@@ -65,7 +65,12 @@ public class LobbyController implements Initializable {
     }
 
     public void listOfGames(List<GameInfo> games){
-        gamesListView.getItems().addAll(games);
+        for (GameInfo game : games) {
+            if (gamesListView.getItems().contains(game) && game.getNumberPlayers() == -1)
+                gamesListView.getItems().remove(game);
+            else if (!gamesListView.getItems().contains(game))
+                gamesListView.getItems().add(game);
+        }
     }
 
     public void failedCreateGame() {

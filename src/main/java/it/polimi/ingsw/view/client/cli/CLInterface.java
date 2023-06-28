@@ -38,6 +38,7 @@ public class CLInterface extends ClientView implements InputReceiver {
     private String currentPlayer;
     private int bookshelvesRows;
     private int bookshelvesColumns;
+    private final List<GameInfo> games = new ArrayList<>();
 
     /**
      * Constructor for the class.
@@ -68,13 +69,18 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onGamesList(GamesList message) {
-        List<GameInfo> games = message.getAvailable();
-
-        if (games == null) {
+        if (message == null) {
             printLoginFailed();
             System.out.flush();
             nickname = null;
             return;
+        }
+
+        for(GameInfo game : message.getAvailable()) {
+            if (games.contains(game) && game.getNumberPlayers() == -1)
+                games.remove(game);
+            else if (!games.contains(game))
+                games.add(game);
         }
 
         if (status == CLIStatus.LOGIN) clearScreen();
