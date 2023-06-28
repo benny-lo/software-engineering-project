@@ -122,7 +122,7 @@
    <ImageView fitHeight="249.0" fitWidth="247.0" layoutX="813.0" layoutY="243.0" pickOnBounds="true" preserveRatio="true">
        <Image url="@myShelfieImages/boards/bookshelf.png" />
    </ImageView>
-   <GridPane fx:id="bookshelfGridPane" layoutX="847.0" layoutY="256.0" prefHeight="199.0" prefWidth="192.0">
+   <GridPane fx:id="bookshelfGridPane" layoutX="844.0" layoutY="258.0" prefHeight="199.0" prefWidth="192.0">
      <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -163,7 +163,7 @@
          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
      </rowConstraints>
    </GridPane>
-   <GridPane fx:id="firstBookshelfGridPane" layoutX="138.0" layoutY="111.0" prefHeight="87.0" prefWidth="86.0">
+   <GridPane fx:id="firstBookshelfGridPane" layoutX="138.0" layoutY="114.0" prefHeight="87.0" prefWidth="86.0">
      <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -180,7 +180,7 @@
          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
      </rowConstraints>
    </GridPane>
-   <GridPane fx:id="secondBookshelfGridPane" layoutX="138.0" layoutY="277.0" prefHeight="87.0" prefWidth="86.0">
+   <GridPane fx:id="secondBookshelfGridPane" layoutX="138.0" layoutY="280.0" prefHeight="87.0" prefWidth="86.0">
       <columnConstraints>
          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -197,7 +197,7 @@
          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
       </rowConstraints>
    </GridPane>
-   <GridPane fx:id="thirdBookshelfGridPane" layoutX="138.0" layoutY="443.0" prefHeight="87.0" prefWidth="86.0">
+   <GridPane fx:id="thirdBookshelfGridPane" layoutX="138.0" layoutY="447.0" prefHeight="87.0" prefWidth="86.0">
       <columnConstraints>
          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
