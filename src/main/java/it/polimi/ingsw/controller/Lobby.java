@@ -88,9 +88,16 @@ public class Lobby {
      * @param controller The controller to remove.
      */
     public synchronized void removeController(ControllerInterface controller) {
-        Integer id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
+        int id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
 
-        if (id != -1) controllers.remove(id);
+        if (id != -1) {
+            controllers.remove(id);
+            if (!controller.isStarted()) {
+                for (ServerUpdateViewInterface v : views) {
+                    if (!v.isInGame()) v.onGamesList(new GamesList(List.of(new GameInfo(id, -1, -1))));
+                }
+            }
+        }
     }
 
     /**

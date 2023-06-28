@@ -14,7 +14,8 @@ public class LivingRoom {
     private final Item[][] grid;
 
     /**
-     * Constructor for the class. It sets the prohibited squares and fills the rest of the squares with items.
+     * Constructor for the class. It sets the prohibited squares and fills the rest of the squares with {@code Item}s,
+     * following the default configurations of the game.
      * @param numberPlayers Number of players in the game.
      */
     public LivingRoom(int numberPlayers) {
