@@ -76,14 +76,15 @@ public class CLInterface extends ClientView implements InputReceiver {
             return;
         }
 
-        for(GameInfo game : message.getAvailable()) {
-            if (games.contains(game) && game.getNumberPlayers() == -1)
-                games.remove(game);
-            else if (!games.contains(game))
+        for (GameInfo game : message.getAvailable()) {
+            List<GameInfo> other = games.stream().filter((g) -> g.getId() != game.getId()).toList();
+            games.removeAll(other);
+            if (game.getNumberPlayers() != -1 && game.getNumberCommonGoals() != -1) {
                 games.add(game);
+            }
         }
 
-        if (status == CLIStatus.LOGIN) clearScreen();
+        clearScreen();
 
         status = CLIStatus.LOBBY;
 
