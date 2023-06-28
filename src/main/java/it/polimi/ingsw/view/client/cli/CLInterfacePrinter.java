@@ -195,30 +195,12 @@ class CLInterfacePrinter {
      * @param bookshelves - the bookshelves that need to be printed.
      */
     static void printBookshelves(Map<String, Item[][]> bookshelves) {
-        Item[][] array;
-        int length=6, nPlayers=0;
         if (bookshelves == null) return;
         System.out.println("These are the respective Bookshelves of: ");
-        for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
-            System.out.print(entry.getKey() + "\t\t    "); //TODO: fix this
-            nPlayers++;
+        for (String player : bookshelves.keySet()) {
+            System.out.println(player);
+            printBookshelfOrPersonalGoalCard(bookshelves.get(player));
         }
-        System.out.println();
-        for (int i = length - 1; i >= 0; i--) {
-            System.out.print(i + " ");
-            for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
-                array=entry.getValue();
-                for (int j = 0; j < array[i].length; j++) {
-                    printItem(array[i][j]);
-                }
-                System.out.print("    ");
-            }
-            System.out.println();
-        }
-        for(int i=0; i<nPlayers; i++){
-            System.out.print("  0 1 2 3 4   ");
-        }
-        System.out.println();
         System.out.println();
     }
 

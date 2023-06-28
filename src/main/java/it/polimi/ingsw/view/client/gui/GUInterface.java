@@ -12,7 +12,7 @@ import java.util.List;
 import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
 import static it.polimi.ingsw.view.client.gui.controllers.AbstractController.setGUInterfaceInControllers;
 
-public class GUInterface extends ClientView implements GUIViewInterface{
+public class GUInterface extends ClientView implements GUIViewInterface {
     private LoginController loginController;
     private LobbyController lobbyController;
     private WaitingRoomController waitingRoomController;
