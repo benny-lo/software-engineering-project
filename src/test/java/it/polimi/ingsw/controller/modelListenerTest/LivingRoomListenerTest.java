@@ -9,6 +9,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class testing {@code LivingRoomListener}.
+ */
 public class LivingRoomListenerTest {
     /**
      * Testing for the constructor for the class

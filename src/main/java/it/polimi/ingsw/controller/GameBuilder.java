@@ -10,7 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- * Class implementing the Builder pattern. It builds a {@code GameInterface}.
+ * Class realizing the Builder pattern. It is used by {@code Controller} to build
+ * a game with the desired parameters and listeners.
  */
 public class GameBuilder {
     /**

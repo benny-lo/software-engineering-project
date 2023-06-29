@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class representing a listener to the top of the stacks of the {@code CommonGoalCard}s in a {@code Game}.
+ * Listener to the {@code CommonGoalCard}s: it registers the change in the top of the stack
+ * of any {@code CommonGoalCard}.
  */
 public class CommonGoalCardsListener extends ModelListener {
     private final Map<Integer, Integer> cards;

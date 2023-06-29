@@ -3,7 +3,9 @@ import it.polimi.ingsw.controller.modelListener.EndingTokenListener;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Class testing {@code EndingTokenListener}.
+ */
 public class EndingTokenListenerTest {
     /**
      * Testing for the constructor and getter for the class

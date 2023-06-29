@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class representing a listener to the {@code LivingRoom} of a {@code Game}.
+ * Listener to the {@code LivingRoom}: it registers changes an any {@code Position} with the new
+ * {@code Item} placed.
  */
 public class LivingRoomListener extends ModelListener {
     private final Map<Position, Item> livingRoomChanges;

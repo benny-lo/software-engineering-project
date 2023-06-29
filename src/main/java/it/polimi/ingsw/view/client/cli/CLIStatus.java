@@ -4,10 +4,35 @@ package it.polimi.ingsw.view.client.cli;
  * Enumeration of the {@code CLInterface} statuses.
  */
 public enum CLIStatus {
-    LOGIN, //you can only log in
-    LOBBY, //you can create or select a game
-    GAME, //you can select or insert tiles, and you can chat
-    ENDED_GAME, //you can only exit
-    ERROR, // network error
+    /**
+     * The client is in the log-in phase.
+     */
+    LOGIN,
+
+    /**
+     * The client can only create or select an already created game.
+     */
+    LOBBY,
+
+    /**
+     * The client can perform in-game moves: select items from the living room,
+     * insert items in the bookshelf, and move to the chat.
+     */
+    GAME,
+
+    /**
+     * The client can only exit the game.
+     */
+    ENDED_GAME,
+
+    /**
+     * The client disconnected from the server.
+     */
+    ERROR,
+
+    /**
+     * The client can write messages in the chat, both unicast and broadcast.
+     * The client can also move
+     */
     CHAT  // the user is in chat and can send broadcast/unicast messages.
 }

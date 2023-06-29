@@ -63,10 +63,6 @@ public class GameController extends AbstractController {
     @FXML
     private GridPane livingRoomGridPane;
     @FXML
-    public Button sendButton;
-    @FXML
-    public Button enterChatButton;
-    @FXML
     private Label nicknameLabel;
     @FXML
     private Label currentPlayerLabel;
@@ -171,6 +167,7 @@ public class GameController extends AbstractController {
 
     /**
      * Sets the current player.
+     * @param currentPlayer The nickname of the player to set as current.
      */
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;

@@ -10,6 +10,9 @@ public final class GameConfig {
     private int livingRoomR;
     private int livingRoomC;
 
+    /**
+     * No-args constructor for JSON.
+     */
     public GameConfig() {}
 
     /**

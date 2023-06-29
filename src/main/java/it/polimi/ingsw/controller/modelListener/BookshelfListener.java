@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Class representing a listener to a player's {@code Bookshelf} in a {@code Game}.
+ * Listener to the {@code Bookshelf}. It listens for updates to the {@code Item}s and
+ * records for every {@code Position} the new {@code Item} (maybe {@code null}).
  */
 public class BookshelfListener extends ModelListener {
     private final String owner;

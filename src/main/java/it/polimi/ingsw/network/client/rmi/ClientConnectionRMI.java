@@ -13,6 +13,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Class representing an RMI connection on the client-side to the server.
+ */
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
     private static final int RTT = 5000;
     private ServerConnectionRMIInterface serverConnectionRMIInterface;

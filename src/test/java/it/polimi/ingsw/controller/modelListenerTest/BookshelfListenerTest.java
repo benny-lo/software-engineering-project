@@ -9,7 +9,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Class testing {@code BookshelfListener}.
+ */
 public class BookshelfListenerTest {
     /**
      * Testing for the constructor for the class

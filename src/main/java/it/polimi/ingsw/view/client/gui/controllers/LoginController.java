@@ -23,8 +23,6 @@ public class LoginController extends AbstractController {
     private Stage stage;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     @FXML
-    public Button loginButton;
-    @FXML
     private TextField usernameField;
 
     /**

@@ -33,6 +33,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
     /**
      * The constructor of {@code VirtualView}. It only sets the {@code ServerConnection} and
      * leaves {@code nickname} and {@code controller} to {@code null}.
+     * @param serverConnection The connection to the client {@code this} represents.
      */
     public VirtualView(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
