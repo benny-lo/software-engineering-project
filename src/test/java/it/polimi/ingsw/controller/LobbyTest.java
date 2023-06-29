@@ -2,9 +2,12 @@ package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.message.Message;
+import it.polimi.ingsw.utils.message.client.GameInitialization;
+import it.polimi.ingsw.utils.message.client.Nickname;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.VirtualView;
 import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -350,5 +353,48 @@ public class LobbyTest {
         assertEquals(personalGoalCards,2);
         assertEquals(scores,2);
         assertEquals(startTurn,2);
+    }
+
+    /**
+     * Test that a {@code Controller} is removed from {@code Lobby} when all views connected to it disconnect. Moreover,
+     * it is tested that all other views receive the correct updates, i.e. the game has been deleted.
+     */
+    @Test
+    public void testRemoveControllerAndView() {
+        Logger.setTestMode(true);
+        Lobby.setNull();
+
+        MockServerConnection alice = new MockServerConnection();
+        MockServerConnection bob = new MockServerConnection();
+
+        VirtualView aliceView = new VirtualView(alice);
+        VirtualView bobView = new VirtualView(bob);
+
+        aliceView.login(new Nickname("alice"));
+        Message aliceMessage = alice.queue.poll();
+        assertTrue(aliceMessage instanceof GamesList);
+        assertNotNull(((GamesList) aliceMessage).getAvailable());
+        assertTrue(((GamesList) aliceMessage).getAvailable().isEmpty());
+
+        aliceView.createGame(new GameInitialization(2, 2));
+        aliceMessage = alice.queue.poll();
+        assertTrue(aliceMessage instanceof GameData);
+        assertNotEquals(-1, ((GameData) aliceMessage).getNumberPlayers());
+
+        bobView.login(new Nickname("bob"));
+        Message bobMessage = bob.queue.poll();
+        assertTrue(bobMessage instanceof GamesList);
+        assertNotNull(((GamesList) bobMessage).getAvailable());
+        assertEquals(1, ((GamesList) bobMessage).getAvailable().size());
+
+        aliceView.disconnect();
+        bobMessage = bob.queue.poll();
+        assertTrue(bobMessage instanceof GamesList);
+        assertNotNull(((GamesList) bobMessage).getAvailable());
+        assertEquals(1, ((GamesList) bobMessage).getAvailable().size());
+
+        GameInfo info = ((GamesList) bobMessage).getAvailable().get(0);
+        assertEquals(0, info.getId());
+        assertEquals(-1, info.getNumberPlayers());
     }
 }
