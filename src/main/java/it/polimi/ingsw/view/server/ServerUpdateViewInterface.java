@@ -8,7 +8,7 @@ import it.polimi.ingsw.view.UpdateViewInterface;
  */
 public interface ServerUpdateViewInterface extends UpdateViewInterface {
     /**
-     * Setter for the nickname. THREAD-SAFE synchronizing privately.
+     * Setter for the nickname.
      * @param nickname The nickname to set.
      */
     void setNickname(String nickname);
