@@ -67,7 +67,7 @@ public class Position implements Comparable<Position>, Serializable {
     }
 
     /**
-     * Compares the {@code this} to another {@code Position}: {@code this} < {@code other} iff
+     * Compares the {@code this} to another {@code Position}: {@code this} less than {@code other} iff
      * the row of {@code this} is smaller than the row of {@code other} or, in case of equality
      * between the rows, if the column of {@code this} is smaller than the column of {@code other}.
      * @param other The object to compare {@code this} with.
