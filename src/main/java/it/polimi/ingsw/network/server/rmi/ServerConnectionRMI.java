@@ -67,8 +67,8 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
 
     /**
      * Constructs a new {@code ServerConnectionRMI}. It sets the clientRMI interface.
-     * @param client the clientRMI interface.
-     * @throws RemoteException rmi exception. It is the one thrown by the no-args constructor
+     * @param client The clientRMI interface.
+     * @throws RemoteException Rmi exception. It is the one thrown by the no-args constructor
      * of {@code UnicastRemoteObject}.
      */
     public ServerConnectionRMI(ClientConnectionRMIInterface client) throws RemoteException {

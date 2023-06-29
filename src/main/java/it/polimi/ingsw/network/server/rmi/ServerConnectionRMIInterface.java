@@ -13,22 +13,22 @@ import java.rmi.RemoteException;
 public interface ServerConnectionRMIInterface extends Remote {
     /**
      * Performs the login of the client in the server, i.e. their nickname is set.
-     * @param message the request from the client.
-     * @throws RemoteException rmi exception.
+     * @param message The request from the client.
+     * @throws RemoteException Rmi exception.
      */
     void login(Nickname message) throws RemoteException;
 
     /**
      * Creates a new game according to the parameters specified by the client.
-     * @param message the request from the client.
-     * @throws RemoteException rmi exception.
+     * @param message The request from the client.
+     * @throws RemoteException Rmi exception.
      */
     void createGame(GameInitialization message) throws RemoteException;
 
     /**
      * Selects an already created game to join.
-     * @param message the request from the client.
-     * @throws RemoteException rmi exception.
+     * @param message The request from the client.
+     * @throws RemoteException Rmi exception.
      */
     void selectGame(GameSelection message) throws RemoteException;
 

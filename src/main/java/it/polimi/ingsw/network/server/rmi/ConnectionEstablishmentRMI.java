@@ -13,9 +13,9 @@ public class ConnectionEstablishmentRMI implements ConnectionEstablishmentRMIInt
      * {@inheritDoc}
      * Moreover, it creates the {@code ServerConnectionRMI} object (and starts its timer) and
      * the {@code VirtualView} representing the connected client in the server.
-     * @param clientConnectionRMIInterface rmi interface of the client.
+     * @param clientConnectionRMIInterface Rmi interface of the client.
      * @return {@code ServerConnectionRMIInterface} interface representing the connection to the server.
-     * @throws RemoteException rmi exception.
+     * @throws RemoteException Rmi exception.
      */
     @Override
     public ServerConnectionRMIInterface init(ClientConnectionRMIInterface clientConnectionRMIInterface) throws RemoteException {
