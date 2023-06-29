@@ -37,14 +37,31 @@ public class CommonGoalCardManagerTest {
 
         List<ScoringToken> scoringToken = commonGoalCardManager.check(bookshelf, cannotTake);
         assertEquals(8, scoringToken.get(0).getScore());
-        assertEquals(0, scoringToken.get(0).getType());
+        assertEquals(7, scoringToken.get(0).getType());
         cannotTake = List.of(scoringToken.get(0).getType());
 
         bookshelf.insert(new LinkedList<>(List.of(Item.CAT, Item.CAT, Item.CAT)),1);
 
         scoringToken = commonGoalCardManager.check(bookshelf, cannotTake);
         assertEquals(8, scoringToken.get(0).getScore());
-        assertEquals(1, scoringToken.get(0).getType());
+        assertEquals(8, scoringToken.get(0).getType());
+    }
+
+    /**
+     * Test for method {@code check} of {@code CommonGoalCardManager}, only one of the two common goals is
+     * satisfied and the corresponding token cannot be taken as the common goal was already satisfied.
+     */
+    @Test
+    public void testCheck1MatchButAlreadyTaken() {
+        CommonGoalCardManager commonGoalCardManager = new CommonGoalCardManager(2);
+        Bookshelf bookshelf = new Bookshelf(2, 2);
+
+        List<Item> toInsert = List.of(Item.CAT, Item.CAT);
+        bookshelf.insert(toInsert, 0);
+        bookshelf.insert(toInsert, 1);
+
+        List<ScoringToken> ret = commonGoalCardManager.check(bookshelf, List.of(7));
+        assertTrue(ret.isEmpty());
     }
 
     /**

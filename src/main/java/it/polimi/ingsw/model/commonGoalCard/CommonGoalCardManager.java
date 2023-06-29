@@ -42,8 +42,8 @@ public class CommonGoalCardManager {
      */
     public CommonGoalCardManager(int numPlayers) {
         cards = new ArrayList<>();
-        cards.add(new CommonGoalCard(0, numPlayers, new CommonGoalPattern8()));
-        cards.add(new CommonGoalCard(1, numPlayers, new CommonGoalPattern9()));
+        cards.add(new CommonGoalCard(7, numPlayers, new CommonGoalPattern8()));
+        cards.add(new CommonGoalCard(8, numPlayers, new CommonGoalPattern9()));
     }
 
     /**
@@ -94,17 +94,17 @@ public class CommonGoalCardManager {
     /**
      * Checks all not yet achieved common goals and gets the {@code ScoringToken}s.
      * @param bookshelf The {@code Bookshelf} to check the patterns on.
-     * @param cannotTake List of indices of common goal cards not to consider.
+     * @param cannotTake {@code List} of IDs of {@code CommonGoalCard}s not to consider.
      * @return The scoring token from the common goal cards achieved.
      */
     public List<ScoringToken> check(Bookshelf bookshelf, List<Integer> cannotTake) {
         List<ScoringToken> tokens = new ArrayList<>();
-        for(int i = 0; i < cards.size(); i++) {
-            if (cannotTake.contains(i)) continue;
-            if (cards.get(i).checkPattern(bookshelf)) {
-                tokens.add(cards.get(i).popToken());
+        for(CommonGoalCard card : cards) {
+            if (cannotTake.contains(card.getId())) continue;
+            if (card.checkPattern(bookshelf)) {
+                tokens.add(card.popToken());
                 if (commonGoalCardsListener != null) {
-                    commonGoalCardsListener.updateState(cards.get(i).getId(), cards.get(i).getTopStack());
+                    commonGoalCardsListener.updateState(card.getId(), card.getTopStack());
                 }
             }
         }
@@ -115,7 +115,7 @@ public class CommonGoalCardManager {
      * Sets the given CommonGoalCardsListener and updates with the current state of the {@code CommonGoalCard}s.
      * @param commonGoalCardsListener {@code CommonGoalCardListener} to set.
      */
-    public void setCommonGoalCardsRep(CommonGoalCardsListener commonGoalCardsListener) {
+    public void setCommonGoalCardsListener(CommonGoalCardsListener commonGoalCardsListener) {
         this.commonGoalCardsListener = commonGoalCardsListener;
         for(CommonGoalCard card : cards) {
             commonGoalCardsListener.updateState(card.getId(), card.getTopStack());

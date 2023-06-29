@@ -2,20 +2,19 @@ package it.polimi.ingsw.view.client.gui.controllers;
 
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
-import it.polimi.ingsw.view.client.gui.GUInterface;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-public class ChatController implements Initializable {
+/**
+ * Class representing Chat controller.
+ * It manages the messages of the various players, that can be sent in broadcast or in unicast.
+ */
+public class ChatController extends AbstractController {
     private final static String BROADCAST = "all";
-    private static GUInterface guInterface;
     @FXML
     private ComboBox<String> playerMenu;
     @FXML
@@ -23,16 +22,15 @@ public class ChatController implements Initializable {
     @FXML
     private TextField textToSend;
 
-    private List<ChatUpdate> messages;
+    private final List<ChatUpdate> messages = new ArrayList<>();
 
-    public static void startChatController(GUInterface guInterface){
-        ChatController.guInterface = guInterface;
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        guInterface.receiveController(this);
-        messages = new ArrayList<>();
+    /**
+     * Sets {@code this} in the {@code GUInterface}.
+     * Sets 'all' and the nicknames of the connected players to the {@code playerMenu}.
+     */
+    @FXML
+    public void initialize() {
+        guInterface.setController(this);
         playerMenu.getItems().add("all");
         playerMenu.setValue("all");
 
@@ -42,6 +40,10 @@ public class ChatController implements Initializable {
         }
     }
 
+    /**
+     * Adds the message received to the chat.
+     * @param message The message received.
+     */
     public void receiveMessage(ChatUpdate message) {
         messages.add(message);
         if (isToDisplay(message)) {
@@ -49,6 +51,9 @@ public class ChatController implements Initializable {
         }
     }
 
+    /**
+     * Sends to the {@code GUInterface} the message written by the client.
+     */
     public void onSendButtonClick() {
         String text = textToSend.getText();
         String receiver = playerMenu.getValue();
@@ -59,6 +64,9 @@ public class ChatController implements Initializable {
         guInterface.writeChat(message);
     }
 
+    /**
+     * Displays the messages between the client and the player selected or the 'all' chat.
+     */
     public void onPlayerFromMenu() {
         messagesDisplayed.getChildren().clear();
         for (ChatUpdate message : messages) {
@@ -87,6 +95,9 @@ public class ChatController implements Initializable {
         return new Label(sender + " sent to " + receiver + ": " + text);
     }
 
+    /**
+     * Notifies the client that the message has been rejected from the server.
+     */
     public void rejectedMessage() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText("Warning!");

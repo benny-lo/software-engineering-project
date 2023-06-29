@@ -2,17 +2,19 @@ package it.polimi.ingsw.view.client.cli;
 
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.client.*;
-import it.polimi.ingsw.view.client.InputReceiver;
 
 import java.util.*;
 
+/**
+ * Class representing the InputHandler.
+ */
 public class InputHandler implements Runnable {
     private final InputReceiver inputReceiver;
     private final Scanner in;
 
     /**
-     * Constructor for the class
-     * @param inputReceiver - the inputReceiver of the input handler
+     * Constructor of the class: creates a new {@code Scanner} and sets the {@code InputReceiver}.
+     * @param inputReceiver The inputReceiver of the input handler.
      */
     public InputHandler(InputReceiver inputReceiver) {
         this.inputReceiver = inputReceiver;
@@ -20,8 +22,9 @@ public class InputHandler implements Runnable {
     }
 
     /**
-     * Override of the run method, handling all the cases : help, login, create game, select game, handle the living room
-     * handle the bookshelf, enter the chat, exit the chat, direct message.
+     * {@inheritDoc}
+     * Handles the various inputs that can be sent by the client.
+     * It receives the inputs from the client and then calls the respective methods on CLInterface.
      */
     @Override
     public void run() {

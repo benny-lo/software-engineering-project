@@ -20,14 +20,25 @@ import java.rmi.registry.Registry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Abstract class representing the client view.
+ */
 public abstract class ClientView implements ClientUpdateViewInterface, InputViewInterface {
+
+    /**
+     * The nickname of the client.
+     */
     protected String nickname;
+
+    /**
+     * The network connection of the client to the server.
+     */
     protected ClientConnection clientConnection;
 
     /**
-     * This method starts the RMI type of connection, catching different exceptions.
-     * @param hostName - server IP
-     * @param rmiPort - RMI port
+     * Starts the RMI connection.
+     * @param hostName The server hostname.
+     * @param rmiPort The RMI port used by the server.
      */
     public void startRMI(String hostName, int rmiPort) {
         Registry registry = null;
@@ -78,9 +89,9 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
     }
 
     /**
-     * This method starts the TCP type of connection, catch different kinds of exceptions
-     * @param hostName - server IP
-     * @param socketPort - client socket port
+     * Starts the TCP connection.
+     * @param hostName The server hostname.
+     * @param socketPort The client socket port.
      */
     public void startTCP(String hostName, int socketPort) {
         Socket socket = null;
@@ -102,12 +113,15 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         (new Thread(sender)).start();
     }
 
+    /**
+     * Starts the GUI/CLI.
+     */
     public abstract void start();
 
     /**
-     * This method checks if the nickname given is valid
-     * @param nickname - the nickname that needs to be checked.
-     * @return - true if the nickname is valid, false if not.
+     * Checks if the nickname given is valid.
+     * @param nickname The nickname that needs to be checked.
+     * @return True if the nickname is valid, false if not.
      */
     public static boolean isNicknameValid(String nickname){
         String regex = "^[A-Za-z]\\w{0,29}$";
@@ -122,31 +136,55 @@ public abstract class ClientView implements ClientUpdateViewInterface, InputView
         return !matcher.matches();
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message Message containing the chosen nickname.
+     */
     @Override
     public void login(Nickname message) {
         clientConnection.send(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message Message containing the information about the game to create.
+     */
     @Override
     public void createGame(GameInitialization message) {
         clientConnection.send(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message Message containing the id of the game chosen.
+     */
     @Override
     public void selectGame(GameSelection message) {
         clientConnection.send(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message Message containing the chosen positions.
+     */
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
         clientConnection.send(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message Message containing the column and the order in which to insert the chosen tiles.
+     */
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
         clientConnection.send(message);
     }
 
+    /**
+     * {@inheritDoc}
+     * @param message Message containing the text written.
+     */
     @Override
     public void writeChat(ChatMessage message) {
         clientConnection.send(message);

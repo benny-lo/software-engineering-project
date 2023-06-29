@@ -100,6 +100,7 @@ public class Controller implements ControllerInterface {
      * Constructor for {@code this} class. It creates a {@code Controller} for a not yet started (and constructed) game.
      * @param numberPlayers - the number of players that need to join the game to make it start.
      * @param numberCommonGoalCards - the number of common goal cards of the game.
+     * @param id The id assigned to the {@code Game} controlled.
      */
     public Controller(int numberPlayers, int numberCommonGoalCards, int id) {
         this.numberPlayers = numberPlayers;

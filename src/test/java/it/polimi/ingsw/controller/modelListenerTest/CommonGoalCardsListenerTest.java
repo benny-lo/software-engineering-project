@@ -6,7 +6,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-
+/**
+ * Class testing {@code CommonGoalCardListener}.
+ */
 public class CommonGoalCardsListenerTest {
     /**
      * Testing for the class constructor

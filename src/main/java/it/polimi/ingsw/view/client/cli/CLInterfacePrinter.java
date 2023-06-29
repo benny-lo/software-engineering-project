@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class representing the CLIPrinter.
+ */
 class CLInterfacePrinter {
 
     private static final String ANSI_RESET = "\u001B[0m";
@@ -21,9 +24,9 @@ class CLInterfacePrinter {
     private static final String ANSI_WHITE = "\u001B[37m";
 
     /**
-     * This method prints the current player
-     * @param nickname - the nickname of the player owning the view that calls this method.
-     * @param currentPlayer - the current player that needs to be printed
+     * Prints the current player.
+     * @param nickname The nickname of the player owning the client.
+     * @param currentPlayer The nickname of the current player.
      */
     static void printCurrentPlayer(String nickname, String currentPlayer){
         if (currentPlayer == null) return;
@@ -35,7 +38,7 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the welcome message.
+     * Prints the welcome message.
      */
     static void printWelcomeMessage(){
         System.out.println("""
@@ -44,7 +47,7 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the help menu.
+     * Prints the help menu.
      */
     static void printHelp(){
         System.out.println("""
@@ -61,21 +64,21 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the wrong command error message.
+     * Prints the wrong command error message.
      */
     static void printWrongCommand() {
         System.out.println("This command does not exists! Try to digit '/help' for other commands.");
     }
 
     /**
-     * This method prints the incorrect command error message.
+     * Prints the incorrect command error message.
      */
     static void printIncorrectCommand(){
         System.out.println("This command is misspelled! Try to digit '/help' for other commands.");
     }
 
     /**
-     * This method prints a warning in case the status of the player doesn't match the requirement of the action that needs
+     * Prints a warning in case the player's status doesn't match the status required by the action that needs
      * to be completed.
      */
     static void printWrongStatus(){
@@ -83,21 +86,21 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the login failed error message.
+     * Prints the login failed error message.
      */
     static void printLoginFailed(){
         System.out.println("Login failed. Try again!");
     }
 
     /**
-     * This method warns the player of absence of available games.
+     * Warns the player of the absence of available games.
      */
     static void printNoAvailableGames(){
         System.out.println("There are no available games.\nCreate a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
     }
 
     /**
-     * This method warns the player of having inserted an incorrect nickname.
+     * Warns the player of having inserted an incorrect nickname.
      */
     static void printIncorrectNickname(){
         System.out.println("""
@@ -107,50 +110,50 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method warns the player of having selected a invalid tile.
+     * Warns the player of having selected an invalid tile.
      */
     static  void printInvalidSelection(){
         System.out.println("Invalid tile selection! Try again.");
     }
 
     /**
-     * This method prints the denied action error message.
+     * Prints the denied action error message.
      */
     static void printDeniedAction(){
         System.out.println("Action denied. Try again!");
     }
 
     /**
-     * This method informs the player that they have entered the chat.
+     * Informs the player that they have entered the chat.
      */
     static void printInChat(){
         System.out.println("You've now entered in the chat!");
     }
 
     /**
-     * This method informs the player that they have not yet entered the chat.
+     * Informs the player that they have not yet entered the chat.
      */
     static void printNotInChat(){
         System.out.println("You've not entered in the chat yet!\nTry with the command '/enter_chat'.");
     }
 
     /**
-     * This method informs the player that they have exited the chat.
+     * Informs the player that they have exited the chat.
      */
     static void printExitChat(){
         System.out.println("You've now left the chat!");
     }
 
     /**
-     * This method clears the screen.
+     * Clears the screen.
      */
     static void clearScreen() {
         System.out.print("\033[H\033[2J");
     }
 
     /**
-     * This method prints out the living room
-     * @param livingRoom - the living room that needs to be printed
+     * Prints out the living room.
+     * @param livingRoom The living room that needs to be printed.
      */
     static void printLivingRoom(Item[][] livingRoom) {
         if (livingRoom == null) return;
@@ -170,8 +173,8 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints an item of the living room or bookshelves.
-     * @param item - the item that needs to be printed
+     * Prints an item of the living room or of the bookshelves.
+     * @param item The item that needs to be printed.
      */
     static void printItem(Item item) {
         if (item == null) {
@@ -191,40 +194,22 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the bookshelves of the players
-     * @param bookshelves - the bookshelves that need to be printed.
+     * Prints the bookshelves of the players.
+     * @param bookshelves The bookshelves that need to be printed.
      */
     static void printBookshelves(Map<String, Item[][]> bookshelves) {
-        Item[][] array;
-        int length=6, nPlayers=0;
         if (bookshelves == null) return;
         System.out.println("These are the respective Bookshelves of: ");
-        for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
-            System.out.print(entry.getKey() + "\t\t    "); //TODO: fix this
-            nPlayers++;
+        for (String player : bookshelves.keySet()) {
+            System.out.println(player);
+            printBookshelfOrPersonalGoalCard(bookshelves.get(player));
         }
-        System.out.println();
-        for (int i = length - 1; i >= 0; i--) {
-            System.out.print(i + " ");
-            for (Map.Entry<String, Item[][]> entry : bookshelves.entrySet()) {
-                array=entry.getValue();
-                for (int j = 0; j < array[i].length; j++) {
-                    printItem(array[i][j]);
-                }
-                System.out.print("    ");
-            }
-            System.out.println();
-        }
-        for(int i=0; i<nPlayers; i++){
-            System.out.print("  0 1 2 3 4   ");
-        }
-        System.out.println();
         System.out.println();
     }
 
     /**
-     * This method prints a bookshelf or a singular personal goal card
-     * @param array - the position of the items of the personal goal card or of the bookshelf.
+     * Prints a bookshelf or a singular personal goal card.
+     * @param array The position of the items of the personal goal card or of the bookshelf.
      */
     static void printBookshelfOrPersonalGoalCard(Item[][] array) {
         for (int i = array.length - 1; i >= 0; i--) {
@@ -239,8 +224,8 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the personal goal card of the player.
-     * @param personalGoalCard - the personal goal card that needs to be printed
+     * Prints the personal goal card of the player.
+     * @param personalGoalCard The personal goal card that needs to be printed.
      */
     static void printPersonalGoalCard(Item[][] personalGoalCard) {
         if (personalGoalCard == null) return;
@@ -249,8 +234,8 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the common goal cards of the game
-     * @param commonGoalCards - the common goal cards that need to be printed.
+     * Prints the common goal cards of the game.
+     * @param commonGoalCards The common goal cards that need to be printed.
      */
     static void printCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
         if (commonGoalCards == null) return;
@@ -263,9 +248,9 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the chosen items.
-     * @param itemsChosen - the item chosen by the player
-     * @param currentPlayer - the player choosing the items.
+     * Prints the chosen items.
+     * @param itemsChosen The item chosen by the player.
+     * @param currentPlayer The player that has chosen the items.
      */
     static void printItemsChosen(List<Item> itemsChosen, String currentPlayer) {
         if (currentPlayer == null) return;
@@ -278,8 +263,8 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the ending token.
-     * @param endingToken - the endingToken
+     * Prints the ending token.
+     * @param endingToken The endingToken.
      */
     static void printEndingToken(String endingToken) {
         if (endingToken != null) {
@@ -288,8 +273,8 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the scores of the players
-     * @param scores - the scores of the players.
+     * Prints the scores of the players.
+     * @param scores The scores of the players.
      */
     static void printScores(Map<String, Integer> scores) {
         if (scores == null) return;
@@ -300,8 +285,8 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the chat messages
-     * @param chat - the chat that needs to be printed.
+     * Prints the chat messages.
+     * @param chat The chat that needs to be printed.
      */
     static void printChat(List<ChatUpdate> chat) {
         if (chat.size() == 0) {
@@ -315,10 +300,10 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This game prints the end game messages
-     * @param nickname - the nickname of the winner.
-     * @param winner - the winner.
-     * @param scores - the scores of the players.
+     * Prints the end game messages.
+     * @param nickname The nickname of the winner.
+     * @param winner The winner.
+     * @param scores The scores of the players.
      */
     static void printEndGame(String nickname, String winner, Map<String, Integer> scores) {
         if (winner == null){
@@ -337,14 +322,14 @@ class CLInterfacePrinter {
     }
 
     /**
-     * This method prints the lost connection error message.
+     * Prints the lost connection error message.
      */
     static void printLostConnection() {
         System.out.println("Lost connection to server.");
     }
 
     /**
-     * This method prints the personal goal card configuration failed error message.
+     * Prints the failed personal goal card configuration message.
      */
     static void printPersonalGoalCardConfigurationFailed(){
         System.err.println("""
@@ -353,13 +338,26 @@ class CLInterfacePrinter {
                     with name personal_goal_pattern_{id}""");
     }
 
+    /**
+     * Prints the player's nickname that has just connected.
+     * @param nickname The nickname of the player.
+     */
     static void printPlayerJustConnected(String nickname){
         System.out.println(nickname + " just connected");
     }
+
+    /**
+     * Prints the player's nickname that has disconnected.
+     * @param nickname The nickname of the player.
+     */
     static void printPlayerJustDisconnected(String nickname){
         System.out.println(nickname + " just disconnected");
     }
 
+    /**
+     * Prints the list of available games.
+     * @param games The list of games.
+     */
     static void printGamesList(List<GameInfo> games){
         System.out.println("Select a game from the list:");
         for (GameInfo info : games) {
@@ -367,6 +365,11 @@ class CLInterfacePrinter {
         }
     }
 
+    /**
+     * Prints the number of connected players and how many players have to connect.
+     * @param missing Number of players missing.
+     * @param connectedPlayers Number of connected players.
+     */
     static void printNumberMissingPlayers(int missing, Collection<String> connectedPlayers){
         if (connectedPlayers == null) return;
 
@@ -381,9 +384,16 @@ class CLInterfacePrinter {
             System.out.println("Waiting for " + missing + " players ...");
     }
 
+    /**
+     * Prints the start game message.
+     */
     static void printStartGame(){
         System.out.println("Game starts!");
     }
+
+    /**
+     * Prints the exit message.
+     */
     static void printExit(){
         System.out.println("Digit '/exit' to close the launcher.");
     }

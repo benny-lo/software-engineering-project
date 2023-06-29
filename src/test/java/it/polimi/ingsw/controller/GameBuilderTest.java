@@ -11,6 +11,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Class testing {@code GameBuilder}.
+ */
 public class GameBuilderTest {
     /**
      * Testing {@code GameBuilder} with no listener set.

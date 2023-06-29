@@ -5,11 +5,9 @@ import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.client.BookshelfInsertion;
 import it.polimi.ingsw.utils.message.client.LivingRoomSelection;
-import it.polimi.ingsw.view.client.gui.GUInterface;
 import it.polimi.ingsw.view.client.gui.GameControllerStatus;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -21,12 +19,15 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 
-
-public class GameController implements Initializable {
-    private static GUInterface guInterface;
+/**
+ * Class representing Game controller.
+ * The client can interact with the LivingRoom, the Bookshelf and the Chat.
+ * Shows the client's Bookshelf and PersonalGoalCard, the other players Bookshelves, the LivingRoom, the current player,
+ * the ending token, the CommonGoalCards, and the ranking.
+ */
+public class GameController extends AbstractController {
     final private static String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
     final private static String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
     final private static String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
@@ -58,12 +59,9 @@ public class GameController implements Initializable {
     private final Alert errorAlert = new Alert(Alert.AlertType.ERROR);
     private int firstCommonGoalCardId;
     private int secondCommonGoalCardId;
+    private boolean firstCommonGoalCardUpdate = true;
     @FXML
     private GridPane livingRoomGridPane;
-    @FXML
-    public Button sendButton;
-    @FXML
-    public Button enterChatButton;
     @FXML
     private Label nicknameLabel;
     @FXML
@@ -131,10 +129,46 @@ public class GameController implements Initializable {
     @FXML
     private Label rankingLabel;
 
-    public static void startGameController(GUInterface guInterface){
-        GameController.guInterface=guInterface;
+    /**
+     * Sets {@code this} in the {@code GUInterface}.
+     * Sets the gap between LivingRoom tiles.
+     * Sets the gap between client Bookshelf tiles.
+     * Sets the gap between Bookshelves tiles.
+     * Sets the columns buttons.
+     * Sets the CommonGoalCard {@code ImageView}s.
+     * Creates the Chat {@code Stage} and loads the Chat {@code scene}.
+     */
+    @FXML
+    public void initialize() {
+        guInterface.setController(this);
+        livingRoomGridPane.setHgap(livingRoomGap);
+        livingRoomGridPane.setVgap(livingRoomGap);
+        bookshelfGridPane.setHgap(bookshelfGap);
+        bookshelfGridPane.setVgap(bookshelfGap);
+        firstBookshelfGridPane.setHgap(othersBookshelfGap);
+        firstBookshelfGridPane.setVgap(othersBookshelfGap);
+        secondBookshelfGridPane.setHgap(othersBookshelfGap);
+        secondBookshelfGridPane.setVgap(othersBookshelfGap);
+        thirdBookshelfGridPane.setHgap(othersBookshelfGap);
+        thirdBookshelfGridPane.setVgap(othersBookshelfGap);
+        insertColumn0Button.setOnMouseClicked(mouseEvent -> selectColumn(0));
+        insertColumn1Button.setOnMouseClicked(mouseEvent -> selectColumn(1));
+        insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));
+        insertColumn3Button.setOnMouseClicked(mouseEvent -> selectColumn(3));
+        insertColumn4Button.setOnMouseClicked(mouseEvent -> selectColumn(4));
+        firstCommonGoalCardImageView.setOnMouseClicked(mouseEvent -> showCommonGoalCardDescription(firstCommonGoalCardId));
+        secondCommonGoalCardImageView.setOnMouseClicked(mouseEvent -> showCommonGoalCardDescription(secondCommonGoalCardId));
+        try {
+            createChat();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Sets the current player.
+     * @param currentPlayer The nickname of the player to set as current.
+     */
     public void setCurrentPlayer(String currentPlayer){
         this.currentPlayer = currentPlayer;
         if (currentPlayer.equals(nickname)) {
@@ -145,6 +179,10 @@ public class GameController implements Initializable {
             currentPlayerLabel.setText("It's " + currentPlayer + "'s turn!");
     }
 
+    /**
+     * Sets the nickname of the client.
+     * @param nickname The nickname of the client.
+     */
     public void setNickname(String nickname) {
         this.nickname = nickname;
         nicknameLabel.setText("Hi " + nickname + "!");
@@ -175,6 +213,10 @@ public class GameController implements Initializable {
         return 0;
     }
     //ENDGAME
+
+    /**
+     * Notifies the client that has been disconnected from the server.
+     */
     public void disconnectionInGame() {
         errorAlert.setHeaderText("Error!");
         errorAlert.setContentText("You have been disconnected from the server.\n");
@@ -182,6 +224,9 @@ public class GameController implements Initializable {
         System.exit(0);
     }
 
+    /**
+     * Notifies the client that a player has disconnected, and the game has ended.
+     */
     public void playerDisconnectionInGame() {
         errorAlert.setHeaderText("Error!");
         errorAlert.setContentText("A player has disconnected, the game has ended.\n");
@@ -189,6 +234,10 @@ public class GameController implements Initializable {
         System.exit(0);
     }
 
+    /**
+     * Notifies the client that the game has ended, and shows the winner and the ranking.
+     * @param winner The player that has won.
+     */
     public void endGame(String winner){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("The Game has ended!");
@@ -201,6 +250,11 @@ public class GameController implements Initializable {
     }
 
     //GRID
+
+    /**
+     * Sets the {@code Item}s in the LivingRoom.
+     * @param livingRoom A {@code Map} of the LivingRoom.
+     */
     public void setLivingRoomGridPane(Map<Position, Item> livingRoom) {
         if (livingRoom == null) return;
         for (Position position : livingRoom.keySet()) {
@@ -219,6 +273,10 @@ public class GameController implements Initializable {
         livingRoomGridPane.add(imageView, column, row);
     }
 
+    /**
+     * Selects or deselects the {@code Item} clicked by the user in the LivingRoom.
+     * @param position {@code Position} selected by the user.
+     */
     public void selectItem(Position position) {
         if (!guInterface.getNickname().equals(currentPlayer)) {
             warningAlert.setHeaderText("Warning!");
@@ -239,7 +297,7 @@ public class GameController implements Initializable {
         }
         if (selectedItems.size() <= 2) {
             selectedItems.add(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().forEach(n -> n.setOpacity(selectedOpacity));
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(selectedOpacity));
             return;
         }
         warningAlert.setHeaderText("Warning!");
@@ -247,6 +305,10 @@ public class GameController implements Initializable {
         warningAlert.showAndWait();
     }
 
+    /**
+     * Sends the {@code Item}s selected to the {@code GUInterface}.
+     * @throws IOException Error in I/O.
+     */
     public void selectFromLivingRoom() throws IOException {
         if (!guInterface.getNickname().equals(currentPlayer)){
             warningAlert.setHeaderText("Warning!");
@@ -269,6 +331,10 @@ public class GameController implements Initializable {
         guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
     }
 
+    /**
+     * Sets the chosen {@code Item}s in the {@code ImageView}s above the Bookshelf.
+     * @param chosenItems {@code List} of chosen {@code Item}s.
+     */
     public void setChosenItems(List<Item> chosenItems){
         if (!currentPlayer.equals(nickname)) return;
         status = GameControllerStatus.BOOKSHELF;
@@ -280,21 +346,33 @@ public class GameController implements Initializable {
         livingRoomGridPane.getChildren().removeIf(node -> GridPane.getColumnIndex(node) == column && GridPane.getRowIndex(node) == row);
     }
 
+    /**
+     * Clears the chosen tiles in the LivingRoom.
+     */
     public void clearTilesList() {
         if (!currentPlayer.equals(nickname)) return;
         for (Position items : selectedItems) clearNodeByColumnRow(items.getColumn(), items.getRow());
     }
 
+    /**
+     * Resets the opacity of the selected tiles in the LivingRoom when the selection is gone wrong.
+     */
     public void resetOpacity() {
         for (Position position : selectedItems) {
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).toList().get(0).setOpacity(notSelectedOpacity);
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(notSelectedOpacity));
         }
     }
 
+    /**
+     * Clears the {@code selectedItems} when the items selection is gone wrong.
+     */
     public void clearSelectedItems() {
         selectedItems.clear();
     }
 
+    /**
+     * Notifies the client that the items selection is gone wrong.
+     */
     public void failedSelection() {
         warningAlert.setHeaderText("Warning!");
         warningAlert.setContentText("Failed selection, retry!");
@@ -316,6 +394,10 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * Orders the {@code ImageView}s selected.
+     * @param selected The {@code ImageView} selected.
+     */
     public void selectOrder(ImageView selected) {
         if (!guInterface.getNickname().equals(currentPlayer)) return;
         if (!status.equals(GameControllerStatus.BOOKSHELF)) {
@@ -366,6 +448,11 @@ public class GameController implements Initializable {
         if (!third)
             thirdChosenItemLabel.setText("");
     }
+
+    /**
+     * Sends to {@code GUInterface} the column selected by the client.
+     * @param column The column selected.
+     */
     public void selectColumn(int column) {
         if (!currentPlayer.equals(nickname)) {
             warningAlert.setHeaderText("Warning!");
@@ -395,6 +482,9 @@ public class GameController implements Initializable {
         guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, selectedOrder));
     }
 
+    /**
+     * Inserts the {@code ImageView}s in the selected order in the Bookshelf, when the insertion is successful.
+     */
     public void insertItems() {
         for (ImageView item : orderItems) {
             ImageView imageView = new ImageView(item.getImage());
@@ -433,6 +523,9 @@ public class GameController implements Initializable {
         thirdChosenItemImageView.setOnMouseClicked(null);
     }
 
+    /**
+     * Clears the {@code ImageView}s above the Bookshelf, when the insertion is successful.
+     */
     public void clearChosenItemsImageView() {
         firstChosenItemImageView.setImage(null);
         firstChosenItemImageView.setOpacity(notSelectedOpacity);
@@ -442,6 +535,9 @@ public class GameController implements Initializable {
         thirdChosenItemImageView.setOpacity(notSelectedOpacity);
     }
 
+    /**
+     * Notifies the client that the insertion is gone wrong.
+     */
     public void failedInsertion() {
         warningAlert.setHeaderText("Warning!");
         warningAlert.setContentText("Failed insertion, retry!");
@@ -450,12 +546,20 @@ public class GameController implements Initializable {
 
     //PERSONAL GOAL CARD
 
+    /**
+     * Loads the client's PersonalGoalCard.
+     * @param id The ID of the PersonalGoalCard.
+     */
     public void setPersonalGoalCard(int id){
         personalGoalCardImageView.setImage(new Image("/gui/myShelfieImages/personal_goal_cards/personal_goal_card_" + id + ".png"));
     }
 
     //BOOKSHELVES
 
+    /**
+     * Initializes the Bookshelves of the other players.
+     * @param nicknames The nicknames of the other players.
+     */
     public void initializeBookshelves(List<String> nicknames) {
         int numberPlayers = nicknames.size();
         nicknames.remove(nickname);
@@ -480,6 +584,11 @@ public class GameController implements Initializable {
         }
     }
 
+    /**
+     * Updates the Bookshelf of a player.
+     * @param owner The owner of the Bookshelf.
+     * @param bookshelf The new updated Bookshelf.
+     */
     public void updateBookshelf(String owner, Map<Position, Item> bookshelf) {
         if (owner == null) return;
         if (bookshelf == null) return;
@@ -494,23 +603,40 @@ public class GameController implements Initializable {
 
     //COMMON GOAL CARDS
 
+    /**
+     * Sets the CommonGoalCard descriptions, top tokens and {@code ImageView}s the first time that is called.
+     * Afterwards it only updates the top tokens.
+     * @param commonGoalCards A {@code Map} of the CommonGoalCards.
+     */
     public void updateCommonGoalCards(Map<Integer, Integer> commonGoalCards) {
         if (commonGoalCards == null) return;
+
         String filename;
         String topName;
         boolean first = true;
+
+        //setting commonGoalCards in a map only when the game starts
+        if (firstCommonGoalCardUpdate) {
+            firstCommonGoalCardUpdate = false;
+            for (Integer id : commonGoalCards.keySet()) {
+                if (first) {
+                    firstCommonGoalCardId = id;
+                    first = false;
+                }
+                else
+                    secondCommonGoalCardId = id;
+            }
+        }
+
         for (Map.Entry<Integer, Integer> card : commonGoalCards.entrySet()) {
             filename = "/gui/myShelfieImages/common_goal_cards/common_goal_card_" + card.getKey() + ".jpg";
             topName = "/gui/myShelfieImages/scoring_tokens/scoring_" + card.getValue() + ".jpg";
-            if (first) {
+            if (firstCommonGoalCardId == card.getKey()) {
                 firstCommonGoalCardTopImageView.setImage(new Image(topName));
                 firstCommonGoalCardImageView.setImage(new Image(filename));
-                firstCommonGoalCardId = card.getKey();
-                first = false;
-            } else {
+            } else if (secondCommonGoalCardId == card.getKey()) {
                 secondCommonGoalCardTopImageView.setImage(new Image(topName));
                 secondCommonGoalCardImageView.setImage(new Image(filename));
-                secondCommonGoalCardId = card.getKey();
             }
         }
     }
@@ -524,6 +650,10 @@ public class GameController implements Initializable {
 
     //ENDING TOKEN
 
+    /**
+     * Sets the ending token.
+     * @param owner The owner of the ending token.
+     */
     public void setEndingToken(String owner) {
         if (owner == null) return;
         if (owner.equals(nickname))
@@ -535,6 +665,10 @@ public class GameController implements Initializable {
 
     //SCORES
 
+    /**
+     * Sets the scores of the players in the {@code rankingLabel}.
+     * @param newScores A {@code Map} of the new scores.
+     */
     public void setScores(Map<String, Integer> newScores) {
         if (newScores == null) return;
         this.scores.putAll(newScores);
@@ -560,35 +694,11 @@ public class GameController implements Initializable {
             chatStage.hide();
         });
     }
+
+    /**
+     * Shows the Chat {@code Stage} when the {@code enterChatButton} is clicked.
+     */
     public void enterChat() {
         chatStage.show();
     }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        guInterface.receiveController(this);
-        livingRoomGridPane.setHgap(livingRoomGap);
-        livingRoomGridPane.setVgap(livingRoomGap);
-        bookshelfGridPane.setHgap(bookshelfGap);
-        bookshelfGridPane.setVgap(bookshelfGap);
-        firstBookshelfGridPane.setHgap(othersBookshelfGap);
-        firstBookshelfGridPane.setVgap(othersBookshelfGap);
-        secondBookshelfGridPane.setHgap(othersBookshelfGap);
-        secondBookshelfGridPane.setVgap(othersBookshelfGap);
-        thirdBookshelfGridPane.setHgap(othersBookshelfGap);
-        thirdBookshelfGridPane.setVgap(othersBookshelfGap);
-        insertColumn0Button.setOnMouseClicked(mouseEvent -> selectColumn(0));
-        insertColumn1Button.setOnMouseClicked(mouseEvent -> selectColumn(1));
-        insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));
-        insertColumn3Button.setOnMouseClicked(mouseEvent -> selectColumn(3));
-        insertColumn4Button.setOnMouseClicked(mouseEvent -> selectColumn(4));
-        firstCommonGoalCardImageView.setOnMouseClicked(mouseEvent -> showCommonGoalCardDescription(firstCommonGoalCardId));
-        secondCommonGoalCardImageView.setOnMouseClicked(mouseEvent -> showCommonGoalCardDescription(secondCommonGoalCardId));
-        try {
-            createChat();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -67,13 +67,13 @@ public class Position implements Comparable<Position>, Serializable {
     }
 
     /**
-     * Compares the {@code this} to another {@code Position}: {@code this} < {@code other} iff
+     * Compares the {@code this} to another {@code Position}: {@code this} less than {@code other} iff
      * the row of {@code this} is smaller than the row of {@code other} or, in case of equality
      * between the rows, if the column of {@code this} is smaller than the column of {@code other}.
      * @param other The object to compare {@code this} with.
-     * @return int < 0 if {@code this} < {@code other},
-     * int = 0 if {@code this} = {@code other},
-     * else an int > 0.
+     * @return int less than 0 if {@code this} less than {@code other},
+     * int equal to 0 if {@code this} equal to {@code other},
+     * else an int bigger than 0.
      */
     @Override
     public int compareTo(Position other){

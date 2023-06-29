@@ -6,7 +6,15 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
+/**
+ * Class representing WindowManager.
+ */
 public class WindowManager {
+
+    /**
+     * Ask if the client wants to close the {@code Stage}, if the answer is positive then it closes the {@code Stage}.
+     * @param stage The selected {@code Stage}.
+     */
     public static void closeWindow(Stage stage) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout");

@@ -10,13 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static it.polimi.ingsw.view.client.gui.GUILauncher.startGUI;
-import static it.polimi.ingsw.view.client.gui.controllers.ChatController.startChatController;
-import static it.polimi.ingsw.view.client.gui.controllers.GameController.startGameController;
-import static it.polimi.ingsw.view.client.gui.controllers.LobbyController.startLobbyController;
-import static it.polimi.ingsw.view.client.gui.controllers.LoginController.*;
-import static it.polimi.ingsw.view.client.gui.controllers.WaitingRoomController.startWaitingRoomController;
+import static it.polimi.ingsw.view.client.gui.controllers.AbstractController.setGUInterfaceInControllers;
 
-public class GUInterface extends ClientView {
+/**
+ * Class representing the GUI.
+ * It receives messages from the server and updates the controllers.
+ * It sends the client's input to the server.
+ */
+public class GUInterface extends ClientView implements GUIViewInterface {
     private LoginController loginController;
     private LobbyController lobbyController;
     private WaitingRoomController waitingRoomController;
@@ -26,15 +27,19 @@ public class GUInterface extends ClientView {
     private boolean inLauncher = true;
     private boolean inGame = false;
 
+    /**
+     * Class constructor: sets the GUIViewInterface in each controller.
+     */
     public GUInterface() {
-        super();
-        startLoginController(this);
-        startLobbyController(this);
-        startWaitingRoomController(this);
-        startGameController(this);
-        startChatController(this);
+        setGUInterfaceInControllers(this);
     }
 
+    /**
+     * {@inheritDoc}
+     * It saves the player's nickname.
+     * It synchronizes on {@code this}.
+     * @param message Message containing the chosen nickname.
+     */
     @Override
     public void login(Nickname message) {
         synchronized (this) {
@@ -47,6 +52,11 @@ public class GUInterface extends ClientView {
         super.login(new Nickname(nickname));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
+     */
     @Override
     public synchronized void onGamesList(GamesList message) {
         List<GameInfo> games = message.getAvailable();
@@ -61,6 +71,11 @@ public class GUInterface extends ClientView {
         Platform.runLater(() -> lobbyController.listOfGames(games));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
+     */
     @Override
     public synchronized void onGameData(GameData message) {
         if (message.getNumberPlayers() == -1 ||
@@ -81,6 +96,11 @@ public class GUInterface extends ClientView {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
+     */
     @Override
     public synchronized void onSelectedItems(SelectedItems message) {
         if (message.getItems() == null){
@@ -93,6 +113,11 @@ public class GUInterface extends ClientView {
         Platform.runLater(() -> gameController.setChosenItems(message.getItems()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
+     */
     @Override
     public synchronized void onAcceptedInsertion(AcceptedInsertion message) {
         if (!message.isAccepted()) {
@@ -103,22 +128,42 @@ public class GUInterface extends ClientView {
         Platform.runLater(() -> gameController.clearChosenItemsImageView());
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
+     */
     @Override
     public synchronized void onChatAccepted(ChatAccepted message) {
         if (message.isAccepted()) return;
         Platform.runLater(() -> chatController.rejectedMessage());
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onLivingRoomUpdate(LivingRoomUpdate update) {
         Platform.runLater(() -> gameController.setLivingRoomGridPane(update.getLivingRoomUpdate()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onBookshelfUpdate(BookshelfUpdate update) {
         Platform.runLater(() -> gameController.updateBookshelf(update.getOwner(), update.getBookshelf()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
         if (update.isConnected()) {
@@ -140,37 +185,72 @@ public class GUInterface extends ClientView {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onScoresUpdate(ScoresUpdate update) {
         Platform.runLater(() -> gameController.setScores(update.getScores()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onEndingTokenUpdate(EndingTokenUpdate update) {
         Platform.runLater(() -> gameController.setEndingToken(update.getOwner()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
         Platform.runLater(() -> gameController.updateCommonGoalCards(update.getCommonGoalCardsUpdate()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
         Platform.runLater(() -> gameController.setPersonalGoalCard(update.getId()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onChatUpdate(ChatUpdate update) {
         Platform.runLater(() -> gameController.enterChat());
         Platform.runLater(() -> chatController.receiveMessage(update));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onStartTurnUpdate(StartTurnUpdate update) {
         Platform.runLater(() -> gameController.setCurrentPlayer(update.getCurrentPlayer()));
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
+     */
     @Override
     public synchronized void onEndGameUpdate(EndGameUpdate update) {
         if(update.getWinner() == null){
@@ -180,6 +260,10 @@ public class GUInterface extends ClientView {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     */
     @Override
     public synchronized void onDisconnection() {
         if (inLauncher) {
@@ -190,32 +274,74 @@ public class GUInterface extends ClientView {
         }
     }
 
+    /**
+     * Calls the {@code startGUI} method that starts the GUI.
+     */
     @Override
     public void start() {
         startGUI();
     }
 
+    /**
+     * {@inheritDoc}
+     * @return The nickname of the client.
+     */
+    @Override
     public synchronized String getNickname(){
         return nickname;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return The nicknames of the other clients.
+     */
+    @Override
     public synchronized List<String> getOthersNicknames() {
         return nicknames.stream().filter((n) -> !n.equals(nickname)).toList();
     }
 
-    public synchronized void receiveController(LoginController controller){
+    /**
+     * {@inheritDoc}
+     * @param controller The controller reference.
+     */
+    @Override
+    public synchronized void setController(LoginController controller) {
         loginController = controller;
     }
-    public synchronized void receiveController(LobbyController controller){
+
+    /**
+     * {@inheritDoc}
+     * @param controller The controller reference.
+     */
+    @Override
+    public synchronized void setController(LobbyController controller) {
         lobbyController = controller;
     }
-    public synchronized void receiveController(WaitingRoomController controller){
-        waitingRoomController = controller;
+
+    /**
+     * {@inheritDoc}
+     * @param controller The controller reference.
+     */
+    @Override
+    public synchronized void setController(WaitingRoomController controller) {
+        waitingRoomController =  controller;
     }
-    public synchronized void receiveController(GameController controller){
+
+    /**
+     * {@inheritDoc}
+     * @param controller The controller reference.
+     */
+    @Override
+    public synchronized void setController(GameController controller) {
         gameController = controller;
     }
-    public synchronized void receiveController(ChatController controller){
+
+    /**
+     * {@inheritDoc}
+     * @param controller The controller reference.
+     */
+    @Override
+    public synchronized void setController(ChatController controller) {
         chatController = controller;
     }
 }

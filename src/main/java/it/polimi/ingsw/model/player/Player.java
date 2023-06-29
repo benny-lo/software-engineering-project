@@ -206,7 +206,12 @@ public class Player {
     }
 
     //METHODS EXCLUSIVELY FOR TESTING
+
+    /**
+     * Getter for the items that {@code this} took from the {@code LivingRoom}.
+     * @return {@code List} of items taken from the {@code LivingRoom}.
+     */
     public List<Item> getItemsTakenFromLivingRoom() {
-        return itemsTakenFromLivingRoom;
+        return new ArrayList<>(itemsTakenFromLivingRoom);
     }
 }

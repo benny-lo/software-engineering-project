@@ -174,7 +174,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * {@inheritDoc}
      * @param message the request from the client.
-     * @throws RemoteException
+     * @throws RemoteException Exception throws by rmi call.
      */
     @Override
     public void login(Nickname message) throws RemoteException {
@@ -184,7 +184,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * {@inheritDoc}
      * @param message the request from the client.
-     * @throws RemoteException
+     * @throws RemoteException Exception throws by rmi call.
      */
     @Override
     public void createGame(GameInitialization message) throws RemoteException {
@@ -194,7 +194,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * {@inheritDoc}
      * @param message the request from the client.
-     * @throws RemoteException
+     * @throws RemoteException Exception throws by rmi call.
      */
     @Override
     public void selectGame(GameSelection message) throws RemoteException {
@@ -204,7 +204,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * {@inheritDoc}
      * @param message the request from the client.
-     * @throws RemoteException
+     * @throws RemoteException Exception throws by rmi call.
      */
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) throws RemoteException {
@@ -214,7 +214,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * {@inheritDoc}
      * @param message the request from the client.
-     * @throws RemoteException
+     * @throws RemoteException Exception throws by rmi call.
      */
     @Override
     public void insertInBookshelf(BookshelfInsertion message) throws RemoteException {
@@ -224,7 +224,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * {@inheritDoc}
      * @param message the request from the client.
-     * @throws RemoteException
+     * @throws RemoteException Exception throws by rmi call.
      */
     @Override
     public void writeChat(ChatMessage message) throws RemoteException {
@@ -234,7 +234,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * {@inheritDoc}
      * @param beep the beep from the client.
-     * @throws RemoteException
+     * @throws RemoteException Exception throws by rmi call.
      */
     @Override
     public void beep(Beep beep) throws RemoteException {
