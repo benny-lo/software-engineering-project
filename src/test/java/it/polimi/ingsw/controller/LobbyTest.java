@@ -3,6 +3,7 @@ package it.polimi.ingsw.controller;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.GameInitialization;
+import it.polimi.ingsw.utils.message.client.GameSelection;
 import it.polimi.ingsw.utils.message.client.Nickname;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.server.VirtualView;
@@ -24,24 +25,30 @@ public class LobbyTest {
         Logger.setTestMode(true);
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
-        view0.setNickname("nick");
-        lobby.login(view0.getNickname(), view0);
+        view0.login(new Nickname("nick"));
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
-        view1.setNickname("nick");
-        lobby.login(view1.getNickname(),view1);
+        view1.login(new Nickname("nick"));
 
         Message message;
 
+        while(!mockServerConnection0.queue.isEmpty()) {
+            message = mockServerConnection0.queue.poll();
+            assertTrue(message instanceof GamesList);
+            GamesList gamesList = (GamesList) message;
+            assertNotNull(gamesList.getAvailable());
+            assertTrue(gamesList.getAvailable().isEmpty());
+        }
+
         while(!mockServerConnection1.queue.isEmpty()) {
-            message = mockServerConnection1.queue.remove();
-            if (message instanceof GamesList gamesList)
-                assertNull(gamesList.getAvailable());
+            message = mockServerConnection1.queue.poll();
+            assertTrue(message instanceof GamesList);
+            GamesList gamesList = (GamesList) message;
+            assertNull(gamesList.getAvailable());
         }
     }
 
@@ -53,21 +60,23 @@ public class LobbyTest {
         Logger.setTestMode(true);
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
+
+        Message message;
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
-        view0.setNickname("nick");
-        lobby.login(view0.getNickname(), view0);
+        view0.login(new Nickname("nick"));
 
         while(!mockServerConnection0.queue.isEmpty()) {
-            mockServerConnection0.queue.remove();
+            message = mockServerConnection0.queue.poll();
+            assertTrue(message instanceof GamesList);
+            GamesList gamesList = (GamesList) message;
+            assertNotNull(gamesList.getAvailable());
+            assertTrue(gamesList.getAvailable().isEmpty());
         }
 
-        view0.setNickname("rick");
-        lobby.login(view0.getNickname(), view0);
+        view0.login(new Nickname("rick"));
 
-        Message message;
 
         while(!mockServerConnection0.queue.isEmpty()) {
             message = mockServerConnection0.queue.remove();
@@ -84,12 +93,11 @@ public class LobbyTest {
         Logger.setTestMode(true);
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
 
-        lobby.createGame(2,2,view0);
+        view0.createGame(new GameInitialization(2, 2));
 
         Message message;
 
@@ -115,20 +123,22 @@ public class LobbyTest {
         Logger.setTestMode(true);
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
-        VirtualView view1 = new VirtualView(mockServerConnection0);
-        view1.setNickname("rick");
+        VirtualView view0 = new VirtualView(mockServerConnection0);
 
-        lobby.login(view1.getNickname(), view1);
-        lobby.createGame(1,2,view1);
+        view0.login(new Nickname("rick"));
+        view0.createGame(new GameInitialization(1, 2));
 
 
         Message message;
 
         while(!mockServerConnection0.queue.isEmpty()) {
             message = mockServerConnection0.queue.remove();
+            if (message instanceof GamesList gamesList) {
+                assertNotNull(gamesList.getAvailable());
+                assertTrue(gamesList.getAvailable().isEmpty());
+            }
             if (message instanceof GameData gameData) {
                 assertEquals(gameData.getNumberPlayers(),-1);
                 assertNull(gameData.getConnectedPlayers());
@@ -142,27 +152,24 @@ public class LobbyTest {
     }
 
     /**
-     * Testing the {@code createGame} method when it works as intended.
+     * Testing the {@code createGame} method with correct parameters.
      */
     @Test
     public void testCreateGameLoggedIn() {
         Logger.setTestMode(true);
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
-        view0.setNickname("nick");
 
-        lobby.login(view0.getNickname(), view0);
-        lobby.createGame(2,2,view0);
+        view0.login(new Nickname("nick"));
+        view0.createGame(new GameInitialization(2, 2));
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
-        view1.setNickname("rick");
 
-        lobby.login(view1.getNickname(), view1);
+        view1.login(new Nickname("rick"));
 
         Message message;
 
@@ -185,13 +192,11 @@ public class LobbyTest {
         Logger.setTestMode(true);
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
-        view0.setNickname("nick");
 
-        lobby.selectGame(0,view0);
+        view0.login(new Nickname("nick"));
 
         Message message;
 
@@ -210,21 +215,19 @@ public class LobbyTest {
     }
 
     /**
-     * Testing the {@code selectGame} method when the player selects a game that not exists.
+     * Testing the {@code selectGame} method when the player selects a game that does not exist.
      */
     @Test
     public void testSelectGameWrongSelection() {
         Logger.setTestMode(true);
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
-        view0.setNickname("nick");
 
-        lobby.login(view0.getNickname(), view0);
-        lobby.selectGame(0,view0);
+        view0.login(new Nickname("nick"));
+        view0.selectGame(new GameSelection(0));
 
         Message message;
 
@@ -261,21 +264,18 @@ public class LobbyTest {
         int startTurn=0;
 
         Lobby.setNull();
-        Lobby lobby = Lobby.getInstance();
 
         MockServerConnection mockServerConnection0 = new MockServerConnection();
         VirtualView view0 = new VirtualView(mockServerConnection0);
-        view0.setNickname("nick");
 
-        lobby.login(view0.getNickname(),view0);
-        lobby.createGame(2,2,view0);
+        view0.login(new Nickname("nick"));
+        view0.createGame(new GameInitialization(2, 2));
 
         MockServerConnection mockServerConnection1 = new MockServerConnection();
         VirtualView view1 = new VirtualView(mockServerConnection1);
-        view1.setNickname("rick");
 
-        lobby.login(view1.getNickname(), view1);
-        lobby.selectGame(0,view1);
+        view1.login(new Nickname("rick"));
+        view1.selectGame(new GameSelection(0));
 
         for(Message message :mockServerConnection0.queue) {
             if(message instanceof GamesList) {
