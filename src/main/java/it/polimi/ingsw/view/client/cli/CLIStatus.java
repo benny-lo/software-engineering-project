@@ -1,5 +1,8 @@
 package it.polimi.ingsw.view.client.cli;
 
+/**
+ * Enumeration of the {@code CLInterface} statuses.
+ */
 public enum CLIStatus {
     LOGIN, //you can only log in
     LOBBY, //you can create or select a game

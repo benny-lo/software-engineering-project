@@ -1,6 +1,16 @@
 package it.polimi.ingsw.utils.view;
 
+/**
+ * Class representing CommonGoalCardDescription.
+ * It contains the descriptions of the CommonGoalCard.
+ */
 public class CommonGoalCardDescription {
+
+    /**
+     * Getter of the description of the CommonGoalCards.
+     * @param id The ID of the requested CommonGoalCard.
+     * @return The description of the CommonGoalCard.
+     */
     public static String getDescription(int id) {
         switch (id) {
             case 0 -> {

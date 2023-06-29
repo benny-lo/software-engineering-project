@@ -9,6 +9,10 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class representing Chat controller.
+ * It manages the messages of the various players, that can be sent in broadcast or in unicast.
+ */
 public class ChatController extends AbstractController {
     private final static String BROADCAST = "all";
     @FXML
@@ -18,12 +22,15 @@ public class ChatController extends AbstractController {
     @FXML
     private TextField textToSend;
 
-    private List<ChatUpdate> messages;
+    private final List<ChatUpdate> messages = new ArrayList<>();
 
+    /**
+     * Sets {@code this} in the {@code GUInterface}.
+     * Sets 'all' and the nicknames of the connected players to the {@code playerMenu}.
+     */
     @FXML
     public void initialize() {
-        guInterface.receiveController(this);
-        messages = new ArrayList<>();
+        guInterface.setController(this);
         playerMenu.getItems().add("all");
         playerMenu.setValue("all");
 
@@ -33,6 +40,10 @@ public class ChatController extends AbstractController {
         }
     }
 
+    /**
+     * Adds the message received to the chat.
+     * @param message The message received.
+     */
     public void receiveMessage(ChatUpdate message) {
         messages.add(message);
         if (isToDisplay(message)) {
@@ -40,6 +51,9 @@ public class ChatController extends AbstractController {
         }
     }
 
+    /**
+     * Sends to the {@code GUInterface} the message written by the client.
+     */
     public void onSendButtonClick() {
         String text = textToSend.getText();
         String receiver = playerMenu.getValue();
@@ -50,6 +64,9 @@ public class ChatController extends AbstractController {
         guInterface.writeChat(message);
     }
 
+    /**
+     * Displays the messages between the client and the player selected or the 'all' chat.
+     */
     public void onPlayerFromMenu() {
         messagesDisplayed.getChildren().clear();
         for (ChatUpdate message : messages) {
@@ -78,6 +95,9 @@ public class ChatController extends AbstractController {
         return new Label(sender + " sent to " + receiver + ": " + text);
     }
 
+    /**
+     * Notifies the client that the message has been rejected from the server.
+     */
     public void rejectedMessage() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setHeaderText("Warning!");

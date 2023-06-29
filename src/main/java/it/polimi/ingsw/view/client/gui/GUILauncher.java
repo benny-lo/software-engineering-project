@@ -12,11 +12,24 @@ import java.util.Objects;
 
 import static it.polimi.ingsw.utils.view.gui.WindowManager.closeWindow;
 
+/**
+ * Class that starts the GUI.
+ */
 public class GUILauncher extends Application {
+    /**
+     * Launches the GUI and calls the {@code start} method.
+     */
     public static void startGUI(){
         launch();
     }
 
+
+    /**
+     * {@inheritDoc}
+     * Loads the Login {@code scene} and then shows it.
+     * @param primaryStage The Launcher {@code stage}.
+     * @throws IOException Error in I/O with fxml files or with resources.
+     */
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Login.fxml"));

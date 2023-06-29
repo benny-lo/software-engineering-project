@@ -10,7 +10,6 @@ import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
-import it.polimi.ingsw.view.client.InputReceiver;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -20,7 +19,9 @@ import java.util.*;
 import static it.polimi.ingsw.view.client.cli.CLInterfacePrinter.*;
 
 /**
- * This class receives the messages from the server and updates the text interface. It also sends the client's input to the server.
+ * Class representing the CLI.
+ * It receives messages from the server and updates the text interface.
+ * It sends the client's input to the server.
  */
 
 public class CLInterface extends ClientView implements InputReceiver {
@@ -38,20 +39,23 @@ public class CLInterface extends ClientView implements InputReceiver {
     private String currentPlayer;
     private int bookshelvesRows;
     private int bookshelvesColumns;
-    private final List<GameInfo> games = new ArrayList<>();
+    private final List<GameInfo> games;
 
     /**
-     * Constructor for the class.
+     * Constructor of the class: creates a {@code Map} for the bookshelves, commonGoalCards, and the scores;
+     * and creates an {@code Array} for the chat and the games.
      */
     public CLInterface() {
         bookshelves = new HashMap<>();
         commonGoalCards = new HashMap<>();
         scores = new HashMap<>();
         chat = new ArrayList<>();
+        games = new ArrayList<>();
     }
 
     /**
-     * Override of the start method, starts a new thread, using inputHandler
+     * Starts the CLI, and it creates a new {@code Thread} in {@code InputHandler}.
+     * It synchronizes on {@code this}.
      */
     @Override
     public synchronized void start() {
@@ -63,9 +67,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onGamesList method, prints the list of Games that are available, or error messages in cases the nickname
-     * is not set, or there are no games available
-     * @param message - message of the type GameList
+     * {@inheritDoc}
+     * Prints the list of Games that are available, but if the login failed prints an error.
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
      */
     @Override
     public synchronized void onGamesList(GamesList message) {
@@ -97,8 +102,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onAcceptedInsertion method, handles what the text interface should do in case of a AcceptedInsertion message.
-     * @param message - message of acceptedInsertion type, which is true if the insertion is accepted or false otherwise.
+     * {@inheritDoc}
+     * Prints the GameRep if the insertion is successful, otherwise it prints an error.
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
      */
     @Override
     public synchronized void onAcceptedInsertion(AcceptedInsertion message) {
@@ -111,8 +118,9 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onChatAccepted method, handles what the text interface should do in case of a chatAccepted message.
-     * @param message - message of chatAccepted type, which is true if the player has connected to the chat or false otherwise.
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
      */
     @Override
     public synchronized void onChatAccepted(ChatAccepted message) {
@@ -121,9 +129,12 @@ public class CLInterface extends ClientView implements InputReceiver {
         }
         System.out.flush();
     }
+
     /**
-     * Override of the onItemsSelected method, handles what the text interface should do in case of a ItemsSelected message.
-     * @param message - message of onItemsSelected type, which contains the item chosen.
+     * {@inheritDoc}
+     * Prints the GameRep if the selection is successful, otherwise it prints an error.
+     * It synchronizes on {@code this}.
+     * @param message The message to process.
      */
     @Override
     public synchronized void onSelectedItems(SelectedItems message) {
@@ -135,12 +146,15 @@ public class CLInterface extends ClientView implements InputReceiver {
         }
         System.out.flush();
     }
+
     /**
-     * Override of the onLivingRoomUpdate method, handles what the text interface should do in case of a LivingRoom update.
-     * @param update - message of LivingRoomUpdate type, which contains the updated Living Room.
+     * {@inheritDoc}
+     * Prints the GameRep and updates the LivingRoom.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
-    public void onLivingRoomUpdate(LivingRoomUpdate update) {
+    public synchronized void onLivingRoomUpdate(LivingRoomUpdate update) {
         Map<Position, Item> ups = update.getLivingRoomUpdate();
         for (Position p : ups.keySet()) {
             livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
@@ -152,9 +166,12 @@ public class CLInterface extends ClientView implements InputReceiver {
         }
         System.out.flush();
     }
+
     /**
-     * Override of the onBookshelfUpdate method, handles what the text interface should do in case of a Bookshelf update.
-     * @param update - message of BookshelfUpdate type, which contains the updated Bookshelf.
+     * {@inheritDoc}
+     * Prints the GameRep and updates the bookshelf.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onBookshelfUpdate(BookshelfUpdate update) {
@@ -170,10 +187,12 @@ public class CLInterface extends ClientView implements InputReceiver {
         }
         System.out.flush();
     }
+
     /**
-     * Override of the onWaitingUpdate method, handles what the text interface should do in case of a waiting update.
-     * @param update- message of WaitingUpdate type, which is true if the player has just connected and the rest of the players are
-     * waiting for the game to start.
+     * {@inheritDoc}
+     * Prints the StartGame message if all players have connected, otherwise prints how many player are missing.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onWaitingUpdate(WaitingUpdate update) {
@@ -192,8 +211,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onScoresUpdate method, handles what the text interface should do in case of a Scores update.
-     * @param update - message of ScoresUpdate type, which is contains the updated scores.
+     * {@inheritDoc}
+     * Prints the GameRep.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onScoresUpdate(ScoresUpdate update) {
@@ -208,8 +229,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onEndingTokenUpdate method, handles what the text interface should do in case of a EndingToken update.
-     * @param update - message of EndingTokenUpdate type, which contains the owner of the endingToken
+     * {@inheritDoc}
+     * Prints the GameRep and assign the ending token.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onEndingTokenUpdate(EndingTokenUpdate update) {
@@ -224,8 +247,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onCommonGoalCardsUpdate method, handles what the text interface should do in case of a CommonGoalCards update.
-     * @param update - message of CommonGoalCardsUpdate type , which contains the updated common goal cards
+     * {@inheritDoc}
+     * Prints the GameRep and updates the CommonGoalCards.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
@@ -243,8 +268,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onPersonalGoalCardUpdate method, handles what the text interface should do in case of a PersonalGoalCard update.
-     * @param update - message of PersonalGoalCardUpdate type , which contains the updated personal goal card
+     * {@inheritDoc}
+     * Prints the GameRep and updates the PersonalGoalCard.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onPersonalGoalCardUpdate(PersonalGoalCardUpdate update) {
@@ -278,8 +305,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onChatUpdate method, handles what the text interface should do in case of a chat update.
-     * @param message - message of ChatUpdate type, which contains an updated chat message
+     * {@inheritDoc}
+     * Add a message to the Chat and prints the Chat.
+     * It synchronizes on {@code this}.
+     * @param message The update to process.
      */
     @Override
     public synchronized void onChatUpdate(ChatUpdate message) {
@@ -294,8 +323,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onStartTurnUpdate, handles what the text interface should do in case of a startTurn update.
-     * @param update - message of StartTurnUpdate type, which contains the updated current player.
+     * {@inheritDoc}
+     * Updates the current player and prints the GameRep.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onStartTurnUpdate(StartTurnUpdate update) {
@@ -311,8 +342,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onEndGameUpdate, handles what the text interface should do in case of an endgame update.
-     * @param update - message of the EndGameUpdate type, which contains the winner of the game.
+     * {@inheritDoc}
+     * Ends the Game, prints the winner and the ranking.
+     * It synchronizes on {@code this}.
+     * @param update The update to process.
      */
     @Override
     public synchronized void onEndGameUpdate(EndGameUpdate update) {
@@ -329,9 +362,11 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onGameData, handles what the text interface should do in case of a gameData update.
-     * @param gameData - message of the GameData type, which contains information of the game, number of players, number
-     * of common goal cards, of the row and columns of the living room and bookshelves.
+     * {@inheritDoc}
+     * Sets the connected players, the LivingRoom, the Bookshelves, the PersonalGoalCard if the game selection is successful,
+     * otherwise prints an error.
+     * It synchronizes on {@code this}.
+     * @param gameData The message to process.
      */
     @Override
     public synchronized void onGameData(GameData gameData) {
@@ -358,7 +393,9 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the onDisconnection method, handles what the text interface should do in a case of a disconnection.
+     * {@inheritDoc}
+     * Prints the Disconnection message when the client loses his connection with the server.
+     * It synchronizes on {@code this}.
      */
     @Override
     public synchronized void onDisconnection() {
@@ -371,8 +408,11 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the login method, handles what the text interface should do in case of a login.
-     * @param message message containing the chosen nickname.
+     * {@inheritDoc}
+     * Sets the client's nickname, if the nickname is invalid prints IncorrectNickname message.
+     * Sends to {@code ClientConnection} a Nickname message.
+     * It synchronizes on {@code this}.
+     * @param message Message containing the chosen nickname.
      */
     @Override
     public void login(Nickname message) {
@@ -395,8 +435,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the createGame method, handles what the text interface should do in case of a gameInitialization message.
-     * @param message message containing the information about the game to create.
+     * {@inheritDoc}
+     * Sends to {@code ClientConnection} a GameInitialization message.
+     * It synchronizes on {@code this}.
+     * @param message Message containing the information about the game to create.
      */
     @Override
     public void createGame(GameInitialization message) {
@@ -411,8 +453,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the selectGame method, handles what the text interface should do in case of a GameSelection message.
-     * @param message message containing the id of the game chosen.
+     * {@inheritDoc}
+     * Sends to {@code ClientConnection} a GameSelection message.
+     * It synchronizes on {@code this}.
+     * @param message Message containing the id of the game chosen.
      */
     @Override
     public void selectGame(GameSelection message) {
@@ -427,8 +471,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * Override of the selectFromLivingRoom method, handles what the text interface should do in case of a LivingRoomSelection message.
-     * @param message message containing the chosen positions.
+     * {@inheritDoc}
+     * Sends to {@code ClientConnection} a LivingRoomSelection message.
+     * It synchronizes on {@code this}.
+     * @param message Message containing the chosen positions.
      */
     @Override
     public void selectFromLivingRoom(LivingRoomSelection message) {
@@ -443,8 +489,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * * Override of the insertInBookshelf method, handles what the text interface should do in case of a BookshelfInsertion message.
-     * @param message message containing the column and the order in which to insert the chosen tiles.
+     * {@inheritDoc}
+     * Sends to {@code ClientConnection} a BookshelfInsertion message.
+     * It synchronizes on {@code this}.
+     * @param message Message containing the column and the order in which to insert the chosen tiles.
      */
     @Override
     public void insertInBookshelf(BookshelfInsertion message) {
@@ -459,8 +507,10 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * * Override of the writeChat method, handles what the text interface should do in case of a Chat message.
-     * @param message message containing the text written.
+     * {@inheritDoc}
+     * Sends to {@code ClientConnection} a ChatMessage message.
+     * It synchronizes on {@code this}.
+     * @param message Message containing the text written.
      */
     @Override
     public void writeChat(ChatMessage message) {
@@ -475,7 +525,9 @@ public class CLInterface extends ClientView implements InputReceiver {
     }
 
     /**
-     * * Override of the enterChat method, handles what the text interface should do in case of a player entering the chat.
+     * {@inheritDoc}
+     * The client enters the Chat.
+     * It synchronizes on {@code this}.
      */
     @Override
     public synchronized void enterChat() {
@@ -491,8 +543,11 @@ public class CLInterface extends ClientView implements InputReceiver {
         System.out.flush();
     }
 
+
     /**
-     * * Override of the exitChat method, handles what the text interface should do in case of a player exiting the chat.
+     * {@inheritDoc}
+     * The client exits the Chat.
+     * It synchronizes on {@code this}.
      */
     @Override
     public synchronized void exitChat() {
@@ -508,13 +563,17 @@ public class CLInterface extends ClientView implements InputReceiver {
         System.out.flush();
     }
 
+    /**
+     * {@inheritDoc}
+     * It synchronizes on {@code this}.
+     */
     @Override
     public synchronized void exit() {
         System.exit(0);
     }
 
     /**
-     * This method prints the text interface representation of the whole game.
+     * Prints the text interface representation of the whole game.
      */
     private void printGameRep() {
         printCurrentPlayer(nickname, currentPlayer);
