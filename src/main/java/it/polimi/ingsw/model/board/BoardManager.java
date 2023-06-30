@@ -147,6 +147,8 @@ public class BoardManager {
         }
     }
 
+    // EXCLUSIVELY USED FOR TESTING.
+
     /**
      * Getter for the {@code LivingRoom}.
      * @return The {@code LivingRoom}.

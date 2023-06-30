@@ -102,7 +102,8 @@ public class CommonGoalCardManager {
         for(CommonGoalCard card : cards) {
             if (cannotTake.contains(card.getId())) continue;
             if (card.checkPattern(bookshelf)) {
-                tokens.add(card.popToken());
+                ScoringToken token = card.popToken();
+                if (token != null) tokens.add(token);
                 if (commonGoalCardsListener != null) {
                     commonGoalCardsListener.updateState(card.getId(), card.getTopStack());
                 }

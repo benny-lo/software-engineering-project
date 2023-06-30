@@ -2,7 +2,6 @@ package it.polimi.ingsw.utils.message.client;
 
 import it.polimi.ingsw.utils.message.Message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ public class BookshelfInsertion extends Message {
     public BookshelfInsertion(int column, List<Integer> permutation) {
         super();
         this.column = column;
-        this.permutation =  new ArrayList<>(permutation);
+        this.permutation =  permutation;
     }
 
     /**

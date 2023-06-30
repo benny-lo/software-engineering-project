@@ -328,7 +328,7 @@ public class GameController extends AbstractController {
             warningAlert.showAndWait();
             return;
         }
-        guInterface.selectFromLivingRoom(new LivingRoomSelection(selectedItems));
+        guInterface.selectFromLivingRoom(new LivingRoomSelection(new ArrayList<>(selectedItems)));
     }
 
     /**
@@ -479,7 +479,7 @@ public class GameController extends AbstractController {
             return;
         }
         selectedColumn = column;
-        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, selectedOrder));
+        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, new ArrayList<>(selectedOrder)));
     }
 
     /**

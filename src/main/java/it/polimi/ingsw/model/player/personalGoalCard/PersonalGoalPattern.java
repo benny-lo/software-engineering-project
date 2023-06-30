@@ -50,6 +50,6 @@ public class PersonalGoalPattern implements PersonalGoalPatternInterface {
      * @return The {@code Map} representing the mask of the pattern.
      */
     public Map<Position, Item> getMaskPositions() {
-        return maskPositions;
+        return new HashMap<>(maskPositions);
     }
 }
