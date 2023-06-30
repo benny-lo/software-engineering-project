@@ -123,10 +123,15 @@ public class InputHandler implements Runnable {
                         }
                     }
                     case "/dm" -> {
-                        if (tokenizer.countTokens() == 2) {
+                        if (tokenizer.countTokens() >= 2) {
                             String receiver = tokenizer.nextToken();
-                            String text = tokenizer.nextToken();
-                            inputReceiver.writeChat(new ChatMessage(text, receiver));
+                            StringBuilder text = new StringBuilder();
+                            String newText;
+                            while (tokenizer.hasMoreTokens()) {
+                                newText = tokenizer.nextToken();
+                                text.append(newText).append(" ");
+                            }
+                            inputReceiver.writeChat(new ChatMessage(text.toString(), receiver));
                         } else
                             CLInterfacePrinter.printIncorrectCommand();
                     }

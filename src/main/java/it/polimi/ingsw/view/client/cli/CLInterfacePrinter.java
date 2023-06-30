@@ -278,7 +278,7 @@ class CLInterfacePrinter {
      */
     static void printScores(Map<String, Integer> scores) {
         if (scores == null) return;
-        System.out.println("Rankings:");
+        System.out.println("Ranking:");
         for (Map.Entry<String, Integer> e : scores.entrySet()) {
             System.out.println(e.getKey() + ": " + e.getValue());
         }

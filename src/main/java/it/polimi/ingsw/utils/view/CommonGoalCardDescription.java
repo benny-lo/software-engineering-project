@@ -14,16 +14,16 @@ public class CommonGoalCardDescription {
     public static String getDescription(int id) {
         switch (id) {
             case 0 -> {
-                return "\nTwo groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different\nfrom those of the other square.\n";
+                return "\nTwo groups each containing 4 tiles of the same type in a 2x2 square.\nThe tiles of one square can be different\nfrom those of the other square.\nThe groups have to be disjoint.\n";
             }
             case 1 -> {
                 return "\nTwo columns each formed by 6 different types of tiles.\n";
             }
             case 2 -> {
-                return "\nFour groups each containing at least 4 tiles of the same type.\nThe tiles of one group can be different\nfrom those of another group.\n";
+                return "\nFour groups each containing at least 4 tiles of the same type.\nThe tiles of one group can be different\nfrom those of another group.\nThe groups have to be disjoint.\n";
             }
             case 3 -> {
-                return "\nSix groups each containing at least 2 tiles of the same type.\nThe tiles of one group can be different\nfrom those of another group.\n";
+                return "\nSix groups each containing at least 2 tiles of the same type.\nThe tiles of one group can be different\nfrom those of another group.\nThe groups have to be disjoint.\n";
             }
             case 4 -> {
                 return "\nThree columns each formed by 6 tiles of maximum three different types.\nOne column can show the same or a different\ncombination of another column.\n";
