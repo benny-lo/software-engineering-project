@@ -1,5 +1,6 @@
 package it.polimi.ingsw.view.client.gui;
 
+import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.server.*;
 import it.polimi.ingsw.view.client.ClientView;
@@ -103,14 +104,15 @@ public class GUInterface extends ClientView implements GUIViewInterface {
      */
     @Override
     public synchronized void onSelectedItems(SelectedItems message) {
-        if (message.getItems() == null){
+        List<Item> items = message.getItems();
+        if (items == null){
             Platform.runLater(() -> gameController.resetOpacity());
             Platform.runLater(() -> gameController.clearSelectedItems());
             Platform.runLater(() -> gameController.failedSelection());
             return;
         }
         Platform.runLater(() -> gameController.clearTilesList());
-        Platform.runLater(() -> gameController.setChosenItems(message.getItems()));
+        Platform.runLater(() -> gameController.setChosenItems(items));
     }
 
     /**

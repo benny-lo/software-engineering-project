@@ -74,14 +74,15 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onGamesList(GamesList message) {
-        if (message.getAvailable() == null) {
+        List<GameInfo> available = message.getAvailable();
+        if (available == null) {
             printLoginFailed();
             System.out.flush();
             nickname = null;
             return;
         }
 
-        for (GameInfo game : message.getAvailable()) {
+        for (GameInfo game : available) {
             List<GameInfo> other = games.stream().filter((g) -> g.getId() != game.getId()).toList();
             games.removeAll(other);
             if (game.getNumberPlayers() != -1 && game.getNumberCommonGoals() != -1) {
@@ -370,9 +371,10 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onGameData(GameData gameData) {
+        Collection<String> list = gameData.getConnectedPlayers();
         if (gameData.getNumberPlayers() == -1 ||
                 gameData.getNumberCommonGoalCards() == -1 ||
-                gameData.getConnectedPlayers() == null ||
+                list == null ||
                 gameData.getBookshelvesColumns() == -1 ||
                 gameData.getBookshelvesRows() == -1 ||
                 gameData.getLivingRoomColumns() == -1 ||
@@ -384,7 +386,7 @@ public class CLInterface extends ClientView implements InputReceiver {
 
         status = CLIStatus.GAME;
 
-        connectedPlayers = gameData.getConnectedPlayers();
+        connectedPlayers = list;
         livingRoom = new Item[gameData.getLivingRoomRows()][gameData.getLivingRoomColumns()];
         bookshelvesRows = gameData.getBookshelvesRows();
         bookshelvesColumns = gameData.getBookshelvesColumns();
