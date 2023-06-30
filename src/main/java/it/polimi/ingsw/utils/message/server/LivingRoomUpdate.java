@@ -4,6 +4,7 @@ import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -25,6 +26,6 @@ public class LivingRoomUpdate extends Message {
      * @return {@code Map} of updates to the {@code LivingRoom}.
      */
     public Map<Position, Item> getLivingRoomUpdate() {
-        return livingRoom;
+        return new HashMap<>(livingRoom);
     }
 }

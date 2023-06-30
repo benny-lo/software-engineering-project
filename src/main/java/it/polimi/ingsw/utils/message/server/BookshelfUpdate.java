@@ -4,6 +4,7 @@ import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,6 +37,6 @@ public class BookshelfUpdate extends Message {
      * @return The {@code Map} of updates.
      */
     public Map<Position, Item> getBookshelf() {
-        return bookshelf;
+        return new HashMap<>(bookshelf);
     }
 }

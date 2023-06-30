@@ -2,6 +2,7 @@ package it.polimi.ingsw.utils.message.server;
 
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -23,6 +24,6 @@ public class ScoresUpdate extends Message {
      * @return {@code Map} of update scores.
      */
     public Map<String, Integer> getScores() {
-        return scores;
+        return new HashMap<>(scores);
     }
 }

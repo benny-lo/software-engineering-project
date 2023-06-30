@@ -2,6 +2,7 @@ package it.polimi.ingsw.utils.message.server;
 
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -49,7 +50,9 @@ public class GameData extends Message {
      * @return {@code Collection} of the connected players.
      */
     public Collection<String> getConnectedPlayers() {
-        return connectedPlayers;
+        return (connectedPlayers != null) ?
+                new ArrayList<>(connectedPlayers) :
+                null;
     }
 
     /**

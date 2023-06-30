@@ -3,6 +3,7 @@ package it.polimi.ingsw.utils.message.server;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +25,8 @@ public class SelectedItems extends Message {
      * @return The list of selected {@code Item}s.
      */
     public List<Item> getItems() {
-        return items;
+        return (items != null) ?
+                new ArrayList<>(items) :
+                null;
     }
 }

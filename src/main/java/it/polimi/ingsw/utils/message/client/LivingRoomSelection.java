@@ -3,6 +3,7 @@ package it.polimi.ingsw.utils.message.client;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +26,7 @@ public class LivingRoomSelection extends Message {
      * @return The positions selected.
      */
     public List<Position> getPositions() {
-        return positions;
+        return new ArrayList<>(positions);
     }
 
     /**

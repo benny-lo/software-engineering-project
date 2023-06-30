@@ -2,6 +2,7 @@ package it.polimi.ingsw.utils.message.server;
 
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -24,6 +25,8 @@ public class GamesList extends Message {
      * @return The {@code List} of {@code GameInfo}s of the available games.
      */
     public List<GameInfo> getAvailable() {
-        return available;
+        return (available != null) ?
+                new ArrayList<>(available) :
+                null;
     }
 }

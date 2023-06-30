@@ -2,6 +2,7 @@ package it.polimi.ingsw.utils.message.client;
 
 import it.polimi.ingsw.utils.message.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,6 +36,6 @@ public class BookshelfInsertion extends Message {
      * @return The permutation in which the objects are inserted.
      */
     public List<Integer> getPermutation() {
-        return permutation;
+        return new ArrayList<>(permutation);
     }
 }
