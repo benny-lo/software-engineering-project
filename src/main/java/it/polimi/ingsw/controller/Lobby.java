@@ -177,18 +177,14 @@ public class Lobby {
         Logger.createGame(numberPlayers, numberCommonGoals, availableId - 1, view.getNickname());
 
         // send to client without game
-        (new Thread(() -> {
-            synchronized (this) {
-                for (ServerUpdateViewInterface v : views) {
-                    List<GameInfo> list = new ArrayList<>();
-                    list.add(new GameInfo(availableId - 1, numberPlayers, numberCommonGoals));
-                    GamesList gamesList = new GamesList(list);
-                    if (!v.isInGame()) {
-                        v.onGamesList(gamesList);
-                    }
-                }
+        for (ServerUpdateViewInterface v : views) {
+            List<GameInfo> list = new ArrayList<>();
+            list.add(new GameInfo(availableId-1, numberPlayers, numberCommonGoals));
+            GamesList gamesList = new GamesList(list);
+            if (!v.isInGame()) {
+                v.onGamesList(gamesList);
             }
-        })).start();
+        }
     }
 
     /**

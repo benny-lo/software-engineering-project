@@ -74,7 +74,7 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onGamesList(GamesList message) {
-        if (message == null) {
+        if (message.getAvailable() == null) {
             printLoginFailed();
             System.out.flush();
             nickname = null;

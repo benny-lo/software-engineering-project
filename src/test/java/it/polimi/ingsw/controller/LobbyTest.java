@@ -379,7 +379,7 @@ public class LobbyTest {
         aliceView.createGame(new GameInitialization(2, 2));
         aliceMessage = alice.queue.poll();
         assertTrue(aliceMessage instanceof GameData);
-        assertNotEquals(-1, ((GameData) aliceMessage).getNumberPlayers());
+        assertEquals(2, ((GameData) aliceMessage).getNumberPlayers());
 
         bobView.login(new Nickname("bob"));
         Message bobMessage = bob.queue.poll();
