@@ -8,7 +8,9 @@ import it.polimi.ingsw.model.player.Bookshelf;
  * first column on the left or on the right, each next column
  * must be made of exactly one more tile. tiles can be of any type.
  */
-public class CommonGoalPattern12 implements CommonGoalPatternInterface{
+public class CommonGoalPattern12 implements CommonGoalPatternInterface {
+    private static final int NUMBER_OF_COLUMNS = 5;
+
     /**
      * {@inheritDoc}
      * @param bookshelf {@code Bookshelf} object to check the pattern on.
@@ -16,30 +18,32 @@ public class CommonGoalPattern12 implements CommonGoalPatternInterface{
      */
     @Override
     public boolean check(Bookshelf bookshelf) {
-        int[] counter=new int[bookshelf.getColumns()];
-        for(int i=0; i< bookshelf.getColumns(); i++){
-            for(int j=0; j< bookshelf.getRows(); j++){
-                if(bookshelf.tileAt(j,i)!=null){
-                    counter[i]++;
-                }else{
-                    j=bookshelf.getRows();
+        int[] counter = new int[bookshelf.getColumns()];
+
+        for(int i = 0; i < bookshelf.getRows(); i++){
+            for(int j = 0; j < bookshelf.getColumns(); j++){
+                if(bookshelf.tileAt(i, j) != null){
+                    counter[j]++;
                 }
             }
         }
-//        if you want to include 01234 or 43210, comment the next line
-        if(counter[0]==0 || counter[bookshelf.getColumns()-1]==0) return false;
 
-        int i=0;
-        if(counter[i]>counter[i+1]) {
-            for(i=0; i<bookshelf.getColumns()-1; i++){
-                if(counter[i]-counter[i+1]!=1) return false;
+        for(int i = 0; i < counter.length - NUMBER_OF_COLUMNS + 1; i++) {
+            boolean increasing = true;
+            boolean decreasing = true;
+
+            if (counter[i] == 0) continue;
+
+            for(int j = 1; j < NUMBER_OF_COLUMNS; j++) {
+                int tmp = counter[i + j] - counter[i];
+
+                if (tmp != j) increasing = false;
+                if (tmp != -j || counter[i+j] == 0) decreasing = false;
             }
-            return true;
-        }else if(counter[i+1]>counter[i]){
-            for(i=0; i<bookshelf.getColumns()-1; i++){
-                if(counter[i+1]-counter[i]!=1) return false;
-            }
-            return true;
-        }else return false;
+
+            if (increasing || decreasing) return true;
+        }
+
+        return false;
     }
 }

@@ -9,7 +9,7 @@ import it.polimi.ingsw.model.player.Bookshelf;
  * position of these tiles.
  */
 public class CommonGoalPattern9 implements CommonGoalPatternInterface {
-    private static final int MINIMUM = 8;
+    private static final int THRESHOLD = 8;
 
     /**
      * {@inheritDoc}
@@ -18,16 +18,17 @@ public class CommonGoalPattern9 implements CommonGoalPatternInterface {
      */
     @Override
     public boolean check(Bookshelf bookshelf) {
-        int[] counter=new int[Item.values().length];
+        int[] counts = new int[Item.values().length];
         for(int i=0; i< bookshelf.getRows(); i++){
             for(int j=0; j< bookshelf.getColumns(); j++){
                 if(bookshelf.tileAt(i,j)!=null) {
-                    counter[bookshelf.tileAt(i, j).ordinal()]++;
+                    counts[bookshelf.tileAt(i, j).ordinal()]++;
                 }
             }
         }
-        for (int j : counter) {
-            if (j >= MINIMUM) return true;
+
+        for (int count : counts) {
+            if (count >= THRESHOLD) return true;
         }
         return false;
     }

@@ -105,7 +105,7 @@ public class CommonGoalPatternCountGroups implements CommonGoalPatternInterface 
      * @param curr The current subset considered.
      * @param idx The index to decide whether to insert or exclude.
      */
-    void generateAllSubsets(List<Set<Position>> groups, List<Set<Position>> curr, int idx) {
+    private void generateAllSubsets(List<Set<Position>> groups, List<Set<Position>> curr, int idx) {
         if (!nonOverlapping(curr)) return;
         matchesFound = Math.max(curr.size(), matchesFound);
         if (idx == groups.size()) return;
