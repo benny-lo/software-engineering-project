@@ -29,13 +29,6 @@ public class GUInterface extends ClientView implements GUIViewInterface {
     private boolean inGame = false;
 
     /**
-     * Class constructor: sets the GUIViewInterface in each controller.
-     */
-    public GUInterface() {
-        setGUInterfaceInControllers(this);
-    }
-
-    /**
      * {@inheritDoc}
      * It saves the player's nickname.
      * It synchronizes on {@code this}.
@@ -281,6 +274,7 @@ public class GUInterface extends ClientView implements GUIViewInterface {
      */
     @Override
     public void start() {
+        setGUInterfaceInControllers(this);
         startGUI();
     }
 

@@ -54,7 +54,7 @@ public class CommonGoalCardManager {
         List<CommonGoalPatternInterface> pattern = new ArrayList<>();
         for(int i = 0; i < 12; i++) {
             if (i == 0)
-                pattern.add(new CommonGoalPatternCountGroups(4, 4, (s) -> {
+                pattern.add(new CommonGoalPatternCountGroups(4, 2, (s) -> {
                     if (s.size() != 4) return false;
                     List<Position> l = s.stream().sorted((p1, p2) -> (p1.getRow() != p2.getRow()) ? p1.getRow() - p2.getRow() : p1.getColumn() - p2.getColumn()).toList();
                     Position firstPos = l.get(0);

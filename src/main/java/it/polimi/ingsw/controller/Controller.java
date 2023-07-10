@@ -221,6 +221,7 @@ public class Controller implements ControllerInterface {
         game = gameBuilder.startGame();
         if (game == null) {
             notifyEndGame(null);
+            ended = true;
             return;
         }
 
