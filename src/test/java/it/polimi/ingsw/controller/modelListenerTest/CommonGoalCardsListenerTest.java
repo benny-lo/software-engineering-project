@@ -19,8 +19,8 @@ public class CommonGoalCardsListenerTest {
         CommonGoalCardsListener commonGoalCardsListener = new CommonGoalCardsListener();
         assertFalse(commonGoalCardsListener.hasChanged());
         assertNotNull(commonGoalCardsListener);
-        assertNotNull(commonGoalCardsListener.getCards());
-        assertTrue(commonGoalCardsListener.getCards().isEmpty());
+        assertNotNull(commonGoalCardsListener.getCardsUpdates());
+        assertTrue(commonGoalCardsListener.getCardsUpdates().isEmpty());
 
     }
     /**
@@ -35,10 +35,10 @@ public class CommonGoalCardsListenerTest {
         commonGoalCardsListener.updateState(2,2);
         commonGoalCardsListener.updateState(3,3);
         assertTrue(commonGoalCardsListener.hasChanged());
-        Map<Integer, Integer> map = commonGoalCardsListener.getCards();
+        Map<Integer, Integer> map = commonGoalCardsListener.getCardsUpdates();
         assertEquals(1,map.get(1));
         assertEquals(2,map.get(2));
         assertEquals(3,map.get(3));
-        assertTrue(commonGoalCardsListener.getCards().isEmpty());
+        assertTrue(commonGoalCardsListener.getCardsUpdates().isEmpty());
     }
 }

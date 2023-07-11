@@ -12,7 +12,8 @@ import java.util.Map;
  */
 public class BookshelfListener extends ModelListener {
     private final String owner;
-    private final Map<Position, Item> bookshelf;
+    private final Map<Position, Item> bookshelfUpdates;
+    private final Map<Position, Item> bookshelfState;
 
     /**
      * Constructor for the class. It initializes {@code this} with an empty state.
@@ -21,7 +22,8 @@ public class BookshelfListener extends ModelListener {
     public BookshelfListener(String owner) {
         super();
         this.owner = owner;
-        bookshelf = new HashMap<>();
+        this.bookshelfUpdates = new HashMap<>();
+        this.bookshelfState = new HashMap<>();
     }
 
     /**
@@ -29,12 +31,19 @@ public class BookshelfListener extends ModelListener {
      * is set to empty.
      * @return {@code Map} of the portion of the {@code Bookshelf} that changed.
      */
-    public Map<Position, Item> getBookshelf() {
+    public Map<Position, Item> getBookshelfUpdates() {
         changed = false;
-        Map<Position, Item> ret = new HashMap<>(bookshelf);
-
-        bookshelf.clear();
+        Map<Position, Item> ret = new HashMap<>(bookshelfUpdates);
+        bookshelfUpdates.clear();
         return ret;
+    }
+
+    /**
+     * Getter for the full representation of the listened {@code Bookshelf}.
+     * @return {@code Map} representing the entire {@code Bookshelf}.
+     */
+    public Map<Position, Item> getBookshelfState() {
+        return new HashMap<>(bookshelfState);
     }
 
     /**
@@ -53,6 +62,7 @@ public class BookshelfListener extends ModelListener {
      */
     public void updateState(Position position, Item item) {
         changed = true;
-        bookshelf.put(position, item);
+        bookshelfUpdates.put(position, item);
+        bookshelfState.put(position, item);
     }
 }

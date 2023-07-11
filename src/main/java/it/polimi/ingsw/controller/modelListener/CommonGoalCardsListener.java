@@ -8,25 +8,35 @@ import java.util.Map;
  * of any {@code CommonGoalCard}.
  */
 public class CommonGoalCardsListener extends ModelListener {
-    private final Map<Integer, Integer> cards;
+    private final Map<Integer, Integer> cardsUpdates;
+    private final Map<Integer, Integer> cardsState;
+
 
     /**
      * Constructor for the class. It initializes {@code this} with an empty state.
      */
     public CommonGoalCardsListener() {
-        this.cards = new HashMap<>();
+        this.cardsUpdates = new HashMap<>();
+        this.cardsState = new HashMap<>();
     }
 
     /**
      * Getter for the latest updates to the {@code CommonGoalCard}s. The state of {@code this} is set to empty.
      * @return {@code Map} where keys are IDs of {@code CommonGoalCard}s and values are the corresponding top score.
      */
-    public Map<Integer, Integer> getCards() {
+    public Map<Integer, Integer> getCardsUpdates() {
         changed = false;
-        Map<Integer, Integer> ret = new HashMap<>(cards);
-
-        cards.clear();
+        Map<Integer, Integer> ret = new HashMap<>(cardsUpdates);
+        cardsUpdates.clear();
         return ret;
+    }
+
+    /**
+     * Getter for the full representation of the {@code CommonGoalCard}s.
+     * @return {@code Map} representing the stack of every {@code CommonGoalCard}.
+     */
+    public Map<Integer, Integer> getCardsState() {
+        return new HashMap<>(cardsState);
     }
 
     /**
@@ -37,6 +47,7 @@ public class CommonGoalCardsListener extends ModelListener {
      */
     public void updateState(int id, int topStack) {
         changed = true;
-        cards.put(id, topStack);
+        cardsUpdates.put(id, topStack);
+        cardsState.put(id, topStack);
     }
 }

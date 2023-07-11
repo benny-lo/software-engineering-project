@@ -21,8 +21,8 @@ public class BookshelfListenerTest {
     {
         BookshelfListener bookshelfListener = new BookshelfListener("nick");
         assertEquals("nick", bookshelfListener.getOwner());
-        assertNotNull(bookshelfListener.getBookshelf());
-        assertTrue(bookshelfListener.getBookshelf().isEmpty());
+        assertNotNull(bookshelfListener.getBookshelfUpdates());
+        assertTrue(bookshelfListener.getBookshelfUpdates().isEmpty());
     }
     /**
      * Testing for the updateState method working as intended
@@ -34,11 +34,11 @@ public class BookshelfListenerTest {
         bookshelfListener.updateState(new Position(0,0), Item.CAT);
         bookshelfListener.updateState(new Position(1,1), Item.CUP);
         bookshelfListener.updateState(new Position(2,2), Item.BOOK);
-        Map<Position,Item> map = bookshelfListener.getBookshelf();
+        Map<Position,Item> map = bookshelfListener.getBookshelfUpdates();
         assertEquals(map.get(new Position(0,0)), Item.CAT);
         assertEquals(map.get(new Position(1,1)), Item.CUP);
         assertEquals(map.get(new Position(2,2)), Item.BOOK);
-        assertTrue(bookshelfListener.getBookshelf().isEmpty());
+        assertTrue(bookshelfListener.getBookshelfUpdates().isEmpty());
 
     }
 }

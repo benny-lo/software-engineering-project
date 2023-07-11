@@ -14,15 +14,12 @@ public class EndingTokenListener extends ModelListener {
     }
 
     /**
-     * Getter for the current owner of the ending token. The state of {@code this} is set to empty.
+     * Getter for the current owner of the ending token. The state of {@code this} is NOT reset.
      * @return The nickname of the owner of the ending token.
      */
     public String getEndingToken() {
         changed = false;
-        String ret = owner;
-        owner = null;
-
-        return ret;
+        return owner;
     }
 
     /**

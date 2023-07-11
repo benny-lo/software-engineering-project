@@ -22,8 +22,8 @@ public class LivingRoomListenerTest {
         LivingRoomListener livingRoomListener = new LivingRoomListener();
         assertFalse(livingRoomListener.hasChanged());
         assertNotNull(livingRoomListener);
-        assertNotNull(livingRoomListener.getLivingRoom());
-        assertTrue(livingRoomListener.getLivingRoom().isEmpty());
+        assertNotNull(livingRoomListener.getLivingRoomUpdates());
+        assertTrue(livingRoomListener.getLivingRoomUpdates().isEmpty());
     }
     /**
      * Testing for the updateState method working as intended
@@ -36,12 +36,12 @@ public class LivingRoomListenerTest {
         livingRoomListener.updateState(new Position(1,1), Item.BOOK);
         livingRoomListener.updateState(new Position(2,2), Item.CUP);
         assertTrue(livingRoomListener.hasChanged());
-        Map<Position,Item> map = livingRoomListener.getLivingRoom();
+        Map<Position,Item> map = livingRoomListener.getLivingRoomUpdates();
         assertFalse(livingRoomListener.hasChanged());
         assertEquals(Item.CAT,map.get(new Position(0,0)));
         assertEquals(Item.BOOK,map.get(new Position(1,1)));
         assertEquals(Item.CUP,map.get(new Position(2,2)));
-        assertTrue(livingRoomListener.getLivingRoom().isEmpty());
+        assertTrue(livingRoomListener.getLivingRoomUpdates().isEmpty());
     }
 
 }

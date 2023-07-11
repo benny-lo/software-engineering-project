@@ -131,7 +131,7 @@ public class Controller implements ControllerInterface {
     private void notifyBookshelvesToEverybody() {
         for (BookshelfListener bookshelfListener : bookshelfListeners) {
             if (!bookshelfListener.hasChanged()) continue;
-            Map<Position, Item> map = bookshelfListener.getBookshelf();
+            Map<Position, Item> map = bookshelfListener.getBookshelfUpdates();
             BookshelfUpdate update = new BookshelfUpdate(bookshelfListener.getOwner(), map);
             for (ServerUpdateViewInterface v : views) {
                 v.onBookshelfUpdate(update);
@@ -143,7 +143,7 @@ public class Controller implements ControllerInterface {
      * Notifies the players of any changes in the common goal cards.
      */
     private void notifyCommonGoalCardsToEverybody() {
-        Map<Integer, Integer> map = commonGoalCardsListener.getCards();
+        Map<Integer, Integer> map = commonGoalCardsListener.getCardsUpdates();
         for(ServerUpdateViewInterface view : views) {
             view.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(map));
         }
@@ -165,7 +165,7 @@ public class Controller implements ControllerInterface {
      */
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
-       LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoom());
+       LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoomUpdates());
         for(ServerUpdateViewInterface view : views) {
             view.onLivingRoomUpdate(update);
         }
