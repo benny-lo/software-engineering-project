@@ -12,37 +12,41 @@ public interface ControllerInterface {
     /**
      * Joins a {@code ServerUpdateViewInterface} into the match. If the join is rejected, the client will be notified.
      * @param view The {@code ServerUpdateViewInterface} performing the action.
+     * @param nickname The nickname of the player performing the action.
      */
-    void join(ServerUpdateViewInterface view);
+    boolean join(ServerUpdateViewInterface view, String nickname);
 
     /**
      * Performs a selection from the {@code LivingRoom}. If the selection is rejected, the client will be notified.
      * @param positions {@code List} of {@code Position}s that are chosen by the player.
-     * @param view The {@code ServerUpdateViewInterface} performing the action.
+     * @param nickname The nickname of the player performing the action.
      */
-    void livingRoom(List<Position> positions, ServerUpdateViewInterface view);
+    void livingRoom(List<Position> positions, String nickname);
 
     /**
      * Performs an insertion in the player's {@code Bookshelf}. If the insertion is rejected, the client will be notified.
      * @param column The column of the {@code Bookshelf} where to insert the previously chosen {@code Item}s
      * @param permutation {@code List} of {@code Integer}s representing the order in which to insert the {@code Item}s in the {@code Bookshelf}.
-     * @param view The {@code ServerUpdateViewInterface} performing the action.
+     * @param nickname The nickname of the player performing the action.
      */
-    void bookshelf(int column, List<Integer> permutation, ServerUpdateViewInterface view);
+    void bookshelf(int column, List<Integer> permutation, String nickname);
 
     /**
      * Processes a chat message from a player. If the message is rejected, the client will be notified.
      * @param text The content of the message.
      * @param receiver The receiver of the message.
-     * @param view The {@code ServerUpdateViewInterface} performing the action.
+     * @param nickname The nickname of the player performing the action.
      */
-    void chat(String text, String receiver, ServerUpdateViewInterface view);
+    void chat(String text, String receiver, String nickname);
 
     /**
      * Processes a disconnection of a client.
-     * @param view The {@code ServerUpdateViewInterface} that disconnected.
+     * @param nickname The nickname of the player performing the action.
      */
-    void disconnection(ServerUpdateViewInterface view);
+    void disconnection(String nickname);
+
+
+    boolean reconnection(ServerUpdateViewInterface view, String nickname);
 
     /**
      * Returns whether the game has started.

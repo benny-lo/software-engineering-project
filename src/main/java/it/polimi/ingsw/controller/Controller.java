@@ -22,6 +22,9 @@ import java.util.*;
  * appropriately send updates to clients. Some methods synchronize on {@code this}.
  */
 public class Controller implements ControllerInterface {
+    private static final int WIN_FORFEIT = 15000;
+
+    private final Object controllerLock;
     /**
      * The model of the game.
      */
@@ -57,18 +60,31 @@ public class Controller implements ControllerInterface {
      */
     private final List<String> playerList;
 
+    /**
+     * Index in {@code playerList} of the current player.
+     */
     private int playerIndex;
 
     /**
-     * Set of {@code ServerUpdateViewInterface}s connected to the {@code Game}
+     * Map of nickname -> {@code ServerUpdateViewInterface}s connected to the {@code Game}.
      * controlled by {@code this}.
      */
-    private final Set<ServerUpdateViewInterface> views;
+    private final Map<String, ServerUpdateViewInterface> views;
+
+    /**
+     * Set of the nicknames of the inactive players, i.e. players that disconnected after the game started.
+     */
+    private final Set<String> inactivePlayers;
 
     /**
      * Flag representing whether the game has ended.
      */
     private boolean ended;
+
+    /**
+     * Flag representing whether the controller has scheduled a timer after only one player connected remained.
+     */
+    private boolean onHold;
 
     /**
      * Current turn phase: either selection from living room or selection of column in the bookshelf.
@@ -97,12 +113,23 @@ public class Controller implements ControllerInterface {
     private final LivingRoomListener livingRoomListener;
 
     /**
+     * Listener to the Chat.
+     */
+    private final ChatListener chatListener;
+
+    /**
+     * Timer activated when only one player remains, after the game has started.
+     */
+    private final Timer timer;
+
+    /**
      * Constructor for {@code this} class. It creates a {@code Controller} for a not yet started (and constructed) game.
      * @param numberPlayers - the number of players that need to join the game to make it start.
      * @param numberCommonGoalCards - the number of common goal cards of the game.
      * @param id The id assigned to the {@code Game} controlled.
      */
     public Controller(int numberPlayers, int numberCommonGoalCards, int id) {
+        this.controllerLock = new Object();
         this.numberPlayers = numberPlayers;
         this.id = id;
         this.game = null;
@@ -111,7 +138,8 @@ public class Controller implements ControllerInterface {
         this.firstPlayer = null;
         this.playerList = new ArrayList<>();
         this.playerIndex = -1;
-        this.views = new HashSet<>();
+        this.views = new HashMap<>();
+        this.inactivePlayers = new HashSet<>();
         this.turnPhase = null;
         this.ended = false;
 
@@ -119,6 +147,9 @@ public class Controller implements ControllerInterface {
         this.commonGoalCardsListener = new CommonGoalCardsListener();
         this.endingTokenListener = new EndingTokenListener();
         this.livingRoomListener = new LivingRoomListener();
+        this.chatListener = new ChatListener();
+
+        this.timer = new Timer();
 
         gameBuilder.setCommonGoalCardsListener(commonGoalCardsListener);
         gameBuilder.setEndingTokenListener(endingTokenListener);
@@ -133,7 +164,7 @@ public class Controller implements ControllerInterface {
             if (!bookshelfListener.hasChanged()) continue;
             Map<Position, Item> map = bookshelfListener.getBookshelfUpdates();
             BookshelfUpdate update = new BookshelfUpdate(bookshelfListener.getOwner(), map);
-            for (ServerUpdateViewInterface v : views) {
+            for (ServerUpdateViewInterface v : views.values()) {
                 v.onBookshelfUpdate(update);
             }
         }
@@ -144,7 +175,7 @@ public class Controller implements ControllerInterface {
      */
     private void notifyCommonGoalCardsToEverybody() {
         Map<Integer, Integer> map = commonGoalCardsListener.getCardsUpdates();
-        for(ServerUpdateViewInterface view : views) {
+        for(ServerUpdateViewInterface view : views.values()) {
             view.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(map));
         }
     }
@@ -155,7 +186,7 @@ public class Controller implements ControllerInterface {
     private void notifyEndingTokenToEverybody() {
         if (!endingTokenListener.hasChanged()) return;
         EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
-        for(ServerUpdateViewInterface view : views) {
+        for(ServerUpdateViewInterface view : views.values()) {
             view.onEndingTokenUpdate(update);
         }
     }
@@ -166,7 +197,7 @@ public class Controller implements ControllerInterface {
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
        LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoomUpdates());
-        for(ServerUpdateViewInterface view : views) {
+        for(ServerUpdateViewInterface view : views.values()) {
             view.onLivingRoomUpdate(update);
         }
     }
@@ -176,15 +207,15 @@ public class Controller implements ControllerInterface {
      */
     private void notifyScoresToEverybody() {
         Map<String, Integer> scores = new HashMap<>();
-        for (ServerUpdateViewInterface v : views) {
-            for (ServerUpdateViewInterface u : views) {
-                int personalScore = game.getPersonalScore(u.getNickname());
-                int publicScore = game.getPublicScore(u.getNickname());
+        for (String v : views.keySet()) {
+            for (String u : views.keySet()) {
+                int personalScore = game.getPersonalScore(v);
+                int publicScore = game.getPublicScore(u);
 
-                if (ended || v.getNickname().equals(u.getNickname())) scores.put(u.getNickname(), personalScore + publicScore);
-                else scores.put(u.getNickname(), publicScore);
+                if (ended || v.equals(u)) scores.put(u, personalScore + publicScore);
+                else scores.put(u, publicScore);
             }
-            v.onScoresUpdate(new ScoresUpdate(scores));
+            views.get(v).onScoresUpdate(new ScoresUpdate(scores));
             scores = new HashMap<>();
         }
     }
@@ -193,8 +224,17 @@ public class Controller implements ControllerInterface {
      * Notifies the players of any changes in the personal goal cards.
      */
     private void notifyPersonalGoalCardsToEverybody() {
-        for (ServerUpdateViewInterface v : views) {
-            v.onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(v.getNickname())));
+        for (String v : views.keySet()) {
+            views.get(v).onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(v)));
+        }
+    }
+
+    /**
+     * Notifies all players of the start of a new turn.
+     */
+    private void notifyStartTurnToEverybody() {
+        for(ServerUpdateViewInterface v : views.values()) {
+            v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
         }
     }
 
@@ -202,10 +242,96 @@ public class Controller implements ControllerInterface {
      * Notifies the players that the game has ended.
      * @param winner the winner; {@code null} if the game terminated due to an error.
      */
-    private void notifyEndGame(String winner) {
+    private void notifyEndGameToEverybody(String winner) {
         Logger.endGame(id);
-        for (ServerUpdateViewInterface v : views) {
+        for (ServerUpdateViewInterface v : views.values()) {
             v.onEndGameUpdate(new EndGameUpdate(winner));
+        }
+    }
+
+    /**
+     * Notifies all players that a new player connected or disconnected in the pre-game phase.
+     * @param nickname The nickname of the player whose state changed, i.e. they connected or disconnected.
+     * @param connected {@code true} iff the player connected.
+     */
+    private void notifyWaitingUpdateToEverybody(String nickname, boolean connected) {
+        for(ServerUpdateViewInterface v : views.values()) {
+            v.onWaitingUpdate(new WaitingUpdate(
+                    nickname,
+                    numberPlayers - playerList.size(),
+                    connected
+            ));
+        }
+    }
+
+    /**
+     * Notifies to all players the {@code Item}s that the current player has selected from the {@code LivingRoom}.
+     * @param selectedItems The selected {@code Item}s.
+     */
+    private void notifySelectedItemsToEverybody(List<Item> selectedItems) {
+        for(ServerUpdateViewInterface v : views.values()) {
+            v.onSelectedItems(new SelectedItems(selectedItems));
+        }
+    }
+
+    private void notifyChatUpdate(ChatUpdate update) {
+        for(ServerUpdateViewInterface v : views.values()) {
+            v.onChatUpdate(update);
+        }
+    }
+
+    private void notifyDisconnectionToEverybody(String nickname) {
+        Disconnection update = new Disconnection(nickname);
+        for(ServerUpdateViewInterface v : views.values()) {
+            v.onDisconnectionUpdate(update);
+        }
+    }
+
+    private void notifyReconnectionToEverybody(String nickname) {
+        Reconnection update = new Reconnection(nickname);
+        for(ServerUpdateViewInterface v : views.values()) {
+            v.onReconnectionUpdate(update);
+        }
+    }
+
+    private void notifyFullState(String nickname) {
+        ServerUpdateViewInterface v = views.get(nickname);
+
+        GameConfig gc = getGameConfig();
+        v.onGameData(new GameData(numberPlayers,
+                                new ArrayList<>(playerList),
+                                numberCommonGoalCards,
+                                gc.getLivingRoomR(),
+                                gc.getLivingRoomC(),
+                                gc.getBookshelfR(),
+                                gc.getBookshelfC()));
+
+        for(BookshelfListener b : bookshelfListeners) {
+            v.onBookshelfUpdate(new BookshelfUpdate(b.getOwner(), b.getBookshelfState()));
+        }
+        v.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(commonGoalCardsListener.getCardsState()));
+        v.onEndingTokenUpdate(new EndingTokenUpdate(endingTokenListener.getEndingToken()));
+        v.onLivingRoomUpdate(new LivingRoomUpdate(livingRoomListener.getLivingRoomState()));
+        v.onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(nickname)));
+
+        for(String n : inactivePlayers) {
+            Disconnection disconnection = new Disconnection(n);
+            v.onDisconnectionUpdate(disconnection);
+        }
+
+        Map<String, Integer> scores = new HashMap<>();
+        for (String n : views.keySet()) {
+            int personalScore = game.getPersonalScore(n);
+            int publicScore = game.getPublicScore(n);
+
+            if (ended || nickname.equals(n)) scores.put(n, personalScore + publicScore);
+            else scores.put(n, publicScore);
+        }
+
+        v.onScoresUpdate(new ScoresUpdate(scores));
+
+        if (!onHold) {
+            v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
         }
     }
 
@@ -220,7 +346,7 @@ public class Controller implements ControllerInterface {
 
         game = gameBuilder.startGame();
         if (game == null) {
-            notifyEndGame(null);
+            notifyEndGameToEverybody(null);
             ended = true;
             return;
         }
@@ -237,11 +363,7 @@ public class Controller implements ControllerInterface {
         notifyLivingRoomToEverybody();
         notifyPersonalGoalCardsToEverybody();
         notifyScoresToEverybody();
-
-        //
-        for(ServerUpdateViewInterface v : views) {
-            v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
-        }
+        notifyStartTurnToEverybody();
     }
 
     /**
@@ -249,10 +371,33 @@ public class Controller implements ControllerInterface {
      * else notify the beginning of the turn of the new current player.
      */
     private void nextTurn() {
+        if (inactivePlayers.size() >= numberPlayers - 1) {
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    synchronized (controllerLock) {
+                        if (inactivePlayers.size() < numberPlayers - 1) return;
+                        ended = true;
+
+                        String winner = null;
+                        for (String s : playerList) {
+                            if (!inactivePlayers.contains(s)) winner = s;
+                        }
+                        if (winner != null) notifyEndGameToEverybody(winner);
+                    }
+                }
+            }, WIN_FORFEIT);
+            onHold = true;
+            return;
+        }
 
         // Move the index forward.
         playerIndex++;
         playerIndex %= playerList.size();
+        while(inactivePlayers.contains(playerList.get(playerIndex))) {
+            playerIndex++;
+            playerIndex %= playerList.size();
+        }
 
         game.setCurrentPlayer(playerList.get(playerIndex));
 
@@ -263,6 +408,7 @@ public class Controller implements ControllerInterface {
             int bestScore = -1;
             String winner = null;
             for(String nickname : playerList) {
+                if (inactivePlayers.contains(nickname)) continue;
                 if (game.getPublicScore(nickname) + game.getPersonalScore(nickname)
                         > bestScore) {
                     winner = nickname;
@@ -271,12 +417,10 @@ public class Controller implements ControllerInterface {
             }
 
             notifyScoresToEverybody();
-            notifyEndGame(winner);
+            notifyEndGameToEverybody(winner);
         } else {
             // Game continues.
-            for(ServerUpdateViewInterface v : views) {
-                v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));
-            }
+            notifyStartTurnToEverybody();
         }
     }
 
@@ -312,43 +456,42 @@ public class Controller implements ControllerInterface {
      * @param view The {@code ServerUpdateViewInterface} performing the action.
      */
     @Override
-    public synchronized void join(ServerUpdateViewInterface view) {
-        if (turnPhase != null || ended) {
-            // Game already started or already ended.
-            view.setController(null);
-            view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
-            return;
-        }
+    public boolean join(ServerUpdateViewInterface view, String nickname) {
+        synchronized (controllerLock) {
+            if (views.containsKey(nickname) || turnPhase != null || ended) {
+                // Game already started or already ended or player already joined.
+                view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+                return false;
+            }
 
-        // Get the GameConfig and send them to player.
-        GameConfig gameConfig = getGameConfig();
-        view.onGameData(new GameData(numberPlayers, new ArrayList<>(playerList), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
+            view.setController(this);
 
-        // Add player to queue and to list of views.
-        playerList.add(view.getNickname());
-        views.add(view);
+            // Get the GameConfig and send them to player.
+            GameConfig gameConfig = getGameConfig();
+            view.onGameData(new GameData(numberPlayers, new ArrayList<>(playerList), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
+
+            // Add player to queue and to list of views.
+            playerList.add(nickname);
+            views.put(nickname, view);
 
 
-        // Update builder with player and listener for their bookshelf.
-        gameBuilder.addPlayer(view.getNickname());
+            // Update builder with player and listener for their bookshelf.
+            gameBuilder.addPlayer(nickname);
 
-        BookshelfListener bookshelfListener = new BookshelfListener(view.getNickname());
-        bookshelfListeners.add(bookshelfListener);
-        gameBuilder.setBookshelfListener(bookshelfListener);
+            BookshelfListener bookshelfListener = new BookshelfListener(nickname);
+            bookshelfListeners.add(bookshelfListener);
+            gameBuilder.setBookshelfListener(bookshelfListener);
 
-        // Update all waiting players that a new one just connected.
-        for(ServerUpdateViewInterface v : views) {
-            v.onWaitingUpdate(new WaitingUpdate(
-                    view.getNickname(),
-                    numberPlayers - playerList.size(),
-                    true
-            ));
-        }
+            // Update all waiting players that a new one just connected.
+            notifyWaitingUpdateToEverybody(nickname, true);
 
-        if (playerList.size() == this.numberPlayers) {
-            // All players joined.
-            Logger.startGame(id);
-            setup();
+            if (playerList.size() == this.numberPlayers) {
+                // All players joined.
+                Logger.startGame(id);
+                setup();
+            }
+
+            return true;
         }
     }
 
@@ -356,31 +499,31 @@ public class Controller implements ControllerInterface {
      * {@inheritDoc}
      * It synchronizes on {@code this}.
      * @param positions {@code List} of {@code Position}s that are chosen by the player.
-     * @param view The {@code ServerUpdateViewInterface} performing the action.
+     * @param nickname The nickname of the player performing the action.
      */
     @Override
-    public synchronized void livingRoom(List<Position> positions, ServerUpdateViewInterface view) {
-        if (ended ||
-                !view.getNickname().equals(playerList.get(playerIndex)) ||
-                turnPhase != TurnPhase.LIVING_ROOM ||
-                !game.canTakeItemTiles(positions)) {
-            view.onSelectedItems(new SelectedItems(null));
-            return;
+    public void livingRoom(List<Position> positions, String nickname) {
+        synchronized (controllerLock) {
+            if (ended || onHold ||
+                    !nickname.equals(playerList.get(playerIndex)) ||
+                    turnPhase != TurnPhase.LIVING_ROOM ||
+                    !game.canTakeItemTiles(positions)) {
+                views.get(nickname).onSelectedItems(new SelectedItems(null));
+                return;
+            }
+
+            Logger.selectItems(positions.size(), nickname, id);
+
+            List<Item> items = game.selectItemTiles(positions);
+
+            notifyLivingRoomToEverybody();
+
+            // Send the selected items to everybody.
+            notifySelectedItemsToEverybody(items);
+
+            // Update the turn phase.
+            turnPhase = TurnPhase.BOOKSHELF;
         }
-
-        Logger.selectItems(positions.size(), view.getNickname(), id);
-
-        List<Item> items = game.selectItemTiles(positions);
-
-        notifyLivingRoomToEverybody();
-
-        // Send the selected items to everybody.
-        for(ServerUpdateViewInterface v : views) {
-            v.onSelectedItems(new SelectedItems(items));
-        }
-
-        // Update the turn phase.
-        turnPhase = TurnPhase.BOOKSHELF;
     }
 
     /**
@@ -388,35 +531,37 @@ public class Controller implements ControllerInterface {
      * It synchronizes on {@code this}.
      * @param column The column of the {@code Bookshelf} where to insert the previously chosen {@code Item}s
      * @param permutation {@code List} of {@code Integer}s representing the order in which to insert the {@code Item}s in the {@code Bookshelf}.
-     * @param view The {@code ServerUpdateViewInterface} performing the action.
+     * @param nickname The nickname of the player performing the action.
      */
     @Override
-    public synchronized void bookshelf(int column, List<Integer> permutation, ServerUpdateViewInterface view) {
-        if (ended ||
-                !view.getNickname().equals(playerList.get(playerIndex)) ||
-                turnPhase != TurnPhase.BOOKSHELF ||
-                !game.canInsertItemTilesInBookshelf(column, permutation)) {
-            view.onAcceptedInsertion(new AcceptedInsertion(false));
-            return;
+    public void bookshelf(int column, List<Integer> permutation, String nickname) {
+        synchronized (controllerLock) {
+            if (ended || onHold ||
+                    !nickname.equals(playerList.get(playerIndex)) ||
+                    turnPhase != TurnPhase.BOOKSHELF ||
+                    !game.canInsertItemTilesInBookshelf(column, permutation)) {
+                views.get(nickname).onAcceptedInsertion(new AcceptedInsertion(false));
+                return;
+            }
+
+            Logger.selectColumn(column, permutation, nickname, id);
+
+            game.insertItemTilesInBookshelf(column, permutation);
+
+            views.get(nickname).onAcceptedInsertion(new AcceptedInsertion(true));
+
+            notifyLivingRoomToEverybody();
+            notifyBookshelvesToEverybody();
+            notifyPersonalGoalCardsToEverybody();
+            notifyCommonGoalCardsToEverybody();
+            notifyEndingTokenToEverybody();
+            notifyScoresToEverybody();
+
+            // Set the new turn phase.
+            turnPhase = TurnPhase.LIVING_ROOM;
+
+            nextTurn();
         }
-
-        Logger.selectColumn(column, permutation, view.getNickname(), id);
-
-        game.insertItemTilesInBookshelf(column, permutation);
-
-        view.onAcceptedInsertion(new AcceptedInsertion(true));
-
-        notifyLivingRoomToEverybody();
-        notifyBookshelvesToEverybody();
-        notifyPersonalGoalCardsToEverybody();
-        notifyCommonGoalCardsToEverybody();
-        notifyEndingTokenToEverybody();
-        notifyScoresToEverybody();
-
-        // Set the new turn phase.
-        turnPhase = TurnPhase.LIVING_ROOM;
-
-        nextTurn();
     }
 
     /**
@@ -424,84 +569,110 @@ public class Controller implements ControllerInterface {
      * It synchronizes on {@code this}.
      * @param text The content of the message.
      * @param receiver The receiver of the message.
-     * @param view The {@code ServerUpdateViewInterface} performing the action.
+     * @param nickname The nickname of the player performing the action.
      */
     @Override
-    public synchronized void chat(String text, String receiver, ServerUpdateViewInterface view) {
-        if (ended || playerIndex == -1 || receiver.equals(view.getNickname())) {
-            view.onChatAccepted(new ChatAccepted(false));
-            // Action failed.
-            return;
-        }
-
-        ChatUpdate update = new ChatUpdate(view.getNickname(),
-                text,
-                receiver);
-
-        if (receiver.equals("all")) {
-            // Broadcast chat message.
-            view.onChatAccepted(new ChatAccepted(true));
-
-            Logger.sendMessage(view.getNickname(), "all", id);
-
-            for (ServerUpdateViewInterface v : views) {
-                v.onChatUpdate(update);
-            }
-        } else {
-            // Unicast chat message.
-            ServerUpdateViewInterface tmp = null;
-            for(ServerUpdateViewInterface v : views) {
-                if (v.getNickname().equals(receiver)) {
-                    tmp = v;
-                    break;
-                }
-            }
-
-            if (tmp == null) {
-                view.onChatAccepted(new ChatAccepted(false));
+    public void chat(String text, String receiver, String nickname) {
+        synchronized (controllerLock) {
+            if (ended || playerIndex == -1 || receiver.equals(nickname)) {
+                views.get(nickname).onChatAccepted(new ChatAccepted(false));
+                // Action failed.
                 return;
             }
 
-            Logger.sendMessage(view.getNickname(), receiver, id);
+            ChatUpdate update = new ChatUpdate(nickname,
+                    text,
+                    receiver);
 
-            view.onChatUpdate(update);
-            tmp.onChatUpdate(update);
+            chatListener.addUpdate(update);
+
+            if (receiver.equals("all")) {
+                // Broadcast chat message.
+                views.get(nickname).onChatAccepted(new ChatAccepted(true));
+
+                Logger.sendMessage(nickname, "all", id);
+
+                notifyChatUpdate(update);
+            } else {
+                // Unicast chat message.
+                ServerUpdateViewInterface other = views.get(receiver);
+
+                if (other == null) {
+                    views.get(nickname).onChatAccepted(new ChatAccepted(false));
+                    return;
+                }
+
+                Logger.sendMessage(nickname, receiver, id);
+
+                views.get(nickname).onChatUpdate(update);
+                other.onChatUpdate(update);
+            }
         }
     }
 
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.
-     * @param view The {@code ServerUpdateViewInterface} that disconnected.
+     * @param nickname The nickname of the player that disconnected.
      */
     @Override
-    public synchronized void disconnection(ServerUpdateViewInterface view) {
-        // Game already finished.
-        if (ended) return;
+    public void disconnection(String nickname) {
+        synchronized (controllerLock) {
+            // Game already finished.
+            if (ended || !views.containsKey(nickname)) return;
 
-        if (isStarted()) {
-            // Disconnection during game-phase.
-            // The game is killed.
-            ended = true;
-            views.remove(view);
-            for (ServerUpdateViewInterface v : views) {
-                v.onEndGameUpdate(new EndGameUpdate(null));
+            views.remove(nickname);
+
+            if (isStarted()) {
+                // Disconnection during game-phase.
+                // The game is killed
+                inactivePlayers.add(nickname);
+
+                notifyDisconnectionToEverybody(nickname);
+
+                if (inactivePlayers.size() >= numberPlayers) {
+                    ended = true;
+                    notifyEndGameToEverybody(null);
+                    Logger.endGame(id);
+                    return;
+                }
+
+                if (playerList.get(playerIndex).equals(nickname)) {
+                    nextTurn();
+                }
+            } else {
+                // Disconnection during pre-game phase.
+                // The game is not killed.
+                views.remove(nickname);
+                gameBuilder.removePlayer(nickname);
+                gameBuilder.removeBookshelfListener(nickname);
+                bookshelfListeners.removeIf(b -> b.getOwner().equals(nickname));
+                playerList.remove(nickname);
+
+                notifyWaitingUpdateToEverybody(nickname, false);
             }
-            Logger.endGame(id);
-            return;
         }
+    }
 
-        // Disconnection during pre-game phase.
-        // The game is not killed.
-        views.remove(view);
-        gameBuilder.removePlayer(view.getNickname());
-        gameBuilder.removeBookshelfListener(view.getNickname());
-        playerList.remove(view.getNickname());
+    @Override
+    public boolean reconnection(ServerUpdateViewInterface view, String nickname) {
+        synchronized (controllerLock) {
+            if (ended || !inactivePlayers.contains(nickname)) return false;
 
-        for(ServerUpdateViewInterface v : views) {
-            v.onWaitingUpdate(new WaitingUpdate(view.getNickname(),
-                    numberPlayers - playerList.size(),
-                    false));
+            view.setController(this);
+            views.put(nickname, view);
+            inactivePlayers.remove(nickname);
+
+            notifyReconnectionToEverybody(nickname);
+
+            notifyFullState(nickname);
+
+            if (onHold) {
+                onHold = false;
+                nextTurn();
+            }
+
+            return true;
         }
     }
 

@@ -255,6 +255,16 @@ public class GUInterface extends ClientView implements GUIViewInterface {
         }
     }
 
+    @Override
+    public void onDisconnectionUpdate(Disconnection update) {
+
+    }
+
+    @Override
+    public void onReconnectionUpdate(Reconnection update) {
+
+    }
+
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}.

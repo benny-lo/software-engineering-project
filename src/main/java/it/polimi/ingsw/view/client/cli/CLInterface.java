@@ -362,6 +362,16 @@ public class CLInterface extends ClientView implements InputReceiver {
         System.out.flush();
     }
 
+    @Override
+    public void onDisconnectionUpdate(Disconnection update) {
+
+    }
+
+    @Override
+    public void onReconnectionUpdate(Reconnection update) {
+
+    }
+
     /**
      * {@inheritDoc}
      * Sets the connected players, the LivingRoom, the Bookshelves, the PersonalGoalCard if the game selection is successful,

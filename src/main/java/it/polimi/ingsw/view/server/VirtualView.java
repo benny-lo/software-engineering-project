@@ -26,9 +26,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      * Reference to the Controller, this VirtualView is logged in. Initially, it set to {@code null}.
      */
     private ControllerInterface controller;
+
+    /**
+     * The connection to the client.
+     */
     private final ServerConnection serverConnection;
-    private final Object nicknameLock;
-    private final Object controllerLock;
 
     /**
      * The constructor of {@code VirtualView}. It only sets the {@code ServerConnection} and
@@ -37,8 +39,6 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     public VirtualView(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
-        this.nicknameLock = new Object();
-        this.controllerLock = new Object();
     }
 
     /**
@@ -48,21 +48,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public void setNickname(String nickname) {
-        synchronized (nicknameLock) {
-            this.nickname = nickname;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * THREAD-SAFE synchronizing privately.
-     * @return {@code String} corresponding to the nickname of {@code this}.
-     */
-    @Override
-    public String getNickname() {
-        synchronized (nicknameLock) {
-            return nickname;
-        }
+        this.nickname = nickname;
     }
 
     /**
@@ -72,21 +58,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public void setController(ControllerInterface controller) {
-        synchronized (controllerLock) {
-            this.controller = controller;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * THREAD-SAFE synchronizing privately.
-     * @return {@code true} iff the {@code Controller} of {@code this} is not {@code null}.
-     */
-    @Override
-    public boolean isInGame() {
-        synchronized (controllerLock) {
-            return controller != null;
-        }
+        this.controller = controller;
     }
 
     /**
@@ -96,11 +68,9 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void login(Nickname message) {
-        synchronized (controllerLock) {
-            if (controller != null) {
-                onGamesList(new GamesList(null));
-                return;
-            }
+        if (controller != null) {
+            onGamesList(new GamesList(null));
+            return;
         }
         Lobby.getInstance().login(message.getNickname(), this);
     }
@@ -112,13 +82,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void createGame(GameInitialization message) {
-        synchronized (controllerLock) {
-            if (controller != null) {
-                onGamesList(new GamesList(null));
-                return;
-            }
+        if (controller != null) {
+            onGamesList(new GamesList(null));
+            return;
         }
-        Lobby.getInstance().createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this);
+        Lobby.getInstance().createGame(message.getNumberPlayers(), message.getNumberCommonGoalCards(), this, nickname);
     }
 
     /**
@@ -128,13 +96,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void selectGame(GameSelection message) {
-        synchronized (controllerLock) {
-            if (controller != null) {
-                onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
-                return;
-            }
+        if (controller != null) {
+            onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+            return;
         }
-        Lobby.getInstance().selectGame(message.getId(), this);
+        Lobby.getInstance().selectGame(message.getId(), this, nickname);
     }
 
     /**
@@ -144,13 +110,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void selectFromLivingRoom(LivingRoomSelection message) {
-        synchronized (controllerLock) {
-            if (controller == null) {
-                onSelectedItems(new SelectedItems(null));
-                return;
-            }
+        if (controller == null) {
+            onSelectedItems(new SelectedItems(null));
+            return;
         }
-        controller.livingRoom(message.getPositions(), this);
+        controller.livingRoom(message.getPositions(), nickname);
     }
 
     /**
@@ -160,13 +124,11 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void insertInBookshelf(BookshelfInsertion message) {
-        synchronized (controllerLock) {
-            if (controller == null) {
-                onAcceptedInsertion(new AcceptedInsertion(false));
-                return;
-            }
+        if (controller == null) {
+            onAcceptedInsertion(new AcceptedInsertion(false));
+            return;
         }
-        controller.bookshelf(message.getColumn(), message.getPermutation(), this);
+        controller.bookshelf(message.getColumn(), message.getPermutation(), nickname);
     }
 
     /**
@@ -176,14 +138,12 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void writeChat(ChatMessage message) {
-        synchronized (controllerLock) {
-            if (controller == null) {
-                onChatAccepted(new ChatAccepted(false));
-                return;
-            }
+        if (controller == null) {
+            onChatAccepted(new ChatAccepted(false));
+            return;
         }
 
-        controller.chat(message.getText(), message.getReceiver(), this);
+        controller.chat(message.getText(), message.getReceiver(), nickname);
     }
 
     /**
@@ -193,24 +153,19 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void disconnect() {
-        synchronized (nicknameLock) {
-            if (nickname != null) {
-                Logger.logout(nickname);
-            } else {
-                Logger.logout();
-            }
+        Lobby.getInstance().removeConnection(nickname);
+
+        if (nickname != null) {
+            Logger.logout(nickname);
+        } else {
+            Logger.logout();
         }
 
 
-        boolean flag;
-        synchronized (controllerLock) {
-            flag = (controller != null);
-        }
-        if (flag) {
-            controller.disconnection(this);
+        if (controller != null) {
+            controller.disconnection(nickname);
             if (controller.getNumberActualPlayers() < 1) Lobby.getInstance().removeController(controller);
         }
-        Lobby.getInstance().removeServerUpdateViewInterface(this);
     }
 
     /**
@@ -300,6 +255,24 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public void onEndGameUpdate(EndGameUpdate update) {
+        serverConnection.send(update);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
+    @Override
+    public void onDisconnectionUpdate(Disconnection update) {
+        serverConnection.send(update);
+    }
+
+    /**
+     * {@inheritDoc}
+     * @param update The update to process.
+     */
+    @Override
+    public void onReconnectionUpdate(Reconnection update) {
         serverConnection.send(update);
     }
 

@@ -80,8 +80,10 @@ public class LobbyTest {
 
         while(!mockServerConnection0.queue.isEmpty()) {
             message = mockServerConnection0.queue.remove();
-            if (message instanceof GamesList gamesList)
-                assertNull(gamesList.getAvailable());
+            if (message instanceof GamesList gamesList) {
+                assertNotNull(gamesList.getAvailable());
+                assertTrue(gamesList.getAvailable().isEmpty());
+            }
         }
     }
 
@@ -345,7 +347,7 @@ public class LobbyTest {
 
         assertEquals(gameList,2);
         assertEquals(gameData,2);
-        assertEquals(waiting,3);
+        assertEquals(3, waiting);
         assertEquals(bookshelf,4);
         assertEquals(commonGoalCards,2);
         assertEquals(endingToken,2);

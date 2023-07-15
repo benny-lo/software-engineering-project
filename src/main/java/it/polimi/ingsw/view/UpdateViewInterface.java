@@ -95,4 +95,16 @@ public interface UpdateViewInterface {
      * @param update The update to process.
      */
     void onEndGameUpdate(EndGameUpdate update);
+
+    /**
+     * Processes a {@code Disconnection} update.
+     * @param update The update to process.
+     */
+    void onDisconnectionUpdate(Disconnection update);
+
+    /**
+     * Processes a {@code Reconnection} update.
+     * @param update The update to process.
+     */
+    void onReconnectionUpdate(Reconnection update);
 }

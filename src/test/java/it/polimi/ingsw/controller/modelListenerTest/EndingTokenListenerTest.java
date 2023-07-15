@@ -30,7 +30,5 @@ public class EndingTokenListenerTest {
         endingTokenListener.updateState("nick");
         assertTrue(endingTokenListener.hasChanged());
         assertEquals("nick", endingTokenListener.getEndingToken());
-        assertNull(endingTokenListener.getEndingToken());
     }
-
 }

@@ -18,11 +18,16 @@ public class Lobby {
     private final Map<Integer, ControllerInterface> controllers;
 
     /**
-     * Set of all logged in (with a nickname) {@code ServerUpdateViewInterface}s,
+     * {@code Map} of all logged in (with a nickname) {@code ServerUpdateViewInterface}s,
      * representing all players connected either waiting for a game or in game.
      * They can be used by {@code this} to send updates to a player.
      */
-    private final Set<ServerUpdateViewInterface> views;
+    private final Map<String, ServerUpdateViewInterface> views;
+
+    /**
+     * {@code Map} of nicknames still bound to a game.
+     */
+    private final Map<String, Integer> boundToGame;
 
     /**
      * Smallest available id for the next game to be created.
@@ -44,9 +49,10 @@ public class Lobby {
      * and an empty set of {@code ServerUpdateViewInterface}s. The first available id is 0.
      */
     private Lobby() {
-        controllers = new HashMap<>();
-        views = new HashSet<>();
-        availableId = 0;
+        this.controllers = new HashMap<>();
+        this.views = new HashMap<>();
+        this.boundToGame = new HashMap<>();
+        this.availableId = 0;
     }
 
     /**
@@ -92,21 +98,31 @@ public class Lobby {
 
         if (id != -1) {
             controllers.remove(id);
+
+            List<String> nicknames = boundToGame.entrySet().stream().
+                                        filter(e -> e.getValue() == id).
+                                        map(Map.Entry::getKey).toList();
+
+            for(String nickname : nicknames) {
+                boundToGame.remove(nickname);
+            }
+
             if (!controller.isStarted()) {
-                for (ServerUpdateViewInterface v : views) {
-                    if (!v.isInGame()) v.onGamesList(new GamesList(List.of(new GameInfo(id, -1, -1))));
+                for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
+                    if (boundToGame.containsKey(e.getKey())) continue;
+                    e.getValue().onGamesList(new GamesList(List.of(new GameInfo(id, -1, -1))));
                 }
             }
         }
     }
 
     /**
-     * Unsubscribes a {@code ServerUpdateViewInterface} from updates sent by {@code this}.
+     * Unsubscribes a client from updates sent by {@code this}.
      * It synchronizes on {@code this}.
-     * @param view The view to be removed
+     * @param nickname The player to remove.
      */
-    public synchronized void removeServerUpdateViewInterface(ServerUpdateViewInterface view) {
-        views.remove(view);
+    public synchronized void removeConnection(String nickname) {
+        views.remove(nickname);
     }
 
     /**
@@ -116,26 +132,24 @@ public class Lobby {
      * @param view The {@code ServerUpdateViewInterface} performing the request.
      */
     public synchronized void login(String nickname, ServerUpdateViewInterface view) {
-        if(views.contains(view)) {
-            // this view has already logged in.
+        if(views.containsKey(nickname)) {
+            // A view with the same nickname has already logged in.
             view.onGamesList(new GamesList(null));
             return;
         }
 
-        for(ServerUpdateViewInterface v : views) {
-            if (nickname.equals(v.getNickname())) {
-                // a view with nickname already exists.
-                view.onGamesList(new GamesList(null));
-                return;
-            }
-        }
+        Logger.login(nickname);
 
-        synchronized (System.out) {
-            Logger.login(nickname);
-        }
-
-        views.add(view);
+        views.put(nickname, view);
         view.setNickname(nickname);
+
+        Integer id = boundToGame.get(nickname);
+        if (id != null && controllers.containsKey(id)) {
+            boolean result = controllers.get(id).reconnection(view, nickname);
+            if (!result) view.onGamesList(new GamesList(null));
+            return;
+        }
+
         view.onGamesList(new GamesList(getGameInfo()));
     }
 
@@ -147,69 +161,88 @@ public class Lobby {
      * It synchronizes on {@code this}.
      * @param numberPlayers The number of players in the game to create.
      * @param numberCommonGoals The number of common goal cards in the game to create.
-     * @param view The {@code ServerUpdateViewInterface} that performed the request.
+     * @param nickname The nickname that performed the request.
      */
-    public synchronized void createGame(int numberPlayers, int numberCommonGoals, ServerUpdateViewInterface view) {
+    public synchronized void createGame(int numberPlayers, int numberCommonGoals, ServerUpdateViewInterface view, String nickname) {
         // not yet registered or already playing.
-        if (!views.contains(view) || view.isInGame()) {
-            view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+        if (!views.containsKey(nickname) || boundToGame.containsKey(nickname)) {
+            view.onGameData(new GameData(-1,
+                            null,
+                            -1,
+                            -1,
+                            -1,
+                            -1,
+                            -1));
             return;
         }
 
         // incorrect parameters.
         if (numberPlayers < 2 || numberPlayers > 4 || numberCommonGoals < 1 || numberCommonGoals > 2) {
-            view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+            view.onGameData(new GameData(-1,
+                    null,
+                    -1,
+                    -1,
+                    -1,
+                    -1,
+                    -1));
             return;
         }
 
         // create controller + join operation in controller
         Controller controller = new Controller(numberPlayers, numberCommonGoals, availableId);
-        view.setController(controller);
 
-        controller.join(view);
+        if (!controller.join(view, nickname)) return;
 
-        // check if the Join worked
-        if (!view.isInGame()) return;
-
-        // set controller in view.
+        // The join worked.
         addController(controller);
+        boundToGame.put(nickname, availableId - 1);
 
-        Logger.createGame(numberPlayers, numberCommonGoals, availableId - 1, view.getNickname());
+        Logger.createGame(numberPlayers, numberCommonGoals, availableId - 1, nickname);
 
         // send to client without game
-        for (ServerUpdateViewInterface v : views) {
-            List<GameInfo> list = new ArrayList<>();
-            list.add(new GameInfo(availableId-1, numberPlayers, numberCommonGoals));
-            GamesList gamesList = new GamesList(list);
-            if (!v.isInGame()) {
-                v.onGamesList(gamesList);
-            }
+        GamesList gamesList = new GamesList(List.of(new GameInfo(availableId-1, numberPlayers, numberCommonGoals)));
+        for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
+            if (boundToGame.containsKey(e.getKey())) continue;
+            e.getValue().onGamesList(gamesList);
         }
     }
 
     /**
      * Joins the {@code ServerUpdateViewInterface} that performed the request in the selected match (by id).
      * @param id The id of the selected game.
-     * @param view The {@code ServerUpdateViewInterface} that performed the request.
+     * @param nickname The nickname of the client that performed the request.
      */
-    public synchronized void selectGame(int id, ServerUpdateViewInterface view) {
+    public synchronized void selectGame(int id, ServerUpdateViewInterface view, String nickname) {
         // not yet registered or already in a match.
-        if (!views.contains(view) || view.isInGame()) {
-            view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+        if (!views.containsKey(nickname) || boundToGame.containsKey(nickname)) {
+            view.onGameData(new GameData(-1,
+                            null,
+                            -1,
+                            -1,
+                            -1,
+                            -1,
+                            -1));
+            return;
         }
 
         // selected match does not exist or is already started.
         if (!controllers.containsKey(id) || controllers.get(id).isStarted()) {
-            view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+            view.onGameData(new GameData(-1,
+                    null,
+                    -1,
+                    -1,
+                    -1,
+                    -1,
+                    -1));
             return;
         }
 
+        if (!controllers.get(id).join(view, nickname)) return;
+
         // join successful.
-        view.setController(controllers.get(id));
+        boundToGame.put(nickname, id);
+        Logger.selectGame(id, nickname);
 
-        Logger.selectGame(id, view.getNickname());
-
-        controllers.get(id).join(view);
         // the controller is sending the player the game dimensions.
     }
 
@@ -218,8 +251,7 @@ public class Lobby {
     /**
      * This method sets the Singleton instance to null, allowing us to instance it again, used only for testing.
      */
-    public static void setNull()
-    {
+    public static void setNull() {
         instance = null;
     }
 }
