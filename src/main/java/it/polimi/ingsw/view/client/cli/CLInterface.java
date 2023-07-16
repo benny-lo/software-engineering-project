@@ -26,7 +26,8 @@ import static it.polimi.ingsw.view.client.cli.CLInterfacePrinter.*;
 
 public class CLInterface extends ClientView implements InputReceiver {
     private CLIStatus status;
-    private Collection<String> connectedPlayers;
+    private List<String> connectedPlayers;
+    private final Set<String> disconnectedPlayers;
     private final Map<String, Item[][]> bookshelves;
     private String endingToken;
     private Item[][] personalGoalCard;
@@ -46,11 +47,12 @@ public class CLInterface extends ClientView implements InputReceiver {
      * and creates an {@code Array} for the chat and the games.
      */
     public CLInterface() {
-        bookshelves = new HashMap<>();
-        commonGoalCards = new HashMap<>();
-        scores = new HashMap<>();
-        chat = new ArrayList<>();
-        games = new ArrayList<>();
+        this.disconnectedPlayers = new HashSet<>();
+        this.bookshelves = new HashMap<>();
+        this.commonGoalCards = new HashMap<>();
+        this.scores = new HashMap<>();
+        this.chat = new ArrayList<>();
+        this.games = new ArrayList<>();
     }
 
     /**
@@ -364,12 +366,30 @@ public class CLInterface extends ClientView implements InputReceiver {
 
     @Override
     public void onDisconnectionUpdate(Disconnection update) {
+        if (update != null) {
+            disconnectedPlayers.add(update.getDisconnectedPlayer());
 
+            clearScreen();
+            printDisconnected(update.getDisconnectedPlayer());
+
+            clearScreen();
+            printGameRep();
+            return;
+        }
+
+        if (status == CLIStatus.ERROR) return;
+        clearScreen();
+        status = CLIStatus.ERROR;
+        printLostConnection();
+        printExit();
+        System.out.flush();
     }
 
     @Override
-    public void onReconnectionUpdate(Reconnection update) {
+    public synchronized void onReconnectionUpdate(Reconnection update) {
+        printReconnection(nickname, update.getReconnectedPlayer());
 
+        clearScreen();
     }
 
     /**
@@ -381,7 +401,7 @@ public class CLInterface extends ClientView implements InputReceiver {
      */
     @Override
     public synchronized void onGameData(GameData gameData) {
-        Collection<String> list = gameData.getConnectedPlayers();
+        List<String> list = gameData.getConnectedPlayers();
         if (gameData.getNumberPlayers() == -1 ||
                 gameData.getNumberCommonGoalCards() == -1 ||
                 list == null ||
@@ -401,21 +421,6 @@ public class CLInterface extends ClientView implements InputReceiver {
         bookshelvesRows = gameData.getBookshelvesRows();
         bookshelvesColumns = gameData.getBookshelvesColumns();
         personalGoalCard = new Item[bookshelvesRows][bookshelvesColumns];
-        System.out.flush();
-    }
-
-    /**
-     * {@inheritDoc}
-     * Prints the Disconnection message when the client loses his connection with the server.
-     * It synchronizes on {@code this}.
-     */
-    @Override
-    public synchronized void onDisconnection() {
-        if (status == CLIStatus.ERROR) return;
-        clearScreen();
-        status = CLIStatus.ERROR;
-        printLostConnection();
-        printExit();
         System.out.flush();
     }
 
@@ -591,7 +596,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         printCurrentPlayer(nickname, currentPlayer);
 
         printLivingRoom(livingRoom);
-        printBookshelves(bookshelves);
+        printBookshelves(bookshelves, disconnectedPlayers);
         printPersonalGoalCard(personalGoalCard);
         printCommonGoalCards(commonGoalCards);
         printItemsChosen(chosenItems, currentPlayer);

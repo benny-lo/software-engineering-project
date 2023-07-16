@@ -3,14 +3,14 @@ package it.polimi.ingsw.utils.message.server;
 import it.polimi.ingsw.utils.message.Message;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Message sent by the server when a client enters a {@code Game}.
  */
 public class GameData extends Message {
     private final int numberPlayers;
-    private final Collection<String> connectedPlayers;
+    private final List<String> connectedPlayers;
     private final int numberCommonGoalCards;
     private final int livingRoomRows;
     private final int livingRoomColumns;
@@ -20,14 +20,14 @@ public class GameData extends Message {
     /**
      * Constructor for the class. It sets all {@code Game} parameters.
      * @param numberPlayers The number of players.
-     * @param connectedPlayers Collection of connected players so far in the joined {@code Game}.
+     * @param connectedPlayers {@code List} of connected players so far in the joined {@code Game}.
      * @param numberCommonGoalCards The number of common goal cards.
      * @param livingRoomRows The number of the rows of the living room.
      * @param livingRoomColumns The number of the columns of the living room.
      * @param bookshelvesRows The number of the rows of the bookshelves.
      * @param bookshelvesColumns The number of the columns of the bookshelves.
      */
-    public GameData(int numberPlayers, Collection<String> connectedPlayers, int numberCommonGoalCards, int livingRoomRows, int livingRoomColumns, int bookshelvesRows, int bookshelvesColumns) {
+    public GameData(int numberPlayers, List<String> connectedPlayers, int numberCommonGoalCards, int livingRoomRows, int livingRoomColumns, int bookshelvesRows, int bookshelvesColumns) {
         this.numberPlayers = numberPlayers;
         this.connectedPlayers = connectedPlayers;
         this.numberCommonGoalCards = numberCommonGoalCards;
@@ -49,7 +49,7 @@ public class GameData extends Message {
      * Getter for the players connected in this game.
      * @return {@code Collection} of the connected players.
      */
-    public Collection<String> getConnectedPlayers() {
+    public List<String> getConnectedPlayers() {
         return (connectedPlayers != null) ?
                 new ArrayList<>(connectedPlayers) :
                 null;

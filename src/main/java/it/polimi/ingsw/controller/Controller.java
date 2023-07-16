@@ -22,7 +22,7 @@ import java.util.*;
  * appropriately send updates to clients. Some methods synchronize on {@code this}.
  */
 public class Controller implements ControllerInterface {
-    private static final int WIN_FORFEIT = 15000;
+    private static final int WIN_FORFEIT = 30000;
 
     private final Object controllerLock;
     /**
@@ -196,7 +196,7 @@ public class Controller implements ControllerInterface {
      */
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
-       LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoomUpdates());
+        LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoomUpdates());
         for(ServerUpdateViewInterface view : views.values()) {
             view.onLivingRoomUpdate(update);
         }
@@ -209,7 +209,8 @@ public class Controller implements ControllerInterface {
         Map<String, Integer> scores = new HashMap<>();
         for (String v : views.keySet()) {
             for (String u : views.keySet()) {
-                int personalScore = game.getPersonalScore(v);
+                if (inactivePlayers.contains(u)) continue;
+                int personalScore = game.getPersonalScore(u);
                 int publicScore = game.getPublicScore(u);
 
                 if (ended || v.equals(u)) scores.put(u, personalScore + publicScore);
@@ -319,16 +320,7 @@ public class Controller implements ControllerInterface {
             v.onDisconnectionUpdate(disconnection);
         }
 
-        Map<String, Integer> scores = new HashMap<>();
-        for (String n : views.keySet()) {
-            int personalScore = game.getPersonalScore(n);
-            int publicScore = game.getPublicScore(n);
-
-            if (ended || nickname.equals(n)) scores.put(n, personalScore + publicScore);
-            else scores.put(n, publicScore);
-        }
-
-        v.onScoresUpdate(new ScoresUpdate(scores));
+        notifyScoresToEverybody();
 
         if (!onHold) {
             v.onStartTurnUpdate(new StartTurnUpdate(playerList.get(playerIndex)));

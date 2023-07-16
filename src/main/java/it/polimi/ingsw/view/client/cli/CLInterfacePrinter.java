@@ -8,6 +8,7 @@ import it.polimi.ingsw.utils.message.server.GameInfo;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class representing the CLIPrinter.
@@ -197,10 +198,11 @@ class CLInterfacePrinter {
      * Prints the bookshelves of the players.
      * @param bookshelves The bookshelves that need to be printed.
      */
-    static void printBookshelves(Map<String, Item[][]> bookshelves) {
+    static void printBookshelves(Map<String, Item[][]> bookshelves, Set<String> disconnectedPlayers) {
         if (bookshelves == null) return;
         System.out.println("These are the respective Bookshelves of: ");
         for (String player : bookshelves.keySet()) {
+            if (disconnectedPlayers.contains(player)) continue;
             System.out.println(player);
             printBookshelfOrPersonalGoalCard(bookshelves.get(player));
         }
@@ -396,5 +398,15 @@ class CLInterfacePrinter {
      */
     static void printExit(){
         System.out.println("Digit '/exit' to close the launcher.");
+    }
+
+    static void printReconnection(String myNickname, String reconnectedNickname) {
+        String re = (!reconnectedNickname.equals(myNickname)) ? reconnectedNickname : "you";
+
+        System.out.println(ANSI_RED + re + " reconnected!!!" + ANSI_RESET);
+    }
+
+    static void printDisconnected(String disconnectedPlayer) {
+        System.out.println(ANSI_RED + disconnectedPlayer + " disconnected!!!" + ANSI_RESET);
     }
 }

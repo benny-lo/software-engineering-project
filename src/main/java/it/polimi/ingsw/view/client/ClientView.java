@@ -8,6 +8,7 @@ import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.view.InputViewInterface;
+import it.polimi.ingsw.view.UpdateViewInterface;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -23,7 +24,7 @@ import java.util.regex.Pattern;
 /**
  * Abstract class representing the client view.
  */
-public abstract class ClientView implements ClientUpdateViewInterface, InputViewInterface {
+public abstract class ClientView implements UpdateViewInterface, InputViewInterface {
 
     /**
      * The nickname of the client.
