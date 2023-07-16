@@ -103,7 +103,7 @@ public class Server {
                         }
                         VirtualView view = new VirtualView(serverConnectionTCP);
                         serverConnectionTCP.setServerInputViewInterface(view);
-                        (new Thread(serverConnectionTCP)).start();
+                        serverConnectionTCP.start();
                     } catch (IOException e) {
                         Logger.serverError("server closed");
                         System.exit(0);

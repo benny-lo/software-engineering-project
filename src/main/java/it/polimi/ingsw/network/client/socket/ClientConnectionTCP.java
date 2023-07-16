@@ -3,10 +3,8 @@ package it.polimi.ingsw.network.client.socket;
 import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.utils.message.Beep;
 import it.polimi.ingsw.utils.message.Message;
-import it.polimi.ingsw.utils.message.client.*;
-import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.client.ClientUpdateViewInterface;
+import it.polimi.ingsw.view.UpdateViewInterface;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -33,7 +31,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
     /**
      * The listener for messages coming from the server.
      */
-    private final ClientUpdateViewInterface listener;
+    private final UpdateViewInterface listener;
 
     /**
      * The output stream used to send messages to the server.
@@ -54,12 +52,12 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
      * Object used for synchronization purposes. The lock on this object is required to
      * access {@code toDisconnect} and {@code serverBeep} and to send messages.
      */
-    private final Object disconnectLock;
+    private final Object internalLock;
 
     /**
      * Flag indicating whether the connection is set to disconnect.
      */
-    private boolean toDisconnect;
+    private boolean disconnect;
 
     /**
      * The last {@code Beep} got from the server.
@@ -75,14 +73,14 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
      * @throws IOException exception relayed from the opening of a {@code ObjectOutputStream} from
      * the output stream of the {@code socket}.
      */
-    public ClientConnectionTCP(Socket socket, ClientUpdateViewInterface listener) throws IOException {
+    public ClientConnectionTCP(Socket socket, UpdateViewInterface listener) throws IOException {
         this.socket = socket;
         this.listener = listener;
         this.serverTimer = new Timer();
         this.clientTimer = new Timer();
-        this.disconnectLock = new Object();
+        this.internalLock = new Object();
         this.out = new ObjectOutputStream(socket.getOutputStream());
-        this.toDisconnect = false;
+        this.disconnect = false;
     }
 
     /**
@@ -90,52 +88,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
      * @param message the message to send.
      */
     @Override
-    public void send(Nickname message) {
-        sendPrivate(message);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(GameInitialization message) {
-        sendPrivate(message);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(GameSelection message) {
-        sendPrivate(message);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(LivingRoomSelection message) {
-        sendPrivate(message);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(BookshelfInsertion message) {
-        sendPrivate(message);
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(ChatMessage message) {
+    public void send(Message message) {
         sendPrivate(message);
     }
 
@@ -176,8 +129,12 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             listener.onAcceptedInsertion((AcceptedInsertion) input);
         } else if (input instanceof ChatAccepted) {
             listener.onChatAccepted((ChatAccepted) input);
+        } else if (input instanceof Disconnection m) {
+            listener.onDisconnectionUpdate(m);
+        } else if (input instanceof Reconnection m) {
+            listener.onReconnectionUpdate(m);
         } else if (input instanceof Beep) {
-            synchronized (disconnectLock) {
+            synchronized (internalLock) {
                 serverBeep = (Beep) input;
             }
         }
@@ -196,12 +153,16 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
             scheduleTimers();
 
             while (true) {
+                synchronized (internalLock) {
+                    if (disconnect) return;
+                }
+
                 input = in.readObject();
                 receive(input);
             }
         } catch (IOException | ClassNotFoundException ignored) {
-            synchronized (disconnectLock) {
-                toDisconnect = true;
+            synchronized (internalLock) {
+                disconnect = true;
             }
         }
     }
@@ -212,12 +173,12 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
      * @param message the message to send to the server.
      */
     private void sendPrivate(Message message) {
-        synchronized (disconnectLock) {
+        synchronized (internalLock) {
             try {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException ignored) {
-                toDisconnect = true;
+                disconnect = true;
             }
         }
     }
@@ -230,13 +191,13 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
         serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                synchronized (disconnectLock) {
-                    if (serverBeep != null && !toDisconnect) {
+                synchronized (internalLock) {
+                    if (serverBeep != null && !disconnect) {
                         serverBeep = null;
                         return;
                     }
 
-                    toDisconnect = true;
+                    disconnect = true;
 
                     try {
                         socket.shutdownInput();
@@ -247,7 +208,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
 
                 serverTimer.cancel();
                 clientTimer.cancel();
-                listener.onDisconnection();
+                listener.onDisconnectionUpdate(null);
             }
         }, RTT, 2*RTT);
         clientTimer.scheduleAtFixedRate(new TimerTask() {

@@ -55,12 +55,12 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
      * Flag indicating whether the server needs to disconnect from the client. The lock on this object
      * is needed to access {@code toDisconnect} and {@code clientBeep} and to send messages.
      */
-    private boolean toDisconnect;
+    private boolean disconnect;
 
     /**
      * Object used for synchronization purposes.
      */
-    private final Object disconnectLock;
+    private final Object internalLock;
 
     /**
      * Constructs a {@code ServerConnectionTCP} from a {@code Socket} object. It initializes the
@@ -73,8 +73,8 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         clientTimer = new Timer();
         this.socket = socket;
         this.out = new ObjectOutputStream(socket.getOutputStream());
-        toDisconnect = false;
-        disconnectLock = new Object();
+        disconnect = false;
+        internalLock = new Object();
     }
 
     /**
@@ -89,12 +89,16 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
             scheduleTimer();
 
             while (true) {
+                synchronized (internalLock) {
+                    if (disconnect) return;
+                }
+
                 Object input = in.readObject();
                 receive(input);
             }
         } catch (IOException | ClassNotFoundException e) {
-            synchronized (disconnectLock) {
-                toDisconnect = true;
+            synchronized (internalLock) {
+                disconnect = true;
             }
         }
     }
@@ -128,7 +132,7 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         } else if (input instanceof ChatMessage) {
             listener.writeChat((ChatMessage) input);
         } else if (input instanceof Beep) {
-            synchronized (disconnectLock) {
+            synchronized (internalLock) {
                 clientBeep = (Beep) input;
             }
             sendPrivate(new Beep());
@@ -141,13 +145,13 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
      * @param message the message to send to the client.
      */
     private void sendPrivate(Message message) {
-        synchronized (disconnectLock) {
-            if (toDisconnect) return;
+        synchronized (internalLock) {
+            if (disconnect) return;
             try {
                 out.writeObject(message);
                 out.flush();
             } catch (IOException e) {
-                toDisconnect = true;
+                disconnect = true;
             }
         }
     }
@@ -162,6 +166,14 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
     }
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void start() {
+        (new Thread(this)).start();
+    }
+
+    /**
      * Schedules the {@code clientTimer} to check constantly whether a {@code Beep} was received.
      * If no {@code Beep} was received, the timer closes the {@code socket} and shutdowns the streams,
      * cancels itself, and notifies the listener of the disconnection.
@@ -170,13 +182,13 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                synchronized (disconnectLock) {
-                    if (clientBeep != null && !toDisconnect) {
+                synchronized (internalLock) {
+                    if (clientBeep != null && !disconnect) {
                         clientBeep = null;
                         return;
                     }
 
-                    toDisconnect = true;
+                    disconnect = true;
 
                     try {
                         socket.shutdownInput();

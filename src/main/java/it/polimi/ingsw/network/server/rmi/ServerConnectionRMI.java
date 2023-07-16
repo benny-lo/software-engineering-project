@@ -82,10 +82,12 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     }
 
     /**
+     * {@inheritDoc}
      * Starts the timer that constantly checks whether a {@code Beep} from client has arrived. Moreover, it
      * starts the {@code Thread} that will be listening for messages to send (in the {@code sendingQueue})
      * and will be calling the appropriate clientRMI methods.
      */
+    @Override
     public void start() {
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override

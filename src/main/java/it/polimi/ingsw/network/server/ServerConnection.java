@@ -18,4 +18,9 @@ public interface ServerConnection {
      * @param message the message to send.
      */
     void send(Message message);
+
+    /**
+     * Start listening for messages from the network.
+     */
+    void start();
 }

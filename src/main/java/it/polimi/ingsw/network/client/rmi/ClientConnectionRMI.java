@@ -3,13 +3,16 @@ package it.polimi.ingsw.network.client.rmi;
 import it.polimi.ingsw.network.client.ClientConnection;
 import it.polimi.ingsw.network.server.rmi.ServerConnectionRMIInterface;
 import it.polimi.ingsw.utils.message.Beep;
+import it.polimi.ingsw.utils.message.Message;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;
-import it.polimi.ingsw.view.client.ClientUpdateViewInterface;
+import it.polimi.ingsw.view.UpdateViewInterface;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -19,10 +22,12 @@ import java.util.TimerTask;
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
     private static final int RTT = 5000;
     private ServerConnectionRMIInterface serverConnectionRMIInterface;
-    private final ClientUpdateViewInterface listener;
+    private final UpdateViewInterface listener;
     private final Timer serverTimer;
     private final Timer clientTimer;
-    private final Object beepLock;
+    private final Object internalLock;
+    private boolean disconnected;
+    private final Queue<Message> sendingQueue;
     private Beep serverBeep;
 
     /**
@@ -31,43 +36,89 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
      * @throws RemoteException Rmi exception. It is the one thrown by the no-args constructor
      * of {@code UnicastRemoteObject}.
      */
-    public ClientConnectionRMI(ClientUpdateViewInterface listener) throws RemoteException {
+    public ClientConnectionRMI(UpdateViewInterface listener) throws RemoteException {
         super();
         this.listener = listener;
         this.serverTimer = new Timer();
         this.clientTimer = new Timer();
-        beepLock = new Object();
+        this.sendingQueue = new ArrayDeque<>();
+        this.disconnected = false;
+        this.internalLock = new Object();
     }
 
     /**
      * Schedules the timers to send and check for {@code Beep}s (heartbeats) periodically.
      */
     public void scheduleTimers() {
+        (new Thread(() -> {
+            Message message;
+            while (true) {
+                synchronized (sendingQueue) {
+                    while (sendingQueue.isEmpty()) {
+                        try {
+                            sendingQueue.wait();
+                        } catch (InterruptedException ignored) {}
+                    }
+                    message = sendingQueue.poll();
+                }
+
+                synchronized (internalLock) {
+                    if (disconnected) return;
+                }
+
+                try {
+                    if (message instanceof BookshelfInsertion m) {
+                        serverConnectionRMIInterface.insertInBookshelf(m);
+                    } else if (message instanceof ChatMessage m) {
+                        serverConnectionRMIInterface.writeChat(m);
+                    } else if (message instanceof GameInitialization m) {
+                        serverConnectionRMIInterface.createGame(m);
+                    } else if (message instanceof GameSelection m) {
+                        serverConnectionRMIInterface.selectGame(m);
+                    } else if (message instanceof LivingRoomSelection m) {
+                        serverConnectionRMIInterface.selectFromLivingRoom(m);
+                    } else if (message instanceof Nickname m) {
+                        serverConnectionRMIInterface.login(m);
+                    }
+                } catch (RemoteException e) {
+                    synchronized (internalLock) {
+                        disconnected = true;
+                    }
+                }
+            }
+        })).start();
+
         serverTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                synchronized (beepLock) {
-                    if (serverBeep != null) {
+                synchronized (internalLock) {
+                    if (serverBeep != null && !disconnected) {
                         serverBeep = null;
                         return;
                     }
+
+                    disconnected = true;
                 }
 
                 serverTimer.cancel();
                 clientTimer.cancel();
-                listener.onDisconnection();
+                listener.onDisconnectionUpdate(null);
             }
         }, RTT, 2*RTT);
 
         clientTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                synchronized (internalLock) {
+                    if (disconnected) return;
+                }
+
                 try {
                     serverConnectionRMIInterface.beep(new Beep());
                 } catch (RemoteException e) {
-                    serverTimer.cancel();
-                    clientTimer.cancel();
-                    listener.onDisconnection();
+                    synchronized (internalLock) {
+                        disconnected = true;
+                    }
                 }
             }
         }, 0, 2*RTT);
@@ -86,88 +137,10 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
      * @param message the message to send.
      */
     @Override
-    public void send(Nickname message) {
-        try {
-            serverConnectionRMIInterface.login(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            listener.onDisconnection();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(GameInitialization message) {
-        try {
-            serverConnectionRMIInterface.createGame(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            listener.onDisconnection();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(GameSelection message) {
-        try {
-            serverConnectionRMIInterface.selectGame(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            listener.onDisconnection();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(LivingRoomSelection message) {
-        try {
-            serverConnectionRMIInterface.selectFromLivingRoom(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            listener.onDisconnection();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(BookshelfInsertion message) {
-        try {
-            serverConnectionRMIInterface.insertInBookshelf(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            listener.onDisconnection();
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     * @param message the message to send.
-     */
-    @Override
-    public void send(ChatMessage message) {
-        try {
-            serverConnectionRMIInterface.writeChat(message);
-        } catch (RemoteException e) {
-            serverTimer.cancel();
-            clientTimer.cancel();
-            listener.onDisconnection();
+    public void send(Message message) {
+        synchronized (sendingQueue) {
+            sendingQueue.add(message);
+            sendingQueue.notifyAll();
         }
     }
 
@@ -321,6 +294,16 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
         listener.onChatAccepted(chatAccepted);
     }
 
+    @Override
+    public void receive(Disconnection disconnection) throws RemoteException {
+        listener.onDisconnectionUpdate(disconnection);
+    }
+
+    @Override
+    public void receive(Reconnection reconnection) throws RemoteException {
+        listener.onReconnectionUpdate(reconnection);
+    }
+
     /**
      * {@inheritDoc}
      * @param beep The {@code Beep} object to send to the client.
@@ -328,7 +311,7 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
      */
     @Override
     public void receive(Beep beep) throws RemoteException {
-        synchronized (beepLock) {
+        synchronized (internalLock) {
             serverBeep = beep;
         }
     }

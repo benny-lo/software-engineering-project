@@ -116,6 +116,10 @@ public interface ClientConnectionRMIInterface extends Remote {
      */
     void receive(ChatAccepted chatAccepted) throws RemoteException;
 
+    void receive(Disconnection disconnection) throws RemoteException;
+
+    void receive(Reconnection reconnection) throws RemoteException;
+
     /**
      * Sends a {@code Beep} to the client (used as a heartbeat).
      * @param beep The {@code Beep} object to send to the client.
