@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
+import javafx.util.Pair;
 
 import java.io.*;
 import java.util.List;
@@ -108,15 +109,16 @@ public class BoardManager {
     /**
      * Extracts a list of {@code Item}s from {@code LivingRoom}.
      * @param positions {@code List} of {@code Position}s to select the {@code Item}s from.
-     * @return {@code List} of selected {@code Item}s.
+     * @return {@code Map} of selected {@code Item}s in their {@code Position}s.
      */
-    public List<Item> selectItemTiles(List<Position> positions) {
+    public List<Pair<Position, Item>> selectItemTiles(List<Position> positions) {
+        List<Pair<Position, Item>> ret = livingRoom.selectTiles(positions);
         if (livingRoomListener != null) {
             for (Position p : positions) {
-                livingRoomListener.updateState(p, null);
+                livingRoomListener.updateState(p, livingRoom.tileAt(p.getRow(), p.getColumn()));
             }
         }
-        return livingRoom.selectTiles(positions);
+        return ret;
     }
 
     /**
@@ -144,6 +146,13 @@ public class BoardManager {
             for(int j = 0; j < livingRoom.getColumns(); j++) {
                 livingRoomListener.updateState(new Position(i, j), livingRoom.tileAt(i, j));
             }
+        }
+    }
+
+    public void resetTiles(List<Pair<Position, Item>> scheme) {
+        for(Pair<Position, Item> p : scheme) {
+           livingRoom.setTile(p.getValue(), p.getKey());
+           livingRoomListener.updateState(p.getKey(), p.getValue());
         }
     }
 

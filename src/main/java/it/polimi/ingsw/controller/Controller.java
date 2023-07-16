@@ -629,7 +629,11 @@ public class Controller implements ControllerInterface {
                     return;
                 }
 
+                notifyScoresToEverybody();
+
                 if (playerList.get(playerIndex).equals(nickname)) {
+                    game.resetTilesSelected();
+                    notifyLivingRoomToEverybody();
                     nextTurn();
                 }
             } else {

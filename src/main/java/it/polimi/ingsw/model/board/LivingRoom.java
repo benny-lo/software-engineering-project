@@ -2,6 +2,7 @@ package it.polimi.ingsw.model.board;
 
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +88,10 @@ public class LivingRoom {
      * @param item {@code Item} to place in the grid.
      * @param position The {@code Position} where the {@code Item} is placed.
      */
-    public void setTile(Item item, Position position){
+    public void setTile(Item item, Position position) {
+        if (position.getRow() < 0 || position.getRow() >= getRows() ||
+        position.getColumn() < 0 || position.getColumn() >= getColumns()) return;
+
         if(grid[position.getRow()][position.getColumn()] == null)
             grid[position.getRow()][position.getColumn()] = item;
     }
@@ -165,12 +169,12 @@ public class LivingRoom {
     /**
      * Selects of items from the grid at {@code positions}.
      * @param positions {@code List} of {@code Position}s to select the items from.
-     * @return {@code List} of selected {@code Item}s.
+     * @return {@code Map} of selected {@code Item}s in their {@code Position}s.
      */
-    public List<Item> selectTiles(List<Position> positions) {
-        List<Item> selection = new ArrayList<>();
+    public List<Pair<Position, Item>> selectTiles(List<Position> positions) {
+        List<Pair<Position, Item>> selection = new ArrayList<>();
         for(Position p : positions) {
-            selection.add(grid[p.getRow()][p.getColumn()]);
+            selection.add(new Pair<>(p, grid[p.getRow()][p.getColumn()]));
             grid[p.getRow()][p.getColumn()] = null;
         }
         return selection;

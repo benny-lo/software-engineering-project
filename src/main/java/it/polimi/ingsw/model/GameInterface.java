@@ -72,4 +72,6 @@ public interface GameInterface {
      * @return The id of the {@code PersonalGoalCard} of the player with nickname {@code nickname}.
      */
     int getPersonalID(String nickname);
+
+    void resetTilesSelected();
 }

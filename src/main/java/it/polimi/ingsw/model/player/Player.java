@@ -8,6 +8,7 @@ import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.controller.modelListener.BookshelfListener;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,7 +19,7 @@ import java.util.*;
  * Class representing a player of a game. It manages their {@code Bookshelf} and {@code PersonalGoalCard}.
  */
 public class Player {
-    private List<Item> itemsTakenFromLivingRoom;
+    private List<Pair<Position, Item>> itemsTakenFromLivingRoom;
     private final Bookshelf bookshelf;
     private PersonalGoalCard personalGoalCard;
     private final List<ScoringToken> scoringTokens;
@@ -58,10 +59,15 @@ public class Player {
      * Assigns to {@code this} the items taken from the living room.
      * @param items List of the items taken from the living room.
      */
-    public void takeItems(List<Item> items) {
+    public void takeItems(List<Pair<Position, Item>> items) {
         itemsTakenFromLivingRoom = items;
     }
 
+    public List<Pair<Position, Item>> getAndRemoveItems() {
+        List<Pair<Position, Item>> ret = itemsTakenFromLivingRoom;
+        itemsTakenFromLivingRoom = null;
+        return ret;
+    }
     /**
      * Setter for the {@code PersonalGoalCard}.
      * @param card The card to set.
@@ -122,7 +128,7 @@ public class Player {
     public void insertTiles(int column, List<Integer> order) {
         List<Item> permutedItems = new ArrayList<>();
         for (Integer integer : order) {
-            permutedItems.add(itemsTakenFromLivingRoom.get(integer));
+            permutedItems.add(itemsTakenFromLivingRoom.stream().map(Pair::getValue).toList().get(integer));
         }
 
         bookshelf.insert(permutedItems, column);
@@ -212,6 +218,6 @@ public class Player {
      * @return {@code List} of items taken from the {@code LivingRoom}.
      */
     public List<Item> getItemsTakenFromLivingRoom() {
-        return new ArrayList<>(itemsTakenFromLivingRoom);
+        return itemsTakenFromLivingRoom.stream().map(Pair::getValue).toList();
     }
 }

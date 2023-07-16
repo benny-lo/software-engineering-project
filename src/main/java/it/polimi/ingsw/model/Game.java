@@ -11,6 +11,7 @@ import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
+import javafx.util.Pair;
 
 import java.io.*;
 import java.util.*;
@@ -130,9 +131,15 @@ public class Game implements GameInterface {
      */
     @Override
     public List<Item> selectItemTiles(List<Position> positions){
-        List<Item> selectedItems = boardManager.selectItemTiles(positions);
+        List<Pair<Position, Item>> selectedItems = boardManager.selectItemTiles(positions);
         players.get(currentPlayer).takeItems(selectedItems);
-        return new ArrayList<>(selectedItems);
+        return selectedItems.stream().map(Pair::getValue).toList();
+    }
+
+    @Override
+    public void resetTilesSelected() {
+        List<Pair<Position, Item>> posToItems = players.get(currentPlayer).getAndRemoveItems();
+        if (posToItems != null) boardManager.resetTiles(posToItems);
     }
 
     /**

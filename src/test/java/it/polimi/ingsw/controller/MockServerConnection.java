@@ -40,4 +40,9 @@ public class MockServerConnection implements ServerConnection {
     public void send(Message message) {
         queue.add(message);
     }
+
+    @Override
+    public void start() {
+
+    }
 }
