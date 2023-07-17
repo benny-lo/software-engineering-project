@@ -82,10 +82,10 @@ public class GUInterface extends ClientView implements GUIViewInterface {
             return;
         }
 
-        Platform.runLater(() -> lobbyController.successfulCreateOrSelectGame());
+        Platform.runLater(() -> {if (lobbyController != null) lobbyController.successfulCreateOrSelectGame(); });
 
         for (String player : message.getConnectedPlayers()) {
-            Platform.runLater(() -> waitingRoomController.playerConnected(player));
+            Platform.runLater(() -> {if (waitingRoomController != null) waitingRoomController.playerConnected(player); });
             nicknames.add(player);
         }
     }
@@ -257,25 +257,33 @@ public class GUInterface extends ClientView implements GUIViewInterface {
 
     @Override
     public void onDisconnectionUpdate(Disconnection update) {
+        String nick = update.getDisconnectedPlayer();
 
-    }
+        System.out.print("received disconnection: ");
 
-    @Override
-    public void onReconnectionUpdate(Reconnection update) {
+        if (nick != null) {
+            System.out.println(nick + " disconnected!!!");
 
-    }
+            Platform.runLater(() -> gameController.disconnectionInGame(nick));
+            return;
+        }
 
-    /**
-     * {@inheritDoc}
-     * It synchronizes on {@code this}.
-     */
-    @Override
-    public synchronized void onDisconnection() {
         if (inLauncher) {
             Platform.runLater(() -> loginController.disconnectionInLauncher());
         }
         if (inGame) {
             Platform.runLater(() -> gameController.disconnectionInGame());
+        }
+    }
+
+    @Override
+    public void onReconnectionUpdate(Reconnection update) {
+        String nick = update.getReconnectedPlayer();
+
+        if (nick.equals(nickname)) {
+            Platform.runLater(() -> loginController.reconnectionInLauncher());
+        } else {
+            Platform.runLater(() -> gameController.reconnectionInGame(nick));
         }
     }
 

@@ -206,8 +206,10 @@ public class Controller implements ControllerInterface {
      * Notifies the players of any changes in the scores.
      */
     private void notifyScoresToEverybody() {
-        Map<String, Integer> scores = new HashMap<>();
+        Map<String, Integer> scores;
         for (String v : views.keySet()) {
+            scores = new HashMap<>();
+            if (inactivePlayers.contains(v)) continue;
             for (String u : views.keySet()) {
                 if (inactivePlayers.contains(u)) continue;
                 int personalScore = game.getPersonalScore(u);
@@ -217,7 +219,6 @@ public class Controller implements ControllerInterface {
                 else scores.put(u, publicScore);
             }
             views.get(v).onScoresUpdate(new ScoresUpdate(scores));
-            scores = new HashMap<>();
         }
     }
 
@@ -282,9 +283,9 @@ public class Controller implements ControllerInterface {
     }
 
     private void notifyDisconnectionToEverybody(String nickname) {
-        Disconnection update = new Disconnection(nickname);
+        Disconnection message = new Disconnection(nickname);
         for(ServerUpdateViewInterface v : views.values()) {
-            v.onDisconnectionUpdate(update);
+            v.onDisconnectionUpdate(message);
         }
     }
 
@@ -392,6 +393,7 @@ public class Controller implements ControllerInterface {
         }
 
         game.setCurrentPlayer(playerList.get(playerIndex));
+        turnPhase = TurnPhase.LIVING_ROOM;
 
         if (firstPlayer.equals(playerList.get(playerIndex)) && game.IsEndingTokenAssigned()) {
             // Game ended -> Find the winner.
@@ -632,14 +634,15 @@ public class Controller implements ControllerInterface {
                 notifyScoresToEverybody();
 
                 if (playerList.get(playerIndex).equals(nickname)) {
-                    game.resetTilesSelected();
-                    notifyLivingRoomToEverybody();
+                    if (turnPhase == TurnPhase.BOOKSHELF) {
+                        game.resetTilesSelected();
+                        notifyLivingRoomToEverybody();
+                    }
                     nextTurn();
                 }
             } else {
                 // Disconnection during pre-game phase.
                 // The game is not killed.
-                views.remove(nickname);
                 gameBuilder.removePlayer(nickname);
                 gameBuilder.removeBookshelfListener(nickname);
                 bookshelfListeners.removeIf(b -> b.getOwner().equals(nickname));

@@ -10,9 +10,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
+
+import static it.polimi.ingsw.utils.view.gui.WindowManager.closeWindow;
 
 /**
  * Class representing Login controller.
@@ -69,6 +73,28 @@ public class LoginController extends AbstractController {
     }
 
     /**
+     * Jump directly to {@code GameController}.
+     */
+    private void reconnection() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Game.fxml"));
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.setTitle("MyShelfie");
+            stage.show();
+            stage.setResizable(false);
+            stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
+
+            stage.setOnCloseRequest(event -> {event.consume();
+                closeWindow(stage);});
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Sends the username inserted by the client to the {@code GUInterface}.
      * @param event The {@code loginButton} has been clicked.
      * @throws IOException Error in I/O with the username field.
@@ -90,5 +116,14 @@ public class LoginController extends AbstractController {
         alert.setContentText("You have been disconnected from the server.\n");
         alert.showAndWait();
         System.exit(0);
+    }
+
+    public void reconnectionInLauncher() {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText("Error!");
+        alert.setContentText("You have been disconnected from the server.\n");
+        alert.show();
+
+        reconnection();
     }
 }

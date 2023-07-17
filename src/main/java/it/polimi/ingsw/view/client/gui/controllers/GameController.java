@@ -701,4 +701,44 @@ public class GameController extends AbstractController {
     public void enterChat() {
         chatStage.show();
     }
+
+    public void reconnectionInGame(String nickname) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Reconnection");
+        alert.setContentText(nickname + " reconnected!!!");
+
+        if (nickname.equals(firstBookshelfLabel.getText())) {
+            firstBookshelfImageView.setOpacity(notSelectedOpacity);
+        }
+
+        if (nickname.equals(secondBookshelfLabel.getText())) {
+            secondBookshelfImageView.setOpacity(notSelectedOpacity);
+        }
+
+        if (nickname.equals(thirdBookshelfLabel.getText())) {
+            thirdBookshelfImageView.setOpacity(notSelectedOpacity);
+        }
+
+        alert.show();
+    }
+
+    public void disconnectionInGame(String nickname) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Disconnection");
+        alert.setContentText(nickname + " disconnected!!!");
+
+        if (nickname.equals(firstBookshelfLabel.getText())) {
+            firstBookshelfImageView.setOpacity(selectedOpacity);
+        }
+
+        if (nickname.equals(secondBookshelfLabel.getText())) {
+            secondBookshelfImageView.setOpacity(selectedOpacity);
+        }
+
+        if (nickname.equals(thirdBookshelfLabel.getText())) {
+            thirdBookshelfImageView.setOpacity(selectedOpacity);
+        }
+
+        alert.show();
+    }
 }
