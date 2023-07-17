@@ -80,7 +80,6 @@ public class LoginController extends AbstractController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Game.fxml"));
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
-            Stage stage = new Stage();
             stage.setScene(scene);
             stage.setTitle("MyShelfie");
             stage.show();
@@ -119,9 +118,9 @@ public class LoginController extends AbstractController {
     }
 
     public void reconnectionInLauncher() {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText("Error!");
-        alert.setContentText("You have been disconnected from the server.\n");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Reconnection");
+        alert.setContentText("The game you were playing is still on. You are being reconnected");
         alert.show();
     }
 }
