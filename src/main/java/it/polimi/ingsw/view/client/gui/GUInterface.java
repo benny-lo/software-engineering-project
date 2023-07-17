@@ -282,6 +282,7 @@ public class GUInterface extends ClientView implements GUIViewInterface {
 
         if (nick.equals(nickname)) {
             Platform.runLater(() -> loginController.reconnectionInLauncher());
+            Platform.runLater(() -> loginController.reconnection());
         } else {
             Platform.runLater(() -> gameController.reconnectionInGame(nick));
         }

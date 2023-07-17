@@ -6,6 +6,7 @@ import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.board.Bag;
 import it.polimi.ingsw.model.board.LivingRoom;
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class LivingRoomTest {
         positions.add(new Position(2, 3));
 
         Item item = livingRoom.tileAt(2, 3);
-        assertEquals(livingRoom.selectTiles(positions), List.of(item));
+        assertEquals(positions.stream().map(p -> new Pair<>(p, item)).toList(), livingRoom.selectTiles(positions));
         assertNull(livingRoom.tileAt(2, 3));
     }
 

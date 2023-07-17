@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.Player;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
 import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -19,6 +20,12 @@ import java.util.*;
  */
 
 public class PlayerTest {
+    private static final Position dummy = new Position(-1, -1);
+
+    private static List<Pair<Position, Item>> convert(List<Item> items) {
+        return items.stream().map(item -> new Pair<>(dummy, item)).toList();
+    }
+
     /**
      * Test {@code Player}'s constructor.
      */
@@ -49,7 +56,7 @@ public class PlayerTest {
             fail();
         }
 
-        player.takeItems(List.of(item, item));
+        player.takeItems(convert(List.of(item, item)));
 
         player.insertTiles(0, List.of(1));
 
@@ -82,17 +89,17 @@ public class PlayerTest {
 
         player.setPersonalGoalCard(card);
 
-        player.takeItems(List.of(item_b, item_c,item_c));
+        player.takeItems(convert(List.of(item_b, item_c,item_c)));
         player.insertTiles(0, List.of(0, 1, 2));
-        player.takeItems(List.of(item_f));
+        player.takeItems(convert(List.of(item_f)));
         player.insertTiles(0, List.of(0));
-        player.takeItems(List.of(item_b, item_c,item_b));
+        player.takeItems(convert(List.of(item_b, item_c,item_b)));
         player.insertTiles(1, List.of(0, 1, 2));
-        player.takeItems(List.of(item_b, item_f,item_c));
+        player.takeItems(convert(List.of(item_b, item_f,item_c)));
         player.insertTiles(4, List.of(0, 1, 2));
-        player.takeItems(List.of(item_p, item_c,item_c));
+        player.takeItems(convert(List.of(item_p, item_c,item_c)));
         player.insertTiles(2, List.of(0, 1, 2));
-        player.takeItems(List.of(item_c));
+        player.takeItems(convert(List.of(item_c)));
         player.insertTiles(2, List.of(0));
 
         assertEquals(6, player.getPersonalScore());
@@ -132,7 +139,7 @@ public class PlayerTest {
             fail();
         }
 
-        player.takeItems(List.of(item_b, item_c, item_f));
+        player.takeItems(convert(List.of(item_b, item_c, item_f)));
         player.insertTiles(0, List.of(0, 1, 2));
 
         assertEquals(item_b, player.getBookshelf().tileAt(0,0));
@@ -180,17 +187,17 @@ public class PlayerTest {
             fail();
         }
 
-        player.takeItems(List.of(item_b, item_c,item_c));
+        player.takeItems(convert(List.of(item_b, item_c,item_c)));
         player.insertTiles(0, List.of(0, 1, 2));
-        player.takeItems(List.of(item_f));
+        player.takeItems(convert(List.of(item_f)));
         player.insertTiles(0, List.of(0));
-        player.takeItems(List.of(item_b, item_b,item_b));
+        player.takeItems(convert(List.of(item_b, item_b,item_b)));
         player.insertTiles(1, List.of(0, 1, 2));
-        player.takeItems(List.of(item_p, item_c,item_c));
+        player.takeItems(convert(List.of(item_p, item_c,item_c)));
         player.insertTiles(2, List.of(0, 1, 2));
-        player.takeItems(List.of(item_c));
+        player.takeItems(convert(List.of(item_c)));
         player.insertTiles(2, List.of(0));
-        player.takeItems(List.of(item_b, item_f,item_c));
+        player.takeItems(convert(List.of(item_b, item_f,item_c)));
         player.insertTiles(4, List.of(0, 1, 2));
 
 
@@ -219,17 +226,17 @@ public class PlayerTest {
         player.addScoringToken(token_0);
         player.addScoringToken(token_1);
 
-        player.takeItems(List.of(item_b, item_c,item_c));
+        player.takeItems(convert(List.of(item_b, item_c,item_c)));
         player.insertTiles(0, List.of(0, 1, 2));
-        player.takeItems(List.of(item_f));
+        player.takeItems(convert(List.of(item_f)));
         player.insertTiles(0, List.of(0));
-        player.takeItems(List.of(item_b, item_b,item_b));
+        player.takeItems(convert(List.of(item_b, item_b,item_b)));
         player.insertTiles(1, List.of(0, 1, 2));
-        player.takeItems(List.of(item_p, item_c,item_c));
+        player.takeItems(convert(List.of(item_p, item_c,item_c)));
         player.insertTiles(2, List.of(0, 1, 2));
-        player.takeItems(List.of(item_c));
+        player.takeItems(convert(List.of(item_c)));
         player.insertTiles(2, List.of(0));
-        player.takeItems(List.of(item_b, item_f,item_c));
+        player.takeItems(convert(List.of(item_b, item_f,item_c)));
         player.insertTiles(4, List.of(0, 1, 2));
 
 
@@ -267,17 +274,17 @@ public class PlayerTest {
         player.addScoringToken(token_0);
         player.addScoringToken(token_1);
 
-        player.takeItems(List.of(item_b, item_c,item_c));
+        player.takeItems(convert(List.of(item_b, item_c,item_c)));
         player.insertTiles(0, List.of(0, 1, 2));
-        player.takeItems(List.of(item_f));
+        player.takeItems(convert(List.of(item_f)));
         player.insertTiles(0, List.of(0));
-        player.takeItems(List.of(item_b, item_b,item_b));
+        player.takeItems(convert(List.of(item_b, item_b,item_b)));
         player.insertTiles(1, List.of(0, 1, 2));
-        player.takeItems(List.of(item_p, item_c,item_c));
+        player.takeItems(convert(List.of(item_p, item_c,item_c)));
         player.insertTiles(2, List.of(0, 1, 2));
-        player.takeItems(List.of(item_c));
+        player.takeItems(convert(List.of(item_c)));
         player.insertTiles(2, List.of(0));
-        player.takeItems(List.of(item_b, item_f,item_c));
+        player.takeItems(convert(List.of(item_b, item_f,item_c)));
         player.insertTiles(4, List.of(0, 1, 2));
 
         assertEquals(6+13+5, player.getTotalScore());

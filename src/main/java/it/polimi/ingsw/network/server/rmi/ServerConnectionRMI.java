@@ -154,6 +154,10 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                         client.receive((AcceptedInsertion) message);
                     } else if (message instanceof ChatAccepted) {
                         client.receive((ChatAccepted) message);
+                    } else if (message instanceof Reconnection m) {
+                        client.receive(m);
+                    } else if (message instanceof Disconnection m) {
+                        client.receive(m);
                     }
                 } catch (RemoteException e) {
                     synchronized (disconnectedLock) {

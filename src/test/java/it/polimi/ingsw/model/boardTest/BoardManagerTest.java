@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.board.BoardManager;
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -221,7 +222,7 @@ public class BoardManagerTest {
         positions.add(new Position(2, 3));
 
         Item item = boardManager.getLivingRoom().tileAt(2, 3);
-        assertEquals(boardManager.selectItemTiles(positions), List.of(item));
+        assertEquals(boardManager.selectItemTiles(positions).stream().map(Pair::getValue).toList(), List.of(item));
         assertNull(boardManager.getLivingRoom().tileAt(2, 3));
     }
 

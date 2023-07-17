@@ -75,7 +75,7 @@ public class LoginController extends AbstractController {
     /**
      * Jump directly to {@code GameController}.
      */
-    private void reconnection() {
+    public void reconnection() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/Game.fxml"));
             Parent root = fxmlLoader.load();
@@ -123,7 +123,5 @@ public class LoginController extends AbstractController {
         alert.setHeaderText("Error!");
         alert.setContentText("You have been disconnected from the server.\n");
         alert.show();
-
-        reconnection();
     }
 }
