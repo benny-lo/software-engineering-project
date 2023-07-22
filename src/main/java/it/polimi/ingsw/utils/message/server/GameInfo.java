@@ -47,7 +47,7 @@ public class GameInfo implements Serializable {
     @Override
     public String toString() {
         return "Id= " + id + ":\n" +
-                "\tNumber of players: " + numberPlayers + "\n" +
-                "\tNumber of common goal cards: " + numberCommonGoals + "\n";
+                "   Number of players: " + numberPlayers + "\n" +
+                "   Number of common goal cards: " + numberCommonGoals + "\n";
     }
 }
