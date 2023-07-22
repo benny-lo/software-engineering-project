@@ -86,7 +86,7 @@ public abstract class ClientView implements UpdateViewInterface, InputViewInterf
 
         clientConnectionRMI.setServerConnectionRMIInterface(serverConnection);
         this.clientConnection = clientConnectionRMI;
-        clientConnectionRMI.scheduleTimers();
+        this.clientConnection.start();
     }
 
     /**
@@ -111,7 +111,7 @@ public abstract class ClientView implements UpdateViewInterface, InputViewInterf
             System.exit(0);
         }
         this.clientConnection = sender;
-        (new Thread(sender)).start();
+        this.clientConnection.start();
     }
 
     /**

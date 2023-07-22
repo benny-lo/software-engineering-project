@@ -47,9 +47,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
     }
 
     /**
-     * Schedules the timers to send and check for {@code Beep}s (heartbeats) periodically.
+     * {@inheritDoc}
      */
-    public void scheduleTimers() {
+    public void start() {
         (new Thread(() -> {
             Message message;
             while (true) {

@@ -92,6 +92,11 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
         sendPrivate(message);
     }
 
+    @Override
+    public void start() {
+        (new Thread(this)).start();
+    }
+
     /**
      * Analyzes the runtime type of {@code input} and acts appropriately:
      * either the appropriate method of the listener is called, or the {@code Beep}
