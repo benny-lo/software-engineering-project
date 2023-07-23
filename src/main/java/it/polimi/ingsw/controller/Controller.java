@@ -51,6 +51,11 @@ public class Controller implements ControllerInterface {
     private final int numberCommonGoalCards;
 
     /**
+     * Nickname of the first player. If game has not started yet, it is null.
+     */
+    private String firstPlayer;
+
+    /**
      * List containing the players in the order of the turns.
      */
     private final List<String> playerList;
@@ -130,6 +135,7 @@ public class Controller implements ControllerInterface {
         this.game = null;
         this.numberCommonGoalCards = numberCommonGoalCards;
         this.gameBuilder = new GameBuilder(numberCommonGoalCards);
+        this.firstPlayer = null;
         this.playerList = new ArrayList<>();
         this.playerIndex = -1;
         this.views = new HashMap<>();
@@ -168,8 +174,6 @@ public class Controller implements ControllerInterface {
      * Notifies the players of any changes in the common goal cards.
      */
     private void notifyCommonGoalCardsToEverybody() {
-        if (!commonGoalCardsListener.hasChanged()) return;
-
         Map<Integer, Integer> map = commonGoalCardsListener.getCardsUpdates();
         for(ServerUpdateViewInterface view : views.values()) {
             view.onCommonGoalCardsUpdate(new CommonGoalCardsUpdate(map));
@@ -181,7 +185,6 @@ public class Controller implements ControllerInterface {
      */
     private void notifyEndingTokenToEverybody() {
         if (!endingTokenListener.hasChanged()) return;
-
         EndingTokenUpdate update = new EndingTokenUpdate(endingTokenListener.getEndingToken());
         for(ServerUpdateViewInterface view : views.values()) {
             view.onEndingTokenUpdate(update);
@@ -193,7 +196,6 @@ public class Controller implements ControllerInterface {
      */
     private void notifyLivingRoomToEverybody() {
         if (!livingRoomListener.hasChanged()) return;
-
         LivingRoomUpdate update = new LivingRoomUpdate(livingRoomListener.getLivingRoomUpdates());
         for(ServerUpdateViewInterface view : views.values()) {
             view.onLivingRoomUpdate(update);
@@ -243,6 +245,7 @@ public class Controller implements ControllerInterface {
      * @param winner the winner; {@code null} if the game terminated due to an error.
      */
     private void notifyEndGameToEverybody(String winner) {
+        Logger.endGame(id);
         for (ServerUpdateViewInterface v : views.values()) {
             v.onEndGameUpdate(new EndGameUpdate(winner));
         }
@@ -331,6 +334,7 @@ public class Controller implements ControllerInterface {
      */
     private void setup() {
         Collections.shuffle(playerList);
+        firstPlayer = playerList.get(0);
         playerIndex = 0;
 
         game = gameBuilder.startGame();
@@ -342,7 +346,7 @@ public class Controller implements ControllerInterface {
 
         // Setting the first player in game and
         // setting the current turn phase.
-        game.setCurrentPlayer(playerList.get(playerIndex));
+        game.setCurrentPlayer(firstPlayer);
         turnPhase = TurnPhase.LIVING_ROOM;
 
         // Sending initial updates about the reps.
@@ -353,16 +357,6 @@ public class Controller implements ControllerInterface {
         notifyPersonalGoalCardsToEverybody();
         notifyScoresToEverybody();
         notifyStartTurnToEverybody();
-    }
-
-    private boolean isFirstPlayer(int index) {
-        for(int i = 0; i < index; i++) {
-            if (!inactivePlayers.contains(playerList.get(i))) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -401,20 +395,18 @@ public class Controller implements ControllerInterface {
         game.setCurrentPlayer(playerList.get(playerIndex));
         turnPhase = TurnPhase.LIVING_ROOM;
 
-        if (game.IsEndingTokenAssigned() && isFirstPlayer(playerIndex)) {
+        if (firstPlayer.equals(playerList.get(playerIndex)) && game.IsEndingTokenAssigned()) {
             // Game ended -> Find the winner.
             ended = true;
 
             int bestScore = -1;
             String winner = null;
-            for (String nickname : playerList) {
+            for(String nickname : playerList) {
                 if (inactivePlayers.contains(nickname)) continue;
-
-                int currentScore = game.getPublicScore(nickname) + game.getPersonalScore(nickname);
-
-                if (currentScore > bestScore) {
+                if (game.getPublicScore(nickname) + game.getPersonalScore(nickname)
+                        > bestScore) {
                     winner = nickname;
-                    bestScore = currentScore;
+                    bestScore = game.getPublicScore(nickname) + game.getPersonalScore(nickname);
                 }
             }
 
