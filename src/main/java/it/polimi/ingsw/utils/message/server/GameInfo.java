@@ -48,6 +48,6 @@ public class GameInfo implements Serializable {
     public String toString() {
         return "Id= " + id + ":\n" +
                 "\tNumber of players: " + numberPlayers + "\n" +
-                "\tNumber of common goal cards: " + numberCommonGoals + "\n";
+                "\tNumber of common goal cards: " + numberCommonGoals;
     }
 }
