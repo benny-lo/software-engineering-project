@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,7 +50,6 @@ public class GameController extends AbstractController {
     private List<Item> chosenItems = new ArrayList<>(numberSelectedItems);
     private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
     private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
-    private int selectedColumn;
     private final static double selectedOpacity = 0.3;
     private final static double notSelectedOpacity = 1.0;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
@@ -478,8 +478,7 @@ public class GameController extends AbstractController {
             warningAlert.showAndWait();
             return;
         }
-        selectedColumn = column;
-        guInterface.insertInBookshelf(new BookshelfInsertion(selectedColumn, new ArrayList<>(selectedOrder)));
+        guInterface.insertInBookshelf(new BookshelfInsertion(column, new ArrayList<>(selectedOrder)));
     }
 
     /**
@@ -488,7 +487,6 @@ public class GameController extends AbstractController {
     public void insertItems() {
         for (ImageView item : orderItems) {
             ImageView imageView = new ImageView(item.getImage());
-            bookshelfGridPane.add(imageView, selectedColumn, findFreeRowBookshelf(bookshelfGridPane, selectedColumn));
             imageView.setOpacity(notSelectedOpacity);
             imageView.setFitWidth(cellSizeBookshelf);
             imageView.setFitHeight(cellSizeBookshelf);
@@ -496,15 +494,6 @@ public class GameController extends AbstractController {
         }
         endTurnClear();
         status = GameControllerStatus.WAITING;
-    }
-
-    private int findFreeRowBookshelf(GridPane bookshelfGridPane, int column) {
-        for (int i = bookshelfGridPane.getColumnCount(); i >= 0; i--) {
-            int finalI = i;
-            if (bookshelfGridPane.getChildren().stream().noneMatch(n -> (GridPane.getColumnIndex(n) == column && GridPane.getRowIndex(n) == finalI)))
-                return finalI;
-        }
-        return -1;
     }
 
     private void clearChosenItemLabels() {
@@ -592,7 +581,15 @@ public class GameController extends AbstractController {
     public void updateBookshelf(String owner, Map<Position, Item> bookshelf) {
         if (owner == null) return;
         if (bookshelf == null) return;
-        if (!otherPlayersBookshelf.containsKey(owner)) return;
+        if (owner.equals(nickname)) {
+            for (Position position : bookshelf.keySet()) {
+                ImageView imageView = new ImageView(getImage(bookshelf.get(position)));
+                imageView.setFitHeight(cellSizeBookshelf);
+                imageView.setFitWidth(cellSizeBookshelf);
+                bookshelfGridPane.add(imageView, position.getColumn(), getRealRow(position.getRow()));
+            }
+            return;
+        }
         for (Position position : bookshelf.keySet()) {
             ImageView imageView = new ImageView(getImage(bookshelf.get(position)));
             imageView.setFitHeight(cellSizeOthersBookshelf);
@@ -705,18 +702,24 @@ public class GameController extends AbstractController {
     public void reconnectionInGame(String nickname) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Reconnection");
-        alert.setContentText(nickname + " reconnected!!!");
+        alert.setContentText(nickname + " has reconnected!");
 
         if (nickname.equals(firstBookshelfLabel.getText())) {
             firstBookshelfImageView.setOpacity(notSelectedOpacity);
+            firstBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(notSelectedOpacity));
+            firstBookshelfLabel.setTextFill(Color.BLACK);
         }
 
         if (nickname.equals(secondBookshelfLabel.getText())) {
             secondBookshelfImageView.setOpacity(notSelectedOpacity);
+            secondBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(notSelectedOpacity));
+            secondBookshelfLabel.setTextFill(Color.BLACK);
         }
 
         if (nickname.equals(thirdBookshelfLabel.getText())) {
             thirdBookshelfImageView.setOpacity(notSelectedOpacity);
+            thirdBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(notSelectedOpacity));
+            thirdBookshelfLabel.setTextFill(Color.BLACK);
         }
 
         alert.show();
@@ -725,18 +728,24 @@ public class GameController extends AbstractController {
     public void disconnectionInGame(String nickname) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Disconnection");
-        alert.setContentText(nickname + " disconnected!!!");
+        alert.setContentText(nickname + " has disconnected!");
 
         if (nickname.equals(firstBookshelfLabel.getText())) {
             firstBookshelfImageView.setOpacity(selectedOpacity);
+            firstBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(selectedOpacity));
+            firstBookshelfLabel.setTextFill(Color.DARKRED);
         }
 
         if (nickname.equals(secondBookshelfLabel.getText())) {
             secondBookshelfImageView.setOpacity(selectedOpacity);
+            secondBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(selectedOpacity));
+            secondBookshelfLabel.setTextFill(Color.DARKRED);
         }
 
         if (nickname.equals(thirdBookshelfLabel.getText())) {
             thirdBookshelfImageView.setOpacity(selectedOpacity);
+            thirdBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(selectedOpacity));
+            thirdBookshelfLabel.setTextFill(Color.DARKRED);
         }
 
         alert.show();
