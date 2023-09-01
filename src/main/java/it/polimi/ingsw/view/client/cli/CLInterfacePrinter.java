@@ -28,6 +28,7 @@ class CLInterfacePrinter {
      */
     static void printCurrentPlayer(String nickname, String currentPlayer){
         if (currentPlayer == null) return;
+        System.out.println("Hi " + nickname + "!");
         if (currentPlayer.equals(nickname)) {
             System.out.println(ANSI_YELLOW + "You are the current player" + ANSI_RESET + "\n");
         } else {
