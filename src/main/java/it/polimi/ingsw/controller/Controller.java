@@ -370,7 +370,16 @@ public class Controller implements ControllerInterface {
      * else notify the beginning of the turn of the new current player.
      */
     private void nextTurn() {
-        if (inactivePlayers.size() >= numberPlayers - 1) {
+        // Move the index forward.
+        int old = playerIndex;
+        playerIndex++;
+        playerIndex %= playerList.size();
+        while(inactivePlayers.contains(playerList.get(playerIndex))) {
+            playerIndex++;
+            playerIndex %= playerList.size();
+        }
+
+        if (playerIndex == old) {
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -388,14 +397,6 @@ public class Controller implements ControllerInterface {
             }, WIN_FORFEIT);
             onHold = true;
             return;
-        }
-
-        // Move the index forward.
-        playerIndex++;
-        playerIndex %= playerList.size();
-        while(inactivePlayers.contains(playerList.get(playerIndex))) {
-            playerIndex++;
-            playerIndex %= playerList.size();
         }
 
         game.setCurrentPlayer(playerList.get(playerIndex));
