@@ -120,7 +120,7 @@ public class LoginController extends AbstractController {
     public void reconnectionInLauncher() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Reconnection");
-        alert.setContentText("The game you were playing is still on. You are being reconnected");
+        alert.setContentText("The game that you were playing is still on.\nYou are being reconnected!");
         alert.show();
     }
 }
