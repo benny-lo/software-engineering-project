@@ -5,10 +5,7 @@ import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import it.polimi.ingsw.utils.message.server.GameInfo;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Class representing the CLIPrinter.
@@ -32,9 +29,9 @@ class CLInterfacePrinter {
     static void printCurrentPlayer(String nickname, String currentPlayer){
         if (currentPlayer == null) return;
         if (currentPlayer.equals(nickname)) {
-            System.out.println(ANSI_RED + "You are the current player" + ANSI_RESET + "\n");
+            System.out.println(ANSI_YELLOW + "You are the current player" + ANSI_RESET + "\n");
         } else {
-            System.out.println(ANSI_RED + "The current player is " + currentPlayer + ANSI_RESET + "\n");
+            System.out.println(ANSI_YELLOW + "The current player is " + currentPlayer + ANSI_RESET + "\n");
         }
     }
 
@@ -284,6 +281,7 @@ class CLInterfacePrinter {
         for (Map.Entry<String, Integer> e : scores.entrySet()) {
             System.out.println(e.getKey() + ": " + e.getValue());
         }
+        System.out.println();
     }
 
     /**
@@ -400,13 +398,29 @@ class CLInterfacePrinter {
         System.out.println("Digit '/exit' to close the launcher.");
     }
 
-    static void printReconnection(String myNickname, String reconnectedNickname) {
-        String re = (!reconnectedNickname.equals(myNickname)) ? reconnectedNickname : "you";
-
-        System.out.println(ANSI_RED + re + " reconnected!!!" + ANSI_RESET);
+    /**
+     * Prints the nickname of the player that has reconnected.
+     * @param myNickname The client's nickname.
+     * @param reconnectedNickname The nickname of the player that has reconnected.
+     */
+    static void printReconnection(String myNickname, HashSet<String> reconnectedNickname) {
+        if (reconnectedNickname.contains(myNickname)) {
+            System.out.println(ANSI_RED + "You have reconnected!" + ANSI_RESET);
+            reconnectedNickname.remove(myNickname);
+        }
+        if (reconnectedNickname.size() != 0)
+            for (String player : reconnectedNickname) {
+                System.out.println(ANSI_RED + player + " has reconnected!" + ANSI_RESET);
+            }
     }
 
-    static void printDisconnected(String disconnectedPlayer) {
-        System.out.println(ANSI_RED + disconnectedPlayer + " disconnected!!!" + ANSI_RESET);
+    /**
+     * Prints the nicknames of the players that have disconnected.
+     * @param disconnectedPlayers The nicknames of the players that have disconnected.
+     */
+    static void printDisconnectedPlayers(HashSet<String> disconnectedPlayers) {
+        for (String player : disconnectedPlayers){
+            System.out.println(ANSI_RED + player + " has disconnected!" + ANSI_RESET);
+        }
     }
 }

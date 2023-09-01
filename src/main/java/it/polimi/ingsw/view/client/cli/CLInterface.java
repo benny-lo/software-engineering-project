@@ -27,7 +27,8 @@ import static it.polimi.ingsw.view.client.cli.CLInterfacePrinter.*;
 public class CLInterface extends ClientView implements InputReceiver {
     private CLIStatus status;
     private List<String> connectedPlayers;
-    private final Set<String> disconnectedPlayers;
+    private final HashSet<String> disconnectedPlayers;
+    private final HashSet<String> reconnectedPlayers;
     private final Map<String, Item[][]> bookshelves;
     private String endingToken;
     private Item[][] personalGoalCard;
@@ -47,6 +48,7 @@ public class CLInterface extends ClientView implements InputReceiver {
      * and creates an {@code Array} for the chat and the games.
      */
     public CLInterface() {
+        this.reconnectedPlayers = new HashSet<>();
         this.disconnectedPlayers = new HashSet<>();
         this.bookshelves = new HashMap<>();
         this.commonGoalCards = new HashMap<>();
@@ -207,7 +209,10 @@ public class CLInterface extends ClientView implements InputReceiver {
             connectedPlayers.remove(update.getNickname());
         }
 
-        if (update.getMissing() != 0) printNumberMissingPlayers(update.getMissing(), connectedPlayers);
+        if (update.getMissing() != 0) {
+            clearScreen();
+            printNumberMissingPlayers(update.getMissing(), connectedPlayers);
+        }
         else printStartGame();
 
         System.out.flush();
@@ -370,9 +375,6 @@ public class CLInterface extends ClientView implements InputReceiver {
             disconnectedPlayers.add(update.getDisconnectedPlayer());
 
             clearScreen();
-            printDisconnected(update.getDisconnectedPlayer());
-
-            clearScreen();
             printGameRep();
             return;
         }
@@ -387,7 +389,8 @@ public class CLInterface extends ClientView implements InputReceiver {
 
     @Override
     public synchronized void onReconnectionUpdate(Reconnection update) {
-        printReconnection(nickname, update.getReconnectedPlayer());
+        disconnectedPlayers.remove(update.getReconnectedPlayer());
+        reconnectedPlayers.add(update.getReconnectedPlayer());
 
         clearScreen();
     }
@@ -602,6 +605,12 @@ public class CLInterface extends ClientView implements InputReceiver {
         printItemsChosen(chosenItems, currentPlayer);
         printEndingToken(endingToken);
         printScores(scores);
+        if (disconnectedPlayers.size() != 0)
+            printDisconnectedPlayers(disconnectedPlayers);
+        if (reconnectedPlayers.size() != 0) {
+            printReconnection(nickname, reconnectedPlayers);
+            reconnectedPlayers.clear();
+        }
 
         System.out.flush();
     }

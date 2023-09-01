@@ -769,7 +769,7 @@ public class GameController extends AbstractController {
         if (numberActualPlayers == 1) {
             Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
             alert1.setHeaderText("You are the only one left in the game.");
-            alert1.setContentText("The game will end in 30 seconds\nif nobody gets back into the game.");
+            alert1.setContentText("If you end your turn and nobody gets back into the game,\nthe game will end in 30 seconds");
             alert1.showAndWait();
         }
     }
