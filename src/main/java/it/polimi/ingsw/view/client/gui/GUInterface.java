@@ -259,12 +259,9 @@ public class GUInterface extends ClientView implements GUIViewInterface {
     public void onDisconnectionUpdate(Disconnection update) {
         String nick = update.getDisconnectedPlayer();
 
-        System.out.print("received disconnection: ");
-
         if (nick != null) {
-            System.out.println(nick + " disconnected!!!");
-
             Platform.runLater(() -> gameController.disconnectionInGame(nick));
+            Platform.runLater(() -> chatController.disconnectedPlayer(nick));
             return;
         }
 
@@ -291,6 +288,7 @@ public class GUInterface extends ClientView implements GUIViewInterface {
             Platform.runLater(() -> gameController.initializeBookshelves(nicknames));
         } else {
             Platform.runLater(() -> gameController.reconnectionInGame(nick));
+            Platform.runLater(() -> chatController.reconnectedPlayer(nick));
         }
     }
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.utils.message.server.ChatUpdate;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class ChatController extends AbstractController {
     private TextField textToSend;
 
     private final List<ChatUpdate> messages = new ArrayList<>();
+    private final List<String> disconnectedPlayers = new ArrayList<>();
 
     /**
      * Sets {@code this} in the {@code GUInterface}.
@@ -103,5 +105,49 @@ public class ChatController extends AbstractController {
         alert.setHeaderText("Warning!");
         alert.setContentText("Your message has been rejected!");
         alert.showAndWait();
+    }
+
+    public void disconnectedPlayer(String nickname) {
+        disconnectedPlayers.add(nickname);
+        updatePlayerMenuColors();
+    }
+
+    public void reconnectedPlayer(String nickname) {
+        disconnectedPlayers.remove(nickname);
+        updatePlayerMenuColors();
+    }
+
+    private void updatePlayerMenuColors() {
+        playerMenu.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    if (!disconnectedPlayers.contains(item))
+                        setTextFill(Color.BLACK);
+                    else
+                        setTextFill(Color.DARKRED);
+                }
+            }
+        });
+
+        playerMenu.setButtonCell(new ListCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    if (!disconnectedPlayers.contains(item))
+                        setTextFill(Color.BLACK);
+                    else
+                        setTextFill(Color.DARKRED);
+                }
+            }
+        });
     }
 }

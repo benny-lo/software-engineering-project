@@ -37,6 +37,7 @@ public class GameController extends AbstractController {
     final private static String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
     private final List<Position> selectedItems = new ArrayList<>(numberSelectedItems);
     private String nickname;
+    private int numberActualPlayers;
     private String currentPlayer;
     private final static int numberSelectedItems = 3;
     private final Map<String, GridPane> otherPlayersBookshelf = new HashMap<>();
@@ -551,6 +552,7 @@ public class GameController extends AbstractController {
      */
     public void initializeBookshelves(List<String> nicknames) {
         int numberPlayers = nicknames.size();
+        numberActualPlayers = nicknames.size();
         nicknames.remove(nickname);
 
         firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
@@ -700,6 +702,7 @@ public class GameController extends AbstractController {
     }
 
     public void reconnectionInGame(String nickname) {
+        numberActualPlayers++;
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Reconnection");
         alert.setContentText(nickname + " has reconnected!");
@@ -722,10 +725,11 @@ public class GameController extends AbstractController {
             thirdBookshelfLabel.setTextFill(Color.BLACK);
         }
 
-        alert.show();
+        alert.showAndWait();
     }
 
     public void disconnectionInGame(String nickname) {
+        numberActualPlayers--;
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Disconnection");
         alert.setContentText(nickname + " has disconnected!");
@@ -748,6 +752,13 @@ public class GameController extends AbstractController {
             thirdBookshelfLabel.setTextFill(Color.DARKRED);
         }
 
-        alert.show();
+        alert.showAndWait();
+
+        if (numberActualPlayers == 1) {
+            Alert alert1 = new Alert(Alert.AlertType.INFORMATION);
+            alert1.setHeaderText("You are the only one left in the game.");
+            alert1.setContentText("The game will end in 30 seconds\nif nobody gets back into the game.");
+            alert1.showAndWait();
+        }
     }
 }
