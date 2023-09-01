@@ -621,9 +621,14 @@ public class Controller implements ControllerInterface {
     public void disconnection(String nickname) {
         synchronized (controllerLock) {
             // Game already finished.
-            if (ended || !views.containsKey(nickname)) return;
+            if (!views.containsKey(nickname)) return;
 
             views.remove(nickname);
+
+            if (ended) {
+                inactivePlayers.add(nickname);
+                return;
+            }
 
             if (isStarted()) {
                 // Disconnection during game-phase.
@@ -717,8 +722,13 @@ public class Controller implements ControllerInterface {
      * @return The number of currently connected players.
      */
     @Override
-    public synchronized int getNumberActualPlayers(){
-        return playerList.size();
+    public synchronized int getNumberActualPlayers() {
+        return playerList.size() - inactivePlayers.size();
+    }
+
+    @Override
+    public synchronized int getID() {
+        return id;
     }
 
     // EXCLUSIVELY FOR TESTING

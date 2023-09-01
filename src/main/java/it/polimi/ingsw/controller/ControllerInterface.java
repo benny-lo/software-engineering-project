@@ -71,4 +71,6 @@ public interface ControllerInterface {
      * @return The number of currently connected players.
      */
     int getNumberActualPlayers();
+
+    int getID();
 }

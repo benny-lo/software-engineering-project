@@ -94,24 +94,22 @@ public class Lobby {
      * @param controller The controller to remove.
      */
     public synchronized void removeController(ControllerInterface controller) {
-        int id = controllers.entrySet().stream().filter(entry -> controller.equals(entry.getValue())).findFirst().map(Map.Entry::getKey).orElse(-1);
+        int id = controller.getID();
 
-        if (id != -1) {
-            controllers.remove(id);
+        controllers.remove(id);
 
-            List<String> nicknames = boundToGame.entrySet().stream().
-                                        filter(e -> e.getValue() == id).
-                                        map(Map.Entry::getKey).toList();
+        List<String> nicknames = boundToGame.entrySet().stream().
+                filter(e -> e.getValue() == id).
+                map(Map.Entry::getKey).toList();
 
-            for(String nickname : nicknames) {
-                boundToGame.remove(nickname);
-            }
+        for(String nickname : nicknames) {
+            boundToGame.remove(nickname);
+        }
 
-            if (!controller.isStarted()) {
-                for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
-                    if (boundToGame.containsKey(e.getKey())) continue;
-                    e.getValue().onGamesList(new GamesList(List.of(new GameInfo(id, -1, -1))));
-                }
+        if (!controller.isStarted()) {
+            for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
+                if (boundToGame.containsKey(e.getKey())) continue;
+                e.getValue().onGamesList(new GamesList(List.of(new GameInfo(id, -1, -1))));
             }
         }
     }
@@ -143,8 +141,9 @@ public class Lobby {
         views.put(nickname, view);
         view.setNickname(nickname);
 
-        Integer id = boundToGame.get(nickname);
-        if (id != null && controllers.containsKey(id)) {
+
+        if (boundToGame.containsKey(nickname)) {
+            int id = boundToGame.get(nickname);
             boolean result = controllers.get(id).reconnection(view, nickname);
             if (!result) view.onGamesList(new GamesList(null));
             return;

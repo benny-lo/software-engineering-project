@@ -164,7 +164,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
 
         if (controller != null) {
             controller.disconnection(nickname);
-            if (controller.getNumberActualPlayers() < 1) Lobby.getInstance().removeController(controller);
+            if (controller.getNumberActualPlayers() <= 0) Lobby.getInstance().removeController(controller);
         }
     }
 
