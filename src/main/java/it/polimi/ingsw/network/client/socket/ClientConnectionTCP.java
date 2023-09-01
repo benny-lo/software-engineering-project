@@ -208,7 +208,7 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
 
                 serverTimer.cancel();
                 clientTimer.cancel();
-                listener.onDisconnectionUpdate(null);
+                listener.onDisconnectionUpdate(new Disconnection(null));
             }
         }, RTT, 2*RTT);
         clientTimer.scheduleAtFixedRate(new TimerTask() {

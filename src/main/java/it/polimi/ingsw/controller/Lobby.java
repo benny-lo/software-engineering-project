@@ -76,6 +76,8 @@ public class Lobby {
             if (!controllers.get(id).isStarted())   //If a game has already started, it's not displayed.
                 ret.add(new GameInfo(id, controllers.get(id).getNumberPlayers(), controllers.get(id).getNumberCommonGoalCards()));
         }
+
+        System.out.println(ret);
         return ret;
     }
 
@@ -95,23 +97,7 @@ public class Lobby {
      */
     public synchronized void removeController(ControllerInterface controller) {
         int id = controller.getID();
-
         controllers.remove(id);
-
-        List<String> nicknames = boundToGame.entrySet().stream().
-                filter(e -> e.getValue() == id).
-                map(Map.Entry::getKey).toList();
-
-        for(String nickname : nicknames) {
-            boundToGame.remove(nickname);
-        }
-
-        if (!controller.isStarted()) {
-            for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
-                if (boundToGame.containsKey(e.getKey())) continue;
-                e.getValue().onGamesList(new GamesList(List.of(new GameInfo(id, -1, -1))));
-            }
-        }
     }
 
     /**
@@ -136,17 +122,23 @@ public class Lobby {
             return;
         }
 
-        if (boundToGame.containsKey(nickname)) {
-            int id = boundToGame.get(nickname);
-            boolean result = controllers.get(id).reconnection(view, nickname);
-            if (!result) view.onGamesList(new GamesList(null));
-            return;
-        }
-
         Logger.login(nickname);
 
         views.put(nickname, view);
         view.setNickname(nickname);
+
+        synchronized (boundToGame) {
+            if (boundToGame.containsKey(nickname)) {
+                int id = boundToGame.get(nickname);
+                boolean result = controllers.get(id).reconnection(view, nickname);
+                if (!result) {
+                    views.remove(nickname);
+                    view.setNickname(null);
+                    view.onGamesList(new GamesList(null));
+                }
+                return;
+            }
+        }
 
         view.onGamesList(new GamesList(getGameInfo()));
     }
@@ -163,7 +155,11 @@ public class Lobby {
      */
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, ServerUpdateViewInterface view, String nickname) {
         // not yet registered or already playing.
-        if (!views.containsKey(nickname) || boundToGame.containsKey(nickname)) {
+        boolean bound;
+        synchronized (boundToGame) {
+            bound = boundToGame.containsKey(nickname);
+        }
+        if (!views.containsKey(nickname) || bound) {
             view.onGameData(new GameData(-1,
                             null,
                             -1,
@@ -193,15 +189,14 @@ public class Lobby {
 
         // The join worked.
         addController(controller);
-        boundToGame.put(nickname, availableId - 1);
 
         Logger.createGame(numberPlayers, numberCommonGoals, availableId - 1, nickname);
 
         // send to client without game
         GamesList gamesList = new GamesList(List.of(new GameInfo(availableId-1, numberPlayers, numberCommonGoals)));
-        for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
-            if (boundToGame.containsKey(e.getKey())) continue;
-            e.getValue().onGamesList(gamesList);
+        for(ServerUpdateViewInterface u : views.values()) {
+            if (u.inGame()) continue;
+            u.onGamesList(gamesList);
         }
     }
 
@@ -212,7 +207,11 @@ public class Lobby {
      */
     public synchronized void selectGame(int id, ServerUpdateViewInterface view, String nickname) {
         // not yet registered or already in a match.
-        if (!views.containsKey(nickname) || boundToGame.containsKey(nickname)) {
+        boolean bound;
+        synchronized (boundToGame) {
+            bound = boundToGame.containsKey(nickname);
+        }
+        if (!views.containsKey(nickname) || bound) {
             view.onGameData(new GameData(-1,
                             null,
                             -1,
@@ -236,12 +235,23 @@ public class Lobby {
         }
 
         if (!controllers.get(id).join(view, nickname)) return;
-
         // join successful.
-        boundToGame.put(nickname, id);
+
         Logger.selectGame(id, nickname);
 
         // the controller is sending the player the game dimensions.
+    }
+
+    public void bind(List<String> nicknames, int id) {
+        synchronized (boundToGame) {
+            for(String nickname : nicknames) boundToGame.put(nickname, id);
+        }
+    }
+
+    public void unbind(List<String> nicknames) {
+        synchronized (boundToGame) {
+            for(String nickname : nicknames) boundToGame.remove(nickname);
+        }
     }
 
     //METHODS EXCLUSIVELY FOR TESTING

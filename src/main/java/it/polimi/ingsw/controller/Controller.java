@@ -340,7 +340,7 @@ public class Controller implements ControllerInterface {
         game = gameBuilder.startGame();
         if (game == null) {
             notifyEndGameToEverybody(null);
-            ended = true;
+            gameEnded();
             return;
         }
 
@@ -390,7 +390,7 @@ public class Controller implements ControllerInterface {
                 public void run() {
                     synchronized (controllerLock) {
                         if (inactivePlayers.size() < numberPlayers - 1) return;
-                        ended = true;
+                        gameEnded();
 
                         String winner = null;
                         for (String s : playerList) {
@@ -409,7 +409,7 @@ public class Controller implements ControllerInterface {
 
         if (game.IsEndingTokenAssigned() && isFirstPlayer(playerIndex)) {
             // Game ended -> Find the winner.
-            ended = true;
+            gameEnded();
 
             int bestScore = -1;
             String winner = null;
@@ -430,6 +430,11 @@ public class Controller implements ControllerInterface {
             // Game continues.
             notifyStartTurnToEverybody();
         }
+    }
+
+    private void gameEnded() {
+        ended = true;
+        Lobby.getInstance().unbind(new ArrayList<>(playerList));
     }
 
     /**
@@ -495,6 +500,8 @@ public class Controller implements ControllerInterface {
 
             if (playerList.size() == this.numberPlayers) {
                 // All players joined.
+                Lobby.getInstance().bind(new ArrayList<>(playerList), id);
+
                 Logger.startGame(id);
                 setup();
             }
@@ -626,15 +633,10 @@ public class Controller implements ControllerInterface {
     @Override
     public void disconnection(String nickname) {
         synchronized (controllerLock) {
-            // Game already finished.
-            if (!views.containsKey(nickname)) return;
+            // player already logged out of the game or game ended?
+            if (!views.containsKey(nickname) || ended) return;
 
             views.remove(nickname);
-
-            if (ended) {
-                inactivePlayers.add(nickname);
-                return;
-            }
 
             if (isStarted()) {
                 // Disconnection during game-phase.
@@ -644,7 +646,7 @@ public class Controller implements ControllerInterface {
                 notifyDisconnectionToEverybody(nickname);
 
                 if (inactivePlayers.size() >= numberPlayers) {
-                    ended = true;
+                    gameEnded();
                     notifyEndGameToEverybody(null);
                     Logger.endGame(id);
                     return;
@@ -724,19 +726,14 @@ public class Controller implements ControllerInterface {
         return numberCommonGoalCards;
     }
 
-    /**
-     * {@inheritDoc}
-     * It synchronizes on {@code this}.
-     * @return The number of currently connected players.
-     */
-    @Override
-    public synchronized int getNumberActualPlayers() {
-        return playerList.size() - inactivePlayers.size();
-    }
-
     @Override
     public synchronized int getID() {
         return id;
+    }
+
+    @Override
+    public synchronized boolean isEnded() {
+        return ended;
     }
 
     // EXCLUSIVELY FOR TESTING

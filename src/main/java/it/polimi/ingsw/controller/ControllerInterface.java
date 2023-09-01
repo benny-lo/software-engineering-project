@@ -66,11 +66,7 @@ public interface ControllerInterface {
      */
     int getNumberCommonGoalCards();
 
-    /**
-     * Getter for the number of currently connected players.
-     * @return The number of currently connected players.
-     */
-    int getNumberActualPlayers();
-
     int getID();
+
+    boolean isEnded();
 }

@@ -61,6 +61,10 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         this.controller = controller;
     }
 
+    @Override
+    public boolean inGame() {
+        return controller != null;
+    }
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}. Internally, it requires the lock on {@code Lobby}.
@@ -74,6 +78,8 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
         }
         Lobby.getInstance().login(message.getNickname(), this);
     }
+
+
 
     /**
      * {@inheritDoc}
@@ -164,7 +170,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
 
         if (controller != null) {
             controller.disconnection(nickname);
-            if (controller.getNumberActualPlayers() <= 0) Lobby.getInstance().removeController(controller);
+            if (controller.isEnded()) Lobby.getInstance().removeController(controller);
         }
     }
 

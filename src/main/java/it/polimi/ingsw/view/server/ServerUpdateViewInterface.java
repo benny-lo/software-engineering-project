@@ -18,4 +18,6 @@ public interface ServerUpdateViewInterface extends UpdateViewInterface {
      * @param controller The {@code Controller} joined.
      */
     void setController(ControllerInterface controller);
+
+    boolean inGame();
 }

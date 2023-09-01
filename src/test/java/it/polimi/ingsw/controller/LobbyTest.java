@@ -388,15 +388,5 @@ public class LobbyTest {
         assertTrue(bobMessage instanceof GamesList);
         assertNotNull(((GamesList) bobMessage).getAvailable());
         assertEquals(1, ((GamesList) bobMessage).getAvailable().size());
-
-        aliceView.disconnect();
-        bobMessage = bob.queue.poll();
-        assertTrue(bobMessage instanceof GamesList);
-        assertNotNull(((GamesList) bobMessage).getAvailable());
-        assertEquals(1, ((GamesList) bobMessage).getAvailable().size());
-
-        GameInfo info = ((GamesList) bobMessage).getAvailable().get(0);
-        assertEquals(0, info.getId());
-        assertEquals(-1, info.getNumberPlayers());
     }
 }

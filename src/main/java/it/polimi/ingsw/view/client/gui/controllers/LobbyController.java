@@ -99,7 +99,7 @@ public class LobbyController extends AbstractController {
      */
     public void listOfGames(List<GameInfo> games){
         for (GameInfo game : games) {
-            List<GameInfo> other = gamesListView.getItems().stream().filter((g) -> g.getId() != game.getId()).toList();
+            List<GameInfo> other = gamesListView.getItems().stream().filter((g) -> g.getId() == game.getId()).toList();
             gamesListView.getItems().removeAll(other);
             if (game.getNumberPlayers() != -1 && game.getNumberCommonGoals() != -1) {
                 gamesListView.getItems().add(game);
