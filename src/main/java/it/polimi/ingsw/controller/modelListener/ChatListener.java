@@ -21,6 +21,7 @@ public class ChatListener extends ModelListener {
     public ChatListener() {
         super();
         this.updatesPerPlayer = new HashMap<>();
+        updatesPerPlayer.put(BROADCAST, new ArrayList<>());
     }
 
     /**
@@ -31,19 +32,14 @@ public class ChatListener extends ModelListener {
         String sender = update.getSender();
         String receiver = update.getReceiver();
 
-        if (!BROADCAST.equals(sender) && !updatesPerPlayer.containsKey(sender)) updatesPerPlayer.put(sender, new ArrayList<>());
-        if (!BROADCAST.equals(receiver) && !updatesPerPlayer.containsKey(receiver)) updatesPerPlayer.put(receiver, new ArrayList<>());
-
         if (BROADCAST.equals(sender) || BROADCAST.equals(receiver)) {
-            for(List<ChatUpdate> l : updatesPerPlayer.values()) {
-                l.add(update);
-            }
+            updatesPerPlayer.get(BROADCAST).add(update);
             return;
         }
 
         if (!updatesPerPlayer.containsKey(sender)) updatesPerPlayer.put(sender, new ArrayList<>());
-        updatesPerPlayer.get(sender).add(update);
         if (!updatesPerPlayer.containsKey(receiver)) updatesPerPlayer.put(receiver, new ArrayList<>());
+        updatesPerPlayer.get(sender).add(update);
         updatesPerPlayer.get(receiver).add(update);
     }
 
@@ -55,6 +51,8 @@ public class ChatListener extends ModelListener {
     public List<ChatUpdate> getChatUpdates(String nickname) {
         if (!updatesPerPlayer.containsKey(nickname)) return new ArrayList<>();
 
-        return new ArrayList<>(updatesPerPlayer.get(nickname));
+        List<ChatUpdate> arr = new ArrayList<>(updatesPerPlayer.get(nickname));
+        arr.addAll(updatesPerPlayer.get(BROADCAST));
+        return arr;
     }
 }

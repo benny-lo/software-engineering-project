@@ -136,18 +136,17 @@ public class Lobby {
             return;
         }
 
-        Logger.login(nickname);
-
-        views.put(nickname, view);
-        view.setNickname(nickname);
-
-
         if (boundToGame.containsKey(nickname)) {
             int id = boundToGame.get(nickname);
             boolean result = controllers.get(id).reconnection(view, nickname);
             if (!result) view.onGamesList(new GamesList(null));
             return;
         }
+
+        Logger.login(nickname);
+
+        views.put(nickname, view);
+        view.setNickname(nickname);
 
         view.onGamesList(new GamesList(getGameInfo()));
     }

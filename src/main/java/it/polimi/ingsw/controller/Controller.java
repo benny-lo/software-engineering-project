@@ -318,7 +318,6 @@ public class Controller implements ControllerInterface {
             v.onDisconnectionUpdate(disconnection);
         }
 
-        System.out.println(chatListener.getChatUpdates(nickname));
         for(ChatUpdate c : chatListener.getChatUpdates(nickname)) {
             v.onChatUpdate(c);
         }
@@ -385,6 +384,7 @@ public class Controller implements ControllerInterface {
         }
 
         if (playerIndex == old) {
+            timer.cancel();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -676,6 +676,8 @@ public class Controller implements ControllerInterface {
     public boolean reconnection(ServerUpdateViewInterface view, String nickname) {
         synchronized (controllerLock) {
             if (ended || !inactivePlayers.contains(nickname)) return false;
+
+            timer.cancel();
 
             view.setController(this);
             views.put(nickname, view);
