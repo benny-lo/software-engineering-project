@@ -41,7 +41,9 @@ public class ChatListener extends ModelListener {
             return;
         }
 
+        if (!updatesPerPlayer.containsKey(sender)) updatesPerPlayer.put(sender, new ArrayList<>());
         updatesPerPlayer.get(sender).add(update);
+        if (!updatesPerPlayer.containsKey(receiver)) updatesPerPlayer.put(receiver, new ArrayList<>());
         updatesPerPlayer.get(receiver).add(update);
     }
 
@@ -51,7 +53,7 @@ public class ChatListener extends ModelListener {
      * @return {@code List} containing all {@code ChatUpdate}s related to the player with {@code nickname}.
      */
     public List<ChatUpdate> getChatUpdates(String nickname) {
-        if (!updatesPerPlayer.containsKey(nickname)) return null;
+        if (!updatesPerPlayer.containsKey(nickname)) return new ArrayList<>();
 
         return new ArrayList<>(updatesPerPlayer.get(nickname));
     }
