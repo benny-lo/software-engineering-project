@@ -107,11 +107,19 @@ public class ChatController extends AbstractController {
         alert.showAndWait();
     }
 
+    /**
+     * Adds to the {@code disconnectedPlayers} the nickname of the player that has disconnected, and it updates
+     * the {@code playerMenu}.
+     */
     public void disconnectedPlayer(String nickname) {
         disconnectedPlayers.add(nickname);
         updatePlayerMenuColors();
     }
 
+    /**
+     * Removes from the {@code disconnectedPlayers} the nickname of the player that has reconnected, and it updates
+     * the {@code playerMenu}.
+     */
     public void reconnectedPlayer(String nickname) {
         disconnectedPlayers.remove(nickname);
         updatePlayerMenuColors();

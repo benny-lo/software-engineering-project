@@ -701,6 +701,13 @@ public class GameController extends AbstractController {
         chatStage.show();
     }
 
+
+    //DISCONNECTION AND RECONNECTION
+
+    /**
+     * Notifies that a player has reconnected, and it adds back his bookshelf.
+     * @param nickname The nickname of the player that has reconnected.
+     */
     public void reconnectionInGame(String nickname) {
         numberActualPlayers++;
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -728,6 +735,11 @@ public class GameController extends AbstractController {
         alert.showAndWait();
     }
 
+    /**
+     * Notifies that a player has disconnected, and it removes his bookshelf. If only one player has remained, it notifies
+     * that the game will end in 30 seconds.
+     * @param nickname The nickname of the player that has disconnected.
+     */
     public void disconnectionInGame(String nickname) {
         numberActualPlayers--;
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
