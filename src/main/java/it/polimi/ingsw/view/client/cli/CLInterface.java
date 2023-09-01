@@ -117,6 +117,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         if (!message.isAccepted()){
             printDeniedAction();
         }else {
+            currentPlayer = null;
             printGameRep();
         }
         System.out.flush();

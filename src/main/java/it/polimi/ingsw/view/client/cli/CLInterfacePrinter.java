@@ -27,10 +27,15 @@ class CLInterfacePrinter {
      * @param currentPlayer The nickname of the current player.
      */
     static void printCurrentPlayer(String nickname, String currentPlayer){
-        if (currentPlayer == null) return;
         System.out.println(ANSI_YELLOW + "Hi " + nickname + "!" + ANSI_RESET + "\n");
+
+        if (currentPlayer == null) {
+            System.out.println(ANSI_YELLOW + "Waiting for the other players..." + ANSI_RESET + "\n");
+            return;
+        }
+
         if (currentPlayer.equals(nickname)) {
-            System.out.println(ANSI_YELLOW + "You are the current player" + ANSI_RESET + "\n");
+            System.out.println(ANSI_YELLOW + "You are the current player." + ANSI_RESET + "\n");
         } else {
             System.out.println(ANSI_YELLOW + "The current player is " + currentPlayer + ANSI_RESET + "\n");
         }
