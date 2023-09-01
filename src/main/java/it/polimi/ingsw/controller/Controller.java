@@ -318,6 +318,11 @@ public class Controller implements ControllerInterface {
             v.onDisconnectionUpdate(disconnection);
         }
 
+        System.out.println(chatListener.getChatUpdates(nickname));
+        for(ChatUpdate c : chatListener.getChatUpdates(nickname)) {
+            v.onChatUpdate(c);
+        }
+
         notifyScoresToEverybody();
 
         if (!onHold) {
