@@ -434,7 +434,7 @@ public class Controller implements ControllerInterface {
 
     private void gameEnded() {
         ended = true;
-        Lobby.getInstance().unbind(new ArrayList<>(playerList));
+        Lobby.getInstance().unbind(new ArrayList<>(playerList), id);
     }
 
     /**
@@ -670,6 +670,8 @@ public class Controller implements ControllerInterface {
                 playerList.remove(nickname);
 
                 notifyWaitingUpdateToEverybody(nickname, false);
+
+                if (playerList.size() == 0) gameEnded();
             }
         }
     }

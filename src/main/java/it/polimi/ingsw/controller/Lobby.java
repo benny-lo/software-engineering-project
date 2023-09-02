@@ -91,16 +91,6 @@ public class Lobby {
     }
 
     /**
-     * Removes a controller from {@code Lobby}. It synchronizes on {@code this}. Moreover, it notifies
-     * asynchronously all players still waiting to join a match.
-     * @param controller The controller to remove.
-     */
-    public synchronized void removeController(ControllerInterface controller) {
-        int id = controller.getID();
-        controllers.remove(id);
-    }
-
-    /**
      * Unsubscribes a client from updates sent by {@code this}.
      * It synchronizes on {@code this}.
      * @param nickname The player to remove.
@@ -248,9 +238,19 @@ public class Lobby {
         }
     }
 
-    public void unbind(List<String> nicknames) {
+    public void unbind(List<String> nicknames, int id) {
         synchronized (boundToGame) {
             for(String nickname : nicknames) boundToGame.remove(nickname);
+        }
+
+        synchronized (this) {
+            controllers.remove(id);
+
+            GamesList gamesList = new GamesList(List.of(new GameInfo(id, -1, -1)));
+            for(ServerUpdateViewInterface u : views.values()) {
+                if (u.inGame()) continue;
+                u.onGamesList(gamesList);
+            }
         }
     }
 

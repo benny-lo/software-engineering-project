@@ -97,10 +97,9 @@ public class LobbyController extends AbstractController {
      * Updates the list of games showed by the GUI.
      * @param games {@code List} of games received by the {@code GUInterface}.
      */
-    public void listOfGames(List<GameInfo> games){
+    public void listOfGames(List<GameInfo> games) {
         for (GameInfo game : games) {
-            List<GameInfo> other = gamesListView.getItems().stream().filter((g) -> g.getId() == game.getId()).toList();
-            gamesListView.getItems().removeAll(other);
+            gamesListView.getItems().removeIf(g -> g.getId() == game.getId());
             if (game.getNumberPlayers() != -1 && game.getNumberCommonGoals() != -1) {
                 gamesListView.getItems().add(game);
             }
