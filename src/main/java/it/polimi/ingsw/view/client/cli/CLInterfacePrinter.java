@@ -26,7 +26,7 @@ class CLInterfacePrinter {
      * @param nickname The nickname of the player owning the client.
      * @param currentPlayer The nickname of the current player.
      */
-    static void printCurrentPlayer(String nickname, String currentPlayer){
+    static void printCurrentPlayer(String nickname, String currentPlayer) {
         System.out.println(ANSI_YELLOW + "Hi " + nickname + "!" + ANSI_RESET + "\n");
 
         if (currentPlayer == null) {
@@ -44,7 +44,7 @@ class CLInterfacePrinter {
     /**
      * Prints the welcome message.
      */
-    static void printWelcomeMessage(){
+    static void printWelcomeMessage() {
         System.out.println("""
                 Welcome to MyShelfie!
                 Digit '/help' for all the commands!""");
@@ -53,7 +53,7 @@ class CLInterfacePrinter {
     /**
      * Prints the help menu.
      */
-    static void printHelp(){
+    static void printHelp() {
         System.out.println("""
                 Commands list:\s
                 \t /login [nickname]\s
@@ -77,7 +77,7 @@ class CLInterfacePrinter {
     /**
      * Prints the incorrect command error message.
      */
-    static void printIncorrectCommand(){
+    static void printIncorrectCommand() {
         System.out.println("This command is misspelled! Try to digit '/help' for other commands.");
     }
 
@@ -85,7 +85,7 @@ class CLInterfacePrinter {
      * Prints a warning in case the player's status doesn't match the status required by the action that needs
      * to be completed.
      */
-    static void printWrongStatus(){
+    static void printWrongStatus() {
         System.out.println("You cannot do this action now!\nTry to digit '/help' for other commands.");
     }
 
@@ -99,14 +99,14 @@ class CLInterfacePrinter {
     /**
      * Warns the player of the absence of available games.
      */
-    static void printNoAvailableGames(){
+    static void printNoAvailableGames() {
         System.out.println("There are no available games.\nCreate a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
     }
 
     /**
      * Warns the player of having inserted an incorrect nickname.
      */
-    static void printIncorrectNickname(){
+    static void printIncorrectNickname() {
         System.out.println("""
                 This nickname is incorrect! Retry to login.
                 Your nickname has to be at least 1 character and less than 30.
@@ -337,7 +337,7 @@ class CLInterfacePrinter {
     /**
      * Prints the failed personal goal card configuration message.
      */
-    static void printPersonalGoalCardConfigurationFailed(){
+    static void printPersonalGoalCardConfigurationFailed() {
         System.err.println("""
                     Configuration file for personalGoalCard not found.
                     The configuration file should be in configuration/personalGoalCard
@@ -364,7 +364,8 @@ class CLInterfacePrinter {
      * Prints the list of available games.
      * @param games The list of games.
      */
-    static void printGamesList(List<GameInfo> games){
+    static void printGamesList(List<GameInfo> games) {
+        System.out.println("Create a new game with the command '/create_game [number_of_players] [number_of_common_goal_cards]'.");
         System.out.println("Select a game from the list:");
         for (GameInfo info : games) {
             System.out.println(info);
@@ -376,7 +377,7 @@ class CLInterfacePrinter {
      * @param missing Number of players missing.
      * @param connectedPlayers Number of connected players.
      */
-    static void printNumberMissingPlayers(int missing, Collection<String> connectedPlayers){
+    static void printNumberMissingPlayers(int missing, Collection<String> connectedPlayers) {
         if (connectedPlayers == null) return;
 
         System.out.println("Connected players: ");

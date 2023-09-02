@@ -61,7 +61,7 @@ public class GUInterface extends ClientView implements GUIViewInterface {
             return;
         }
 
-        Platform.runLater(() -> loginController.successfulLogin());
+        if (lobbyController == null) Platform.runLater(() -> loginController.successfulLogin());
         Platform.runLater(() -> lobbyController.listOfGames(games));
     }
 

@@ -87,8 +87,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         }
 
         for (GameInfo game : available) {
-            List<GameInfo> other = games.stream().filter((g) -> g.getId() != game.getId()).toList();
-            games.removeAll(other);
+            games.removeIf(g -> g.getId() == game.getId());
             if (game.getNumberPlayers() != -1 && game.getNumberCommonGoals() != -1) {
                 games.add(game);
             }
