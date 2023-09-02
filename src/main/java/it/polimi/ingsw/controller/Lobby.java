@@ -236,6 +236,8 @@ public class Lobby {
         synchronized (boundToGame) {
             for(String nickname : nicknames) boundToGame.put(nickname, id);
         }
+
+        notyGameNotAvailable(id);
     }
 
     public void unbind(List<String> nicknames, int id) {
@@ -243,14 +245,16 @@ public class Lobby {
             for(String nickname : nicknames) boundToGame.remove(nickname);
         }
 
-        synchronized (this) {
-            controllers.remove(id);
+        notyGameNotAvailable(id);
+    }
 
-            GamesList gamesList = new GamesList(List.of(new GameInfo(id, -1, -1)));
-            for(ServerUpdateViewInterface u : views.values()) {
-                if (u.inGame()) continue;
-                u.onGamesList(gamesList);
-            }
+    private synchronized void notyGameNotAvailable(int id) {
+        controllers.remove(id);
+
+        GamesList gamesList = new GamesList(List.of(new GameInfo(id, -1, -1)));
+        for(ServerUpdateViewInterface u : views.values()) {
+            if (u.inGame()) continue;
+            u.onGamesList(gamesList);
         }
     }
 
