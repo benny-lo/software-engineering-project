@@ -1,13 +1,13 @@
-package it.polimi.ingsw.model.playerTest;
+package it.polimi.ingsw.model.playertest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.model.player.personalgoalcard.PersonalGoalCard;
+import it.polimi.ingsw.model.player.personalgoalcard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 

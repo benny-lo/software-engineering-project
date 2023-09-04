@@ -1,9 +1,8 @@
-package it.polimi.ingsw.model.commonGoalCardTest.commonGoalPatternTest;
+package it.polimi.ingsw.model.commongoalcardtest.pattern;
 
+import it.polimi.ingsw.model.commongoalcard.pattern.CommonGoalPattern10;
+import it.polimi.ingsw.model.commongoalcard.pattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.utils.Item;
-import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPattern10;
-import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPattern8;
-import it.polimi.ingsw.model.commonGoalCard.commonGoalPattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +33,7 @@ public class CommonGoalCardPattern10Test {
      */
     @Test
     public void testTwoColumnsWithSameItems(){
-        CommonGoalPatternInterface pattern = new CommonGoalPattern8();
+        CommonGoalPatternInterface pattern = new CommonGoalPattern10();
         Bookshelf bookshelf=new Bookshelf(3,3);
         for(int j=0; j< bookshelf.getRows(); j++){
             bookshelf.insert(Item.CAT,0);

@@ -1,11 +1,11 @@
-package it.polimi.ingsw.model.playerTest.personalGoalCardTest;
+package it.polimi.ingsw.model.playertest.personalgoalcardtest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import it.polimi.ingsw.model.player.personalgoalcard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.player.Bookshelf;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;

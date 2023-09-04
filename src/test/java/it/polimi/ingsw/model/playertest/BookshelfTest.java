@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.playerTest;
+package it.polimi.ingsw.model.playertest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,8 +19,8 @@ public class BookshelfTest {
     @Test
     public void testConstructionEmptyBookshelf() {
         Bookshelf b = new Bookshelf(2, 3);
-        assertEquals(b.getRows(), 2);
-        assertEquals(b.getColumns(), 3);
+        assertEquals(2, b.getRows());
+        assertEquals(3, b.getColumns());
 
         for(int i = 0; i < b.getRows(); i++) {
             for(int j = 0; j < b.getColumns(); j++) {
