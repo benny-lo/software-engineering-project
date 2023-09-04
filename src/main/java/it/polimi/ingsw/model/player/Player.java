@@ -6,7 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import it.polimi.ingsw.model.ScoringToken;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
+import it.polimi.ingsw.model.player.personalgoalcard.PersonalGoalCard;
 import it.polimi.ingsw.controller.modelListener.BookshelfListener;
 import javafx.util.Pair;
 

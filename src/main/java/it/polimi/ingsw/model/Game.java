@@ -5,10 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.controller.modelListener.*;
 import it.polimi.ingsw.model.board.BoardManager;
-import it.polimi.ingsw.model.commonGoalCard.CommonGoalCardManager;
+import it.polimi.ingsw.model.commongoalcard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalCard;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
+import it.polimi.ingsw.model.player.personalgoalcard.PersonalGoalCard;
+import it.polimi.ingsw.model.player.personalgoalcard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import javafx.util.Pair;
@@ -20,6 +20,7 @@ import java.util.*;
  * Class representing a game. It contains all managers and the nicknames of all players.
  */
 public class Game implements GameInterface {
+    private static final Random random = new Random();
     private final int numberPlayers;
     private final int numberCommonGoalCards;
     private String currentPlayer;
@@ -50,7 +51,6 @@ public class Game implements GameInterface {
      * Creates and assigns a {@code PersonalGoalCard} for each {@code Player}.
      */
     private void distributePersonalCards(){
-        Random random = new Random();
         Gson gson = new GsonBuilder().serializeNulls()
                 .setPrettyPrinting()
                 .disableJdkUnsafe()
@@ -63,7 +63,7 @@ public class Game implements GameInterface {
         PersonalGoalCard personalGoalCard;
 
 
-        for(String name : players.keySet()){
+        for(Player p : players.values()) {
             while (selected == -1 || alreadyTaken.contains(selected)){
                 selected = random.nextInt(12);
             }
@@ -84,7 +84,7 @@ public class Game implements GameInterface {
 
             personalGoalCard = new PersonalGoalCard(selected, personalGoalPattern);
 
-            players.get(name).setPersonalGoalCard(personalGoalCard);
+            p.setPersonalGoalCard(personalGoalCard);
         }
     }
 
@@ -182,7 +182,7 @@ public class Game implements GameInterface {
 
         List<ScoringToken> tokens = commonGoalCardManager.check(players.get(currentPlayer).getBookshelf(),
                 players.get(currentPlayer).cannotTake());
-        tokens.forEach((t) -> players.get(currentPlayer).addScoringToken(t));
+        tokens.forEach(t -> players.get(currentPlayer).addScoringToken(t));
     }
 
     /**
@@ -190,9 +190,9 @@ public class Game implements GameInterface {
      * @return {@code true} iff there is a player that owns the ending token.
      */
     @Override
-    public boolean IsEndingTokenAssigned() {
-        for(String nickname : players.keySet()) {
-            if (players.get(nickname).firstToFinish()) return true;
+    public boolean isEndingTokenAssigned() {
+        for(Player p : players.values()) {
+            if (p.firstToFinish()) return true;
         }
         return false;
     }
@@ -223,9 +223,9 @@ public class Game implements GameInterface {
      */
     public void setEndingTokenListener(EndingTokenListener endingTokenListener) {
         this.endingTokenListener = endingTokenListener;
-        for (String nickname : players.keySet()) {
-            if (players.get(nickname).firstToFinish()) {
-                endingTokenListener.updateState(nickname);
+        for (Map.Entry<String, Player> e: players.entrySet()) {
+            if (e.getValue().firstToFinish()) {
+                endingTokenListener.updateState(e.getKey());
                 return;
             }
         }

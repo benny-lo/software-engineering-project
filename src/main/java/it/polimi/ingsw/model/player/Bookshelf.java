@@ -11,18 +11,18 @@ import java.util.Queue;
  * Class representing the bookshelf of a player. The bottom row and leftmost column have index 0.
  * Empty positions are represented with {@code null}.
  */
-public class Bookshelf{
+public class Bookshelf {
     /**
      * 2D array of {@code Item}s that are currently in {@code this}.
      */
-    private final Item[][] bookshelf;
+    private final Item[][] grid;
 
     /**
      * No-args constructor for the class. It initializes {@code this} with all positions free (set to {@code null}).
      * It used for JSON.
      */
     public Bookshelf() {
-        this.bookshelf = new Item[6][5];
+        this.grid = new Item[6][5];
     }
 
     /**
@@ -31,10 +31,10 @@ public class Bookshelf{
      * @param columns Number of columns.
      */
     public Bookshelf(int rows, int columns){
-        this.bookshelf = new Item[rows][columns];
+        this.grid = new Item[rows][columns];
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
-                bookshelf[i][j] = null;
+                grid[i][j] = null;
             }
         }
     }
@@ -50,7 +50,7 @@ public class Bookshelf{
         if (column < 0 || column >= getColumns()) return false;
 
         for(int i = getRows() - 1; i >= getRows() - itemsSize; i--) {
-            if (bookshelf[i][column] != null) return false;
+            if (grid[i][column] != null) return false;
         }
 
         return true;
@@ -63,8 +63,8 @@ public class Bookshelf{
      */
     public void insert(Item item, int column) {
         for(int i = 0; i < getRows(); i++) {
-            if (bookshelf[i][column] == null) {
-                bookshelf[i][column] = item;
+            if (grid[i][column] == null) {
+                grid[i][column] = item;
                 return;
             }
         }
@@ -89,7 +89,7 @@ public class Bookshelf{
      * returns {@code null}.
      */
     public Item tileAt(int row, int column) {
-        return bookshelf[row][column];
+        return grid[row][column];
     }
 
     /**
@@ -108,7 +108,7 @@ public class Bookshelf{
      */
     public boolean isFull() {
         for(int i = 0; i < getColumns(); i++) {
-            if (bookshelf[getRows() - 1][i] == null) return false;
+            if (grid[getRows() - 1][i] == null) return false;
         }
         return true;
     }
@@ -148,7 +148,7 @@ public class Bookshelf{
         int result = 0;
         for(int i = 0; i < getRows(); i++) {
             for(int j = 0; j < getColumns(); j++) {
-                if (visited[i][j] || bookshelf[i][j] == null) continue;
+                if (visited[i][j] || grid[i][j] == null) continue;
 
                 currentIslandSize = 0;
                 q.add(new Position(i, j));
@@ -162,16 +162,16 @@ public class Bookshelf{
                     visited[row][column] = true;
                     currentIslandSize++;
 
-                    if (row+1 < getRows() && bookshelf[row+1][column] == bookshelf[row][column] && !visited[row+1][column]) {
+                    if (row+1 < getRows() && grid[row+1][column] == grid[row][column] && !visited[row+1][column]) {
                         q.add(new Position(row+1, column));
                     }
-                    if (row-1 > 0 && bookshelf[row-1][column] == bookshelf[row][column] && !visited[row-1][column]) {
+                    if (row-1 > 0 && grid[row-1][column] == grid[row][column] && !visited[row-1][column]) {
                         q.add(new Position(row-1, column));
                     }
-                    if (column+1 < getColumns() && bookshelf[row][column+1] == bookshelf[row][column] && !visited[row][column+1]) {
+                    if (column+1 < getColumns() && grid[row][column+1] == grid[row][column] && !visited[row][column+1]) {
                         q.add(new Position(row, column+1));
                     }
-                    if (column-1 > 0 && bookshelf[row][column-1] == bookshelf[row][column] && !visited[row][column-1]) {
+                    if (column-1 > 0 && grid[row][column-1] == grid[row][column] && !visited[row][column-1]) {
                         q.add(new Position(row, column-1));
                     }
                 }
@@ -200,7 +200,7 @@ public class Bookshelf{
      * @return Number of rows of {@code this}.
      */
     public int getRows() {
-        return bookshelf.length;
+        return grid.length;
     }
 
     /**
@@ -208,7 +208,7 @@ public class Bookshelf{
      * @return Number of columns of {@code this}.
      */
     public int getColumns() {
-        if (bookshelf.length == 0) return 0;
-        return bookshelf[0].length;
+        if (grid.length == 0) return 0;
+        return grid[0].length;
     }
 }

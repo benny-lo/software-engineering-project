@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
-import it.polimi.ingsw.model.player.personalGoalCard.PersonalGoalPattern;
+import it.polimi.ingsw.model.player.personalgoalcard.PersonalGoalPattern;
 import it.polimi.ingsw.utils.message.client.*;
 import it.polimi.ingsw.utils.message.client.ChatMessage;
 import it.polimi.ingsw.utils.message.server.*;

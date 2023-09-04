@@ -50,7 +50,7 @@ public interface GameInterface {
      * Checks if the ending token was assigned to any of the players.
      * @return {@code true} iff there is a player that owns the ending token.
      */
-    boolean IsEndingTokenAssigned();
+    boolean isEndingTokenAssigned();
 
     /**
      * Gets the {@code Player}'s public score (bookshelf, common goals and ending token).

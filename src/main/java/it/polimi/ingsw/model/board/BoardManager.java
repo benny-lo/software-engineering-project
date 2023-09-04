@@ -75,7 +75,7 @@ public class BoardManager {
      * @return {@code true} iff all the {@code Item}s at the selected {@code position} can be taken, else false.
      */
     public boolean canTakeItemTilesBoard(List<Position> positions){
-        if (positions.size() == 0 || positions.size() > 3) return false;
+        if (positions.isEmpty() || positions.size() > 3) return false;
         for(Position p: positions){
             if(!livingRoom.selectable(p)) return false;
         }
@@ -90,7 +90,8 @@ public class BoardManager {
     private boolean horizontalOrVertical(List<Position> positions) {
         List<Position> sortedPosition = positions.stream().sorted().toList();
 
-        boolean horizontal = true, vertical = true;
+        boolean horizontal = true;
+        boolean vertical = true;
         for(int i = 1; i < sortedPosition.size(); i++) {
             if (sortedPosition.get(i).getRow() != sortedPosition.get(i-1).getRow() ||
             sortedPosition.get(i).getColumn() != sortedPosition.get(i-1).getColumn() + 1) {

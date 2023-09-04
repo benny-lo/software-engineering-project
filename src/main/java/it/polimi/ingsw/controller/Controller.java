@@ -407,7 +407,7 @@ public class Controller implements ControllerInterface {
         game.setCurrentPlayer(playerList.get(playerIndex));
         turnPhase = TurnPhase.LIVING_ROOM;
 
-        if (game.IsEndingTokenAssigned() && isFirstPlayer(playerIndex)) {
+        if (game.isEndingTokenAssigned() && isFirstPlayer(playerIndex)) {
             // Game ended -> Find the winner.
             gameEnded();
 
