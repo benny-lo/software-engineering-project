@@ -36,22 +36,22 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
     /**
      * Listener for messages coming from the client.
      */
-    private ServerInputViewInterface listener;
+    private transient ServerInputViewInterface listener;
 
     /**
      * RMI interface provided by the client. Used to send message to the client.
      */
-    private final ClientConnectionRMIInterface client;
+    private final transient ClientConnectionRMIInterface client;
 
     /**
      * Timer used for disconnection handling.
      */
-    private final Timer clientTimer;
+    private final transient Timer clientTimer;
 
     /**
      * Object used for synchronization purposes.
      */
-    private final Object beepLock;
+    private final transient Object beepLock;
 
     /**
      * Last {@code Beep} message received from client.
@@ -63,7 +63,7 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
      */
     private boolean disconnected;
 
-    private final Object disconnectedLock;
+    private final transient Object disconnectedLock;
 
     /**
      * Constructs a new {@code ServerConnectionRMI}. It sets the clientRMI interface.
@@ -124,40 +124,40 @@ public class ServerConnectionRMI extends UnicastRemoteObject implements ServerCo
                 }
 
                 try {
-                    if (message instanceof LivingRoomUpdate) {
-                        client.receive((LivingRoomUpdate) message);
-                    } else if (message instanceof BookshelfUpdate) {
-                        client.receive((BookshelfUpdate) message);
-                    } else if (message instanceof WaitingUpdate) {
-                        client.receive((WaitingUpdate) message);
-                    } else if (message instanceof ScoresUpdate) {
-                        client.receive((ScoresUpdate) message);
-                    } else if (message instanceof EndingTokenUpdate) {
-                        client.receive((EndingTokenUpdate) message);
-                    } else if (message instanceof CommonGoalCardsUpdate) {
-                        client.receive((CommonGoalCardsUpdate) message);
-                    } else if (message instanceof PersonalGoalCardUpdate) {
-                        client.receive((PersonalGoalCardUpdate) message);
-                    } else if (message instanceof ChatUpdate) {
-                        client.receive((ChatUpdate) message);
-                    } else if (message instanceof StartTurnUpdate) {
-                        client.receive((StartTurnUpdate) message);
-                    } else if (message instanceof EndGameUpdate) {
-                        client.receive((EndGameUpdate) message);
-                    } else if (message instanceof GamesList) {
-                        client.receive((GamesList) message);
-                    } else if (message instanceof SelectedItems) {
-                        client.receive((SelectedItems) message);
-                    } else if (message instanceof GameData) {
-                        client.receive((GameData) message);
-                    } else if (message instanceof AcceptedInsertion) {
-                        client.receive((AcceptedInsertion) message);
-                    } else if (message instanceof ChatAccepted) {
-                        client.receive((ChatAccepted) message);
-                    } else if (message instanceof Reconnection m) {
-                        client.receive(m);
-                    } else if (message instanceof Disconnection m) {
-                        client.receive(m);
+                    if (message instanceof LivingRoomUpdate livingRoomUpdate) {
+                        client.receive(livingRoomUpdate);
+                    } else if (message instanceof BookshelfUpdate bookshelfUpdate) {
+                        client.receive(bookshelfUpdate);
+                    } else if (message instanceof WaitingUpdate waitingUpdate) {
+                        client.receive(waitingUpdate);
+                    } else if (message instanceof ScoresUpdate scoresUpdate) {
+                        client.receive(scoresUpdate);
+                    } else if (message instanceof EndingTokenUpdate endingTokenUpdate) {
+                        client.receive(endingTokenUpdate);
+                    } else if (message instanceof CommonGoalCardsUpdate commonGoalCardsUpdate) {
+                        client.receive(commonGoalCardsUpdate);
+                    } else if (message instanceof PersonalGoalCardUpdate personalGoalCardUpdate) {
+                        client.receive(personalGoalCardUpdate);
+                    } else if (message instanceof ChatUpdate chatUpdate) {
+                        client.receive(chatUpdate);
+                    } else if (message instanceof StartTurnUpdate startTurnUpdate) {
+                        client.receive(startTurnUpdate);
+                    } else if (message instanceof EndGameUpdate endGameUpdate) {
+                        client.receive(endGameUpdate);
+                    } else if (message instanceof GamesList gamesList) {
+                        client.receive(gamesList);
+                    } else if (message instanceof SelectedItems selectedItems) {
+                        client.receive(selectedItems);
+                    } else if (message instanceof GameData gameData) {
+                        client.receive(gameData);
+                    } else if (message instanceof AcceptedInsertion acceptedInsertion) {
+                        client.receive(acceptedInsertion);
+                    } else if (message instanceof ChatAccepted chatAccepted) {
+                        client.receive(chatAccepted);
+                    } else if (message instanceof Reconnection reconnection) {
+                        client.receive(reconnection);
+                    } else if (message instanceof Disconnection disconnection) {
+                        client.receive(disconnection);
                     }
                 } catch (RemoteException e) {
                     synchronized (disconnectedLock) {

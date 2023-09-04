@@ -119,21 +119,21 @@ public class ServerConnectionTCP implements ServerConnection, Runnable {
      * @param input the object to analyze (received from the client).
      */
     private void receive(Object input) {
-        if (input instanceof Nickname) {
-            listener.login((Nickname) input);
-        } else if (input instanceof GameInitialization) {
-            listener.createGame((GameInitialization) input);
-        } else if (input instanceof GameSelection) {
-            listener.selectGame((GameSelection) input);
-        } else if (input instanceof LivingRoomSelection) {
-            listener.selectFromLivingRoom((LivingRoomSelection) input);
-        } else if (input instanceof BookshelfInsertion) {
-            listener.insertInBookshelf((BookshelfInsertion) input);
-        } else if (input instanceof ChatMessage) {
-            listener.writeChat((ChatMessage) input);
-        } else if (input instanceof Beep) {
+        if (input instanceof Nickname nickname) {
+            listener.login(nickname);
+        } else if (input instanceof GameInitialization gameInitialization) {
+            listener.createGame(gameInitialization);
+        } else if (input instanceof GameSelection gameSelection) {
+            listener.selectGame(gameSelection);
+        } else if (input instanceof LivingRoomSelection livingRoomSelection) {
+            listener.selectFromLivingRoom(livingRoomSelection);
+        } else if (input instanceof BookshelfInsertion bookshelfInsertion) {
+            listener.insertInBookshelf(bookshelfInsertion);
+        } else if (input instanceof ChatMessage chatMessage) {
+            listener.writeChat(chatMessage);
+        } else if (input instanceof Beep beep) {
             synchronized (internalLock) {
-                clientBeep = (Beep) input;
+                clientBeep = beep;
             }
             sendPrivate(new Beep());
         }
