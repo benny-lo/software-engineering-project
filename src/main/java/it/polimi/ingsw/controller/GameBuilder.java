@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.controller.modelListener.*;
+import it.polimi.ingsw.controller.modellistener.*;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.GameInterface;
 
@@ -17,12 +17,12 @@ public class GameBuilder {
     /**
      * Maximum number of players allowed.
      */
-    private final static int MAX_PLAYERS = 4;
+    private static final int MAX_PLAYERS = 4;
 
     /**
      * Minimum number of players allowed.
      */
-    private final static int MIN_PLAYERS = 2;
+    private static final int MIN_PLAYERS = 2;
 
     /**
      * Number of common goal cards of the {@code Game} to be constructed.

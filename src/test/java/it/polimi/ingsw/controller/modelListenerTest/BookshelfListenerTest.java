@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.modelListenerTest;
 
-import it.polimi.ingsw.controller.modelListener.BookshelfListener;
+import it.polimi.ingsw.controller.modellistener.BookshelfListener;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import org.junit.jupiter.api.Test;
@@ -35,9 +35,9 @@ public class BookshelfListenerTest {
         bookshelfListener.updateState(new Position(1,1), Item.CUP);
         bookshelfListener.updateState(new Position(2,2), Item.BOOK);
         Map<Position,Item> map = bookshelfListener.getBookshelfUpdates();
-        assertEquals(map.get(new Position(0,0)), Item.CAT);
-        assertEquals(map.get(new Position(1,1)), Item.CUP);
-        assertEquals(map.get(new Position(2,2)), Item.BOOK);
+        assertEquals(Item.CAT, map.get(new Position(0, 0)));
+        assertEquals(Item.CUP, map.get(new Position(1, 1)));
+        assertEquals(Item.BOOK, map.get(new Position(2, 2)));
         assertTrue(bookshelfListener.getBookshelfUpdates().isEmpty());
 
     }

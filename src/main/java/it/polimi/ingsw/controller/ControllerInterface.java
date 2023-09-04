@@ -66,7 +66,5 @@ public interface ControllerInterface {
      */
     int getNumberCommonGoalCards();
 
-    int getID();
-
     boolean isEnded();
 }

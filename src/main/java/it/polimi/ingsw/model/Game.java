@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.controller.modelListener.*;
+import it.polimi.ingsw.controller.modellistener.*;
 import it.polimi.ingsw.model.board.BoardManager;
 import it.polimi.ingsw.model.commongoalcard.CommonGoalCardManager;
 import it.polimi.ingsw.model.player.Player;

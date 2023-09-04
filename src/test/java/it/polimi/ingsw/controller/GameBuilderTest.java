@@ -1,9 +1,9 @@
 package it.polimi.ingsw.controller;
 
-import it.polimi.ingsw.controller.modelListener.BookshelfListener;
-import it.polimi.ingsw.controller.modelListener.CommonGoalCardsListener;
-import it.polimi.ingsw.controller.modelListener.EndingTokenListener;
-import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
+import it.polimi.ingsw.controller.modellistener.BookshelfListener;
+import it.polimi.ingsw.controller.modellistener.CommonGoalCardsListener;
+import it.polimi.ingsw.controller.modellistener.EndingTokenListener;
+import it.polimi.ingsw.controller.modellistener.LivingRoomListener;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -42,7 +42,7 @@ public class Lobby {
     /**
      * Object only used as a lock by the {@code getInstance} method for synchronization.
      */
-    private final static Object lock = new Object();
+    private static final Object lock = new Object();
 
     /**
      * The constructor for the class. Initializes the lobby with an empty map of {@code Controller}s
@@ -72,12 +72,10 @@ public class Lobby {
      */
     private List<GameInfo> getGameInfo() {
         List<GameInfo> ret = new ArrayList<>();
-        for (Integer id : controllers.keySet()) {
-            if (!controllers.get(id).isStarted())   //If a game has already started, it's not displayed.
-                ret.add(new GameInfo(id, controllers.get(id).getNumberPlayers(), controllers.get(id).getNumberCommonGoalCards()));
+        for (Map.Entry<Integer, ControllerInterface> e : controllers.entrySet()) {
+            if (!e.getValue().isStarted())   //If a game has already started, it's not displayed.
+                ret.add(new GameInfo(e.getKey(), e.getValue().getNumberPlayers(), e.getValue().getNumberCommonGoalCards()));
         }
-
-        System.out.println(ret);
         return ret;
     }
 

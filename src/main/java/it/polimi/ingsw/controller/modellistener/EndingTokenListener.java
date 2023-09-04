@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.modelListener;
+package it.polimi.ingsw.controller.modellistener;
 
 /**
  * Listener of the ending token: it registers when some player takes the ending token.

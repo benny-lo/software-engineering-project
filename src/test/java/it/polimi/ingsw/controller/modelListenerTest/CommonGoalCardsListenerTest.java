@@ -1,5 +1,5 @@
 package it.polimi.ingsw.controller.modelListenerTest;
-import it.polimi.ingsw.controller.modelListener.CommonGoalCardsListener;
+import it.polimi.ingsw.controller.modellistener.CommonGoalCardsListener;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;

@@ -1,5 +1,5 @@
 package it.polimi.ingsw.controller.modelListenerTest;
-import it.polimi.ingsw.controller.modelListener.EndingTokenListener;
+import it.polimi.ingsw.controller.modellistener.EndingTokenListener;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

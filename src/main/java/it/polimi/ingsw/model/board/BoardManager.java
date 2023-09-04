@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
-import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
+import it.polimi.ingsw.controller.modellistener.LivingRoomListener;
 import javafx.util.Pair;
 
 import java.io.*;

@@ -3,7 +3,7 @@ package it.polimi.ingsw.controller;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import it.polimi.ingsw.controller.modelListener.*;
+import it.polimi.ingsw.controller.modellistener.*;
 import it.polimi.ingsw.model.GameInterface;
 import it.polimi.ingsw.utils.Logger;
 import it.polimi.ingsw.utils.Item;
@@ -224,8 +224,8 @@ public class Controller implements ControllerInterface {
      * Notifies the players of any changes in the personal goal cards.
      */
     private void notifyPersonalGoalCardsToEverybody() {
-        for (String v : views.keySet()) {
-            views.get(v).onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(v)));
+        for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
+            e.getValue().onPersonalGoalCardUpdate(new PersonalGoalCardUpdate(game.getPersonalID(e.getKey())));
         }
     }
 
@@ -671,7 +671,7 @@ public class Controller implements ControllerInterface {
 
                 notifyWaitingUpdateToEverybody(nickname, false);
 
-                if (playerList.size() == 0) gameEnded();
+                if (playerList.isEmpty()) gameEnded();
             }
         }
     }
@@ -726,11 +726,6 @@ public class Controller implements ControllerInterface {
     @Override
     public int getNumberCommonGoalCards() {
         return numberCommonGoalCards;
-    }
-
-    @Override
-    public synchronized int getID() {
-        return id;
     }
 
     @Override

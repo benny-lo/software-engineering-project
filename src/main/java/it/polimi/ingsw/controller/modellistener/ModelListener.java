@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.modelListener;
+package it.polimi.ingsw.controller.modellistener;
 
 /**
  * Abstract class representing a generic listener to something in a {@code Game}.
@@ -12,7 +12,7 @@ public abstract class ModelListener {
     /**
      * Constructor for class. The state of {@code this} is set to empty.
      */
-    public ModelListener() {
+    protected ModelListener() {
         changed = false;
     }
 

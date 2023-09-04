@@ -1,6 +1,6 @@
 package it.polimi.ingsw.controller.modelListenerTest;
 
-import it.polimi.ingsw.controller.modelListener.LivingRoomListener;
+import it.polimi.ingsw.controller.modellistener.LivingRoomListener;
 import it.polimi.ingsw.utils.Item;
 import it.polimi.ingsw.utils.Position;
 import org.junit.jupiter.api.Test;

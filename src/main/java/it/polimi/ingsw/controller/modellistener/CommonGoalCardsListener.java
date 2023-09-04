@@ -1,4 +1,4 @@
-package it.polimi.ingsw.controller.modelListener;
+package it.polimi.ingsw.controller.modellistener;
 
 import java.util.HashMap;
 import java.util.Map;
