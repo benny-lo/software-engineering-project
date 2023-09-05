@@ -316,7 +316,7 @@ public class GUInterface extends ClientView implements GUIViewInterface {
      */
     @Override
     public synchronized List<String> getOthersNicknames() {
-        return nicknames.stream().filter((n) -> !n.equals(nickname)).toList();
+        return nicknames.stream().filter(n -> !n.equals(nickname)).toList();
     }
 
     /**

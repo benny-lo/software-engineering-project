@@ -21,14 +21,14 @@ import java.util.TimerTask;
  */
 public class ClientConnectionRMI extends UnicastRemoteObject implements ClientConnection, ClientConnectionRMIInterface {
     private static final int RTT = 5000;
-    private ServerConnectionRMIInterface serverConnectionRMIInterface;
-    private final UpdateViewInterface listener;
-    private final Timer serverTimer;
-    private final Timer clientTimer;
-    private final Object internalLock;
-    private boolean disconnected;
-    private final Queue<Message> sendingQueue;
-    private Beep serverBeep;
+    private transient ServerConnectionRMIInterface serverConnectionRMIInterface;
+    private final transient UpdateViewInterface listener;
+    private final transient Timer serverTimer;
+    private final transient Timer clientTimer;
+    private final transient Object internalLock;
+    private transient boolean disconnected;
+    private final transient Queue<Message> sendingQueue;
+    private transient Beep serverBeep;
 
     /**
      * Constructs a new {@code ClientConnectionRMI}. It sets the listener of the network.
@@ -57,7 +57,9 @@ public class ClientConnectionRMI extends UnicastRemoteObject implements ClientCo
                     while (sendingQueue.isEmpty()) {
                         try {
                             sendingQueue.wait();
-                        } catch (InterruptedException ignored) {}
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        }
                     }
                     message = sendingQueue.poll();
                 }

@@ -99,43 +99,43 @@ public class ClientConnectionTCP implements ClientConnection, Runnable {
      * @param input the object to analyze (received from the server).
      */
     private void receive(Object input) {
-        if (input instanceof GamesList) {
-            listener.onGamesList((GamesList) input);
-        } else if (input instanceof SelectedItems) {
-            listener.onSelectedItems((SelectedItems) input);
-        } else if (input instanceof LivingRoomUpdate) {
-            listener.onLivingRoomUpdate((LivingRoomUpdate) input);
-        } else if (input instanceof BookshelfUpdate) {
-            listener.onBookshelfUpdate((BookshelfUpdate) input);
-        } else if (input instanceof EndingTokenUpdate) {
-            listener.onEndingTokenUpdate((EndingTokenUpdate) input);
-        } else if (input instanceof WaitingUpdate) {
-            listener.onWaitingUpdate((WaitingUpdate) input);
-        } else if (input instanceof ScoresUpdate) {
-            listener.onScoresUpdate((ScoresUpdate) input);
-        } else if (input instanceof CommonGoalCardsUpdate) {
-            listener.onCommonGoalCardsUpdate((CommonGoalCardsUpdate) input);
-        } else if (input instanceof PersonalGoalCardUpdate) {
-            listener.onPersonalGoalCardUpdate((PersonalGoalCardUpdate) input);
-        } else if (input instanceof ChatUpdate) {
-            listener.onChatUpdate((ChatUpdate) input);
-        } else if (input instanceof StartTurnUpdate) {
-            listener.onStartTurnUpdate((StartTurnUpdate) input);
-        } else if (input instanceof EndGameUpdate) {
-            listener.onEndGameUpdate((EndGameUpdate) input);
-        } else if (input instanceof GameData) {
-            listener.onGameData((GameData) input);
-        } else if (input instanceof AcceptedInsertion) {
-            listener.onAcceptedInsertion((AcceptedInsertion) input);
-        } else if (input instanceof ChatAccepted) {
-            listener.onChatAccepted((ChatAccepted) input);
-        } else if (input instanceof Disconnection m) {
-            listener.onDisconnectionUpdate(m);
-        } else if (input instanceof Reconnection m) {
-            listener.onReconnectionUpdate(m);
-        } else if (input instanceof Beep) {
+        if (input instanceof GamesList gamesList) {
+            listener.onGamesList(gamesList);
+        } else if (input instanceof SelectedItems selectedItems) {
+            listener.onSelectedItems(selectedItems);
+        } else if (input instanceof LivingRoomUpdate livingRoomUpdate) {
+            listener.onLivingRoomUpdate(livingRoomUpdate);
+        } else if (input instanceof BookshelfUpdate bookshelfUpdate) {
+            listener.onBookshelfUpdate(bookshelfUpdate);
+        } else if (input instanceof EndingTokenUpdate endingTokenUpdate) {
+            listener.onEndingTokenUpdate(endingTokenUpdate);
+        } else if (input instanceof WaitingUpdate waitingUpdate) {
+            listener.onWaitingUpdate(waitingUpdate);
+        } else if (input instanceof ScoresUpdate scoresUpdate) {
+            listener.onScoresUpdate(scoresUpdate);
+        } else if (input instanceof CommonGoalCardsUpdate commonGoalCardsUpdate) {
+            listener.onCommonGoalCardsUpdate(commonGoalCardsUpdate);
+        } else if (input instanceof PersonalGoalCardUpdate personalGoalCardUpdate) {
+            listener.onPersonalGoalCardUpdate(personalGoalCardUpdate);
+        } else if (input instanceof ChatUpdate chatUpdate) {
+            listener.onChatUpdate(chatUpdate);
+        } else if (input instanceof StartTurnUpdate startTurnUpdate) {
+            listener.onStartTurnUpdate(startTurnUpdate);
+        } else if (input instanceof EndGameUpdate endGameUpdate) {
+            listener.onEndGameUpdate(endGameUpdate);
+        } else if (input instanceof GameData gameData) {
+            listener.onGameData(gameData);
+        } else if (input instanceof AcceptedInsertion acceptedInsertion) {
+            listener.onAcceptedInsertion(acceptedInsertion);
+        } else if (input instanceof ChatAccepted chatAccepted) {
+            listener.onChatAccepted(chatAccepted);
+        } else if (input instanceof Disconnection disconnection) {
+            listener.onDisconnectionUpdate(disconnection);
+        } else if (input instanceof Reconnection reconnection) {
+            listener.onReconnectionUpdate(reconnection);
+        } else if (input instanceof Beep beep) {
             synchronized (internalLock) {
-                serverBeep = (Beep) input;
+                serverBeep = beep;
             }
         }
     }

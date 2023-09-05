@@ -115,7 +115,7 @@ public class Controller implements ControllerInterface {
     /**
      * Timer activated when only one player remains, after the game has started.
      */
-    private final Timer timer;
+    private Timer timer;
 
     /**
      * Constructor for {@code this} class. It creates a {@code Controller} for a not yet started (and constructed) game.
@@ -384,7 +384,7 @@ public class Controller implements ControllerInterface {
         }
 
         if (playerIndex == old) {
-            timer.cancel();
+            timer = new Timer();
             timer.schedule(new TimerTask() {
                 @Override
                 public void run() {
