@@ -4,10 +4,7 @@ import it.polimi.ingsw.model.ScoringToken;
 import it.polimi.ingsw.model.commongoalcard.pattern.CommonGoalPatternInterface;
 import it.polimi.ingsw.model.player.Bookshelf;
 
-import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.EmptyStackException;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Class representing a Common Goal Card. It consists of a pattern and a stack of scoring tokens.
@@ -52,7 +49,7 @@ public class CommonGoalCard {
     public ScoringToken popToken() {
         try {
             return tokens.pop();
-        } catch (EmptyStackException e) {
+        } catch (NoSuchElementException e) {
             return null;
         }
     }
