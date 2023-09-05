@@ -18,12 +18,14 @@ public class Client {
     private static final int DEFAULT_SOCKET_PORT = 1234;
     private static ClientView view = null;
 
+    private Client() {}
+
     /**
      * Instantiates the {@code ClientView} with correct type and starts either the rmi or tcp connection.
      * @param args {@code List} of arguments from command line.
      */
     public static void launch(List<String> args) {
-        if (args.size() == 0) System.exit(1);
+        if (args.isEmpty()) System.exit(1);
         try {
             if (args.get(0).equalsIgnoreCase("cli")) {
                 view = new CLInterface();

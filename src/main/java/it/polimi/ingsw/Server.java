@@ -25,6 +25,8 @@ public class Server {
     private static final int DEFAULT_RMI_PORT = 1099;
     private static final int DEFAULT_SOCKET_PORT = 1234;
 
+    private Server() {}
+
     /**
      * Starts both the rmi connection and tcp connection.
      * @param args Command Line arguments hostname, rmi port and tcp port.
@@ -37,7 +39,7 @@ public class Server {
 
                 startConnectionRMI(args.get(0), rmiPort);
                 startConnectionTCP(tcpPort);
-            } else if (args.size() == 0) {
+            } else if (args.isEmpty()) {
                 startConnectionRMI(DEFAULT_RMI_PORT);
                 startConnectionTCP(DEFAULT_SOCKET_PORT);
             } else {
@@ -92,27 +94,24 @@ public class Server {
     private static void startConnectionTCP(int port) {
         (new Thread(() -> {
             try (ServerSocket server = new ServerSocket(port)) {
-                while(true) {
-                    try {
-                        Socket socket = server.accept();
-                        ServerConnectionTCP serverConnectionTCP;
-                        try {
-                            serverConnectionTCP = new ServerConnectionTCP(socket);
-                        } catch (IOException e) {
-                            continue;
-                        }
-                        VirtualView view = new VirtualView(serverConnectionTCP);
-                        serverConnectionTCP.setServerInputViewInterface(view);
-                        serverConnectionTCP.start();
-                    } catch (IOException e) {
-                        Logger.serverError("server closed");
-                        System.exit(0);
-                    }
-                }
+                while (true) startServer(server);
             } catch (IOException e) {
                 Logger.serverError("failed to start server socket");
                 System.exit(0);
             }
         })).start();
+    }
+
+    private static void startServer(ServerSocket server) {
+        try {
+            Socket socket = server.accept();
+            ServerConnectionTCP serverConnectionTCP = new ServerConnectionTCP(socket);
+            VirtualView view = new VirtualView(serverConnectionTCP);
+            serverConnectionTCP.setServerInputViewInterface(view);
+            serverConnectionTCP.start();
+        } catch (IOException e) {
+            Logger.serverError("server closed");
+            System.exit(0);
+        }
     }
 }
