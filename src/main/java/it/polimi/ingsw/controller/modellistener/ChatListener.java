@@ -37,8 +37,8 @@ public class ChatListener extends ModelListener {
             return;
         }
 
-        if (!updatesPerPlayer.containsKey(sender)) updatesPerPlayer.put(sender, new ArrayList<>());
-        if (!updatesPerPlayer.containsKey(receiver)) updatesPerPlayer.put(receiver, new ArrayList<>());
+        updatesPerPlayer.computeIfAbsent(sender, k -> new ArrayList<>());
+        updatesPerPlayer.computeIfAbsent(receiver, k -> new ArrayList<>());
         updatesPerPlayer.get(sender).add(update);
         updatesPerPlayer.get(receiver).add(update);
     }
