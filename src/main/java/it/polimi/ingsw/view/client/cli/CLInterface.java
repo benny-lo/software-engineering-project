@@ -97,7 +97,7 @@ public class CLInterface extends ClientView implements InputReceiver {
 
         status = CLIStatus.LOBBY;
 
-        if (games.size() == 0)
+        if (games.isEmpty())
             printNoAvailableGames();
         else
             printGamesList(games);
@@ -161,8 +161,8 @@ public class CLInterface extends ClientView implements InputReceiver {
     @Override
     public synchronized void onLivingRoomUpdate(LivingRoomUpdate update) {
         Map<Position, Item> ups = update.getLivingRoomUpdate();
-        for (Position p : ups.keySet()) {
-            livingRoom[p.getRow()][p.getColumn()] = ups.get(p);
+        for (Map.Entry<Position, Item> e : ups.entrySet()) {
+            livingRoom[e.getKey().getRow()][e.getKey().getColumn()] = e.getValue();
         }
 
         if (status != CLIStatus.CHAT) {
@@ -181,9 +181,9 @@ public class CLInterface extends ClientView implements InputReceiver {
     @Override
     public synchronized void onBookshelfUpdate(BookshelfUpdate update) {
         Map<Position, Item> ups = update.getBookshelf();
-        for (Position p : ups.keySet()) {
+        for (Map.Entry<Position, Item> e : ups.entrySet()) {
             if (!bookshelves.containsKey(update.getOwner())) bookshelves.put(update.getOwner(), new Item[bookshelvesRows][bookshelvesColumns]);
-            bookshelves.get(update.getOwner())[p.getRow()][p.getColumn()] = ups.get(p);
+            bookshelves.get(update.getOwner())[e.getKey().getRow()][e.getKey().getColumn()] = e.getValue();
         }
 
         if (status != CLIStatus.CHAT) {
@@ -263,9 +263,7 @@ public class CLInterface extends ClientView implements InputReceiver {
     @Override
     public synchronized void onCommonGoalCardsUpdate(CommonGoalCardsUpdate update) {
         Map<Integer, Integer> cardsChanged = update.getCommonGoalCardsUpdate();
-        for (Integer id : cardsChanged.keySet()) {
-            commonGoalCards.put(id, cardsChanged.get(id));
-        }
+        commonGoalCards.putAll(cardsChanged);
 
         if (status != CLIStatus.CHAT) {
             clearScreen();
@@ -300,8 +298,8 @@ public class CLInterface extends ClientView implements InputReceiver {
         }
 
         Map<Position, Item> map = personalGoalPattern.getMaskPositions();
-        for (Position position : map.keySet()){
-            personalGoalCard[position.getRow()][position.getColumn()] = map.get(position);
+        for (Map.Entry<Position, Item> e : map.entrySet()){
+            personalGoalCard[e.getKey().getRow()][e.getKey().getColumn()] = e.getValue();
         }
 
         if (status != CLIStatus.CHAT) {
@@ -605,9 +603,9 @@ public class CLInterface extends ClientView implements InputReceiver {
         printItemsChosen(chosenItems, currentPlayer);
         printEndingToken(endingToken);
         printScores(scores);
-        if (disconnectedPlayers.size() != 0)
+        if (!disconnectedPlayers.isEmpty())
             printDisconnectedPlayers(disconnectedPlayers);
-        if (reconnectedPlayers.size() != 0) {
+        if (!reconnectedPlayers.isEmpty()) {
             printReconnection(nickname, reconnectedPlayers);
             reconnectedPlayers.clear();
         }
