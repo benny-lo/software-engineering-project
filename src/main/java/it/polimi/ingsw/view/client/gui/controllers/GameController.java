@@ -29,30 +29,30 @@ import java.util.*;
  * the ending token, the CommonGoalCards, and the ranking.
  */
 public class GameController extends AbstractController {
-    final private static String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
-    final private static String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
-    final private static String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
-    final private static String PLANT= "gui/myShelfieImages/item_tiles/Piante1.1.png";
-    final private static String GAME= "gui/myShelfieImages/item_tiles/Giochi1.1.png";
-    final private static String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
-    private final List<Position> selectedItems = new ArrayList<>(numberSelectedItems);
+    private static final String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
+    private static final String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
+    private static final String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
+    private static final String PLANT= "gui/myShelfieImages/item_tiles/Piante1.1.png";
+    private static final String GAME= "gui/myShelfieImages/item_tiles/Giochi1.1.png";
+    private static final String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
+    private static final int NUMBER_SELECTED_ITEMS = 3;
+    private static final int CELL_SIZE_LIVING_ROOM = 39;
+    private static final int CELL_SIZE_OTHERS_BOOKSHELF = 14;
+    private static final int CELL_SIZE_BOOKSHELF = 29;
+    private static final int LIVING_ROOM_GAP = 0;
+    private static final int BOOKSHELF_GAP = 0;
+    private static final int OTHERS_BOOKSHELF_GAP = 0;
+    private static final double SELECTED_OPACITY = 0.3;
+    private static final double NOT_SELECTED_OPACITY = 1.0;
+    private final List<Position> selectedItems = new ArrayList<>(NUMBER_SELECTED_ITEMS);
     private String nickname;
     private int numberActualPlayers;
     private String currentPlayer;
-    private final static int numberSelectedItems = 3;
     private final Map<String, GridPane> otherPlayersBookshelf = new HashMap<>();
     private final Map<String, ImageView> otherPlayersEndingToken = new HashMap<>();
-    private final static int cellSizeLivingRoom = 39;
-    private final static int cellSizeOthersBookshelf = 14;
-    private final static int cellSizeBookshelf = 29;
-    private final static int livingRoomGap = 0;
-    private final static int bookshelfGap = 0;
-    private final static int othersBookshelfGap = 0;
-    private List<Item> chosenItems = new ArrayList<>(numberSelectedItems);
-    private final List<ImageView> orderItems = new ArrayList<>(numberSelectedItems);
-    private final List<Integer> selectedOrder = new ArrayList<>(numberSelectedItems);
-    private final static double selectedOpacity = 0.3;
-    private final static double notSelectedOpacity = 1.0;
+    private List<Item> chosenItems = new ArrayList<>(NUMBER_SELECTED_ITEMS);
+    private final List<ImageView> orderItems = new ArrayList<>(NUMBER_SELECTED_ITEMS);
+    private final List<Integer> selectedOrder = new ArrayList<>(NUMBER_SELECTED_ITEMS);
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
     private final Stage chatStage = new Stage();
     private final Map <String, Integer> scores = new HashMap<>();
@@ -142,16 +142,16 @@ public class GameController extends AbstractController {
     @FXML
     public void initialize() {
         guInterface.setController(this);
-        livingRoomGridPane.setHgap(livingRoomGap);
-        livingRoomGridPane.setVgap(livingRoomGap);
-        bookshelfGridPane.setHgap(bookshelfGap);
-        bookshelfGridPane.setVgap(bookshelfGap);
-        firstBookshelfGridPane.setHgap(othersBookshelfGap);
-        firstBookshelfGridPane.setVgap(othersBookshelfGap);
-        secondBookshelfGridPane.setHgap(othersBookshelfGap);
-        secondBookshelfGridPane.setVgap(othersBookshelfGap);
-        thirdBookshelfGridPane.setHgap(othersBookshelfGap);
-        thirdBookshelfGridPane.setVgap(othersBookshelfGap);
+        livingRoomGridPane.setHgap(LIVING_ROOM_GAP);
+        livingRoomGridPane.setVgap(LIVING_ROOM_GAP);
+        bookshelfGridPane.setHgap(BOOKSHELF_GAP);
+        bookshelfGridPane.setVgap(BOOKSHELF_GAP);
+        firstBookshelfGridPane.setHgap(OTHERS_BOOKSHELF_GAP);
+        firstBookshelfGridPane.setVgap(OTHERS_BOOKSHELF_GAP);
+        secondBookshelfGridPane.setHgap(OTHERS_BOOKSHELF_GAP);
+        secondBookshelfGridPane.setVgap(OTHERS_BOOKSHELF_GAP);
+        thirdBookshelfGridPane.setHgap(OTHERS_BOOKSHELF_GAP);
+        thirdBookshelfGridPane.setVgap(OTHERS_BOOKSHELF_GAP);
         insertColumn0Button.setOnMouseClicked(mouseEvent -> selectColumn(0));
         insertColumn1Button.setOnMouseClicked(mouseEvent -> selectColumn(1));
         insertColumn2Button.setOnMouseClicked(mouseEvent -> selectColumn(2));
@@ -175,9 +175,9 @@ public class GameController extends AbstractController {
         if (currentPlayer.equals(nickname)) {
             status = GameControllerStatus.LIVING_ROOM;
             currentPlayerLabel.setText("It's your turn!");
-        }
-        else
+        } else {
             currentPlayerLabel.setText("It's " + currentPlayer + "'s turn!");
+        }
     }
 
     /**
@@ -206,12 +206,7 @@ public class GameController extends AbstractController {
     }
 
     private int getRealRow(int row) {
-        if (row == 0) return 5;
-        if (row == 1) return 4;
-        if (row == 2) return 3;
-        if (row == 3) return 2;
-        if (row == 4) return 1;
-        return 0;
+        return 5 - row;
     }
     //ENDGAME
 
@@ -268,8 +263,8 @@ public class GameController extends AbstractController {
         if (imageView.getImage() == null)
             clearNodeByColumnRow(column, row);
         imageView.setOnMouseClicked(mouseEvent -> selectItem(new Position(row, column)));
-        imageView.setFitWidth(cellSizeLivingRoom);
-        imageView.setFitHeight(cellSizeLivingRoom);
+        imageView.setFitWidth(CELL_SIZE_LIVING_ROOM);
+        imageView.setFitHeight(CELL_SIZE_LIVING_ROOM);
         imageView.setPreserveRatio(true);
         livingRoomGridPane.add(imageView, column, row);
     }
@@ -291,19 +286,18 @@ public class GameController extends AbstractController {
             warningAlert.showAndWait();
             return;
         }
+
         if (selectedItems.contains(position)) {
             selectedItems.remove(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(notSelectedOpacity));
-            return;
-        }
-        if (selectedItems.size() <= 2) {
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(NOT_SELECTED_OPACITY));
+        } else if (selectedItems.size() <= 2) {
             selectedItems.add(position);
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(selectedOpacity));
-            return;
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(SELECTED_OPACITY));
+        } else {
+            warningAlert.setHeaderText("Warning!");
+            warningAlert.setContentText("You have already selected 3 items!");
+            warningAlert.showAndWait();
         }
-        warningAlert.setHeaderText("Warning!");
-        warningAlert.setContentText("You have already selected 3 items!");
-        warningAlert.showAndWait();
     }
 
     /**
@@ -323,12 +317,13 @@ public class GameController extends AbstractController {
             warningAlert.showAndWait();
             return;
         }
-        if (selectedItems.size() < 1){
+        if (selectedItems.isEmpty()){
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You have to select at least one item!");
             warningAlert.showAndWait();
             return;
         }
+
         guInterface.selectFromLivingRoom(new LivingRoomSelection(new ArrayList<>(selectedItems)));
     }
 
@@ -360,7 +355,7 @@ public class GameController extends AbstractController {
      */
     public void resetOpacity() {
         for (Position position : selectedItems) {
-            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(notSelectedOpacity));
+            livingRoomGridPane.getChildren().stream().filter(n -> GridPane.getColumnIndex(n) == position.getColumn() && GridPane.getRowIndex(n) == position.getRow()).forEach(n -> n.setOpacity(NOT_SELECTED_OPACITY));
         }
     }
 
@@ -409,10 +404,10 @@ public class GameController extends AbstractController {
         }
         if (!orderItems.contains(selected)) {
             orderItems.add(selected);
-            selected.setOpacity(selectedOpacity);
+            selected.setOpacity(SELECTED_OPACITY);
         } else {
             orderItems.remove(selected);
-            selected.setOpacity(notSelectedOpacity);
+            selected.setOpacity(NOT_SELECTED_OPACITY);
         }
         updateOrderItems();
     }
@@ -467,13 +462,13 @@ public class GameController extends AbstractController {
             warningAlert.showAndWait();
             return;
         }
-        if (chosenItems.size() == 0) {
+        if (chosenItems.isEmpty()) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You have to select items from the Living Room!");
             warningAlert.showAndWait();
             return;
         }
-        if (!(orderItems.size() == selectedItems.size())) {
+        if (orderItems.size() != selectedItems.size()) {
             warningAlert.setHeaderText("Warning!");
             warningAlert.setContentText("You have to choose an order for all the items!");
             warningAlert.showAndWait();
@@ -488,9 +483,9 @@ public class GameController extends AbstractController {
     public void insertItems() {
         for (ImageView item : orderItems) {
             ImageView imageView = new ImageView(item.getImage());
-            imageView.setOpacity(notSelectedOpacity);
-            imageView.setFitWidth(cellSizeBookshelf);
-            imageView.setFitHeight(cellSizeBookshelf);
+            imageView.setOpacity(NOT_SELECTED_OPACITY);
+            imageView.setFitWidth(CELL_SIZE_BOOKSHELF);
+            imageView.setFitHeight(CELL_SIZE_BOOKSHELF);
             clearChosenItemLabels();
         }
         endTurnClear();
@@ -519,11 +514,11 @@ public class GameController extends AbstractController {
      */
     public void clearChosenItemsImageView() {
         firstChosenItemImageView.setImage(null);
-        firstChosenItemImageView.setOpacity(notSelectedOpacity);
+        firstChosenItemImageView.setOpacity(NOT_SELECTED_OPACITY);
         secondChosenItemImageView.setImage(null);
-        secondChosenItemImageView.setOpacity(notSelectedOpacity);
+        secondChosenItemImageView.setOpacity(NOT_SELECTED_OPACITY);
         thirdChosenItemImageView.setImage(null);
-        thirdChosenItemImageView.setOpacity(notSelectedOpacity);
+        thirdChosenItemImageView.setOpacity(NOT_SELECTED_OPACITY);
     }
 
     /**
@@ -579,25 +574,20 @@ public class GameController extends AbstractController {
     /**
      * Updates the Bookshelf of a player.
      * @param owner The owner of the Bookshelf.
-     * @param bookshelf The new updated Bookshelf.
+     * @param update The new updated Bookshelf.
      */
-    public void updateBookshelf(String owner, Map<Position, Item> bookshelf) {
+    public void updateBookshelf(String owner, Map<Position, Item> update) {
         if (owner == null) return;
-        if (bookshelf == null) return;
-        if (owner.equals(nickname)) {
-            for (Position position : bookshelf.keySet()) {
-                ImageView imageView = new ImageView(getImage(bookshelf.get(position)));
-                imageView.setFitHeight(cellSizeBookshelf);
-                imageView.setFitWidth(cellSizeBookshelf);
-                bookshelfGridPane.add(imageView, position.getColumn(), getRealRow(position.getRow()));
-            }
-            return;
-        }
-        for (Position position : bookshelf.keySet()) {
-            ImageView imageView = new ImageView(getImage(bookshelf.get(position)));
-            imageView.setFitHeight(cellSizeOthersBookshelf);
-            imageView.setFitWidth(cellSizeOthersBookshelf);
-            otherPlayersBookshelf.get(owner).add(imageView, position.getColumn(), getRealRow(position.getRow()));
+        if (update == null) return;
+
+        GridPane bookshelf = (owner.equals(nickname)) ? bookshelfGridPane : otherPlayersBookshelf.get(owner);
+        int size = (owner.equals(nickname)) ? CELL_SIZE_BOOKSHELF : CELL_SIZE_OTHERS_BOOKSHELF;
+
+        for (Map.Entry<Position, Item> e: update.entrySet()) {
+            ImageView imageView = new ImageView(getImage(e.getValue()));
+            imageView.setFitHeight(size);
+            imageView.setFitWidth(size);
+            bookshelf.add(imageView, e.getKey().getColumn(), getRealRow(e.getKey().getRow()));
         }
     }
 
@@ -673,8 +663,8 @@ public class GameController extends AbstractController {
         if (newScores == null) return;
         this.scores.putAll(newScores);
         rankingLabel.setText("");
-        for(String player : this.scores.keySet()) {
-            rankingLabel.setText(rankingLabel.getText() + player + ": " + this.scores.get(player) + " points\n");
+        for(Map.Entry<String, Integer> e : scores.entrySet()) {
+            rankingLabel.setText(rankingLabel.getText() + e.getKey() + ": " + e.getValue() + " points\n");
         }
     }
 
@@ -716,20 +706,20 @@ public class GameController extends AbstractController {
         alert.setContentText(nickname + " has reconnected!");
 
         if (nickname.equals(firstBookshelfLabel.getText())) {
-            firstBookshelfImageView.setOpacity(notSelectedOpacity);
-            firstBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(notSelectedOpacity));
+            firstBookshelfImageView.setOpacity(NOT_SELECTED_OPACITY);
+            firstBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(NOT_SELECTED_OPACITY));
             firstBookshelfLabel.setTextFill(Color.BLACK);
         }
 
         if (nickname.equals(secondBookshelfLabel.getText())) {
-            secondBookshelfImageView.setOpacity(notSelectedOpacity);
-            secondBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(notSelectedOpacity));
+            secondBookshelfImageView.setOpacity(NOT_SELECTED_OPACITY);
+            secondBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(NOT_SELECTED_OPACITY));
             secondBookshelfLabel.setTextFill(Color.BLACK);
         }
 
         if (nickname.equals(thirdBookshelfLabel.getText())) {
-            thirdBookshelfImageView.setOpacity(notSelectedOpacity);
-            thirdBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(notSelectedOpacity));
+            thirdBookshelfImageView.setOpacity(NOT_SELECTED_OPACITY);
+            thirdBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(NOT_SELECTED_OPACITY));
             thirdBookshelfLabel.setTextFill(Color.BLACK);
         }
 
@@ -748,20 +738,20 @@ public class GameController extends AbstractController {
         alert.setContentText(nickname + " has disconnected!");
 
         if (nickname.equals(firstBookshelfLabel.getText())) {
-            firstBookshelfImageView.setOpacity(selectedOpacity);
-            firstBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(selectedOpacity));
+            firstBookshelfImageView.setOpacity(SELECTED_OPACITY);
+            firstBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(SELECTED_OPACITY));
             firstBookshelfLabel.setTextFill(Color.DARKRED);
         }
 
         if (nickname.equals(secondBookshelfLabel.getText())) {
-            secondBookshelfImageView.setOpacity(selectedOpacity);
-            secondBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(selectedOpacity));
+            secondBookshelfImageView.setOpacity(SELECTED_OPACITY);
+            secondBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(SELECTED_OPACITY));
             secondBookshelfLabel.setTextFill(Color.DARKRED);
         }
 
         if (nickname.equals(thirdBookshelfLabel.getText())) {
-            thirdBookshelfImageView.setOpacity(selectedOpacity);
-            thirdBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(selectedOpacity));
+            thirdBookshelfImageView.setOpacity(SELECTED_OPACITY);
+            thirdBookshelfGridPane.getChildren().forEach(n -> n.setOpacity(SELECTED_OPACITY));
             thirdBookshelfLabel.setTextFill(Color.DARKRED);
         }
 

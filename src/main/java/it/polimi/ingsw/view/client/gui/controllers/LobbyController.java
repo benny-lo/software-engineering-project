@@ -20,15 +20,15 @@ import java.util.List;
  * It manages the creation of a new game or the selection of an already existing game by the client.
  */
 public class LobbyController extends AbstractController {
+    private static final int MIN_NUMBER_PLAYERS = 2;
+    private static final int MAX_NUMBER_PLAYERS = 4;
+    private static final int DEFAULT_NUMBER_PLAYERS = 3;
+    private static final int MIN_NUMBER_COMMON_GOAL_CARDS = 1;
+    private static final int MAX_NUMBER_COMMON_GOAL_CARDS = 2;
+    private static final int DEFAULT_NUMBER_COMMON_GOAL_CARDS = 2;
     private Stage stage;
     private GameInfo currentSelectedGame;
     private final Alert warningAlert = new Alert(Alert.AlertType.WARNING);
-    private final static int minNumberPlayers = 2;
-    private final static int maxNumberPlayers = 4;
-    private final static int defaultNumberPlayers = 3;
-    private final static int minNumberCommonGoalCards = 1;
-    private final static int maxNumberCommonGoalCards = 2;
-    private final static int defaultNumberCommonGoalCards = 2;
     @FXML
     private Spinner<Integer> numberPlayersSpinner;
     @FXML
@@ -50,12 +50,12 @@ public class LobbyController extends AbstractController {
 
         displayNicknameLabel.setText("Hi " + guInterface.getNickname() + "!");
 
-        SpinnerValueFactory<Integer> numberPlayersValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumberPlayers, maxNumberPlayers);
-        numberPlayersValueFactory.setValue(defaultNumberPlayers);
+        SpinnerValueFactory<Integer> numberPlayersValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_NUMBER_PLAYERS, MAX_NUMBER_PLAYERS);
+        numberPlayersValueFactory.setValue(DEFAULT_NUMBER_PLAYERS);
         numberPlayersSpinner.setValueFactory(numberPlayersValueFactory);
 
-        SpinnerValueFactory<Integer> numberCommonGoalCardsValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(minNumberCommonGoalCards, maxNumberCommonGoalCards);
-        numberCommonGoalCardsValueFactory.setValue(defaultNumberCommonGoalCards);
+        SpinnerValueFactory<Integer> numberCommonGoalCardsValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(MIN_NUMBER_COMMON_GOAL_CARDS, MAX_NUMBER_COMMON_GOAL_CARDS);
+        numberCommonGoalCardsValueFactory.setValue(DEFAULT_NUMBER_COMMON_GOAL_CARDS);
         numberCommonGoalCardsSpinner.setValueFactory(numberCommonGoalCardsValueFactory);
 
         gamesListView.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> currentSelectedGame = gamesListView.getSelectionModel().getSelectedItem());
