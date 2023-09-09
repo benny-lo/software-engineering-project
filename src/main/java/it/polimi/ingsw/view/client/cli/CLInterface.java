@@ -81,7 +81,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         List<GameInfo> available = message.getAvailable();
         if (available == null) {
             printLoginFailed();
-            System.out.flush();
+            flush();
             nickname = null;
             return;
         }
@@ -102,7 +102,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         else
             printGamesList(games);
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -119,7 +119,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             currentPlayer = null;
             printGameRep();
         }
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -132,7 +132,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         if (!message.isAccepted()) {
             printDeniedAction();
         }
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -149,7 +149,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             clearScreen();
             printGameRep();
         }
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -169,7 +169,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             clearScreen();
             printGameRep();
         }
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -190,7 +190,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             clearScreen();
             printGameRep();
         }
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -215,7 +215,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         }
         else printStartGame();
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -233,7 +233,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             printGameRep();
         }
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -251,7 +251,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             printGameRep();
         }
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -270,7 +270,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             printGameRep();
         }
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -307,7 +307,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             printGameRep();
         }
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -325,7 +325,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             printChat(chat);
         }
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -344,7 +344,7 @@ public class CLInterface extends ClientView implements InputReceiver {
             printGameRep();
         }
 
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -364,7 +364,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         printEndGame(nickname, update.getWinner(), scores);
         printExit();
 
-        System.out.flush();
+        flush();
     }
 
     @Override
@@ -382,7 +382,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         status = CLIStatus.ERROR;
         printLostConnection();
         printExit();
-        System.out.flush();
+        flush();
     }
 
     @Override
@@ -411,7 +411,7 @@ public class CLInterface extends ClientView implements InputReceiver {
                 gameData.getLivingRoomColumns() == -1 ||
                 gameData.getLivingRoomRows() == -1) {
             printDeniedAction();
-            System.out.flush();
+            flush();
             return;
         }
 
@@ -422,7 +422,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         bookshelvesRows = gameData.getBookshelvesRows();
         bookshelvesColumns = gameData.getBookshelvesColumns();
         personalGoalCard = new Item[bookshelvesRows][bookshelvesColumns];
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -437,13 +437,13 @@ public class CLInterface extends ClientView implements InputReceiver {
         synchronized (this) {
             if (status != CLIStatus.LOGIN) {
                 printWrongStatus();
-                System.out.flush();
+                flush();
                 return;
             }
 
             if (isNicknameValid(message.getNickname())) {
                 printIncorrectNickname();
-                System.out.flush();
+                flush();
                 return;
             }
 
@@ -463,7 +463,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         synchronized (this) {
             if (status != CLIStatus.LOBBY) {
                 printWrongStatus();
-                System.out.flush();
+                flush();
                 return;
             }
         }
@@ -481,7 +481,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         synchronized (this) {
             if (status != CLIStatus.LOBBY) {
                 printWrongStatus();
-                System.out.flush();
+                flush();
                 return;
             }
         }
@@ -499,7 +499,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         synchronized (this) {
             if (status != CLIStatus.GAME) {
                 printWrongStatus();
-                System.out.flush();
+                flush();
                 return;
             }
         }
@@ -517,7 +517,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         synchronized (this) {
             if (status != CLIStatus.GAME) {
                 printWrongStatus();
-                System.out.flush();
+                flush();
                 return;
             }
         }
@@ -535,7 +535,7 @@ public class CLInterface extends ClientView implements InputReceiver {
         synchronized (this) {
             if (status != CLIStatus.CHAT) {
                 printWrongStatus();
-                System.out.flush();
+                flush();
                 return;
             }
         }
@@ -551,14 +551,14 @@ public class CLInterface extends ClientView implements InputReceiver {
     public synchronized void enterChat() {
         if (status != CLIStatus.GAME) {
             printWrongStatus();
-            System.out.flush();
+            flush();
             return;
         }
         status = CLIStatus.CHAT;
         clearScreen();
         printInChat();
         printChat(chat);
-        System.out.flush();
+        flush();
     }
 
 
@@ -571,14 +571,14 @@ public class CLInterface extends ClientView implements InputReceiver {
     public synchronized void exitChat() {
         if (status != CLIStatus.CHAT) {
             printNotInChat();
-            System.out.flush();
+            flush();
             return;
         }
         status = CLIStatus.GAME;
         clearScreen();
         printExitChat();
         if (!endGame) printGameRep();
-        System.out.flush();
+        flush();
     }
 
     /**
@@ -610,6 +610,6 @@ public class CLInterface extends ClientView implements InputReceiver {
             reconnectedPlayers.clear();
         }
 
-        System.out.flush();
+        flush();
     }
 }

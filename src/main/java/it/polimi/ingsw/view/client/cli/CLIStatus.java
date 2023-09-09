@@ -32,7 +32,7 @@ public enum CLIStatus {
 
     /**
      * The client can write messages in the chat, both unicast and broadcast.
-     * The client can also move
+     * The client can also move back to the game-view to play.
      */
-    CHAT  // the user is in chat and can send broadcast/unicast messages.
+    CHAT
 }
