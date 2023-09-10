@@ -110,18 +110,27 @@ public class Lobby {
             return;
         }
 
+        // login done.
         Logger.login(nickname);
 
+        // register the view and the nickname.
         views.put(nickname, view);
         view.setNickname(nickname);
 
         synchronized (boundToGame) {
             if (boundToGame.containsKey(nickname)) {
                 int id = boundToGame.get(nickname);
-                boolean result = controllers.get(id).reconnection(view, nickname);
-                if (!result) {
-                    views.remove(nickname);
+
+                // try reconnecting.
+                boolean connected = false;
+                if (controllers.containsKey(id)) {
+                    connected = controllers.get(id).reconnection(view, nickname);
+                }
+
+                if (!connected) {
                     view.setNickname(null);
+                    views.remove(nickname);
+
                     view.onGamesList(new GamesList(null));
                 }
                 return;
@@ -235,20 +244,18 @@ public class Lobby {
             for(String nickname : nicknames) boundToGame.put(nickname, id);
         }
 
-        notyGameNotAvailable(id);
+        notifyGameNotAvailable(id);
     }
 
     public void unbind(List<String> nicknames, int id) {
         synchronized (boundToGame) {
             for(String nickname : nicknames) boundToGame.remove(nickname);
         }
-
-        notyGameNotAvailable(id);
+        controllers.remove(id);
+        notifyGameNotAvailable(id);
     }
 
-    private synchronized void notyGameNotAvailable(int id) {
-        controllers.remove(id);
-
+    private void notifyGameNotAvailable(int id) {
         GamesList gamesList = new GamesList(List.of(new GameInfo(id, -1, -1)));
         for(ServerUpdateViewInterface u : views.values()) {
             if (u.inGame()) continue;
