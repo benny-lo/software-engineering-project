@@ -205,18 +205,18 @@ public class Controller implements ControllerInterface {
      */
     private void notifyScoresToEverybody() {
         Map<String, Integer> scores;
-        for (String v : views.keySet()) {
+        for (Map.Entry<String, ServerUpdateViewInterface> e : views.entrySet()) {
             scores = new HashMap<>();
-            if (inactivePlayers.contains(v)) continue;
+            if (inactivePlayers.contains(e.getKey())) continue;
             for (String u : views.keySet()) {
                 if (inactivePlayers.contains(u)) continue;
                 int personalScore = game.getPersonalScore(u);
                 int publicScore = game.getPublicScore(u);
 
-                if (ended || v.equals(u)) scores.put(u, personalScore + publicScore);
+                if (ended || e.getKey().equals(u)) scores.put(u, personalScore + publicScore);
                 else scores.put(u, publicScore);
             }
-            views.get(v).onScoresUpdate(new ScoresUpdate(scores));
+            e.getValue().onScoresUpdate(new ScoresUpdate(scores));
         }
     }
 
@@ -369,6 +369,42 @@ public class Controller implements ControllerInterface {
         return true;
     }
 
+    private void startEndingTimer() {
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                synchronized (controllerLock) {
+                    if (inactivePlayers.size() < numberPlayers - 1) return;
+                    gameEnded();
+
+                    String winner = null;
+                    for (String s : playerList) {
+                        if (!inactivePlayers.contains(s)) winner = s;
+                    }
+                    if (winner != null) notifyEndGameToEverybody(winner);
+                }
+            }
+        }, WIN_FORFEIT);
+        onHold = true;
+    }
+
+    private String findWinner() {
+        int bestScore = -1;
+        String winner = null;
+        for (String nickname : playerList) {
+            if (inactivePlayers.contains(nickname)) continue;
+
+            int currentScore = game.getPublicScore(nickname) + game.getPersonalScore(nickname);
+
+            if (currentScore > bestScore) {
+                winner = nickname;
+                bestScore = currentScore;
+            }
+        }
+        return winner;
+    }
+
     /**
      * Starts the next turn: move the queue of players one step forward; if the game is ending, notify the players,
      * else notify the beginning of the turn of the new current player.
@@ -384,23 +420,7 @@ public class Controller implements ControllerInterface {
         }
 
         if (playerIndex == old) {
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    synchronized (controllerLock) {
-                        if (inactivePlayers.size() < numberPlayers - 1) return;
-                        gameEnded();
-
-                        String winner = null;
-                        for (String s : playerList) {
-                            if (!inactivePlayers.contains(s)) winner = s;
-                        }
-                        if (winner != null) notifyEndGameToEverybody(winner);
-                    }
-                }
-            }, WIN_FORFEIT);
-            onHold = true;
+            startEndingTimer();
             return;
         }
 
@@ -409,23 +429,12 @@ public class Controller implements ControllerInterface {
 
         if (game.isEndingTokenAssigned() && isFirstPlayer(playerIndex)) {
             // Game ended -> Find the winner.
-            gameEnded();
-
-            int bestScore = -1;
-            String winner = null;
-            for (String nickname : playerList) {
-                if (inactivePlayers.contains(nickname)) continue;
-
-                int currentScore = game.getPublicScore(nickname) + game.getPersonalScore(nickname);
-
-                if (currentScore > bestScore) {
-                    winner = nickname;
-                    bestScore = currentScore;
-                }
-            }
+            String winner = findWinner();
 
             notifyScoresToEverybody();
             notifyEndGameToEverybody(winner);
+
+            gameEnded();
         } else {
             // Game continues.
             notifyStartTurnToEverybody();
@@ -469,45 +478,42 @@ public class Controller implements ControllerInterface {
      * @param view The {@code ServerUpdateViewInterface} performing the action.
      */
     @Override
-    public boolean join(ServerUpdateViewInterface view, String nickname) {
-        synchronized (controllerLock) {
-            if (views.containsKey(nickname) || turnPhase != null || ended) {
-                // Game already started or already ended or player already joined.
-                view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
-                return false;
-            }
-
-            view.setController(this);
-
-            // Get the GameConfig and send them to player.
-            GameConfig gameConfig = getGameConfig();
-            view.onGameData(new GameData(numberPlayers, new ArrayList<>(playerList), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
-
-            // Add player to queue and to list of views.
-            playerList.add(nickname);
-            views.put(nickname, view);
-
-
-            // Update builder with player and listener for their bookshelf.
-            gameBuilder.addPlayer(nickname);
-
-            BookshelfListener bookshelfListener = new BookshelfListener(nickname);
-            bookshelfListeners.add(bookshelfListener);
-            gameBuilder.setBookshelfListener(bookshelfListener);
-
-            // Update all waiting players that a new one just connected.
-            notifyWaitingUpdateToEverybody(nickname, true);
-
-            if (playerList.size() == this.numberPlayers) {
-                // All players joined.
-                Lobby.getInstance().bind(new ArrayList<>(playerList), id);
-
-                Logger.startGame(id);
-                setup();
-            }
-
-            return true;
+    public synchronized boolean join(ServerUpdateViewInterface view, String nickname) {
+        if (views.containsKey(nickname) || turnPhase != null || ended) {
+            // Game already started or already ended or player already joined.
+            view.onGameData(new GameData(-1, null, -1, -1, -1, -1, -1));
+            return false;
         }
+
+        view.setController(this);
+
+        // Get the GameConfig and send them to player.
+        GameConfig gameConfig = getGameConfig();
+        view.onGameData(new GameData(numberPlayers, new ArrayList<>(playerList), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
+
+        // Add player to queue and to list of views.
+        playerList.add(nickname);
+        views.put(nickname, view);
+
+
+        // Update builder with player and listener for their bookshelf.
+        gameBuilder.addPlayer(nickname);
+
+        BookshelfListener bookshelfListener = new BookshelfListener(nickname);
+        bookshelfListeners.add(bookshelfListener);
+        gameBuilder.setBookshelfListener(bookshelfListener);
+
+        // Update all waiting players that a new one just connected.
+        notifyWaitingUpdateToEverybody(nickname, true);
+
+        if (playerList.size() == this.numberPlayers) {
+            // All players joined.
+            Lobby.getInstance().bind(new ArrayList<>(playerList), id);
+            Logger.startGame(id);
+            setup();
+        }
+
+        return true;
     }
 
     /**
@@ -517,28 +523,26 @@ public class Controller implements ControllerInterface {
      * @param nickname The nickname of the player performing the action.
      */
     @Override
-    public void livingRoom(List<Position> positions, String nickname) {
-        synchronized (controllerLock) {
-            if (ended || onHold ||
-                    !nickname.equals(playerList.get(playerIndex)) ||
-                    turnPhase != TurnPhase.LIVING_ROOM ||
-                    !game.canTakeItemTiles(positions)) {
-                views.get(nickname).onSelectedItems(new SelectedItems(null));
-                return;
-            }
-
-            Logger.selectItems(positions.size(), nickname, id);
-
-            List<Item> items = game.selectItemTiles(positions);
-
-            notifyLivingRoomToEverybody();
-
-            // Send the selected items to everybody.
-            notifySelectedItemsToEverybody(items);
-
-            // Update the turn phase.
-            turnPhase = TurnPhase.BOOKSHELF;
+    public synchronized void livingRoom(List<Position> positions, String nickname) {
+        if (ended || onHold ||
+                !nickname.equals(playerList.get(playerIndex)) ||
+                turnPhase != TurnPhase.LIVING_ROOM ||
+                !game.canTakeItemTiles(positions)) {
+            views.get(nickname).onSelectedItems(new SelectedItems(null));
+            return;
         }
+
+        Logger.selectItems(positions.size(), nickname, id);
+
+        List<Item> items = game.selectItemTiles(positions);
+
+        notifyLivingRoomToEverybody();
+
+        // Send the selected items to everybody.
+        notifySelectedItemsToEverybody(items);
+
+        // Update the turn phase.
+        turnPhase = TurnPhase.BOOKSHELF;
     }
 
     /**
@@ -549,34 +553,32 @@ public class Controller implements ControllerInterface {
      * @param nickname The nickname of the player performing the action.
      */
     @Override
-    public void bookshelf(int column, List<Integer> permutation, String nickname) {
-        synchronized (controllerLock) {
-            if (ended || onHold ||
-                    !nickname.equals(playerList.get(playerIndex)) ||
-                    turnPhase != TurnPhase.BOOKSHELF ||
-                    !game.canInsertItemTilesInBookshelf(column, permutation)) {
-                views.get(nickname).onAcceptedInsertion(new AcceptedInsertion(false));
-                return;
-            }
-
-            Logger.selectColumn(column, permutation, nickname, id);
-
-            game.insertItemTilesInBookshelf(column, permutation);
-
-            views.get(nickname).onAcceptedInsertion(new AcceptedInsertion(true));
-
-            notifyLivingRoomToEverybody();
-            notifyBookshelvesToEverybody();
-            notifyPersonalGoalCardsToEverybody();
-            notifyCommonGoalCardsToEverybody();
-            notifyEndingTokenToEverybody();
-            notifyScoresToEverybody();
-
-            // Set the new turn phase.
-            turnPhase = TurnPhase.LIVING_ROOM;
-
-            nextTurn();
+    public synchronized void bookshelf(int column, List<Integer> permutation, String nickname) {
+        if (ended || onHold ||
+                !nickname.equals(playerList.get(playerIndex)) ||
+                turnPhase != TurnPhase.BOOKSHELF ||
+                !game.canInsertItemTilesInBookshelf(column, permutation)) {
+            views.get(nickname).onAcceptedInsertion(new AcceptedInsertion(false));
+            return;
         }
+
+        Logger.selectColumn(column, permutation, nickname, id);
+
+        game.insertItemTilesInBookshelf(column, permutation);
+
+        views.get(nickname).onAcceptedInsertion(new AcceptedInsertion(true));
+
+        notifyLivingRoomToEverybody();
+        notifyBookshelvesToEverybody();
+        notifyPersonalGoalCardsToEverybody();
+        notifyCommonGoalCardsToEverybody();
+        notifyEndingTokenToEverybody();
+        notifyScoresToEverybody();
+
+        // Set the new turn phase.
+        turnPhase = TurnPhase.LIVING_ROOM;
+
+        nextTurn();
     }
 
     /**
@@ -587,41 +589,39 @@ public class Controller implements ControllerInterface {
      * @param nickname The nickname of the player performing the action.
      */
     @Override
-    public void chat(String text, String receiver, String nickname) {
-        synchronized (controllerLock) {
-            if (ended || playerIndex == -1 || receiver.equals(nickname)) {
+    public synchronized void chat(String text, String receiver, String nickname) {
+        if (ended || playerIndex == -1 || receiver.equals(nickname)) {
+            views.get(nickname).onChatAccepted(new ChatAccepted(false));
+            // Action failed.
+            return;
+        }
+
+        ChatUpdate update = new ChatUpdate(nickname,
+                text,
+                receiver);
+
+        chatListener.addUpdate(update);
+
+        if (receiver.equals("all")) {
+            // Broadcast chat message.
+            views.get(nickname).onChatAccepted(new ChatAccepted(true));
+
+            Logger.sendMessage(nickname, "all", id);
+
+            notifyChatUpdate(update);
+        } else {
+            // Unicast chat message.
+            ServerUpdateViewInterface other = views.get(receiver);
+
+            if (other == null) {
                 views.get(nickname).onChatAccepted(new ChatAccepted(false));
-                // Action failed.
                 return;
             }
 
-            ChatUpdate update = new ChatUpdate(nickname,
-                    text,
-                    receiver);
+            Logger.sendMessage(nickname, receiver, id);
 
-            chatListener.addUpdate(update);
-
-            if (receiver.equals("all")) {
-                // Broadcast chat message.
-                views.get(nickname).onChatAccepted(new ChatAccepted(true));
-
-                Logger.sendMessage(nickname, "all", id);
-
-                notifyChatUpdate(update);
-            } else {
-                // Unicast chat message.
-                ServerUpdateViewInterface other = views.get(receiver);
-
-                if (other == null) {
-                    views.get(nickname).onChatAccepted(new ChatAccepted(false));
-                    return;
-                }
-
-                Logger.sendMessage(nickname, receiver, id);
-
-                views.get(nickname).onChatUpdate(update);
-                other.onChatUpdate(update);
-            }
+            views.get(nickname).onChatUpdate(update);
+            other.onChatUpdate(update);
         }
     }
 
@@ -631,73 +631,69 @@ public class Controller implements ControllerInterface {
      * @param nickname The nickname of the player that disconnected.
      */
     @Override
-    public void disconnection(String nickname) {
-        synchronized (controllerLock) {
-            // player already logged out of the game or game ended?
-            if (!views.containsKey(nickname) || ended) return;
+    public synchronized void disconnection(String nickname) {
+        // player already logged out of the game or game ended?
+        if (!views.containsKey(nickname) || ended) return;
 
-            views.remove(nickname);
+        views.remove(nickname);
 
-            if (isStarted()) {
-                // Disconnection during game-phase.
-                // The game is killed
-                inactivePlayers.add(nickname);
+        if (isStarted()) {
+            // Disconnection during game-phase.
+            // The game is killed
+            inactivePlayers.add(nickname);
 
-                notifyDisconnectionToEverybody(nickname);
+            notifyDisconnectionToEverybody(nickname);
 
-                if (inactivePlayers.size() >= numberPlayers) {
-                    gameEnded();
-                    notifyEndGameToEverybody(null);
-                    Logger.endGame(id);
-                    return;
-                }
-
-                notifyScoresToEverybody();
-
-                if (playerList.get(playerIndex).equals(nickname)) {
-                    if (turnPhase == TurnPhase.BOOKSHELF) {
-                        game.resetTilesSelected();
-                        notifyLivingRoomToEverybody();
-                    }
-                    nextTurn();
-                }
-            } else {
-                // Disconnection during pre-game phase.
-                // The game is not killed.
-                gameBuilder.removePlayer(nickname);
-                gameBuilder.removeBookshelfListener(nickname);
-                bookshelfListeners.removeIf(b -> b.getOwner().equals(nickname));
-                playerList.remove(nickname);
-
-                notifyWaitingUpdateToEverybody(nickname, false);
-
-                if (playerList.isEmpty()) gameEnded();
+            if (inactivePlayers.size() >= numberPlayers) {
+                gameEnded();
+                notifyEndGameToEverybody(null);
+                Logger.endGame(id);
+                return;
             }
+
+            notifyScoresToEverybody();
+
+            if (playerList.get(playerIndex).equals(nickname)) {
+                if (turnPhase == TurnPhase.BOOKSHELF) {
+                    game.resetTilesSelected();
+                    notifyLivingRoomToEverybody();
+                }
+                nextTurn();
+            }
+        } else {
+            // Disconnection during pre-game phase.
+            // The game is not killed.
+            gameBuilder.removePlayer(nickname);
+            gameBuilder.removeBookshelfListener(nickname);
+            bookshelfListeners.removeIf(b -> b.getOwner().equals(nickname));
+            playerList.remove(nickname);
+
+            notifyWaitingUpdateToEverybody(nickname, false);
+
+            if (playerList.isEmpty()) gameEnded();
         }
     }
 
     @Override
-    public boolean reconnection(ServerUpdateViewInterface view, String nickname) {
-        synchronized (controllerLock) {
-            if (ended || !inactivePlayers.contains(nickname)) return false;
+    public synchronized boolean reconnection(ServerUpdateViewInterface view, String nickname) {
+        if (ended || !inactivePlayers.contains(nickname)) return false;
 
-            timer.cancel();
+        timer.cancel();
 
-            view.setController(this);
-            views.put(nickname, view);
-            inactivePlayers.remove(nickname);
+        view.setController(this);
+        views.put(nickname, view);
+        inactivePlayers.remove(nickname);
 
-            notifyReconnectionToEverybody(nickname);
+        notifyReconnectionToEverybody(nickname);
 
-            notifyFullState(nickname);
+        notifyFullState(nickname);
 
-            if (onHold) {
-                onHold = false;
-                nextTurn();
-            }
-
-            return true;
+        if (onHold) {
+            onHold = false;
+            nextTurn();
         }
+
+        return true;
     }
 
     /**
