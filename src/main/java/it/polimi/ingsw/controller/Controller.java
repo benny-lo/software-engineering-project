@@ -12,7 +12,6 @@ import it.polimi.ingsw.utils.GameConfig;
 import it.polimi.ingsw.view.server.ServerUpdateViewInterface;
 import it.polimi.ingsw.utils.message.server.*;
 
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.*;
@@ -23,7 +22,7 @@ import java.util.*;
  */
 public class Controller implements ControllerInterface {
     private static final int WIN_FORFEIT = 30000;
-
+    private static final String CONFIGURATION_FILE = "/configuration/game_config.json";
     private final Object controllerLock;
     /**
      * The model of the game.
@@ -293,10 +292,9 @@ public class Controller implements ControllerInterface {
         }
     }
 
-    private void notifyFullState(String nickname) {
+    private void notifyFullState(String nickname, GameConfig gc) {
         ServerUpdateViewInterface v = views.get(nickname);
 
-        GameConfig gc = getGameConfig();
         v.onGameData(new GameData(numberPlayers,
                 new ArrayList<>(playerList),
                 numberCommonGoalCards,
@@ -339,8 +337,7 @@ public class Controller implements ControllerInterface {
 
         game = gameBuilder.startGame();
         if (game == null) {
-            notifyEndGameToEverybody(null);
-            gameEnded();
+            gameEnded(null);
             return;
         }
 
@@ -376,13 +373,12 @@ public class Controller implements ControllerInterface {
             public void run() {
                 synchronized (controllerLock) {
                     if (inactivePlayers.size() < numberPlayers - 1) return;
-                    gameEnded();
 
                     String winner = null;
                     for (String s : playerList) {
                         if (!inactivePlayers.contains(s)) winner = s;
                     }
-                    if (winner != null) notifyEndGameToEverybody(winner);
+                    gameEnded(winner);
                 }
             }
         }, WIN_FORFEIT);
@@ -432,44 +428,35 @@ public class Controller implements ControllerInterface {
             String winner = findWinner();
 
             notifyScoresToEverybody();
-            notifyEndGameToEverybody(winner);
-
-            gameEnded();
+            gameEnded(winner);
         } else {
             // Game continues.
             notifyStartTurnToEverybody();
         }
     }
 
-    private void gameEnded() {
+    private void gameEnded(String winner) {
         ended = true;
         Lobby.getInstance().unbind(new ArrayList<>(playerList), id);
+        Logger.endGame(id);
+
+        notifyEndGameToEverybody(winner);
     }
 
     /**
      * Gets the game config parameters from JSON file.
      * @return {@code GameConfig} object storing the game info (bookshelf and living room dimensions).
      */
-    private GameConfig getGameConfig(){
+    private GameConfig getGameConfig() {
         Gson gson = new GsonBuilder().serializeNulls()
                 .setPrettyPrinting()
                 .disableJdkUnsafe()
                 .create();
 
-        GameConfig gameConfig;
 
-        String filename = "/configuration/game_config.json";
+        Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(CONFIGURATION_FILE)));
 
-        try (Reader reader = new InputStreamReader(Objects.requireNonNull(this.getClass().getResourceAsStream(filename)))) {
-            gameConfig = gson.fromJson(reader,new TypeToken<GameConfig>(){}.getType());
-        } catch(IOException e){
-            gameConfig = null;
-            System.err.println("""
-                    Configuration file for gameConfig not found.
-                    The configuration file should be in configuration
-                    with name game_config.json""");
-        }
-        return gameConfig;
+        return gson.fromJson(reader, new TypeToken<GameConfig>(){}.getType());
     }
 
     /**
@@ -485,10 +472,11 @@ public class Controller implements ControllerInterface {
             return false;
         }
 
-        view.setController(this);
-
         // Get the GameConfig and send them to player.
         GameConfig gameConfig = getGameConfig();
+
+        view.setController(this);
+
         view.onGameData(new GameData(numberPlayers, new ArrayList<>(playerList), numberCommonGoalCards, gameConfig.getLivingRoomR(), gameConfig.getLivingRoomC(), gameConfig.getBookshelfR(), gameConfig.getBookshelfC()));
 
         // Add player to queue and to list of views.
@@ -645,9 +633,7 @@ public class Controller implements ControllerInterface {
             notifyDisconnectionToEverybody(nickname);
 
             if (inactivePlayers.size() >= numberPlayers) {
-                gameEnded();
-                notifyEndGameToEverybody(null);
-                Logger.endGame(id);
+                gameEnded(null);
                 return;
             }
 
@@ -670,13 +656,15 @@ public class Controller implements ControllerInterface {
 
             notifyWaitingUpdateToEverybody(nickname, false);
 
-            if (playerList.isEmpty()) gameEnded();
+            if (playerList.isEmpty()) gameEnded(null);
         }
     }
 
     @Override
     public synchronized boolean reconnection(ServerUpdateViewInterface view, String nickname) {
         if (ended || !inactivePlayers.contains(nickname)) return false;
+
+        GameConfig gameConfig = getGameConfig();
 
         timer.cancel();
 
@@ -686,7 +674,7 @@ public class Controller implements ControllerInterface {
 
         notifyReconnectionToEverybody(nickname);
 
-        notifyFullState(nickname);
+        notifyFullState(nickname, gameConfig);
 
         if (onHold) {
             onHold = false;
