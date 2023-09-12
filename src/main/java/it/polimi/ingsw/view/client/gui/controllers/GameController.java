@@ -29,12 +29,15 @@ import java.util.*;
  * the ending token, the CommonGoalCards, and the ranking.
  */
 public class GameController extends AbstractController {
-    private static final String CUP= "gui/myShelfieImages/item_tiles/Trofei1.1.png";
-    private static final String CAT= "gui/myShelfieImages/item_tiles/Gatti1.1.png";
-    private static final String BOOK= "gui/myShelfieImages/item_tiles/Libri1.1.png";
-    private static final String PLANT= "gui/myShelfieImages/item_tiles/Piante1.1.png";
-    private static final String GAME= "gui/myShelfieImages/item_tiles/Giochi1.1.png";
-    private static final String FRAME= "gui/myShelfieImages/item_tiles/Cornici1.1.png";
+    private static final String CUP = "gui/myShelfieImages/item_tiles/Trofei1.1.png";
+    private static final String CAT = "gui/myShelfieImages/item_tiles/Gatti1.1.png";
+    private static final String BOOK = "gui/myShelfieImages/item_tiles/Libri1.1.png";
+    private static final String PLANT = "gui/myShelfieImages/item_tiles/Piante1.1.png";
+    private static final String GAME = "gui/myShelfieImages/item_tiles/Giochi1.1.png";
+    private static final String FRAME = "gui/myShelfieImages/item_tiles/Cornici1.1.png";
+    private static final String GAME_ICON = "/gui/myShelfieImages/publisher_material/icon_50x50px.png";
+    private static final String END_GAME_TOKEN = "/gui/myShelfieImages/scoring_tokens/end_game.jpg";
+    private static final String BOOKSHELF = "/gui/myShelfieImages/boards/bookshelf.png";
     private static final int NUMBER_SELECTED_ITEMS = 3;
     private static final int CELL_SIZE_LIVING_ROOM = 39;
     private static final int CELL_SIZE_OTHERS_BOOKSHELF = 14;
@@ -413,7 +416,9 @@ public class GameController extends AbstractController {
     }
 
     private void updateOrderItems() {
-        boolean first = false, second = false, third = false;
+        boolean first = false;
+        boolean second = false;
+        boolean third = false;
 
         for (ImageView imageView : orderItems) {
             if (imageView.equals(firstChosenItemImageView)) {
@@ -551,20 +556,20 @@ public class GameController extends AbstractController {
         numberActualPlayers = nicknames.size();
         nicknames.remove(nickname);
 
-        firstBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
+        firstBookshelfImageView.setImage(new Image(BOOKSHELF));
         firstBookshelfLabel.setText(nicknames.get(0));
         otherPlayersBookshelf.put(nicknames.get(0), firstBookshelfGridPane);
         otherPlayersEndingToken.put(nicknames.get(0), firstEndingTokenImageView);
 
         if (numberPlayers > 2) {
-            secondBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
+            secondBookshelfImageView.setImage(new Image(BOOKSHELF));
             secondBookshelfLabel.setText(nicknames.get(1));
             otherPlayersBookshelf.put(nicknames.get(1), secondBookshelfGridPane);
             otherPlayersEndingToken.put(nicknames.get(1), secondEndingTokenImageView);
 
         }
         if (numberPlayers > 3) {
-            thirdBookshelfImageView.setImage(new Image("/gui/myShelfieImages/boards/bookshelf.png"));
+            thirdBookshelfImageView.setImage(new Image(BOOKSHELF));
             thirdBookshelfLabel.setText(nicknames.get(2));
             otherPlayersBookshelf.put(nicknames.get(2), thirdBookshelfGridPane);
             otherPlayersEndingToken.put(nicknames.get(2), thirdEndingTokenImageView);
@@ -647,9 +652,9 @@ public class GameController extends AbstractController {
     public void setEndingToken(String owner) {
         if (owner == null) return;
         if (owner.equals(nickname))
-            currentEndingTokenImageView.setImage(new Image("/gui/myShelfieImages/scoring_tokens/end_game.jpg"));
+            currentEndingTokenImageView.setImage(new Image(END_GAME_TOKEN));
         else
-            otherPlayersEndingToken.get(owner).setImage(new Image("/gui/myShelfieImages/scoring_tokens/end_game.jpg"));
+            otherPlayersEndingToken.get(owner).setImage(new Image(END_GAME_TOKEN));
     }
 
 
@@ -677,7 +682,7 @@ public class GameController extends AbstractController {
         chatStage.setTitle("MyShelfieChat");
         chatStage.hide();
         chatStage.setResizable(false);
-        chatStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/gui/myShelfieImages/publisher_material/icon_50x50px.png"))));
+        chatStage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream(GAME_ICON))));
 
         chatStage.setOnCloseRequest(event -> {
             event.consume();

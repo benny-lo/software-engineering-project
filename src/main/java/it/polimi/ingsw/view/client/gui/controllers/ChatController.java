@@ -15,7 +15,7 @@ import java.util.List;
  * It manages the messages of the various players, that can be sent in broadcast or in unicast.
  */
 public class ChatController extends AbstractController {
-    private final static String BROADCAST = "all";
+    private static final String BROADCAST = "all";
     @FXML
     private ComboBox<String> playerMenu;
     @FXML
