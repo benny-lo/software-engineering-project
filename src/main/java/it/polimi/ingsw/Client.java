@@ -58,7 +58,7 @@ public class Client {
                 System.exit(1);
             }
         }
-        else if (args.size() == 3) {
+        else if (args.size() == 3 && parseInt(args.get(2)) >= 0 && parseInt(args.get(2)) <= 65535) {
             if (args.get(0).equalsIgnoreCase("rmi")) {
                 view.startRMI(args.get(1), parseInt(args.get(2)));
             } else if (args.get(0).equalsIgnoreCase("tcp")) {

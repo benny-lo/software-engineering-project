@@ -17,6 +17,8 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
+import static java.lang.Integer.parseInt;
+
 /**
  * Class starting the server.
  */
@@ -33,7 +35,7 @@ public class Server {
      */
     public static void launch(List<String> args) {
         try {
-            if (args.size() == 3) {
+            if (args.size() == 3 && parseInt(args.get(1)) >= 0 && parseInt(args.get(1)) <= 65535 && parseInt(args.get(2)) >= 0 && parseInt(args.get(2)) <= 65535) {
                 int rmiPort = Integer.parseInt(args.get(1));
                 int tcpPort = Integer.parseInt(args.get(2));
 
@@ -43,9 +45,11 @@ public class Server {
                 startConnectionRMI(DEFAULT_RMI_PORT);
                 startConnectionTCP(DEFAULT_SOCKET_PORT);
             } else {
+                Logger.serverError("wrong arguments : server [{hostName} {rmiPort} {socketPort}]");
                 System.exit(1);
             }
         } catch (NumberFormatException e) {
+            Logger.serverError("wrong arguments : server [{hostName} {rmiPort} {socketPort}]");
             System.exit(1);
         }
 
