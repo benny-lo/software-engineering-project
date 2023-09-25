@@ -660,6 +660,12 @@ public class Controller implements ControllerInterface {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @param view The view of the player reconnecting.
+     * @param nickname The nickname of the client reconnecting.
+     * @return {@code true} iff the reconnection went fine.
+     */
     @Override
     public synchronized boolean reconnection(ServerUpdateViewInterface view, String nickname) {
         if (ended || !inactivePlayers.contains(nickname)) return false;
@@ -712,6 +718,10 @@ public class Controller implements ControllerInterface {
         return numberCommonGoalCards;
     }
 
+    /**
+     * {@inheritDoc}
+     * @return {@code true} iff the game has ended.
+     */
     @Override
     public synchronized boolean isEnded() {
         return ended;

@@ -239,20 +239,36 @@ public class Lobby {
         // the controller is sending the player the game dimensions.
     }
 
+    /**
+     * Binds the nicknames of some players to the id of a game. In this way, the {@code Lobby} knows, in case of a
+     * reconnection, to which game the players should be reconnected to. It synchronizes internally and on {@code this}
+     * separately: with the lock on {@code this}, no sensitive lock is acquired.
+     * @param nicknames List of the nicknames of the players to bind.
+     * @param id The id of the game the players are getting bound to.
+     */
     public void bind(List<String> nicknames, int id) {
         synchronized (boundToGame) {
             for(String nickname : nicknames) boundToGame.put(nickname, id);
         }
-
-        notifyGameNotAvailable(id);
+        synchronized (this) {
+            notifyGameNotAvailable(id);
+        }
     }
 
+    /**
+     * Unbinds the nicknames of some players to the id of a game. It synchronizes internally and on {@code this}
+     * separately: with the lock on {@code this}, no sensitive lock is acquired.
+     * @param nicknames list of the nicknames of the players to unbind.
+     * @param id The id of the game the players are unbinding from.
+     */
     public void unbind(List<String> nicknames, int id) {
         synchronized (boundToGame) {
             for(String nickname : nicknames) boundToGame.remove(nickname);
         }
-        controllers.remove(id);
-        notifyGameNotAvailable(id);
+        synchronized (this) {
+            controllers.remove(id);
+            notifyGameNotAvailable(id);
+        }
     }
 
     private void notifyGameNotAvailable(int id) {

@@ -19,5 +19,9 @@ public interface ServerUpdateViewInterface extends UpdateViewInterface {
      */
     void setController(ControllerInterface controller);
 
+    /**
+     * Checks if the client is joined in game (i.e. has a controller).
+     * @return {@code true} iff the client is joined in a game.
+     */
     boolean inGame();
 }

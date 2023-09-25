@@ -150,6 +150,10 @@ public class BoardManager {
         }
     }
 
+    /**
+     * Replaces some previously chosen tiles into the Living Room (called only in case of a disconnection).
+     * @param scheme List of (p, i) with p being a {@code Position} and i begin the {@code Item} to put at p.
+     */
     public void resetTiles(List<Pair<Position, Item>> scheme) {
         for(Pair<Position, Item> p : scheme) {
            livingRoom.setTile(p.getValue(), p.getKey());

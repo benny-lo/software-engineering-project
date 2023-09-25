@@ -32,6 +32,8 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     private final ServerConnection serverConnection;
 
+    private final Object internalLock;
+
     /**
      * The constructor of {@code VirtualView}. It only sets the {@code ServerConnection} and
      * leaves {@code nickname} and {@code controller} to {@code null}.
@@ -39,6 +41,7 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     public VirtualView(ServerConnection serverConnection) {
         this.serverConnection = serverConnection;
+        this.internalLock = new Object();
     }
 
     /**
@@ -48,7 +51,9 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public void setNickname(String nickname) {
-        this.nickname = nickname;
+        synchronized (internalLock) {
+            this.nickname = nickname;
+        }
     }
 
     /**
@@ -58,13 +63,18 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public void setController(ControllerInterface controller) {
-        this.controller = controller;
+        synchronized (internalLock) {
+            this.controller = controller;
+        }
     }
 
     @Override
     public boolean inGame() {
-        return controller != null;
+        synchronized (internalLock) {
+            return controller != null;
+        }
     }
+
     /**
      * {@inheritDoc}
      * It synchronizes on {@code this}. Internally, it requires the lock on {@code Lobby}.
@@ -72,6 +82,8 @@ public class VirtualView implements ServerUpdateViewInterface, ServerInputViewIn
      */
     @Override
     public synchronized void login(Nickname message) {
+        // no need to take the internal lock because controller can be modified
+        // only with the lock on this.
         if (controller != null) {
             onGamesList(new GamesList(null));
             return;

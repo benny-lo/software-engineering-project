@@ -11,7 +11,15 @@ import java.util.Map;
  * {@code Item} placed.
  */
 public class LivingRoomListener extends ModelListener {
+    /**
+     * Map storing the most recent (not yet queried) updates of the Living Room.
+     */
     private final Map<Position, Item> livingRoomUpdates;
+
+    /**
+     * Map mocking the Living Room: used to retrieve the full Living Room when a disconnection followed by a
+     * reconnection occurs.
+     */
     private final Map<Position, Item> livingRoomState;
 
     /**

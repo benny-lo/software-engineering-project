@@ -46,6 +46,12 @@ public interface ControllerInterface {
     void disconnection(String nickname);
 
 
+    /**
+     * Processes a reconnection of a previously disconnected player.
+     * @param view The view of the player reconnecting.
+     * @param nickname The nickname of the client reconnecting.
+     * @return {@code true} iff the reconnection went fine.
+     */
     boolean reconnection(ServerUpdateViewInterface view, String nickname);
 
     /**
@@ -66,5 +72,9 @@ public interface ControllerInterface {
      */
     int getNumberCommonGoalCards();
 
+    /**
+     * Returns whether the game has ended.
+     * @return {@code true} iff the game has ended.
+     */
     boolean isEnded();
 }

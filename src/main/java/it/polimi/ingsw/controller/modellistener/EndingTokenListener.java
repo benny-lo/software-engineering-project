@@ -4,6 +4,9 @@ package it.polimi.ingsw.controller.modellistener;
  * Listener of the ending token: it registers when some player takes the ending token.
  */
 public class EndingTokenListener extends ModelListener {
+    /**
+     * Owner of the ending token.
+     */
     private String owner;
 
     /**

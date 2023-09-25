@@ -8,7 +8,14 @@ import java.util.Map;
  * of any {@code CommonGoalCard}.
  */
 public class CommonGoalCardsListener extends ModelListener {
+    /**
+     * Map storing the most recent (not yet queried) updates to the tops of the stacks of the Common Goal Cards.
+     */
     private final Map<Integer, Integer> cardsUpdates;
+
+    /**
+     * Map storing the top of the stack of every common goal card, used in case of disconnection.
+     */
     private final Map<Integer, Integer> cardsState;
 
 
