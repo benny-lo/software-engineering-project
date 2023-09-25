@@ -148,6 +148,7 @@ public class Lobby {
      * It synchronizes on {@code this}.
      * @param numberPlayers The number of players in the game to create.
      * @param numberCommonGoals The number of common goal cards in the game to create.
+     * @param view The view of the client creating a new game.
      * @param nickname The nickname that performed the request.
      */
     public synchronized void createGame(int numberPlayers, int numberCommonGoals, ServerUpdateViewInterface view, String nickname) {
@@ -200,6 +201,7 @@ public class Lobby {
     /**
      * Joins the {@code ServerUpdateViewInterface} that performed the request in the selected match (by id).
      * @param id The id of the selected game.
+     * @param view The view of the client selecting a game.
      * @param nickname The nickname of the client that performed the request.
      */
     public synchronized void selectGame(int id, ServerUpdateViewInterface view, String nickname) {

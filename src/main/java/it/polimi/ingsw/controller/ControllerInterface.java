@@ -13,6 +13,7 @@ public interface ControllerInterface {
      * Joins a {@code ServerUpdateViewInterface} into the match. If the join is rejected, the client will be notified.
      * @param view The {@code ServerUpdateViewInterface} performing the action.
      * @param nickname The nickname of the player performing the action.
+     * @return {@code true} iff the join completed successfully.
      */
     boolean join(ServerUpdateViewInterface view, String nickname);
 

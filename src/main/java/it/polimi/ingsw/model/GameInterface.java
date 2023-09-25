@@ -73,5 +73,8 @@ public interface GameInterface {
      */
     int getPersonalID(String nickname);
 
+    /**
+     * Resets the {@code Item}s selected by the current {@code PLayer} from the {@code LivingRoom}.
+     */
     void resetTilesSelected();
 }

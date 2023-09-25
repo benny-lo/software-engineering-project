@@ -116,8 +116,18 @@ public interface ClientConnectionRMIInterface extends Remote {
      */
     void receive(ChatAccepted chatAccepted) throws RemoteException;
 
+    /**
+     * Sends a {@code Disconnection} message to the client.
+     * @param disconnection The {@code Disconnection} object to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     void receive(Disconnection disconnection) throws RemoteException;
 
+    /**
+     * Sends a {@code Reconnection} message to the client.
+     * @param reconnection The {@code Reconnection} object to send to the client.
+     * @throws RemoteException Rmi exception.
+     */
     void receive(Reconnection reconnection) throws RemoteException;
 
     /**

@@ -117,6 +117,9 @@ public class LoginController extends AbstractController {
         System.exit(0);
     }
 
+    /**
+     * Shows an alert informing that you reconnected to game you were connected to.
+     */
     public void reconnectionInLauncher() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Reconnection");

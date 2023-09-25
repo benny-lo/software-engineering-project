@@ -63,6 +63,10 @@ public class Player {
         itemsTakenFromLivingRoom = items;
     }
 
+    /**
+     * Returns and gets the {@code Item}s this {@code Player} took from the Living Room.
+     * @return List of pair corresponding to the {@code Item}s retrieved from this player.
+     */
     public List<Pair<Position, Item>> getAndRemoveItems() {
         List<Pair<Position, Item>> ret = itemsTakenFromLivingRoom;
         itemsTakenFromLivingRoom = null;
