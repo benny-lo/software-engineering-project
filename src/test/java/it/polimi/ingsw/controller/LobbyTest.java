@@ -178,10 +178,10 @@ public class LobbyTest {
         while(!mockServerConnection1.queue.isEmpty()) {
             message = mockServerConnection1.queue.remove();
             if (message instanceof GamesList gamesList) {
-                assertEquals(gamesList.getAvailable().size(),1);
-                assertEquals(gamesList.getAvailable().get(0).getId(),0);
-                assertEquals(gamesList.getAvailable().get(0).getNumberPlayers(),2);
-                assertEquals(gamesList.getAvailable().get(0).getNumberCommonGoals(),2);
+                assertEquals(1, gamesList.getAvailable().size());
+                assertEquals(0, gamesList.getAvailable().get(0).getId());
+                assertEquals(2, gamesList.getAvailable().get(0).getNumberPlayers());
+                assertEquals(2, gamesList.getAvailable().get(0).getNumberCommonGoals());
             }
         }
     }
@@ -345,16 +345,16 @@ public class LobbyTest {
             }
         }
 
-        assertEquals(gameList,2);
-        assertEquals(gameData,2);
+        assertEquals(2, gameList);
+        assertEquals(2, gameData);
         assertEquals(3, waiting);
-        assertEquals(bookshelf,4);
-        assertEquals(commonGoalCards,2);
-        assertEquals(endingToken,2);
-        assertEquals(livingRoom,2);
-        assertEquals(personalGoalCards,2);
-        assertEquals(scores,2);
-        assertEquals(startTurn,2);
+        assertEquals(4, bookshelf);
+        assertEquals(2, commonGoalCards);
+        assertEquals(2, endingToken);
+        assertEquals(2, livingRoom);
+        assertEquals(2, personalGoalCards);
+        assertEquals(2, scores);
+        assertEquals(2, startTurn);
     }
 
     /**
@@ -388,5 +388,44 @@ public class LobbyTest {
         assertTrue(bobMessage instanceof GamesList);
         assertNotNull(((GamesList) bobMessage).getAvailable());
         assertEquals(1, ((GamesList) bobMessage).getAvailable().size());
+    }
+
+    /**
+     * Test the creation of a game with two players (alice and bob). Then the disconnection of Bob followed by his
+     * reconnection.
+     */
+    @Test
+    public void testReconnection() {
+        Logger.setTestMode(true);
+        Lobby.setNull();
+
+        MockServerConnection alice = new MockServerConnection();
+        MockServerConnection bob = new MockServerConnection();
+
+        VirtualView aliceView = new VirtualView(alice);
+        VirtualView bobView = new VirtualView(bob);
+
+        aliceView.login(new Nickname("alice"));
+        bobView.login(new Nickname("bob"));
+
+        aliceView.createGame(new GameInitialization(2, 2));
+        bobView.selectGame(new GameSelection(0));
+
+        bobView.disconnect();
+
+        alice.queue.clear();
+
+        MockServerConnection bobReconnected = new MockServerConnection();
+        VirtualView bobReconnectedView = new VirtualView(bobReconnected);
+
+        bobReconnectedView.login(new Nickname("bob"));
+
+        Message bobMessage = bobReconnected.queue.poll();
+        assertTrue(bobMessage instanceof Reconnection);
+        assertEquals("bob", ((Reconnection) bobMessage).getReconnectedPlayer());
+
+        Message aliceMessage = alice.queue.poll();
+        assertTrue(aliceMessage instanceof Reconnection);
+        assertEquals("bob", ((Reconnection) aliceMessage).getReconnectedPlayer());
     }
 }
