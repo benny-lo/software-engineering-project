@@ -34,10 +34,12 @@ public class Client {
                 view = new GUInterface();
                 startNetwork(args.subList(1, args.size()));
             } else {
+                Logger.clientError("wrong arguments : client {cli | gui} {tcp | rmi} [{hostName} {numberPort}]");
                 System.exit(0);
             }
         } catch (NumberFormatException e) {
             e.printStackTrace();
+            Logger.clientError("wrong arguments : client {cli | gui} {tcp | rmi} [{hostName} {numberPort}]");
             System.exit(1);
         }
 
@@ -51,12 +53,20 @@ public class Client {
             } else if (args.get(0).equalsIgnoreCase("tcp")) {
                 view.startTCP(DEFAULT_SERVER_ADDRESS, DEFAULT_SOCKET_PORT);
             }
+            else {
+                Logger.clientError("wrong arguments : client {cli | gui} {tcp | rmi} [{hostName} {numberPort}]");
+                System.exit(1);
+            }
         }
         else if (args.size() == 3) {
             if (args.get(0).equalsIgnoreCase("rmi")) {
                 view.startRMI(args.get(1), parseInt(args.get(2)));
             } else if (args.get(0).equalsIgnoreCase("tcp")) {
                 view.startTCP(args.get(1), parseInt(args.get(2)));
+            }
+            else {
+                Logger.clientError("wrong arguments : client {cli | gui} {tcp | rmi} [{hostName} {numberPort}]");
+                System.exit(1);
             }
         } else {
             Logger.clientError("wrong arguments : client {cli | gui} {tcp | rmi} [{hostName} {numberPort}]");
