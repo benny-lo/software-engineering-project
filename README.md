@@ -9,6 +9,7 @@ The software was developed using:
 - **IDE**: IntelliJ IDEA 2022.3.2
 
 ## How to run it
+Download the jar file [here](https://github.com/benny-lo/IS23-AM38/blob/master/deliverables/jar/MyShelfie.jar).
 
 ### Server
 ` java -jar MyShelfie.jar server [{hostName} {rmiPort} {socketPort}] `
