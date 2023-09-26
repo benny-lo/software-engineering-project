@@ -8,9 +8,6 @@ The software was developed using:
 - **GUI**: JavaFX version 19.0.2.1 and SceneBuilder
 - **IDE**: IntelliJ IDEA 2022.3.2
 
-## Requirements
-The application requires at least Java 8 or later versions to run.
-
 ## How to run it
 
 ### Server
@@ -31,14 +28,16 @@ If the user omits the hostname and the number port the default settings will be 
 | GUI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | RMI | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Socket | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
-| Chat | [![GREEN](https://placehold.it/15/f03c15/f03c15)](#) |
-| Multiple games | [![GREEN](https://placehold.it/15/f03c15/f03c15)](#) |
+| Chat | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
+| Multiple games | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
 | Persistence | [![RED](https://placehold.it/15/f03c15/f03c15)](#) |
-| Resilience to disconnections | [![GREEN](https://placehold.it/15/44bb44/44bb44)](#) |
+| Resilience to disconnections | [![PURPLE](https://placehold.it/15/bb44bb/bb44bb)](#) |
 
 >[![RED](https://placehold.it/15/f03c15/f03c15)](#) = not implemented <br>
 [![YELLOW](https://placehold.it/15/ffdd00/ffdd00)](#) = work in progress <br>
-[![GREEN](https://placehold.it/15/44bb44/44bb44)](#) = completed      
+[![PURPLE](https://placehold.it/15/bb44bb/bb44bb)](#) = implemented after final exam (just for fun) <br>
+[![GREEN](https://placehold.it/15/44bb44/44bb44)](#) = completed
+>
 
 ## Authors
 - Lorenzo Benedetti ([@benny-lo](https://github.com/benny-lo))
