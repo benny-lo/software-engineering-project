@@ -14,12 +14,12 @@ Download the jar file [here](https://github.com/benny-lo/IS23-AM38/blob/master/d
 ### Server
 ` java -jar MyShelfie.jar server [{hostName} {rmiPort} {socketPort}] `
 
-If the user omits the hostname, the RMI and the Socket port the default hostname and ports will be automatically used.
+If the user omits the optional parameters, the server will be on localhost and the ports will be 1099 for RMI and 1234 for the sockets.
 
 ### Client
 ` java -jar MyShelfie.jar client {cli | gui} {tcp | rmi} [{hostName} {numberPort}] ` 
 
-If the user omits the hostname and the number port the default settings will be automatically used.
+If the user omits the optional parameters, the client will automatically try to connect localhost with port 1099 for rmi and 1234 for the sockets.
 
 ## Implemented Functionalities
 | Functionality | State |
